@@ -1,6 +1,5 @@
 package com.empresa.inventario.service;
 
-import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,12 +13,8 @@ import com.empresa.inventario.model.Usuario;
 
 @Named("usuarioService")
 @ApplicationScoped
-public class UsuariosServiceImpl implements IUsuariosService, Serializable {
+public class UsuariosServiceImpl implements IUsuariosService {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	private UsuariosDAO dao;
 
 	@Override
@@ -79,6 +74,18 @@ public class UsuariosServiceImpl implements IUsuariosService, Serializable {
 
 	}
 
+	@Override
+	public Usuario autentificar(String user, String password) {
+		Usuario usuario = new Usuario();
+		if (user == null && password == null) {
+			throw new ExceptionMessage("Campos vacios");
+		} else {
 
+			usuario = dao.login(user, password);
+		}
+
+		return usuario;
+
+	}
 
 }

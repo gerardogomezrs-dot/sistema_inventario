@@ -29,7 +29,6 @@ public class ProductosDAO {
 				p = mapper.mapRow(rs);
 				// Agregamos el producto a la lista en cada iteración
 				lista.add(p);
-				System.err.println(lista.size());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -42,7 +41,7 @@ public class ProductosDAO {
 
 		Connection conexion = Conexion.getConexion();
 
-		String sql = "INSERT INTO productos " + "(codigo_barras, nombre, descripcion, id_categoria, unidad, "
+		String sql = "INSERT INTO productos " + "(codigo_barras, nombre, descripcion, categoria, unidad, "
 				+ "stock_actual, stock_minimo, ubicacion, activo) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		PreparedStatement ps = conexion.prepareStatement(sql);
@@ -50,7 +49,7 @@ public class ProductosDAO {
 		ps.setString(1, productos.getCodigoBarras());
 		ps.setString(2, productos.getNombre());
 		ps.setString(3, productos.getDescripcion());
-		ps.setInt(4, productos.getIdCategoria());
+		ps.setString(4, productos.getCategoria());
 		ps.setString(5, productos.getUnidad());
 		ps.setInt(6, productos.getStockActual());
 		ps.setInt(7, productos.getStockMinimo());
@@ -75,7 +74,7 @@ public class ProductosDAO {
 		ps.setString(1, productos.getCodigoBarras());
 		ps.setString(2, productos.getNombre());
 		ps.setString(3, productos.getDescripcion());
-		ps.setInt(4, productos.getIdCategoria());
+		ps.setString(4, productos.getCategoria());
 		ps.setString(5, productos.getUnidad());
 		ps.setInt(6, productos.getStockActual());
 		ps.setInt(7, productos.getStockMinimo());

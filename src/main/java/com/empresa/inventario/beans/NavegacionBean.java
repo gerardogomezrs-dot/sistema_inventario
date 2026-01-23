@@ -2,12 +2,13 @@ package com.empresa.inventario.beans;
 
 import java.io.Serializable;
 
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import lombok.Data;
 
 @Named("navBean")
-@javax.faces.view.ViewScoped
+@ViewScoped
 @Data
 public class NavegacionBean implements Serializable {
 

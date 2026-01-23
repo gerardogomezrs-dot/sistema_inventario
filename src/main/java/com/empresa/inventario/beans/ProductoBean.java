@@ -7,19 +7,18 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.empresa.inventario.exceptions.ExceptionMessage;
-import com.empresa.inventario.model.Categorias;
 import com.empresa.inventario.model.Productos;
-import com.empresa.inventario.service.ICategoriaService;
 import com.empresa.inventario.service.IProductoService;
 
 import lombok.Data;
 
 @Named("productoBean") // Nombre para usar en el XHTML
-@javax.faces.view.ViewScoped
+@ViewScoped
 @Data
 public class ProductoBean implements Serializable {
 
@@ -27,18 +26,13 @@ public class ProductoBean implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	private List<Categorias> listaCategorias;
 
 	private List<Productos> list;
 
 	private Productos producto;
 
 	@Inject
-	private transient IProductoService iProductoService;
-	
-	@Inject
-	private transient ICategoriaService iCategoriaService;
+	private IProductoService iProductoService;
 
 	public ProductoBean() {
 		producto = new Productos();
@@ -49,7 +43,6 @@ public class ProductoBean implements Serializable {
 	public void init() {
 		try {
 			ListaProductos();
-			listaCategorias = iCategoriaService.getAllCategorias();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -104,7 +97,7 @@ public class ProductoBean implements Serializable {
 	}
 
 	public String menuPrincipal() {
-		return "/pages/dashboard?faces-redirect=true";
+		return "/dashboard?faces-redirect=true";
 	}
 
 

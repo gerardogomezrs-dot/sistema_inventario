@@ -4,30 +4,22 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <h:head>
-	<title>Registrar Moviemiento</title>
+	<title>Registrar Producto</title>
 </h:head>
 
 <h:body>
 
-	<h:form id="formMovimiento">
+	<h:form id="formProducto">
 
-		<p:panel header="Registro de Movimiento">
+		<p:panel header="Registro de Producto">
 
 			<p:messages autoUpdate="true" />
 
 			<h:panelGrid columns="2" columnClasses="label,value">
 
-				<p:outputLabel for="producto" value="Producto:" />
-				<p:selectOneMenu id="producto" value="#">
-
-					<f:selectItem itemLabel="Selecciona un producto" itemValue="" noSelectionOption="true" />
-
-					<f:selectItems value="#" 
-					var="cat" 
-						itemLabel="#{cat.nombre}"
-						itemValue="#{cat.idCategoria}" />
-
-				</p:selectOneMenu>
+				<h:outputLabel value="Código de Barras:" />
+				<p:inputText value="#{productoBean.producto.codigoBarras}"
+					required="false" />
 
 				<h:outputLabel value="Nombre:" />
 				<p:inputText value="#{productoBean.producto.nombre}"

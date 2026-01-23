@@ -33,6 +33,5 @@ public class PasswordUtil {
 
 	public static void main(String[] args) throws Exception {
 		String f = decrypt("LqGEya6oMCUVSBlAC4V+Hw==");
-		System.err.println(f);
 	}
 }

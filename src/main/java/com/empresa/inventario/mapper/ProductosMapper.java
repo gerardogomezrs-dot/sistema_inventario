@@ -17,7 +17,7 @@ public class ProductosMapper {
 		p.setCodigoBarras(rs.getString("codigo_barras"));
 		p.setNombre(rs.getString("nombre"));
 		p.setDescripcion(rs.getString("descripcion"));
-		p.setIdCategoria(rs.getInt("id_categoria"));
+		p.setCategoria(rs.getString("categoria"));
 		p.setUnidad(rs.getString("unidad"));
 		p.setStockActual(rs.getInt("stock_actual"));
 		p.setStockMinimo(rs.getInt("stock_minimo"));

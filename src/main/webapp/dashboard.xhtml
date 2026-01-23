@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+	<link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
+	<title>Sistema de Inventario</title>
+</h:head>
+<h:body>
+	<h:form>
+		 <p:menubar>
+
+            <p:menuitem value="Inicio" url="dashboard.xhtml"/>
+            <p:menuitem value="Salir"
+                        action="#{usuariosBean.logout}"/>
+        </p:menubar>
+		<p:panel header="Menú Principal">
+			<h:panelGrid columns="1" cellpadding="10">
+				<p:outputLabel value="Bienvenido al sistema" />
+				<p:commandButton value="Gestionar Productos" action="#{navBean.irAProductos()}" icon="pi pi-briefcase" />
+				<p:commandButton value="Gestionar Usuarios" action="#{navBean.irAUsuarios()}" icon="pi pi-users" />
+				<p:commandButton value="Gestionar Categorias" action="#{navBean.irACategorias()}" icon="pi pi-tags" />
+				<p:commandButton value="Gestionar Moviemientos" action="#{navBean.irAMovimientos()}"
+					icon="pi pi-sort-alt" />
+			</h:panelGrid>
+		</p:panel>
+	</h:form>
+</h:body>
+</html>

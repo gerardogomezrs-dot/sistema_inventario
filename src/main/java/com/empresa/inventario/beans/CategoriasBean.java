@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -16,7 +17,7 @@ import com.empresa.inventario.service.ICategoriaService;
 import lombok.Data;
 
 @Named("categoriasBean")
-@javax.faces.view.ViewScoped
+@ViewScoped
 @Data
 public class CategoriasBean implements Serializable {
 
@@ -30,7 +31,7 @@ public class CategoriasBean implements Serializable {
 	private Categorias categorias;
 
 	@Inject
-	private transient ICategoriaService categoriaService;
+	private ICategoriaService categoriaService;
 
 	public CategoriasBean() {
 		categorias = new Categorias();
@@ -88,7 +89,7 @@ public class CategoriasBean implements Serializable {
 	}
 	
 	public String irADashboard() {
-		return "/pages/dashboard.xhtml?faces-redirect=true";
+		return "/dashboard.xhtml?faces-redirect=true";
 	}
 
 }

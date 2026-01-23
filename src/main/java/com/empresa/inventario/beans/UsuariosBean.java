@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -17,8 +18,7 @@ import com.empresa.inventario.service.IUsuariosService;
 import lombok.Data;
 
 @Named("usuariosBean") // Nombre para usar en el XHTML
-@javax.faces.view.ViewScoped
-
+@ViewScoped
 @Data
 public class UsuariosBean implements Serializable {
 
@@ -28,12 +28,15 @@ public class UsuariosBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
-	private transient IUsuariosService iUsuariosService;
+	private IUsuariosService iUsuariosService;
 
 	private List<Usuario> list;
 
 	private Usuario usuario;
 
+	private String nameUser;
+
+	private String password;
 
 	public UsuariosBean() {
 		usuario = new Usuario();
@@ -57,7 +60,7 @@ public class UsuariosBean implements Serializable {
 	}
 
 	public String irAIndex() {
-		return "/pages/dashboard?faces-redirect=true";
+		return "/dashboard?faces-redirect=true";
 	}
 
 	public void guardar() {
@@ -104,5 +107,24 @@ public class UsuariosBean implements Serializable {
 		list = iUsuariosService.getAll();
 	}
 
+	public String login() throws Exception {
+		String ruta = "";
+		if (nameUser == null && password == null) {
+			throw new Exception("Ingresa el usuario y contraseña");
+		} else {
+			ruta = "/dashboard?faces-redirect=true";
+		}
+
+		return ruta;
+	}
+
+	public String logout() {
+		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+		return "/index?faces-redirect=true";
+	}
+
+	public boolean esAdmin() {
+		return usuario != null && "ADMIN".equals(usuario.getRol());
+	}
 
 }

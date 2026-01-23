@@ -66,7 +66,6 @@ public class CategoriasDAO {
 				p = mapper.mapRow(rs);
 				// Agregamos el producto a la lista en cada iteración
 				lista.add(p);
-				System.err.println(lista.size());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
