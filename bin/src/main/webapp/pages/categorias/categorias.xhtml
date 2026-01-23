@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Registrar Categorias</title>
+</h:head>
+
+<h:body>
+
+	<h:form id="formCategoria">
+
+		<p:panel header="Registro de Categorias">
+
+			<p:messages autoUpdate="true" />
+
+			<h:panelGrid columns="2" columnClasses="label,value">
+
+
+				<h:outputLabel value="Nombre:" />
+				<p:inputText value="#{categoriasBean.categorias.nombre}" required="false" />
+
+				<h:outputLabel value="Descripción:" />
+				<p:inputTextarea value="#{categoriasBean.categorias.descripcion}"
+					rows="3" />
+
+
+			</h:panelGrid>
+
+			<p:separator />
+
+			<p:commandButton value="Guardar" icon="pi pi-save"
+				action="#{categoriasBean.guardar}" update="@form" oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
+
+			<p:commandButton value="Regresar" 
+                 icon="pi pi-chevron-left"
+                 action="#{categoriasBean.irATablaCategoria}" 
+                 immediate="true" 
+                 style="margin-left: 10px;" />
+		</p:panel>
+
+			<p:dialog header="Mensaje" widgetVar="dlgConfirmacion" modal="true" closable="false">
+
+			<h:outputText value="Datos guardados correctamente." />
+			<br /><br />
+
+			<p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacion').hide(); location.reload();" />
+		</p:dialog>
+
+	</h:form>
+
+</h:body>
+</html>

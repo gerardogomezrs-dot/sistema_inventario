@@ -1,0 +1,46 @@
+package com.empresa.inventario.service;
+
+import java.io.Serializable;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
+
+import com.empresa.inventario.dao.UsuariosDAO;
+import com.empresa.inventario.exceptions.ExceptionMessage;
+import com.empresa.inventario.model.Usuario;
+@Named("authService")
+@ApplicationScoped
+public class AuthService implements IAuthService, Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private UsuariosDAO dao = new UsuariosDAO();
+
+	@Override
+	public Usuario login(String userName, String password) throws ExceptionMessage {
+		Usuario usuario = new Usuario();
+		if (userName == null || password == null) {
+			return null;
+		}
+		try {
+			usuario = dao.login(userName, password);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		if (usuario == null) {
+			throw new ExceptionMessage("No existe el usuario");
+		}
+		if (!usuario.isActivo()) {
+			throw new ExceptionMessage("Usuario inactivo, consulta con el administrador");
+		}
+
+
+		return usuario;
+
+	}
+
+}

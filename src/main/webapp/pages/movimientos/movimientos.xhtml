@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Registrar Moviemiento</title>
+</h:head>
+
+<h:body>
+
+	<h:form id="formMovimiento">
+
+		<p:panel header="Registro de Movimiento">
+
+			<p:messages autoUpdate="true" />
+
+			<h:panelGrid columns="2" columnClasses="label,value">
+
+				<p:outputLabel for="producto" value="Producto:" />
+				<p:selectOneMenu id="producto" value="#">
+
+					<f:selectItem itemLabel="Selecciona un producto" itemValue="" noSelectionOption="true" />
+
+					<f:selectItems value="#" 
+					var="cat" 
+						itemLabel="#{cat.nombre}"
+						itemValue="#{cat.idCategoria}" />
+
+				</p:selectOneMenu>
+
+				<h:outputLabel value="Nombre:" />
+				<p:inputText value="#{productoBean.producto.nombre}"
+					required="false" />
+
+				<h:outputLabel value="Descripción:" />
+				<p:inputTextarea value="#{productoBean.producto.descripcion}"
+					rows="3" />
+
+				<h:outputLabel value="Categoría:" />
+				<p:inputText value="#{productoBean.producto.categoria}" />
+
+				<h:outputLabel value="Unidad:" />
+				<p:inputText value="#{productoBean.producto.unidad}" />
+
+				<h:outputLabel value="Stock Actual:" />
+				<p:inputText value="#{productoBean.producto.stockActual}" />
+
+				<h:outputLabel value="Stock Mínimo:" />
+				<p:inputText value="#{productoBean.producto.stockMinimo}" />
+
+				<h:outputLabel value="Ubicación:" />
+				<p:inputText value="#{productoBean.producto.ubicacion}" />
+
+				<h:outputLabel value="Activo:" />
+				<p:selectBooleanCheckbox value="#{productoBean.producto.activo}" />
+
+			</h:panelGrid>
+
+			<p:separator />
+
+			<p:commandButton value="Guardar" icon="pi pi-save"
+				action="#{productoBean.guardar}" update="@form" />
+
+			<p:commandButton value="Regresar" icon="pi pi-chevron-left"
+				action="#{productoBean.getIndex()}" immediate="true"
+				style="margin-left: 10px;" />
+		</p:panel>
+
+	</h:form>
+
+</h:body>
+</html>
