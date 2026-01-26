@@ -16,7 +16,7 @@ public class ProductosDAO {
 	private ProductosMapper mapper = new ProductosMapper();
 
 	public List<Productos> getAll() throws Exception {
-		String sql = "SELECT * FROM productos";
+		String sql = "SELECT p.*, c.id_categoria as idCategoria, c.nombre as nombreCategoria FROM productos p inner join categorias c on p.id_categoria = c.id_categoria";
 		List<Productos> lista = new ArrayList<>();
 
 		try (Connection con = Conexion.getConexion();
@@ -41,7 +41,7 @@ public class ProductosDAO {
 
 		Connection conexion = Conexion.getConexion();
 
-		String sql = "INSERT INTO productos " + "(codigo_barras, nombre, descripcion, categoria, unidad, "
+		String sql = "INSERT INTO productos " + "(codigo_barras, nombre, descripcion, id_categoria, unidad, "
 				+ "stock_actual, stock_minimo, ubicacion, activo) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		PreparedStatement ps = conexion.prepareStatement(sql);
@@ -49,7 +49,7 @@ public class ProductosDAO {
 		ps.setString(1, productos.getCodigoBarras());
 		ps.setString(2, productos.getNombre());
 		ps.setString(3, productos.getDescripcion());
-		ps.setString(4, productos.getCategoria());
+		ps.setInt(4, productos.getIdCategoria());
 		ps.setString(5, productos.getUnidad());
 		ps.setInt(6, productos.getStockActual());
 		ps.setInt(7, productos.getStockMinimo());
@@ -74,7 +74,7 @@ public class ProductosDAO {
 		ps.setString(1, productos.getCodigoBarras());
 		ps.setString(2, productos.getNombre());
 		ps.setString(3, productos.getDescripcion());
-		ps.setString(4, productos.getCategoria());
+		ps.setInt(4, productos.getIdCategoria());
 		ps.setString(5, productos.getUnidad());
 		ps.setInt(6, productos.getStockActual());
 		ps.setInt(7, productos.getStockMinimo());
@@ -82,6 +82,22 @@ public class ProductosDAO {
 		ps.setBoolean(9, productos.isActivo());
 		ps.setInt(10, productos.getIdProducto());
 
+		ps.executeUpdate();
+
+		ps.close();
+		conexion.close();
+	}
+
+	public void actualizarStock(int idProducto, int stock) throws Exception {
+
+		Connection conexion = Conexion.getConexion();
+
+		String sql = "UPDATE productos SET stock_actual = ? " + "WHERE id_producto = ?";
+
+		PreparedStatement ps = conexion.prepareStatement(sql);
+
+		ps.setInt(1, stock);
+		ps.setInt(2, idProducto);
 		ps.executeUpdate();
 
 		ps.close();
@@ -100,6 +116,27 @@ public class ProductosDAO {
 		statement.close();
 		connection.close();
 
+	}
+
+	public int getByIdProducto(int idProducto) throws Exception {
+		String sql = "SELECT stock_actual FROM productos where id_producto = ?";
+		int  p = 0;
+		try (Connection con = Conexion.getConexion();
+				PreparedStatement ps = con.prepareStatement(sql);
+				) {
+			ps.setInt(1, idProducto);
+			ResultSet rs = ps.executeQuery();
+			// Usamos while para iterar sobre cada fila del ResultSet
+			if (rs.next()) {
+
+				p = rs.getInt("stock_actual");
+				// Agregamos el producto a la lista en cada iteración
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		}
+		return p;
 	}
 
 }

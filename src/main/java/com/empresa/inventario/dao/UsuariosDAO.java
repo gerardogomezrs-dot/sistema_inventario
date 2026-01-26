@@ -10,36 +10,34 @@ import java.util.List;
 import com.empresa.inventario.mapper.UsuariosMapper;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.utils.Conexion;
-
+import com.empresa.inventario.utils.PasswordUtil;
 
 public class UsuariosDAO {
 
 	private UsuariosMapper mapper = new UsuariosMapper();
 
-	public Usuario login(String username, String password) {
+	public Usuario login(String userName, String password) throws Exception {
 
-		Usuario usuario = null;
+		Usuario p = null;
+		String sql = "SELECT * FROM usuarios WHERE userName = ? ";
 
-		try (Connection conn = Conexion.getConexion();
-				PreparedStatement ps = conn.prepareStatement("SELECT * FROM usuarios WHERE userName=? AND password=?")) {
+		try (Connection con = Conexion.getConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
 
-			ps.setString(1, username);
-			ps.setString(2, password);
+			ps.setString(1, userName);
 
-			ResultSet rs = ps.executeQuery();
+			try (ResultSet rs = ps.executeQuery()) {
 
-			if (rs.next()) {
-				usuario = new Usuario();
-				usuario.setIdUsuario(rs.getInt("id_usuario"));
-				usuario.setNombre(rs.getString("nombre"));
-				usuario.setRol(rs.getString("rol"));
-
+				if (rs.next()) { // 🔥 CLAVE
+					p = mapper.mapRowLogin(rs);
+				}
 			}
 
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
+			throw e; // opcional pero recomendado
 		}
-		return usuario;
+
+		return p; // null si no hubo resultados
 	}
 
 	public List<Usuario> getAll() throws Exception {
@@ -68,7 +66,8 @@ public class UsuariosDAO {
 
 		Connection conexion = Conexion.getConexion();
 
-		String sql = "INSERT INTO usuarios " + "(nombre, rol, permisos,userName, password, activo) " + "VALUES (?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO usuarios " + "(nombre, rol, permisos,userName, password, activo) "
+				+ "VALUES (?, ?, ?, ?, ?, ?)";
 
 		PreparedStatement ps = conexion.prepareStatement(sql);
 
@@ -76,7 +75,7 @@ public class UsuariosDAO {
 		ps.setString(2, usuario.getRol());
 		ps.setString(3, usuario.getPermisos());
 		ps.setString(4, usuario.getUserName());
-		ps.setString(5, usuario.getPassword());
+		ps.setString(5, PasswordUtil.encrypt(usuario.getPassword()));
 		ps.setBoolean(6, usuario.isActivo());
 
 		ps.executeUpdate();
@@ -89,8 +88,8 @@ public class UsuariosDAO {
 
 		Connection conexion = Conexion.getConexion();
 
-		String sql = "UPDATE usuarios SET " + "nombre = ?, " + "rol = ?, " + "permisos = ?, " + "userName = ?, " + "password = ?, "
-				+ "activo = ? " + "WHERE id_usuario = ?";
+		String sql = "UPDATE usuarios SET " + "nombre = ?, " + "rol = ?, " + "permisos = ?, " + "userName = ?, "
+				+ "password = ?, " + "activo = ? " + "WHERE id_usuario = ?";
 
 		PreparedStatement ps = conexion.prepareStatement(sql);
 
@@ -98,7 +97,7 @@ public class UsuariosDAO {
 		ps.setString(2, usuario.getRol());
 		ps.setString(3, usuario.getPermisos());
 		ps.setString(4, usuario.getUserName());
-		ps.setString(5, usuario.getPassword());
+		ps.setString(5, PasswordUtil.encrypt(usuario.getPassword()));
 		ps.setBoolean(6, usuario.isActivo());
 		ps.setInt(7, usuario.getIdUsuario());
 		ps.executeUpdate();
@@ -118,7 +117,6 @@ public class UsuariosDAO {
 		statement.executeUpdate();
 		statement.close();
 		connection.close();
-
 	}
 
 }

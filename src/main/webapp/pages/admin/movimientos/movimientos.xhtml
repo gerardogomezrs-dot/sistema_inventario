@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Registrar Movimiento</title>
+    <style>
+        .ui-panelgrid .ui-grid-responsive .ui-grid-row {
+            border: none !important;
+        }
+
+        .label {
+            font-weight: bold;
+            width: 150px;
+        }
+
+        .value {
+            width: 300px;
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <h:form id="formMovimiento">
+        <p:panel header="Registro de Movimiento" style="width: 600px; margin: 0 auto;">
+            <p:messages id="msgs" closable="true" />
+
+            <h:panelGrid columns="2" columnClasses="label, value" cellpadding="5">
+
+                <p:outputLabel for="producto" value="Producto: *" />
+                <p:selectOneMenu id="producto" value="#{movimientosBean.movimientos.idProducto}" required="true"
+                    style="width:100%">
+                    <f:selectItem itemLabel="Selecciona un producto" itemValue="" noSelectionOption="true" />
+                    <f:selectItems value="#{movimientosBean.listProductos}" var="cat" itemLabel="#{cat.nombre}"
+                        itemValue="#{cat.idProducto}" />
+                </p:selectOneMenu>
+
+                <p:outputLabel for="movimiento" value="Tipo de Movimiento: *" />
+
+                <p:selectOneMenu id="movimiento" value="#{movimientosBean.movimientos.tipoMovimiento}" required="true" filter="true"
+                    filterMatchMode="contains" style="width:100%">
+
+                    <f:selectItem itemLabel="Seleccione una opción" itemValue="" noSelectionOption="true" />
+                    <f:selectItem itemLabel="Entrada" itemValue="ENTRADA" />
+                    <f:selectItem itemLabel="Salida" itemValue="SALIDA" />
+
+                </p:selectOneMenu>
+
+                <p:outputLabel value="Cantidad:" />
+                <p:inputNumber value="#{movimientosBean.movimientos.cantidad}" decimalPlaces="0" style="width:100%" />
+
+                <p:outputLabel value="Fecha:" />
+                <p:calendar value="#{movimientosBean.movimientos.fechaHora}" pattern="dd/MM/yyyy HH:mm:ss"
+                    timeZone="America/Mexico_City" showButtonPanel="true" style="width:100%" />
+
+                <p:outputLabel value="Origen Destino:" />
+                <p:inputText value="#{movimientosBean.movimientos.origenDestino}" style="width:100%" />
+
+                <p:outputLabel value="Usuario logueado:" />
+                <p:inputText value="#{loginBean.usuario.nombre}" disabled="true" style="width:100%; opacity: 0.7;" />
+
+                <p:outputLabel value="Observaciones:" />
+                <h:panelGroup />
+                <p:inputTextarea rows="3" value="#{movimientosBean.movimientos.observaciones}" style="width:205%;" />
+
+            </h:panelGrid>
+
+            <h:inputHidden value="#{movimientosBean.movimientos.idUsuario}" />
+
+            <p:separator />
+
+            <p:commandButton value="Guardar" icon="pi pi-save" action="#{movimientosBean.save}" update="msgs"
+                oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
+
+            <p:commandButton value="Regresar" icon="pi pi-arrow-left" action="#{movimientosBean.irATablaMovimientos}"
+                immediate="true" style="margin-left: 10px;" styleClass="ui-button-secondary" />
+        </p:panel>
+
+        <p:dialog header="Mensaje" widgetVar="dlgConfirmacion" modal="true" closable="false" resizable="false">
+            <h:panelGrid columns="1" style="text-align: center;">
+                <h:outputText value="Datos guardados correctamente." />
+                <p:commandButton value="Aceptar" action="#{movimientosBean.irATablaMovimientos}" />
+            </h:panelGrid>
+        </p:dialog>
+    </h:form>
+</h:body>
+
+</html>

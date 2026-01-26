@@ -17,7 +17,7 @@ import lombok.Data;
 @Named("loginBean")
 @SessionScoped
 @Data
-public class LoginBean implements Serializable{
+public class LoginBean implements Serializable {
 
 	/**
 	 * 
@@ -43,8 +43,15 @@ public class LoginBean implements Serializable{
 			} else {
 
 				FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("sessionUsuario", usuario);
+
+				// ESTA ES LA CLAVE: Mantener mensajes a través de la redirección
+				FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+
+				añadirMensaje(FacesMessage.SEVERITY_INFO, "¡Bienvenido!",
+						"Hola " + usuario.getNombre() + ", has iniciado sesión correctamente.");
+
 				// 2. Retornamos la ruta directamente
-				return "/pages/dashboard.xhtml?faces-redirect=true";
+				return "/pages/admin/dashboard.xhtml?faces-redirect=true";
 			}
 
 		} catch (ExceptionMessage e) {
@@ -71,10 +78,10 @@ public class LoginBean implements Serializable{
 		// página,
 		// JSF creará una nueva sesión automáticamente en la siguiente petición.
 	}
-	
+
 	public String logout() {
-        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-        return "/login.xhtml?faces-redirect=true";
-    }
+		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+		return "/login.xhtml?faces-redirect=true";
+	}
 
 }

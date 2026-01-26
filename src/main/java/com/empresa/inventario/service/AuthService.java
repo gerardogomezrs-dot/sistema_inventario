@@ -8,6 +8,7 @@ import javax.inject.Named;
 import com.empresa.inventario.dao.UsuariosDAO;
 import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Usuario;
+import com.empresa.inventario.utils.PasswordUtil;
 @Named("authService")
 @ApplicationScoped
 public class AuthService implements IAuthService, Serializable {
@@ -37,7 +38,21 @@ public class AuthService implements IAuthService, Serializable {
 		if (!usuario.isActivo()) {
 			throw new ExceptionMessage("Usuario inactivo, consulta con el administrador");
 		}
-
+		
+		String passwordDecoficado = null;
+		try {
+			passwordDecoficado = PasswordUtil.decrypt(usuario.getPassword());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if(password.equals(passwordDecoficado)) {
+			
+		} else {
+			throw new ExceptionMessage("Contraseña incorrecta");
+		}
+		
+		
 
 		return usuario;
 

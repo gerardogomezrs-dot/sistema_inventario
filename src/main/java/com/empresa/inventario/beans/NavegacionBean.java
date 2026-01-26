@@ -2,13 +2,12 @@ package com.empresa.inventario.beans;
 
 import java.io.Serializable;
 
-import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import lombok.Data;
 
 @Named("navBean")
-@ViewScoped
+@javax.faces.view.ViewScoped
 @Data
 public class NavegacionBean implements Serializable {
 
@@ -19,22 +18,22 @@ public class NavegacionBean implements Serializable {
 
 
 	public String irAProductos() {
-	    return "/pages/productos/tablaProductos.xhtml?faces-redirect=true";
+	    return "/pages/admin/productos/tablaProductos.xhtml?faces-redirect=true";
 	}
     
     public String irACategorias() {
         // El "/" inicial indica que partimos desde webapp
-        return "/pages/categorias/tablaCategorias?faces-redirect=true";
+        return "/pages/admin/categorias/tablaCategorias?faces-redirect=true";
     }
     
     public String irAMovimientos() {
         // El "/" inicial indica que partimos desde webapp
-        return "/pages/movimientos/tablaMovimientos?faces-redirect=true";
+        return "/pages/admin/movimientos/tablaMovimientos?faces-redirect=true";
     }
     
     public String irAUsuarios() {
         // El "/" inicial indica que partimos desde webapp
-        return "/pages/usuarios/tablaUsuarios?faces-redirect=true";
+        return "/pages/admin/usuarios/tablaUsuarios?faces-redirect=true";
     }
 
     // Volver al index

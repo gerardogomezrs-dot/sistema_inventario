@@ -26,11 +26,11 @@ public class Productos implements Serializable{
 	private String codigoBarras;
 	private String descripcion;
 	private int	idCategoria;
-	private String categoria;
 	private String unidad;
 	private int stockActual;
 	private int stockMinimo;
 	private String ubicacion;
 	private boolean activo;
 
+	private Categorias categorias;
 }

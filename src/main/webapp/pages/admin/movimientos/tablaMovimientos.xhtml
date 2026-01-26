@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+    <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
+    <title>Gestión de Movimientos</title>
+</h:head>
+<h:body>
+
+    <h:form id="form">
+        <p:growl id="msgs" showDetail="true" />
+
+        <p:commandButton value="Nuevo Movimiento" icon="pi pi-save" action="#{movimientosBean.irANuevoMovimiento}" />
+
+        <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{movimientosBean.irADashboard}" 
+                         immediate="true" style="margin-left:10px;" />
+
+        <p:dataTable id="tablaMovimientos" var="prod" value="#{movimientosBean.list}" 
+                     rows="10" paginator="true"
+                     filteredValue="#{movimientosBean.filteredList}"
+                     emptyMessage="No se encontraron Movimientos" style="margin-top:20px;">
+
+            <p:column headerText="ID">
+                <h:outputText value="#{prod.idMovimiento}" />
+            </p:column>
+
+            <p:column headerText="Producto">
+                <h:outputText value="#{prod.productos.nombre}" />
+            </p:column>
+
+            <p:column headerText="Tipo Movimiento">
+                <h:outputText value="#{prod.tipoMovimiento}" />
+            </p:column>
+
+            <p:column headerText="Cantidad">
+                <h:outputText value="#{prod.cantidad}" />
+            </p:column>
+
+            <p:column headerText="Fecha de Movimiento" 
+                      filterBy="#{prod.fechaHora}" 
+                      filterMatchMode="contains">
+                <h:outputText value="#{prod.fechaHora}" />
+            </p:column>
+
+            <p:column headerText="Origen Destino">
+                <h:outputText value="#{prod.origenDestino}" />
+            </p:column>
+
+            <p:column headerText="Usuario Responsable" 
+                      filterBy="#{prod.idUsuario}" 
+                      filterMatchMode="contains">
+                <h:outputText value="#{prod.usuario.nombre}" />
+            </p:column>
+
+            <p:column headerText="Observaciones">
+                <h:outputText value="#{prod.observaciones}" />
+            </p:column>
+
+            <p:column headerText="Acciones">
+                <p:commandButton icon="pi pi-pencil" process="@this" update=":formEditar"
+                                 oncomplete="PF('wdgEditar').show()">
+                    <f:setPropertyActionListener value="#{prod}" target="#{movimientosBean.movimientoSeleccionado}" />
+                </p:commandButton>
+
+                <p:commandButton icon="pi pi-trash" styleClass="p-button-danger" process="@this"
+                                 update=":form:tablaMovimientos :form:msgs" action="#{movimientosBean.eliminar}">
+                    <f:setPropertyActionListener value="#{prod}" target="#{movimientosBean.movimientoSeleccionado}" />
+                    <p:confirm header="Confirmación" message="¿Está seguro de eliminar este movimiento?"
+                               icon="pi pi-exclamation-triangle" />
+                </p:commandButton>
+            </p:column>
+        </p:dataTable>
+
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+            <p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+        </p:confirmDialog>
+    </h:form>
+
+    <ui:include src="/pages/admin/movimientos/actualizarMoviemientos.xhtml" />
+
+</h:body>
+</html>

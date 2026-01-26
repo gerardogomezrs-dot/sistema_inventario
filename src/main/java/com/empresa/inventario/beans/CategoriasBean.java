@@ -6,7 +6,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -17,21 +16,26 @@ import com.empresa.inventario.service.ICategoriaService;
 import lombok.Data;
 
 @Named("categoriasBean")
-@ViewScoped
+@javax.faces.view.ViewScoped
 @Data
 public class CategoriasBean implements Serializable {
 
 	/**
 	 * 
 	 */
+	
+	
 	private static final long serialVersionUID = 1L;
+	
+	private List<Categorias> filteredList; // Lista para almacenar los resultados filtrados
+
 	
 	private List<Categorias> list;
 
 	private Categorias categorias;
 
 	@Inject
-	private ICategoriaService categoriaService;
+	private  ICategoriaService categoriaService;
 
 	public CategoriasBean() {
 		categorias = new Categorias();
@@ -40,7 +44,9 @@ public class CategoriasBean implements Serializable {
 	@PostConstruct
 	public void init() {
 		try {
-			listaCategorias();
+			//listaCategorias();
+			
+			list = categoriaService.getAllCategorias();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -80,16 +86,16 @@ public class CategoriasBean implements Serializable {
 	
 	
 	public String irANuevaCategoria() {
-		return "/pages/categorias/categorias.xhtml?faces-redirect=true";
+		return "/pages/admin/categorias/categorias.xhtml?faces-redirect=true";
 	}
 	
 	public String irATablaCategoria() {
-		return "/pages/categorias/tablaCategorias.xhtml?faces-redirect=true";
+		return "/pages/admin/categorias/tablaCategorias.xhtml?faces-redirect=true";
 		
 	}
 	
 	public String irADashboard() {
-		return "/dashboard.xhtml?faces-redirect=true";
+		return "/pages/admin/dashboard.xhtml?faces-redirect=true";
 	}
 
 }
