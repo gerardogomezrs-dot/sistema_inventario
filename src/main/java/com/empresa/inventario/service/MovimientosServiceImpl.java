@@ -26,8 +26,11 @@ public class MovimientosServiceImpl implements IMovimientosService, Serializable
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public void save(Movimientos movimientos) throws Exception {
-
+	public List<Movimientos> save(List<Movimientos> movimientosL) throws Exception {
+		List<Movimientos> list = new ArrayList<Movimientos>();
+		
+		for(Movimientos movimientos: movimientosL) {
+		
 		if (movimientos == null) {
 			throw new ExceptionMessage("Vacio");
 		}
@@ -48,7 +51,8 @@ public class MovimientosServiceImpl implements IMovimientosService, Serializable
 		if (movimientos.getTipoMovimiento().equals("Ajuste")) {
 			productosDAO.actualizarStock(movimientos.getIdProducto(), unidad);
 		}
-
+		}
+		 return list;
 	}
 
 	@Override

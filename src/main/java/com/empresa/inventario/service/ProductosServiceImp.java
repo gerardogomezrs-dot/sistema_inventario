@@ -28,7 +28,8 @@ public class ProductosServiceImp implements IProductoService {
 	}
 
 	@Override
-	public void create(Productos productos) throws Exception {
+	public List<Productos> create(List<Productos> productosLista) throws Exception {
+		for(Productos productos: productosLista) {
 		try {
 			if (productos == null) {
 				throw new ExceptionMessage("Vacio");
@@ -42,6 +43,8 @@ public class ProductosServiceImp implements IProductoService {
 			e.printStackTrace();
 
 		}
+		}
+		return productosLista;
 
 	}
 

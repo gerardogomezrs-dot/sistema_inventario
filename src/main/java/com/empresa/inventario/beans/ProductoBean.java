@@ -2,6 +2,7 @@ package com.empresa.inventario.beans;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -29,6 +30,7 @@ public class ProductoBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private List<Categorias> listaCategorias;
+	private List<Productos> listaProductosGuardar = new ArrayList<Productos>();
 
 	private List<Productos> list;
 
@@ -58,17 +60,27 @@ public class ProductoBean implements Serializable {
 
 	public void guardar() {
 
+		listaProductosGuardar.add(producto);
 		try {
 			if (producto == null) {
 				throw new ExceptionMessage("Vacio ");
 			} else {
-				iProductoService.create(producto);
+				//iProductoService.create(producto);
 			}
 		} catch (Exception e) {
 
 			e.getMessage();
 		}
 
+	}
+	
+	public void guardarProductoTabla() throws Exception {
+		
+		List<Productos> listaProductos = listaProductosGuardar;
+		
+		iProductoService.create(listaProductos);
+		
+		
 	}
 
 	public void guardarCambios() throws Exception {
@@ -113,4 +125,10 @@ public class ProductoBean implements Serializable {
 		return "/pages/admin/productos/productos.xhtml?faces-redirect=true";
 	}
 
+	
+	private boolean modoManual = false; // Inicia en modo escáner (oculto)
+
+	// Getters y Setters
+	public boolean isModoManual() { return modoManual; }
+	public void setModoManual(boolean modoManual) { this.modoManual = modoManual; }
 }

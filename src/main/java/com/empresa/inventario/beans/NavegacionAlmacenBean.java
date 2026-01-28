@@ -4,22 +4,14 @@ import java.io.Serializable;
 
 import javax.inject.Named;
 
-import com.empresa.inventario.model.Categorias;
-
 import lombok.Data;
 
-@Named("categoriasAlmacenBean")
+@Named("navegacionAlmacenBean")
 @javax.faces.view.ViewScoped
 @Data
-public class CategoriasAlmacenBean implements Serializable{
-	/**
+public class NavegacionAlmacenBean implements Serializable{/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	private Categorias categorias;
-	
-	
-	
 
 }
