@@ -9,6 +9,30 @@
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
     <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
     <title>Gestión de Movimientos</title>
+    <style  type="text/css">
+     body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f7f9;
+            margin: 20px;
+        }
+        /* Quitar degradados de la cabecera de la tabla */
+        .ui-datatable .ui-datatable-header, .ui-datatable .ui-column-header {
+            background: #ffffff !important;
+            border-bottom: 2px solid #ebedef !important;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+        /* Estilo de los Badges */
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+    
+        </style>
 </h:head>
 <h:body>
 
@@ -61,28 +85,13 @@
                 <h:outputText value="#{prod.observaciones}" />
             </p:column>
 
-            <p:column headerText="Acciones">
-                <p:commandButton icon="pi pi-pencil" process="@this" update=":formEditar"
-                                 oncomplete="PF('wdgEditar').show()">
-                    <f:setPropertyActionListener value="#{prod}" target="#{movimientosBean.movimientoSeleccionado}" />
-                </p:commandButton>
-
-                <p:commandButton icon="pi pi-trash" styleClass="p-button-danger" process="@this"
-                                 update=":form:tablaMovimientos :form:msgs" action="#{movimientosBean.eliminar}">
-                    <f:setPropertyActionListener value="#{prod}" target="#{movimientosBean.movimientoSeleccionado}" />
-                    <p:confirm header="Confirmación" message="¿Está seguro de eliminar este movimiento?"
-                               icon="pi pi-exclamation-triangle" />
-                </p:commandButton>
-            </p:column>
+            
         </p:dataTable>
 
-        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-            <p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
-            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
-        </p:confirmDialog>
+        
     </h:form>
 
-    <ui:include src="/pages/admin/movimientos/actualizarMoviemientos.xhtml" />
+    <ui:include src="/pages/admin/movimientos/actualizarMovimientos.xhtml" />
 
 </h:body>
 </html>

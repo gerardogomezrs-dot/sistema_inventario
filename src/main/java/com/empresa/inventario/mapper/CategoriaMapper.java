@@ -7,9 +7,7 @@ import com.empresa.inventario.model.Categorias;
 
 public class CategoriaMapper {
 	
-	public CategoriaMapper() {
-		// TODO Auto-generated constructor stub
-	}
+	public CategoriaMapper() {}
 	
 	public Categorias mapRow(ResultSet resultSet) throws SQLException{
 		Categorias categorias = new Categorias();

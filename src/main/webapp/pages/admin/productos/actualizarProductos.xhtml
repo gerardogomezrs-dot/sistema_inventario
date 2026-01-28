@@ -3,7 +3,7 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 
- <p:dialog id="dialogoEditar" header="Editar Producto" widgetVar="wdgEditar" modal="true" appendTo="@(body)"
+    <p:dialog id="dialogoEditar" header="Editar Producto" widgetVar="wdgEditar" modal="true" appendTo="@(body)"
         resizable="false">
 
         <h:form id="formEditar">
@@ -15,21 +15,22 @@
                 <h:outputLabel value="Descripción:" />
                 <p:inputTextarea value="#{productoBean.producto.descripcion}" rows="3" />
 
-               <p:outputLabel for="categoria" value="Categoría:" />
-				<p:selectOneMenu id="categoria" value="#{productoBean.producto.idCategoria}">
+                <p:outputLabel for="categoria" value="Categoría:" />
+                <p:selectOneMenu id="categoria" value="#{productoBean.producto.idCategoria}">
 
-					<f:selectItem itemLabel="Seleccione una categoría" itemValue="" noSelectionOption="true" />
+                    <f:selectItem itemLabel="Seleccione una categoría" itemValue="" noSelectionOption="true" />
 
-					<f:selectItems value="#{productoBean.listaCategorias}" 
-					var="cat" 
-						itemLabel="#{cat.nombre}"
-						itemValue="#{cat.idCategoria}" />
+                    <f:selectItems value="#{productoBean.listaCategorias}" var="cat" itemLabel="#{cat.nombre}"
+                        itemValue="#{cat.idCategoria}" />
 
-				</p:selectOneMenu>
+                </p:selectOneMenu>
 
                 <h:outputLabel value="Unidad:" />
                 <p:inputText value="#{productoBean.producto.unidad}" />
 
+                <h:outputLabel value="Precio Unitario:" />
+                <p:inputText value="#{productoBean.producto.precioUnitario}" placeholder="$ 0.00" />
+                
                 <h:outputLabel value="Stock Actual:" />
                 <p:inputText value="#{productoBean.producto.stockActual}" />
 
@@ -42,13 +43,11 @@
                 <h:outputLabel value="Activo:" />
                 <p:selectBooleanCheckbox value="#{productoBean.producto.activo}" />
 
-                <p:commandButton value="Guardar"
-                icon="pi pi-save"
-                 action="#{productoBean.guardarCambios}"
-                 update=":form:tablaProductos :form:msgs"
-                 oncomplete="if (!args.validationFailed) { PF('wdgEditar').hide(); }" />
+                <p:commandButton value="Guardar" icon="pi pi-save" action="#{productoBean.guardarCambios}"
+                    update=":form:tablaProductos :form:msgs"
+                    oncomplete="if (!args.validationFailed) { PF('wdgEditar').hide(); }" />
 
             </h:panelGrid>
         </h:form>
-    </p:dialog>                
+    </p:dialog>
 </ui:composition>

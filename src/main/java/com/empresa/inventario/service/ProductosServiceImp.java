@@ -33,7 +33,7 @@ public class ProductosServiceImp implements IProductoService {
 			if (productos == null) {
 				throw new ExceptionMessage("Vacio");
 			} else {
-				productos.setCodigoBarras(CrearCodigoBarra.generarCodigoBarra());
+				productos.setCodigoBarras(CrearCodigoBarra.generarCodigoBarra(productos.getCodigoBarras()));
 				ProductosDAO dao = new ProductosDAO();
 				dao.guardar(productos);
 			}

@@ -16,13 +16,34 @@ public class FiltroSeguridad implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
         HttpSession session = req.getSession(false);
+        String url = req.getRequestURI();
 
         Usuario user = (session != null) ? (Usuario) session.getAttribute("sessionUsuario") : null;
 
-        if (user != null) {
-            chain.doFilter(request, response); // Usuario autenticado, adelante
-        } else {
-            res.sendRedirect(req.getContextPath() + "/login.xhtml"); // No autenticado
+        // 1. Verificación de Autenticación
+        if (user == null) {
+            res.sendRedirect(req.getContextPath() + "/login.xhtml");
+            return; // Detiene la ejecución para evitar procesar el resto del código con un usuario nulo
+        }
+
+        // 2. Lógica de protección por carpeta (Solo se ejecuta si user != null)
+        if (url.contains("/pages/admin/") && !user.getRol().equals("admin")) {
+            res.sendRedirect(req.getContextPath() + "/error_permisos.xhtml");
+            return; // Evita que se llame a chain.doFilter() después de redireccionar
+        } 
+        else if (url.contains("/pages/almacen/") && !user.getRol().equals("almacen")) {
+            res.sendRedirect(req.getContextPath() + "/error_permisos.xhtml");
+            return; // Evita que se llame a chain.doFilter() después de redireccionar
+        } 
+        else {
+            // Si el rol coincide con la carpeta o es una página permitida dentro de /pages/
+            chain.doFilter(request, response);
         }
     }
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {}
+
+    @Override
+    public void destroy() {}
 }

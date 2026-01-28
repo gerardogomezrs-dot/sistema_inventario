@@ -23,7 +23,8 @@
 			<p:messages autoUpdate="true" />
 
 			<h:panelGrid columns="2" columnClasses="label,value">
-
+				<h:outputLabel value="Codigo de Barras:" />
+				<p:inputText value="#{productoBean.producto.codigoBarras}" required="false" />
 
 
 				<h:outputLabel value="Nombre:" />
@@ -46,6 +47,9 @@
 
 				<h:outputLabel value="Unidad:" />
 				<p:inputText value="#{productoBean.producto.unidad}" />
+
+				<h:outputLabel value="Precio Unitario:" />
+				<p:inputText value="#{productoBean.producto.precioUnitario}" />
 
 				<h:outputLabel value="Stock Actual:" />
 				<p:inputText value="#{productoBean.producto.stockActual}" />

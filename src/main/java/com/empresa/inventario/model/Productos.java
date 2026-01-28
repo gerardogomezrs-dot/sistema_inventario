@@ -27,6 +27,7 @@ public class Productos implements Serializable{
 	private String descripcion;
 	private int	idCategoria;
 	private String unidad;
+	private double precioUnitario;
 	private int stockActual;
 	private int stockMinimo;
 	private String ubicacion;

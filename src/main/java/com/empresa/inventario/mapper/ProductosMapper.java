@@ -20,6 +20,7 @@ public class ProductosMapper {
 		p.setDescripcion(rs.getString("descripcion"));
 		p.setIdCategoria(rs.getInt("id_categoria"));
 		p.setUnidad(rs.getString("unidad"));
+		p.setPrecioUnitario(rs.getDouble("precio_unitario"));
 		p.setStockActual(rs.getInt("stock_actual"));
 		p.setStockMinimo(rs.getInt("stock_minimo"));
 		p.setUbicacion(rs.getString("ubicacion"));

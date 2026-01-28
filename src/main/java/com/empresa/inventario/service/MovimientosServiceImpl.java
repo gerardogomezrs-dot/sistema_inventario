@@ -71,9 +71,9 @@ public class MovimientosServiceImpl implements IMovimientosService, Serializable
 		if (list.size() != 0) {
 			
 		} else if(list.size() == 0) {
-			
-		}}catch (Exception e) {
 			throw new ExceptionMessage("Lista Vacia");
+		}}catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		return list;

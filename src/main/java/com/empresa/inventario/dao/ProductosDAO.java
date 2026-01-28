@@ -38,11 +38,11 @@ public class ProductosDAO {
 	}
 
 	public void guardar(Productos productos) throws Exception {
-
+		try {
 		Connection conexion = Conexion.getConexion();
 
-		String sql = "INSERT INTO productos " + "(codigo_barras, nombre, descripcion, id_categoria, unidad, "
-				+ "stock_actual, stock_minimo, ubicacion, activo) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO productos " + "(codigo_barras, nombre, descripcion, id_categoria, unidad, precio_unitario, "
+				+ "stock_actual, stock_minimo, ubicacion, activo) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		PreparedStatement ps = conexion.prepareStatement(sql);
 
@@ -51,14 +51,18 @@ public class ProductosDAO {
 		ps.setString(3, productos.getDescripcion());
 		ps.setInt(4, productos.getIdCategoria());
 		ps.setString(5, productos.getUnidad());
-		ps.setInt(6, productos.getStockActual());
-		ps.setInt(7, productos.getStockMinimo());
-		ps.setString(8, productos.getUbicacion());
-		ps.setBoolean(9, productos.isActivo());
+		ps.setDouble(6, productos.getPrecioUnitario());
+		ps.setInt(7, productos.getStockActual());
+		ps.setInt(8, productos.getStockMinimo());
+		ps.setString(9, productos.getUbicacion());
+		ps.setBoolean(10, productos.isActivo());
 		ps.executeUpdate();
 
 		ps.close();
 		conexion.close();
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void actualizar(Productos productos) throws Exception {
@@ -66,7 +70,7 @@ public class ProductosDAO {
 		Connection conexion = Conexion.getConexion();
 
 		String sql = "UPDATE productos SET " + "codigo_barras = ?, " + "nombre = ?, " + "descripcion = ?, "
-				+ "categoria = ?, " + "unidad = ?, " + "stock_actual = ?, " + "stock_minimo = ?, " + "ubicacion = ?, "
+				+ "categoria = ?, " + "unidad = ?, " +  "precio_unitario = ?, " + "stock_actual = ?, " + "stock_minimo = ?, " + "ubicacion = ?, "
 				+ "activo = ? " + "WHERE id_producto = ?";
 
 		PreparedStatement ps = conexion.prepareStatement(sql);
@@ -76,11 +80,12 @@ public class ProductosDAO {
 		ps.setString(3, productos.getDescripcion());
 		ps.setInt(4, productos.getIdCategoria());
 		ps.setString(5, productos.getUnidad());
-		ps.setInt(6, productos.getStockActual());
-		ps.setInt(7, productos.getStockMinimo());
-		ps.setString(8, productos.getUbicacion());
-		ps.setBoolean(9, productos.isActivo());
-		ps.setInt(10, productos.getIdProducto());
+		ps.setDouble(6, productos.getPrecioUnitario());
+		ps.setInt(7, productos.getStockActual());
+		ps.setInt(8, productos.getStockMinimo());
+		ps.setString(9, productos.getUbicacion());
+		ps.setBoolean(10, productos.isActivo());
+		ps.setInt(11, productos.getIdProducto());
 
 		ps.executeUpdate();
 

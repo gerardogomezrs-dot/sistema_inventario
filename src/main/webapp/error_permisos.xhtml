@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <title>Acceso Denegado</title>
+        <style>
+            .exception-body {
+                background-color: #f4f4f4;
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+            }
+            .exception-card {
+                background: white;
+                padding: 40px;
+                border-radius: 8px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                text-align: center;
+                max-width: 450px;
+            }
+            .exception-icon {
+                font-size: 5rem;
+                color: #e74c3c;
+                margin-bottom: 20px;
+            }
+            h1 { color: #333; margin-top: 0; }
+            p { color: #666; line-height: 1.5; }
+        </style>
+    </h:head>
+
+    <h:body class="exception-body">
+        <div class="exception-card">
+            <i class="pi pi-exclamation-triangle exception-icon"></i>
+            
+            <h1>¡Acceso Denegado!</h1>
+            <p>Lo sentimos, no tienes los permisos necesarios para acceder a este módulo. 
+                <b></b>.</p>
+            
+            <p:separator />
+
+            <h:form>
+                <p:commandButton value="Volver al Inicio" 
+                                 icon="pi pi-home"
+                                 action="#{loginBean.redireccionarInicio()}"
+                                 styleClass="ui-button-raised ui-button-secondary" />
+            </h:form>
+        </div>
+    </h:body>
+</html>

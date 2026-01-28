@@ -37,12 +37,14 @@
 
                 <p:outputLabel for="movimiento" value="Tipo de Movimiento: *" />
 
-                <p:selectOneMenu id="movimiento" value="#{movimientosBean.movimientos.tipoMovimiento}" required="true" filter="true"
-                    filterMatchMode="contains" style="width:100%">
+                <p:selectOneMenu id="movimiento" value="#{movimientosBean.movimientos.tipoMovimiento}" required="true"
+                    filter="true" filterMatchMode="contains" style="width:100%">
 
                     <f:selectItem itemLabel="Seleccione una opción" itemValue="" noSelectionOption="true" />
-                    <f:selectItem itemLabel="Entrada" itemValue="ENTRADA" />
-                    <f:selectItem itemLabel="Salida" itemValue="SALIDA" />
+                    <f:selectItem itemLabel="Entrada" itemValue="Entrada" />
+                    <f:selectItem itemLabel="Salida" itemValue="Salida" />
+                    <f:selectItem itemLabel="Ajuste" itemValue="Ajuste" />
+
 
                 </p:selectOneMenu>
 

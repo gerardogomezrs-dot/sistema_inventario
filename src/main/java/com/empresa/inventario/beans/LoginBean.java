@@ -41,17 +41,36 @@ public class LoginBean implements Serializable {
 				añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error de Inventario", "Usuario o password inválido");
 				return null; // Se queda en login.xhtml
 			} else {
+				String ruta = "";
 
-				FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("sessionUsuario", usuario);
+				if (usuario.getRol().equals("admin")) {
 
-				// ESTA ES LA CLAVE: Mantener mensajes a través de la redirección
-				FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+					FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("sessionUsuario",
+							usuario);
 
-				añadirMensaje(FacesMessage.SEVERITY_INFO, "¡Bienvenido!",
-						"Hola " + usuario.getNombre() + ", has iniciado sesión correctamente.");
+					// ESTA ES LA CLAVE: Mantener mensajes a través de la redirección
+					FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
 
-				// 2. Retornamos la ruta directamente
-				return "/pages/admin/dashboard.xhtml?faces-redirect=true";
+					añadirMensaje(FacesMessage.SEVERITY_INFO, "¡Bienvenido!",
+							"Hola " + usuario.getNombre() + ", has iniciado sesión correctamente.");
+					// 2. Retornamos la ruta directamente
+					ruta = "/pages/admin/dashboard.xhtml?faces-redirect=true";
+				}
+
+				if (usuario.getRol().equals("almacen")) {
+					FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("sessionUsuario",
+							usuario);
+
+					// ESTA ES LA CLAVE: Mantener mensajes a través de la redirección
+					FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+
+					añadirMensaje(FacesMessage.SEVERITY_INFO, "¡Bienvenido!",
+							"Hola " + usuario.getNombre() + ", has iniciado sesión correctamente.");
+					// 2. Retornamos la ruta directamente
+					ruta = "/pages/almacen/dashboard.xhtml?faces-redirect=true";
+				}
+
+				return ruta;
 			}
 
 		} catch (ExceptionMessage e) {
@@ -82,6 +101,19 @@ public class LoginBean implements Serializable {
 	public String logout() {
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 		return "/login.xhtml?faces-redirect=true";
+	}
+	
+	public String redireccionarInicio() {
+		usuario = new Usuario();
+		usuario = authService.login(userName, password);
+		String ruta = "";
+		if(usuario.getRol().equals("admin")) {
+			ruta = "/pages/admin/dashboard.xhtml?faces-redirect=true";
+		}
+		if(usuario.getRol().equals("almacen")) {
+			ruta = "/pages/almacen/dashboard.xhtml?faces-redirect=true";
+		}
+		return ruta;
 	}
 
 }
