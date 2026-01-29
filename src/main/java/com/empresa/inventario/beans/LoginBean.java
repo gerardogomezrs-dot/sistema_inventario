@@ -90,12 +90,7 @@ public class LoginBean implements Serializable {
 	}
 
 	private void resetearSesion() {
-		// Esto destruye la sesión actual y limpia todos los beans @SessionScoped
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-
-		// Opcional: Si quieres que el usuario pueda reintentar de inmediato en la misma
-		// página,
-		// JSF creará una nueva sesión automáticamente en la siguiente petición.
 	}
 
 	public String logout() {

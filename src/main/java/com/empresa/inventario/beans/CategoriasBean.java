@@ -1,6 +1,7 @@
 package com.empresa.inventario.beans;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -33,6 +34,8 @@ public class CategoriasBean implements Serializable {
 	private List<Categorias> list;
 
 	private Categorias categorias;
+	
+	private List<Categorias> listaTablaCategorias = new ArrayList<Categorias>();
 
 	@Inject
 	private  ICategoriaService categoriaService;
@@ -53,16 +56,25 @@ public class CategoriasBean implements Serializable {
 		
 	}
 	
-	public void guardar() throws Exception {
-		if(categorias==null) {
-			throw new ExceptionMessage("Ingresa datos");
-		}else {
-			categoriaService.save(categorias);
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-					"Categoria guardada", "La categoria fue guardada correctamente"));
-		}
+	public void listaTabla() {
+	    
+	    if (this.categorias != null) {
+	        listaTablaCategorias.add(this.categorias);
+	        System.out.println("Tamaño lista: " + listaTablaCategorias.size());
+	        
+	        // Limpiar el objeto para el siguiente registro
+	        this.categorias = new Categorias();
+	    }
+		
 	}
 	
+	public void guardar() throws Exception {
+			categoriaService.save(listaTablaCategorias);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+					"Categoria guardada", "La categoria fue guardada correctamente"));	
+	}
+	
+
 	public void actualizar() throws Exception {
 		if(categorias==null) {
 			throw new ExceptionMessage("Ingresa datos");

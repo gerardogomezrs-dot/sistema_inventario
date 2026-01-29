@@ -10,5 +10,4 @@ public interface IProductoService {
 	void delete(int idProducto) throws Exception;
 	void update(Productos productos) throws Exception;
 	 List<Productos> getAll() throws Exception;
-
 }

@@ -15,6 +15,11 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+		
+		<sonar.host.url>http://localhost:9000</sonar.host.url>
+		<sonar.token>sqa_d1b2911617895ba2242aef49c7ab6aa0711b7239</sonar.token>
+		<sonar.java.source>8</sonar.java.source>
+		<sonar.java.target>8</sonar.java.target>
 	</properties>
 
 	<dependencies>
@@ -23,14 +28,17 @@
 			<artifactId>primefaces</artifactId>
 			<version>7.0</version>
 		</dependency>
-
-		<!-- Source:
-		https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api -->
+		
 		<dependency>
-			<groupId>jakarta.servlet</groupId>
-			<artifactId>jakarta.servlet-api</artifactId>
-			<version>5.0.0</version>
-			<scope>provided</scope>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.3.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
+			<version>2.3.1</version>
 		</dependency>
 
 		<dependency>
@@ -105,19 +113,40 @@
 			<version>1.18.30</version>
 			<scope>provided</scope>
 		</dependency>
-		<!-- Source: https://mvnrepository.com/artifact/org.mvnpm/primeicons -->
+
 		<dependency>
 			<groupId>org.primefaces.extensions</groupId>
 			<artifactId>primefaces-extensions</artifactId>
 			<version>7.0.3</version>
 		</dependency>
 
-		<!-- https://jarcasting.com/artifacts/org.webjars.npm/primeicons/ -->
 		<dependency>
 			<groupId>org.webjars.npm</groupId>
 			<artifactId>primeicons</artifactId>
 			<version>5.0.0</version>
 		</dependency>
+
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.2.11</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>4.1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>4.1.2</version>
+		</dependency>
+		<dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-api</artifactId>
+    <version>1.7.32</version>
+</dependency>
 	</dependencies>
 
 	<build>
@@ -139,6 +168,11 @@
 					<source>1.8</source>
 					<target>1.8</target>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.sonarsource.scanner.maven</groupId>
+				<artifactId>sonar-maven-plugin</artifactId>
+				<version>3.10.0.2594</version>
 			</plugin>
 		</plugins>
 	</build>

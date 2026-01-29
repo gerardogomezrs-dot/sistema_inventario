@@ -35,6 +35,11 @@ public class NavegacionBean implements Serializable {
         // El "/" inicial indica que partimos desde webapp
         return "/pages/admin/usuarios/tablaUsuarios?faces-redirect=true";
     }
+    
+    public String irAReportes() {
+        // El "/" inicial indica que partimos desde webapp
+        return "/pages/admin/reportes/reportes?faces-redirect=true";
+    }
 
     // Volver al index
     public String irAlIndex() {

@@ -16,17 +16,15 @@ public class CategoriaServiceImpl implements ICategoriaService{
 	
 	private CategoriasDAO dao = new CategoriasDAO();
 	
-
 	@Override
-	public void save(Categorias e) throws Exception {
-		
-		if(e==null) {
+	public void save(List<Categorias> list) throws Exception {
+		for(Categorias categorias: list) {
+		if(categorias==null) {
 			throw new ExceptionMessage("Vacio");
 		} else {
-			dao.guardar(e);
+			dao.guardar(categorias);
 		}
-		
-		
+		}
 	}
 
 	@Override
@@ -51,13 +49,11 @@ public class CategoriaServiceImpl implements ICategoriaService{
 
 	@Override
 	public void delete(int idCategoria) throws Exception {
-		
 		if(idCategoria ==0) {
 			throw new ExceptionMessage("Ingrese el id");
 		}else {
 			dao.eliminarCategoria(idCategoria);
 		}
-		
 	}
 
 }

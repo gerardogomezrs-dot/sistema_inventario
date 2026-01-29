@@ -53,12 +53,17 @@ public class ProductosServiceImp implements IProductoService {
 		List<Productos> getProductos = new ArrayList<>();
 		productosDAO = new ProductosDAO();
 		getProductos = productosDAO.getAll();
-		if (getProductos.size() == 0) {
-			throw new ExceptionMessage("Vacio");
-		} else {
+		try {
+		if(getProductos.size() != 0){
 			getProductos = productosDAO.getAll();
 		}
-
+		if (getProductos.size() == 0) {
+			throw new ExceptionMessage("Vacio");
+		} 
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return getProductos;
 
 	}

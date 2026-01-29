@@ -1,10 +1,8 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:p="http://primefaces.org/ui">
-
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui">
 <h:head>
-	 <style>
+    <style>
         .ui-panelgrid .ui-grid-responsive .ui-grid-row {
             border: none !important;
         }
@@ -17,55 +15,85 @@
         .value {
             width: 300px;
         }
+
+        /* Contenedor para poner form y tabla lado a lado */
+        .flex-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 20px;
+        }
     </style>
-	 <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
     <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
-    <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces"/>
-	<title>Registrar Categorias</title>
+    <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
+    <title>Registrar Categorias</title>
 </h:head>
 
 <h:body>
 
-	<h:form id="formCategoria">
+    <h:form id="formCategoria">
+        <div class="flex-container">
+            <p:panel header="Registro de Categorias" style="width: 600px; margin: 0 auto;">
 
-		<p:panel header="Registro de Categorias" style="width: 600px; margin: 0 auto;">
+                <p:messages id="mensajes" autoUpdate="true" />
 
-			<p:messages autoUpdate="true" />
+                <h:panelGrid columns="2" columnClasses="label,value">
 
-			<h:panelGrid columns="2" columnClasses="label,value">
+                    <h:outputLabel value="Nombre:" />
+                    <p:inputText value="#{categoriasBean.categorias.nombre}" required="false" />
+
+                    <h:outputLabel value="Descripción:" />
+                    <p:inputTextarea value="#{categoriasBean.categorias.descripcion}" rows="3" />
+                </h:panelGrid>
+                <p:separator />
+
+                <p:commandButton value="Guardar" icon="pi pi-save" 
+                 action="#{categoriasBean.listaTabla}"
+                 update="formCategoria" 
+                 oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
+
+                <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{categoriasBean.irATablaCategoria}"
+                                 immediate="true" style="margin-left: 10px;" />
+            </p:panel>
 
 
-				<h:outputLabel value="Nombre:" />
-				<p:inputText value="#{categoriasBean.categorias.nombre}" required="false" />
+            <p:panel header="Datos del Formulario" style="flex-grow: 1;">
+                <p:dataTable id="tablaDatos" value="#{categoriasBean.listaTablaCategorias}" var="mov"
+                             emptyMessage="No hay categorias registrados" rows="10" paginator="true" paginatorPosition="bottom">
 
-				<h:outputLabel value="Descripción:" />
-				<p:inputTextarea value="#{categoriasBean.categorias.descripcion}"
-					rows="3" />
+                    <p:column headerText="Categoria: ">
+                        <h:outputText value="#{mov.nombre}" />
+                    </p:column>
 
+                    <p:column headerText="Descripcion: ">
+                        <h:outputText value="#{mov.descripcion}" />
+                    </p:column>
+                </p:dataTable>
 
-			</h:panelGrid>
+                <p:separator />
 
-			<p:separator />
+                <p:commandButton value="Guardar" icon="pi pi-save" action="#{categoriasBean.guardar}" process="@form"
+                                 update="tablaDatos"
+                                 oncomplete="if (!args.validationFailed) PF('dlgConfirmacionGuardar').show();" />
+            </p:panel>
 
-			<p:commandButton value="Guardar" icon="pi pi-save"
-				action="#{categoriasBean.guardar}" update="@form" oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
+        </div>
 
-			<p:commandButton value="Regresar" 
-                 icon="pi pi-chevron-left"
-                 action="#{categoriasBean.irATablaCategoria}" 
-                 immediate="true" 
-                 style="margin-left: 10px;" />
-		</p:panel>
+        <p:dialog header="Mensaje" widgetVar="dlgConfirmacion" modal="true" closable="false" resizable="false">
+            <h:panelGrid columns="1" style="text-align: center;">
+                <h:outputText value="Datos guardados correctamente." />
+                <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacion').hide();" />
+            </h:panelGrid>
+        </p:dialog>
 
-			<p:dialog header="Mensaje" widgetVar="dlgConfirmacion" modal="true" closable="false">
-
-			<h:outputText value="Datos guardados correctamente." />
-			<br /><br />
-
-			<p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacion').hide(); location.reload();" />
-		</p:dialog>
-
-	</h:form>
-
+		<p:dialog header="Mensaje" widgetVar="dlgConfirmacionGuardar" modal="true" closable="false">
+            <h:outputText value="Datos guardados correctamente." />
+            <br /><br />
+            <p:commandButton value="Aceptar" type="button"
+                onclick="PF('dlgConfirmacionGuardar').hide(); location.reload();" />
+        </p:dialog>
+    </h:form>
 </h:body>
 </html>

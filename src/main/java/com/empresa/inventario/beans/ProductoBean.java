@@ -11,7 +11,6 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Categorias;
 import com.empresa.inventario.model.Productos;
 import com.empresa.inventario.service.ICategoriaService;
@@ -28,7 +27,9 @@ public class ProductoBean implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
+	private boolean modoManual = false; // Inicia en modo escáner (oculto)
+
 	private List<Categorias> listaCategorias;
 	private List<Productos> listaProductosGuardar = new ArrayList<Productos>();
 
@@ -38,7 +39,7 @@ public class ProductoBean implements Serializable {
 
 	@Inject
 	private transient IProductoService iProductoService;
-	
+
 	@Inject
 	private transient ICategoriaService iCategoriaService;
 
@@ -61,26 +62,15 @@ public class ProductoBean implements Serializable {
 	public void guardar() {
 
 		listaProductosGuardar.add(producto);
-		try {
-			if (producto == null) {
-				throw new ExceptionMessage("Vacio ");
-			} else {
-				//iProductoService.create(producto);
-			}
-		} catch (Exception e) {
-
-			e.getMessage();
-		}
 
 	}
-	
+
 	public void guardarProductoTabla() throws Exception {
-		
+
 		List<Productos> listaProductos = listaProductosGuardar;
-		
+
 		iProductoService.create(listaProductos);
-		
-		
+
 	}
 
 	public void guardarCambios() throws Exception {
@@ -119,16 +109,8 @@ public class ProductoBean implements Serializable {
 		return "/pages/admin/dashboard?faces-redirect=true";
 	}
 
-
-
 	public String irANuevoProducto() {
 		return "/pages/admin/productos/productos.xhtml?faces-redirect=true";
 	}
 
-	
-	private boolean modoManual = false; // Inicia en modo escáner (oculto)
-
-	// Getters y Setters
-	public boolean isModoManual() { return modoManual; }
-	public void setModoManual(boolean modoManual) { this.modoManual = modoManual; }
 }
