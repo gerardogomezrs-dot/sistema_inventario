@@ -19,5 +19,18 @@ public class ReportesMapper {
 		movimiento.setUsuarioResponsable(resultSet.getString("responsable"));
 		return movimiento;
 	}
+	
+	public static ReportesMovimiento rowInventariosValorizado(ResultSet resultSet) throws SQLException {
+		ReportesMovimiento movimiento = new ReportesMovimiento();
+		movimiento.setCodigoBarras(resultSet.getString("codigoBarras"));
+		movimiento.setNombreProducto(resultSet.getString("nombreProducto"));
+		movimiento.setCategoria(resultSet.getString("categoria"));
+		movimiento.setUbicacion(resultSet.getString("ubicacion"));
+		movimiento.setStockActual(resultSet.getString("stockActual"));
+		movimiento.setUnidad(resultSet.getString("unidad"));
+		movimiento.setPrecioUnitario(resultSet.getInt("precioUnitario"));
+		movimiento.setPrecioTotal(resultSet.getInt("valorTotal"));
+		return movimiento;
+	}
 
 }

@@ -7,7 +7,6 @@ import lombok.Data;
 @Data
 public class ReportesMovimiento {
 
-	
 	private int idMovimiento;
 	private Date fechaHora;
 	private String codigoBarras;
@@ -16,4 +15,9 @@ public class ReportesMovimiento {
 	private String tipoMovimiento;
 	private String cantidad;
 	private String usuarioResponsable;
+	private int precioUnitario;
+	private int precioTotal;
+	private String ubicacion;
+	private String stockActual;
+	private String unidad;
 }

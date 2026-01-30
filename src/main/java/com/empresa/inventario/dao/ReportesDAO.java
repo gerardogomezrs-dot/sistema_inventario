@@ -53,4 +53,40 @@ public class ReportesDAO {
 		return lista;
 	}
 
+	
+	public List<ReportesMovimiento> getInventarioValorizado() throws Exception{
+		String sql = "SELECT \r\n"
+				+ "    p.codigo_barras as codigoBarras,\r\n"
+				+ "    p.nombre as nombreProducto,\r\n"
+				+ "    c.nombre AS categoria,\r\n"
+				+ "    p.ubicacion as ubicacion,\r\n"
+				+ "    p.stock_actual as stockActual,\r\n"
+				+ "    p.unidad as unidad,\r\n"
+				+ "    p.precio_unitario as precioUnitario,\r\n"
+				+ "    (p.stock_actual * p.precio_unitario) AS valorTotal\r\n"
+				+ "FROM productos p\r\n"
+				+ "JOIN categorias c ON p.id_categoria = c.id_categoria\r\n"
+				+ "WHERE p.activo = 1\r\n"
+				+ "ORDER BY valorTotal DESC;";
+		List<ReportesMovimiento> lista = new ArrayList<ReportesMovimiento>();
+
+		try (Connection con = Conexion.getConexion();
+				PreparedStatement ps = con.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
+
+			// Usamos while para iterar sobre cada fila del ResultSet
+			while (rs.next()) {
+				ReportesMovimiento p = new ReportesMovimiento();
+				p = ReportesMapper.rowInventariosValorizado(rs);
+				// Agregamos el producto a la lista en cada iteración
+				lista.add(p);
+			
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		}
+		return lista;
+	}
+
 }

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Reporte de Inventario Valorizado</title>
+    <style>
+        .ui-panelgrid .ui-grid-responsive .ui-grid-row {
+            border: none !important;
+        }
+
+        .label {
+            font-weight: bold;
+            width: 150px;
+        }
+
+        .value {
+            width: 300px;
+        }
+
+        .flex-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        /* Estilo extra para asegurar que el botón resalte */
+        .btn-excel {
+            background-color: #217346 !important; /* Verde Excel */
+            border-color: #217346 !important;
+            color: white !important;
+        }
+    </style>
+    
+    <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
+</h:head>
+
+<h:body>
+
+    <h:form id="formReporte">
+        <p:panel header="Reporte de Inventario Valorizado">
+            
+            <h:panelGrid columns="5" cellpadding="5" style="margin-bottom: 20px;">
+                <p:outputLabel value="Desde:" />
+                <p:calendar value="#{inventarioReporteBean.fechaInicio}" pattern="dd/MM/yyyy" />
+
+                <p:outputLabel value="Hasta:" />
+                <p:calendar value="#{inventarioReporteBean.fechaFin}" pattern="dd/MM/yyyy" />
+
+                <p:commandButton value="Consultar" 
+                                 actionListener="#{inventarioReporteBean.buscarInventarioValorizado}"
+                                 update="tblMovimientos" 
+                                 icon="pi pi-search" />
+            </h:panelGrid>
+
+            <p:dataTable id="tblMovimientos" 
+             value="#{inventarioReporteBean.listaInventarioValorizado}" 
+             var="mov"
+             paginator="true" 
+             rows="20" 
+             emptyMessage="No se encontraron movimientos">
+    
+
+                <f:facet name="header">
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+                        <span style="font-weight: bold;">Lista de Movimientos</span>
+                        
+                        <p:commandButton value="Exportar Excel" 
+                                         icon="pi pi-file-excel" 
+                                         ajax="false" 
+                                         styleClass="btn-excel">
+                            <p:dataExporter type="xls" 
+                                            target="tblMovimientos" 
+                                            fileName="kardex_inventario" 
+                                            pageOnly="false" />
+                        </p:commandButton>
+                    </div>
+                </f:facet>
+ <p:column headerText="Codigo Barras" >
+                    <h:outputText value="#{mov.codigoBarras}" />
+                </p:column>
+
+
+                <p:column headerText="Producto" filterBy="#{mov.nombreProducto}" filterMatchMode="contains">
+                    <h:outputText value="#{mov.nombreProducto}" />
+                </p:column>
+
+                <p:column headerText="Categoria">
+                    <h:outputText value="#{mov.categoria}" />
+                </p:column>
+
+                <p:column headerText="Ubicacion" style="text-align: right;">
+                    <h:outputText value="#{mov.ubicacion}" />
+                </p:column>
+
+                  <p:column headerText="Stock Actual" style="text-align: right;">
+                    <h:outputText value="#{mov.stockActual}" />
+                </p:column>
+
+                 <p:column headerText="Precio Unitario" style="text-align: right;">
+                    <h:outputText value="#{mov.precioUnitario}" />
+                </p:column>
+
+                 <p:column headerText="Precio Total" style="text-align: right;">
+                    <h:outputText value="#{mov.precioTotal}" />
+                </p:column>
+
+                
+            </p:dataTable>
+        </p:panel>
+    </h:form>
+
+</h:body>
+</html>

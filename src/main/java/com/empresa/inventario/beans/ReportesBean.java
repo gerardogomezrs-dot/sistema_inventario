@@ -31,6 +31,8 @@ public class ReportesBean implements Serializable{/**
 	
 	private List<ReportesMovimiento> listaReporteMovimientos;
 	
+	private List<ReportesMovimiento> listaInventarioValorizado;
+	
 	public ReportesBean(){
 		
 	}
@@ -45,6 +47,7 @@ public class ReportesBean implements Serializable{/**
         cal.add(Calendar.DAY_OF_MONTH, -30);
         this.fechaInicio = cal.getTime();
         buscar();
+        buscarInventarioValorizado();
 	}
 	
 	
@@ -52,10 +55,17 @@ public class ReportesBean implements Serializable{/**
 		listaReporteMovimientos = iReporteService.movimientos(fechaInicio, fechaFin);
 	}
 	
+	public void buscarInventarioValorizado() throws Exception {
+		listaInventarioValorizado = iReporteService.reporteInventarioValorizado();
+	}
+	
+	
 	public String irAReporteMovimientos() {
 		return "/pages/admin/reportes/reporteMovimientos.xhtml?faces-redirect=true";
 	}
 	
+	public String irAReporteInventarioValorizado() {
+		return "/pages/admin/reportes/reporteInventarioValorizado.xhtml?faces-redirect=true";
+	}
 	
-
 }

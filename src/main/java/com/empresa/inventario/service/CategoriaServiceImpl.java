@@ -41,8 +41,12 @@ public class CategoriaServiceImpl implements ICategoriaService{
 	public List<Categorias> getAllCategorias() throws Exception {
 		List<Categorias> categorias = new ArrayList<Categorias>();
 		categorias = dao.getAllCategorias();
+		try {
 		if(categorias.size()==0) {
-			throw new ExceptionMessage("Lista Vacioa");
+			throw new ExceptionMessage("Lista Vacia");
+		}
+		}catch (Exception e) {
+			e.printStackTrace();
 		}
 		return categorias;
 	}
