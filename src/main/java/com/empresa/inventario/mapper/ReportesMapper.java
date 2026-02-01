@@ -32,5 +32,16 @@ public class ReportesMapper {
 		movimiento.setPrecioTotal(resultSet.getInt("valorTotal"));
 		return movimiento;
 	}
+	
+	public static ReportesMovimiento rowStockBajo(ResultSet resultSet) throws SQLException {
+		ReportesMovimiento movimiento = new ReportesMovimiento();
+		movimiento.setCodigoBarras(resultSet.getString("codigoBarras"));
+		movimiento.setNombreProducto(resultSet.getString("nombreProducto"));
+		movimiento.setStockActual(resultSet.getString("stockActual"));
+		movimiento.setStockMinimo(Integer.toString(resultSet.getInt("stockMinimo")));
+		movimiento.setFaltanteSugerido(Integer.toString(resultSet.getInt("faltanteSugerido")));
+		movimiento.setCategoria(resultSet.getString("categoria"));
+		return movimiento;
+	}
 
 }

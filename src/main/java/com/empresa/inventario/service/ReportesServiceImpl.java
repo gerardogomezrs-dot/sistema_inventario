@@ -48,6 +48,13 @@ public class ReportesServiceImpl implements IReporteService, Serializable{
 		}
 		return reportesMovimientos;
 	}
+
+	@Override
+	public List<ReportesMovimiento> reporteStockBajo() throws Exception {
+		List<ReportesMovimiento> list = new ArrayList<ReportesMovimiento>();
+		list = dao.getStockBajo();
+		return list;
+	}
 	
 
 }

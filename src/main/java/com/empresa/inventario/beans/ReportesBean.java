@@ -1,6 +1,7 @@
 package com.empresa.inventario.beans;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -33,6 +34,8 @@ public class ReportesBean implements Serializable{/**
 	
 	private List<ReportesMovimiento> listaInventarioValorizado;
 	
+	private List<ReportesMovimiento> listaStockMinimo;
+	
 	public ReportesBean(){
 		
 	}
@@ -48,8 +51,15 @@ public class ReportesBean implements Serializable{/**
         this.fechaInicio = cal.getTime();
         buscar();
         buscarInventarioValorizado();
+       
 	}
 	
+	
+	public String getNombreArchivoInventario() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
+        String fechaHoy = sdf.format(new Date());
+        return "inventario_valorizado_" + fechaHoy;
+    }
 	
 	public void buscar() throws Exception {
 		listaReporteMovimientos = iReporteService.movimientos(fechaInicio, fechaFin);
@@ -60,12 +70,21 @@ public class ReportesBean implements Serializable{/**
 	}
 	
 	
+	public void buscarStockBajo() throws Exception {
+		listaStockMinimo = iReporteService.reporteStockBajo();
+	}
+	
 	public String irAReporteMovimientos() {
 		return "/pages/admin/reportes/reporteMovimientos.xhtml?faces-redirect=true";
 	}
 	
 	public String irAReporteInventarioValorizado() {
 		return "/pages/admin/reportes/reporteInventarioValorizado.xhtml?faces-redirect=true";
+	}
+	
+	
+	public String irAReporteStockBajo() {
+		return "/pages/admin/reportes/reporteStockBajo.xhtml?faces-redirect=true";
 	}
 	
 }

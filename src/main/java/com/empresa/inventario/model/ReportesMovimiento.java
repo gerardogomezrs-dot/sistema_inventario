@@ -19,5 +19,7 @@ public class ReportesMovimiento {
 	private int precioTotal;
 	private String ubicacion;
 	private String stockActual;
+	private String stockMinimo;
 	private String unidad;
+	private String faltanteSugerido;
 }

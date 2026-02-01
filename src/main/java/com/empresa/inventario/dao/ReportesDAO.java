@@ -89,4 +89,39 @@ public class ReportesDAO {
 		return lista;
 	}
 
+	
+
+	public List<ReportesMovimiento> getStockBajo() throws Exception{
+		String sql = "SELECT \r\n"
+				+ "    p.codigo_barras as codigoBarras,\r\n"
+				+ "    p.nombre as nombreProducto,\r\n"
+				+ "    p.stock_actual as stockActual,\r\n"
+				+ "    p.stock_minimo as stockMinimo,\r\n"
+				+ "    (p.stock_minimo - p.stock_actual) AS faltanteSugerido,\r\n"
+				+ "    c.nombre AS categoria\r\n"
+				+ "FROM productos p\r\n"
+				+ "INNER JOIN categorias c ON p.id_categoria = c.id_categoria\r\n"
+				+ "WHERE p.stock_actual <= p.stock_minimo \r\n"
+				+ "AND p.activo = 1";
+		List<ReportesMovimiento> lista = new ArrayList<ReportesMovimiento>();
+
+		try (Connection con = Conexion.getConexion();
+				PreparedStatement ps = con.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
+
+			// Usamos while para iterar sobre cada fila del ResultSet
+			while (rs.next()) {
+				ReportesMovimiento p = new ReportesMovimiento();
+				p = ReportesMapper.rowInventariosValorizado(rs);
+				// Agregamos el producto a la lista en cada iteración
+				lista.add(p);
+			
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		}
+		return lista;
+	}
+
 }

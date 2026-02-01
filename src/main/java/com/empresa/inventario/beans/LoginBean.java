@@ -108,6 +108,9 @@ public class LoginBean implements Serializable {
 		if(usuario.getRol().equals("almacen")) {
 			ruta = "/pages/almacen/dashboard.xhtml?faces-redirect=true";
 		}
+		if(usuario.getRol().equals("ventas")) {
+			ruta = "/pages/almacen/dashboard.xhtml?faces-redirect=true";
+		}
 		return ruta;
 	}
 
