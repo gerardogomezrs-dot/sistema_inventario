@@ -25,7 +25,7 @@ public class ReportesMapper {
 		movimiento.setCodigoBarras(resultSet.getString("codigoBarras"));
 		movimiento.setNombreProducto(resultSet.getString("nombreProducto"));
 		movimiento.setCategoria(resultSet.getString("categoria"));
-		movimiento.setUbicacion(resultSet.getString("ubicacion"));
+		movimiento.setUbicacion(resultSet.getString("ubicacionProducto"));
 		movimiento.setStockActual(resultSet.getString("stockActual"));
 		movimiento.setUnidad(resultSet.getString("unidad"));
 		movimiento.setPrecioUnitario(resultSet.getInt("precioUnitario"));

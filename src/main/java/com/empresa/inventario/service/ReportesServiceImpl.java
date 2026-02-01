@@ -56,5 +56,4 @@ public class ReportesServiceImpl implements IReporteService, Serializable{
 		return list;
 	}
 	
-
 }

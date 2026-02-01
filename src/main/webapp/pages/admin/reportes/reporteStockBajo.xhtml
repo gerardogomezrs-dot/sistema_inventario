@@ -43,19 +43,8 @@
     <h:form id="formReporte">
         <p:panel header="Reporte de Stock Bajo">
 
-            <h:panelGrid columns="5" cellpadding="5" style="margin-bottom: 20px;">
-                <p:outputLabel value="Desde:" />
-                <p:calendar value="#{inventarioReporteBean.fechaInicio}" pattern="dd/MM/yyyy" />
-
-                <p:outputLabel value="Hasta:" />
-                <p:calendar value="#{inventarioReporteBean.fechaFin}" pattern="dd/MM/yyyy" />
-
-                <p:commandButton value="Consultar" actionListener="#{inventarioReporteBean.buscarInventarioValorizado}"
-                    update="tblMovimientos" icon="pi pi-search" />
-            </h:panelGrid>
-
-            <p:dataTable id="tblMovimientos" value="#{inventarioReporteBean.listaInventarioValorizado}" var="mov"
-                paginator="true" rows="20" emptyMessage="No se encontraron movimientos">
+            <p:dataTable id="tblMovimientos" value="#{inventarioReporteBean.listaStockBajo}" var="mov" paginator="true"
+                rows="20" emptyMessage="No se encontraron movimientos">
                 <f:facet name="header">
                     <div style="display: flex; justify-content: center; align-items: center; gap: 15px;">
                         <span style="font-weight: bold;">Lista de Movimientos</span>
@@ -63,37 +52,36 @@
                         <p:commandButton value="Exportar Excel" icon="pi pi-file-excel" ajax="false"
                             styleClass="btn-excel">
                             <p:dataExporter type="xls" target="tblMovimientos"
-                                fileName="#{inventarioBean.nombreArchivoInventario}" pageOnly="false" />
+                                fileName="#{inventarioReporteBean.exportarReporteReabastecimiento}" pageOnly="false" />
                         </p:commandButton>
                     </div>
                 </f:facet>
                 <p:column headerText="Codigo Barras">
                     <h:outputText value="#{mov.codigoBarras}" />
                 </p:column>
-
-
                 <p:column headerText="Producto" filterBy="#{mov.nombreProducto}" filterMatchMode="contains">
                     <h:outputText value="#{mov.nombreProducto}" />
                 </p:column>
-
                 <p:column headerText="Categoria">
                     <h:outputText value="#{mov.categoria}" />
                 </p:column>
-
-                <p:column headerText="Ubicacion" style="text-align: right;">
-                    <h:outputText value="#{mov.ubicacion}" />
-                </p:column>
-
                 <p:column headerText="Stock Actual" style="text-align: right;">
                     <h:outputText value="#{mov.stockActual}" />
                 </p:column>
 
-                <p:column headerText="Precio Unitario" style="text-align: right;">
-                    <h:outputText value="#{mov.precioUnitario}" />
+                <p:column headerText="Stock Minimo" style="text-align: right;">
+                    <h:outputText value="#{mov.stockMinimo}" />
                 </p:column>
 
-                <p:column headerText="Precio Total" style="text-align: right;">
-                    <h:outputText value="#{mov.precioTotal}" />
+                <p:column headerText="Estado Stock">
+                    <h:outputText value="CRÍTICO" style="color: red; font-weight: bold;"
+                        rendered="#{mov.stockActual le mov.stockMinimo / 2}" />
+                    <h:outputText value="BAJO" style="color: orange; font-weight: bold;"
+                        rendered="#{mov.stockActual gt mov.stockMinimo / 2}" />
+                </p:column>
+
+                <p:column headerText="Faltante Sugerido" style="text-align: right;">
+                    <h:outputText value="#{mov.faltanteSugerido}" />
                 </p:column>
 
 

@@ -59,7 +59,7 @@ public class ReportesDAO {
 				+ "    p.codigo_barras as codigoBarras,\r\n"
 				+ "    p.nombre as nombreProducto,\r\n"
 				+ "    c.nombre AS categoria,\r\n"
-				+ "    p.ubicacion as ubicacion,\r\n"
+				+ "    p.ubicacion as ubicacionProducto,\r\n"
 				+ "    p.stock_actual as stockActual,\r\n"
 				+ "    p.unidad as unidad,\r\n"
 				+ "    p.precio_unitario as precioUnitario,\r\n"
@@ -112,10 +112,9 @@ public class ReportesDAO {
 			// Usamos while para iterar sobre cada fila del ResultSet
 			while (rs.next()) {
 				ReportesMovimiento p = new ReportesMovimiento();
-				p = ReportesMapper.rowInventariosValorizado(rs);
+				p = ReportesMapper.rowStockBajo(rs);
 				// Agregamos el producto a la lista en cada iteración
 				lista.add(p);
-			
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
