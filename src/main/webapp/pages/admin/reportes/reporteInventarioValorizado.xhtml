@@ -41,6 +41,10 @@
 <h:body>
 
     <h:form id="formReporte">
+
+     <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{inventarioReporteBean.irAReportePrincipal}" immediate="true"
+            style="margin-left:10px;" />
+            
         <p:panel header="Reporte de Inventario Valorizado">
 
             <p:dataTable id="tblMovimientos" value="#{inventarioReporteBean.listaInventarioValorizado}" var="mov"

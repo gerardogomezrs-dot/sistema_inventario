@@ -41,6 +41,9 @@
 <h:body>
 
     <h:form id="formReporte">
+        <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{inventarioReporteBean.irAReportePrincipal}" immediate="true"
+            style="margin-left:10px;" />
+            
         <p:panel header="Reporte de Stock Bajo">
 
             <p:dataTable id="tblMovimientos" value="#{inventarioReporteBean.listaStockBajo}" var="mov" paginator="true"

@@ -38,9 +38,9 @@ public class ReportesBean implements Serializable {
 	private List<ReportesMovimiento> listaStockBajo;
 
 	private String nombreArchivo_1;
-	
+
 	private String nombreArchivo_2;
-	
+
 	private String nombreArchivo_3;
 
 	public ReportesBean() {
@@ -67,19 +67,19 @@ public class ReportesBean implements Serializable {
 	public void exportarReporteReabastecimiento() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
 		String fechaHoy = sdf.format(new Date());
-		 nombreArchivo_1 = "Reporte Reabastecimiento " + fechaHoy;
+		nombreArchivo_1 = "Reporte Reabastecimiento " + fechaHoy;
 	}
 
 	public void exportarReporteInventarioValorizado() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
 		String fechaHoy = sdf.format(new Date());
-	 nombreArchivo_2 = "Reporte Inventario Valorizado " + fechaHoy;
+		nombreArchivo_2 = "Reporte Inventario Valorizado " + fechaHoy;
 	}
 
 	public void exportarReporteMovimientos() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
 		String fechaHoy = sdf.format(new Date());
-		 nombreArchivo_3 = "Reporte Movimientos " + fechaHoy;
+		nombreArchivo_3 = "Reporte Movimientos " + fechaHoy;
 	}
 
 	public void buscar() throws Exception {
@@ -104,6 +104,10 @@ public class ReportesBean implements Serializable {
 
 	public String irAReporteStockBajo() {
 		return "/pages/admin/reportes/reporteStockBajo.xhtml?faces-redirect=true";
+	}
+
+	public String irAReportePrincipal() {
+		return "/pages/admin/reportes/reportes.xhtml?faces-redirect=true";
 	}
 
 }

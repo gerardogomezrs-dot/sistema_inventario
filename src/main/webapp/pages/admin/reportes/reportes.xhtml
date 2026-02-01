@@ -1,52 +1,91 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
 <h:head>
-    <title>Reportes</title>
+    <title>Gestión de Reportes | Inventario</title>
     <style>
-        .ui-panelgrid .ui-grid-responsive .ui-grid-row {
-            border: none !important;
-        }
-
-        .label {
-            font-weight: bold;
-            width: 150px;
-        }
-
-        .value {
-            width: 300px;
-        }
-
-        .flex-container {
-            display: flex;
-            justify-content: space-around;
-            align-items: flex-start;
-            gap: 20px;
+        body {
+            background-color: #f4f7fb;
+            font-family: var(--font-family);
+            margin: 0;
             padding: 20px;
         }
+
+        /* Contenedor principal centrado */
+        .report-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Mejora visual del Panel */
+        .ui-panel.custom-menu-panel .ui-panel-titlebar {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            font-size: 1.2rem;
+        }
+
+        /* Grid de botones estilo "Cards" */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        /* Estilo moderno para los botones */
+        .report-btn {
+            height: 100px !important;
+            font-size: 1.1rem !important;
+            transition: transform 0.2s, box-shadow 0.2s !important;
+            border-radius: 8px !important;
+        }
+
+        .report-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+        }
+
+        /* Iconos más grandes dentro de los botones */
+        .report-btn .ui-button-icon-left {
+            font-size: 1.5rem !important;
+        }
     </style>
-    <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
 </h:head>
 
 <h:body>
+    <div class="report-container">
+        <h:form id="menuForm">
+            <p:growl id="messages" showDetail="true" />
 
-    <h:form id="menuForm">
+            <p:panel header="Panel de Control: Gestión de Reportes" styleClass="custom-menu-panel">
+                
+                <div class="dashboard-grid">
+                    
+                    <p:commandButton value="Reporte Movimientos" 
+                                     action="#{inventarioReporteBean.irAReporteMovimientos()}"
+                                     icon="pi pi-history"
+                                     styleClass="report-btn ui-button-outlined" />
 
-        <p:panel header="Menú Gestión Reportes">
-            <h:panelGrid columns="2" cellpadding="10" styleClass="menu-grid" style="width:100%">
+                    <p:commandButton value="Inventario Valorizado"
+                                     action="#{inventarioReporteBean.irAReporteInventarioValorizado}" 
+                                     icon="pi pi-dollar"
+                                     styleClass="report-btn ui-button-success" />
 
-                <p:commandButton value="Reporte Movimientos" action="#{inventarioReporteBean.irAReporteMovimientos()}"
-                    icon="pi pi-history" />
+                    <p:commandButton value="Reabastecimiento" 
+                                     action="#{inventarioReporteBean.irAReporteStockBajo}" 
+                                     icon="pi pi-shopping-cart"
+                                     styleClass="report-btn ui-button-warning" />
 
-                <p:commandButton value="Reporte Inventario Valorizado"
-                    action="#{inventarioReporteBean.irAReporteInventarioValorizado}" icon="pi pi-dollar" />
+                </div>
 
-                <p:commandButton value="Reporte de Reabastecimiento" action="#{inventarioReporteBean.irAReporteStockBajo}" icon="pi pi-shopping-cart" />
-
-            </h:panelGrid>
-        </p:panel>
-
-    </h:form>
-
+                <f:facet name="footer">
+                    <small>Seleccione un módulo para generar el informe detallado.</small>
+                </f:facet>
+            </p:panel>
+        </h:form>
+    </div>
 </h:body>
 </html>
