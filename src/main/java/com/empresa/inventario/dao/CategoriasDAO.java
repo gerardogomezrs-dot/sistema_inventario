@@ -12,14 +12,13 @@ import com.empresa.inventario.model.Categorias;
 import com.empresa.inventario.utils.Conexion;
 
 public class CategoriasDAO {
-	
+
 	private CategoriaMapper mapper = new CategoriaMapper();;
 
 	public CategoriasDAO() {
 
 	}
 
-	
 	public void guardar(Categorias e) throws Exception {
 		Connection conexion = Conexion.getConexion();
 
@@ -34,12 +33,11 @@ public class CategoriasDAO {
 		ps.close();
 		conexion.close();
 	}
-	
+
 	public void actualizar(Categorias e) throws Exception {
 		Connection conexion = Conexion.getConexion();
 
-		String sql = "UPDATE categorias SET " + "nombre = ?, " + "descripcion = ? "
-				+ " WHERE id_categoria = ?";
+		String sql = "UPDATE categorias SET " + "nombre = ?, " + "descripcion = ? " + " WHERE id_categoria = ?";
 
 		PreparedStatement ps = conexion.prepareStatement(sql);
 
@@ -51,8 +49,8 @@ public class CategoriasDAO {
 		ps.close();
 		conexion.close();
 	}
-	
-	public List<Categorias> getAllCategorias() throws Exception{
+
+	public List<Categorias> getAllCategorias() throws Exception {
 		String sql = "SELECT * FROM categorias";
 		List<Categorias> lista = new ArrayList<>();
 
@@ -66,7 +64,7 @@ public class CategoriasDAO {
 				p = mapper.mapRow(rs);
 				// Agregamos el producto a la lista en cada iteración
 				lista.add(p);
-			
+
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -74,7 +72,7 @@ public class CategoriasDAO {
 		}
 		return lista;
 	}
-	
+
 	public void eliminarCategoria(int idCategoria) throws Exception {
 
 		Connection connection = Conexion.getConexion();
@@ -88,5 +86,4 @@ public class CategoriasDAO {
 		connection.close();
 
 	}
-
 }
