@@ -1,18 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
     <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
-    <style>
-        .ui-panelgrid .ui-grid-responsive .ui-grid-row { border: none !important; }
-        .label { font-weight: bold; width: 150px; }
-        .value { width: 300px; }
+    <style type="text/css">
+        .ui-panelgrid .ui-grid-responsive .ui-grid-row {
+            border: none !important;
+        }
+
+        .label {
+            font-weight: bold;
+            width: 150px;
+        }
+
+        .value {
+            width: 300px;
+        }
 
         /* Estilo para el diseño de dos columnas (Formulario izquierda, Tabla derecha) */
         .main-container {
@@ -55,6 +63,7 @@
     </style>
 
     <script type="text/javascript">
+        //<![CDATA[
         // Función para forzar el foco en el input invisible
         function forceFocus() {
             var isManual = "#{productoBean.modoManual}" === "true";
@@ -66,28 +75,29 @@
             }
         }
 
-        $(document).ready(function() { forceFocus(); });
-        $(document).click(function() { forceFocus(); });
+        $(document).ready(function () { forceFocus(); });
+        $(document).click(function () { forceFocus(); });
+        //]]>
     </script>
-    
+
     <title>Registrar Producto</title>
 </h:head>
 
 <h:body>
 
-    <h:form id="formProducto">
+    <h:form id="formProducto" enctype="multipart/form-data">
         <p:growl id="messages" showDetail="true" />
         <div class="main-container">
-            
+
             <div class="form-side">
-                <p:panel header="Registro de Producto">
+                <p:panel header="Registro de Producto" style="width: 600px; margin: 0 auto;">
 
                     <p:messages id="msgs" closable="true">
                         <p:autoUpdate />
                     </p:messages>
 
                     <h:panelGrid columns="2" columnClasses="label,value">
-                        
+
                         <h:outputLabel value="Método de Entrada:" />
                         <p:selectOneButton value="#{productoBean.modoManual}" id="toggleModo">
                             <f:selectItem itemLabel="Lector Escáner" itemValue="false" />
@@ -102,24 +112,19 @@
                                     <span class="scanner-text">
                                         <i class="pi pi-clone"></i> ESPERANDO LECTURA DEL LÁSER...
                                     </span>
-                                    <p:inputText id="barcodeScanner" 
-                                                 value="#{productoBean.producto.codigoBarras}" 
-                                                 styleClass="hidden-scanner"
-                                                 autocomplete="off">
+                                    <p:inputText id="barcodeScanner" value="#{productoBean.producto.codigoBarras}"
+                                        styleClass="hidden-scanner" autocomplete="off">
                                         <p:ajax event="change" process="@this" update="panelBarcode" />
                                     </p:inputText>
-                                    <h:outputText value="Último capturado: #{productoBean.producto.codigoBarras}" 
-                                                  rendered="#{not empty productoBean.producto.codigoBarras}"
-                                                  style="font-size: 0.8em; color: #666;" />
+                                    <h:outputText value="Último capturado: #{productoBean.producto.codigoBarras}"
+                                        rendered="#{not empty productoBean.producto.codigoBarras}"
+                                        style="font-size: 0.8em; color: #666;" />
                                 </div>
                             </h:panelGroup>
 
                             <h:panelGroup rendered="#{productoBean.modoManual}">
-                                <p:inputText id="barcodeManual" 
-                                             value="#{productoBean.producto.codigoBarras}" 
-                                             required="false" 
-                                             placeholder="Ingrese código manualmente..."
-                                             style="width: 100%;">
+                                <p:inputText id="barcodeManual" value="#{productoBean.producto.codigoBarras}"
+                                    required="false" placeholder="Ingrese código manualmente..." style="width: 100%;">
                                     <p:ajax event="blur" process="@this" />
                                 </p:inputText>
                             </h:panelGroup>
@@ -134,10 +139,8 @@
                         <p:outputLabel for="categoria" value="Categoría:" />
                         <p:selectOneMenu id="categoria" value="#{productoBean.producto.idCategoria}">
                             <f:selectItem itemLabel="Seleccione una categoría" itemValue="" noSelectionOption="true" />
-                            <f:selectItems value="#{productoBean.listaCategorias}" 
-                                           var="cat" 
-                                           itemLabel="#{cat.nombre}"
-                                           itemValue="#{cat.idCategoria}" />
+                            <f:selectItems value="#{productoBean.listaCategorias}" var="cat" itemLabel="#{cat.nombre}"
+                                itemValue="#{cat.idCategoria}" />
                         </p:selectOneMenu>
 
                         <h:outputLabel value="Unidad:" />
@@ -162,20 +165,28 @@
 
                     <p:separator />
 
-                    <p:commandButton value="Guardar" icon="pi pi-save" action="#{productoBean.guardar}" 
-                                     process="@form" update="tablaRegistros"
-                                     oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
+                    <p:commandButton value="Guardar" icon="pi pi-save" action="#{productoBean.guardar}" process="@form"
+                        update="formProducto" oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
 
                     <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{productoBean.getIndex()}"
-                                     immediate="true" style="margin-left: 10px;" />
+                        immediate="true" style="margin-left: 10px;" />
+
+                    <div class="upload-section" style="margin-top: 20px;">
+                        <h:outputLabel value="Cargar desde archivo (CSV, Excel, JSON):"
+                            style="display:block; margin-bottom:5px; font-weight:bold;" />
+                        <p:fileUpload value="#{productoBean.uploadedFile}" mode="simple" skinSimple="true"
+                            label="Seleccionar Archivo" chooseIcon="pi pi-upload" />
+
+                        <p:commandButton value="Procesar Archivo" action="#{productoBean.cargaArchivos}" ajax="false"
+                            styleClass="ui-button-help" style="margin-top: 5px;" icon="pi pi-file-import" />
+                    </div>
                 </p:panel>
             </div>
 
             <div class="table-side">
-                <p:dataTable id="tablaRegistros" value="#{productoBean.listaProductosGuardar}" var="prod" 
-                             emptyMessage="No hay productos registrados en esta sesión."
-                             scrollable="true" scrollHeight="500">
-                    
+                <p:dataTable id="tablaRegistros" value="#{productoBean.listaProductosGuardar}" var="prod"
+                    emptyMessage="No hay productos registrados en esta sesión." scrollable="true" scrollHeight="500">
+
                     <f:facet name="header">Productos Guardados</f:facet>
 
                     <p:column headerText="Código" width="100">
@@ -205,15 +216,16 @@
                     </p:column>
                 </p:dataTable>
 
-                
                 <p:separator />
 
-                <p:commandButton value="Guardar" icon="pi pi-save" action="#{productoBean.guardarProductoTabla}" process="@form"
+                <p:commandButton value="Guardar Tabla" icon="pi pi-save" action="#{productoBean.guardarProductoTabla}"
+                    process="@form" update="tablaRegistros"
                     oncomplete="if (!args.validationFailed) PF('dlgConfirmacionGuardar').show();" />
             </div>
 
         </div>
-         <p:dialog header="Mensaje" widgetVar="dlgConfirmacion" modal="true" closable="false">
+
+        <p:dialog header="Mensaje" widgetVar="dlgConfirmacion" modal="true" closable="false">
             <h:outputText value="Datos guardados correctamente." />
             <br /><br />
             <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacion').hide();" />
@@ -222,11 +234,11 @@
         <p:dialog header="Mensaje" widgetVar="dlgConfirmacionGuardar" modal="true" closable="false">
             <h:outputText value="Datos guardados correctamente." />
             <br /><br />
-            <p:commandButton value="Aceptar" type="button"
-                onclick="PF('dlgConfirmacionGuardar').hide(); location.reload();" />
+            <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacionGuardar').hide();" />
         </p:dialog>
 
     </h:form>
 
 </h:body>
+
 </html>

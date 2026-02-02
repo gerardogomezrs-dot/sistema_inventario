@@ -21,6 +21,9 @@
         <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{productoBean.menuPrincipal}"
             immediate="true" style="margin-left:10px;" />
 
+                <p:separator />
+
+
         <p:dataTable id="tablaProductos" var="prod" value="#{productoBean.list}" rows="10" paginator="true"
             emptyMessage="No se encontraron productos">
 

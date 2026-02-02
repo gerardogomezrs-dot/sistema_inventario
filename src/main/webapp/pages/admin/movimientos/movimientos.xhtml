@@ -81,7 +81,7 @@
                 <p:separator />
 
                 <p:commandButton value="Guardar" icon="pi pi-save" action="#{movimientosBean.save}"
-                    update="msgs tablaDatos" oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
+                    update="formMovimiento" oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
 
                 <p:commandButton value="Regresar" icon="pi pi-arrow-left"
                     action="#{movimientosBean.irATablaMovimientos}" immediate="true" style="margin-left: 10px;"
@@ -130,7 +130,8 @@
 
                 <p:separator />
 
-                <p:commandButton value="Guardar" icon="pi pi-save" action="#{movimientosBean.saveTable}" process="@form"
+                <p:commandButton value="Guardar" icon="pi pi-save" action="#{movimientosBean.saveTable}" process="@this"
+                    update="tablaDatos msgs"
                     oncomplete="if (!args.validationFailed) PF('dlgConfirmacionGuardar').show();" />
             </p:panel>
 
@@ -147,8 +148,7 @@
         <p:dialog header="Mensaje" widgetVar="dlgConfirmacionGuardar" modal="true" closable="false">
             <h:outputText value="Datos guardados correctamente." />
             <br /><br />
-            <p:commandButton value="Aceptar" type="button"
-                onclick="PF('dlgConfirmacionGuardar').hide(); location.reload();" />
+            <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacionGuardar').hide();" />
         </p:dialog>
     </h:form>
 </h:body>

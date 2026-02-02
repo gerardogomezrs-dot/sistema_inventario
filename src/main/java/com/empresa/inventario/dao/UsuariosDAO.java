@@ -27,17 +27,15 @@ public class UsuariosDAO {
 
 			try (ResultSet rs = ps.executeQuery()) {
 
-				if (rs.next()) { // 🔥 CLAVE
+				if (rs.next()) { 
 					p = mapper.mapRowLogin(rs);
 				}
 			}
-
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw e; // opcional pero recomendado
+			throw e; 
 		}
-
-		return p; // null si no hubo resultados
+		return p; 
 	}
 
 	public List<Usuario> getAll() throws Exception {
@@ -101,18 +99,14 @@ public class UsuariosDAO {
 		ps.setBoolean(6, usuario.isActivo());
 		ps.setInt(7, usuario.getIdUsuario());
 		ps.executeUpdate();
-
 		ps.close();
 		conexion.close();
 	}
 
 	public void eliminarUsuario(int idUsuario) throws Exception {
-
 		Connection connection = Conexion.getConexion();
-
 		String sql = "DELETE FROM USUARIOS WHERE ID_USUARIO = ?";
 		PreparedStatement statement = connection.prepareStatement(sql);
-
 		statement.setInt(1, idUsuario);
 		statement.executeUpdate();
 		statement.close();

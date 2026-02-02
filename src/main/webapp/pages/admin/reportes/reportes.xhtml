@@ -52,6 +52,13 @@
         .report-btn .ui-button-icon-left {
             font-size: 1.5rem !important;
         }
+
+        /* Estilo para el contenedor del footer */
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
     </style>
 </h:head>
 
@@ -82,7 +89,15 @@
                 </div>
 
                 <f:facet name="footer">
-                    <small>Seleccione un módulo para generar el informe detallado.</small>
+                    <div class="footer-container">
+                        <small>Seleccione un módulo para generar el informe detallado.</small>
+                        
+                        <p:commandButton value="Regresar al Inicio" 
+                                         icon="pi pi-home" 
+                                         action="#{inventarioReporteBean.irADashboard}"
+                                         styleClass="ui-button-flat"
+                                         immediate="true" />
+                    </div>
                 </f:facet>
             </p:panel>
         </h:form>
