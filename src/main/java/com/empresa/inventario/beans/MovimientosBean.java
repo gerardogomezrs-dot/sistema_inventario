@@ -87,14 +87,12 @@ public class MovimientosBean implements Serializable {
 
 	public void save() throws Exception {
 		listaMovimientosGuardar.add(movimientos);
-		
-		this.movimientos = new Movimientos();
+		int idActual = this.movimientos.getIdUsuario(); 
+	    this.movimientos = new Movimientos();
+	    this.movimientos.setIdUsuario(idActual);
 	}
 
 	public void saveTable() throws Exception {
-		
-		System.out.println("Guardar");
-		
 		if(listaMovimientosGuardar != null && !listaMovimientosGuardar.isEmpty()) {
 		service.save(listaMovimientosGuardar);
 		}
