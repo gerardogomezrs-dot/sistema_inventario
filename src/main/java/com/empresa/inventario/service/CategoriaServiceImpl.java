@@ -73,9 +73,7 @@ public class CategoriaServiceImpl implements ICategoriaService {
 	public List<Categorias> cargarArchivo(UploadedFile file) {
 		List<Categorias> categorias = new ArrayList<Categorias>();
 		String fileName = "";
-
-		fileName = file.getFileName().toLowerCase();
-		
+		fileName = file.getFileName().toLowerCase();		
 		if (fileName.endsWith(".csv")) {
 			try {
 				categorias = leerCSV(file);
