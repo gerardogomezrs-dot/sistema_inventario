@@ -8,12 +8,8 @@ import com.empresa.inventario.model.Productos;
 import com.empresa.inventario.model.Usuario;
 
 public class MovimientosMapper {
-	
-	public MovimientosMapper() {
-		// TODO Auto-generated constructor stub
-	}
 
-	public Movimientos mapRow(ResultSet rs) throws SQLException{
+	public Movimientos mapRow(ResultSet rs) throws SQLException {
 		Movimientos p = new Movimientos();
 		p.setIdMovimiento(rs.getInt("id_movimiento"));
 		p.setIdProducto(rs.getInt("id_producto"));
@@ -32,7 +28,7 @@ public class MovimientosMapper {
 		productos.setNombre(rs.getString("nombreProducto"));
 		p.setProductos(productos);
 		return p;
-		
+
 	}
-	
+
 }

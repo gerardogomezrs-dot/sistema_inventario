@@ -79,11 +79,4 @@ public class PasswordUtil {
         return new SecretKeySpec(finalKey, "AES");
     }
     
-    public static void main(String[] args) throws Exception {
-		String clave = "1234";
-	String encriptado =	encrypt(clave);
-	System.err.println("Encriptado: "+ encriptado.toString());
-		String decodificar = decrypt(encriptado);
-		System.err.println(decodificar);
-	}
 }

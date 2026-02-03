@@ -15,7 +15,7 @@ public class ReportesMovimiento {
 	private String tipoMovimiento;
 	private String cantidad;
 	private String usuarioResponsable;
-	private int precioUnitario;
+	private Double precioUnitario;
 	private int precioTotal;
 	private String ubicacion;
 	private String stockActual;

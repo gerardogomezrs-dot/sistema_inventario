@@ -9,8 +9,10 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -136,26 +138,39 @@ public class ProductosServiceImp implements IProductoService {
 			Cell cellNombre = row.getCell(0);
 			Cell cellDescripcion = row.getCell(1);
 			Cell cellCodigoBarras = row.getCell(2);
-			Cell cellIdCategoria = row.getCell(4);
-			Cell cellUnidad = row.getCell(5);
-			Cell cellPrecioUnitario = row.getCell(6);
-			Cell cellStockActual = row.getCell(7);
-			Cell cellStockMinimo = row.getCell(8);
-			Cell cellUbicacion = row.getCell(9);
-			Cell cellActivo = row.getCell(10);
+			Cell cellIdCategoria = row.getCell(3);
+			Cell cellUnidad = row.getCell(4);
+			Cell cellPrecioUnitario = row.getCell(5);
+			Cell cellStockActual = row.getCell(6);
+			Cell cellStockMinimo = row.getCell(7);
+			Cell cellUbicacion = row.getCell(8);
+			Cell cellActivo = row.getCell(9);
 
+			
 			productos = new Productos();
 			
-			productos.setNombre(cellNombre.getStringCellValue());
-			productos.setDescripcion(cellDescripcion.getStringCellValue());
-			productos.setCodigoBarras(cellCodigoBarras.getStringCellValue());
-			productos.setIdCategoria(Integer.parseInt(cellIdCategoria.getStringCellValue()));
-			productos.setUnidad(cellUnidad.getStringCellValue());
-			productos.setPrecioUnitario(Double.parseDouble(cellPrecioUnitario.getStringCellValue()));
-			productos.setStockActual(Integer.parseInt(cellStockActual.getStringCellValue()));
-			productos.setStockMinimo(Integer.getInteger(cellStockMinimo.getStringCellValue()));
-			productos.setUbicacion(cellUbicacion.getStringCellValue());
-			productos.setActivo(cellActivo.getBooleanCellValue());
+			DataFormatter dataFormatter =new DataFormatter();
+			
+			
+			productos.setNombre(dataFormatter.formatCellValue(cellNombre));
+			productos.setDescripcion(dataFormatter.formatCellValue(cellDescripcion));
+			productos.setCodigoBarras(dataFormatter.formatCellValue(cellCodigoBarras));
+			String idCategoria = dataFormatter.formatCellValue(cellIdCategoria);
+			int stock = NumberUtils.toInt(idCategoria, 0);
+			
+			productos.setIdCategoria(stock);
+			productos.setUnidad(dataFormatter.formatCellValue(cellUnidad));
+			String precioUnitario = dataFormatter.formatCellValue(cellPrecioUnitario);
+			double precioU = NumberUtils.toDouble(precioUnitario, 0.0);
+			productos.setPrecioUnitario(precioU);
+			String stockActual = dataFormatter.formatCellValue(cellStockActual);
+			String stockMinimo = dataFormatter.formatCellValue(cellStockMinimo);
+			int stockAct = NumberUtils.toInt(stockActual, 0);
+			int stockMin = NumberUtils.toInt(stockMinimo, 0);
+			productos.setStockActual(stockAct);
+			productos.setStockMinimo(stockMin);
+			productos.setUbicacion(dataFormatter.formatCellValue(cellUbicacion));
+			productos.setActivo(Boolean.parseBoolean(dataFormatter.formatCellValue(cellActivo)));
 			
 			productosList.add(productos);
 		}
@@ -167,11 +182,13 @@ public class ProductosServiceImp implements IProductoService {
 		Productos p;
 		try (CSVReader csvReader = new CSVReader(new InputStreamReader(uploadedFile.getInputstream()))) {
 			String[] fila;
+			csvReader.readNext();
 			while ((fila = csvReader.readNext()) != null) {
 				if (fila.length >= 2) {
+				
 					p = new Productos();
-					p.setCodigoBarras(fila[0]);
-					p.setNombre(fila[1]);
+					p.setCodigoBarras(fila[1]);
+					p.setNombre(fila[0]);
 					p.setDescripcion(fila[2]);
 					p.setIdCategoria(Integer.parseInt(fila[3]));
 					p.setUnidad(fila[4]);

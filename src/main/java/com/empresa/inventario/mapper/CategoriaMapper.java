@@ -7,7 +7,6 @@ import com.empresa.inventario.model.Categorias;
 
 public class CategoriaMapper {
 	
-	public CategoriaMapper() {}
 	
 	public Categorias mapRow(ResultSet resultSet) throws SQLException{
 		Categorias categorias = new Categorias();
@@ -16,5 +15,4 @@ public class CategoriaMapper {
 		categorias.setDescripcion(resultSet.getString("descripcion"));
 		return categorias;
 	}
-
 }

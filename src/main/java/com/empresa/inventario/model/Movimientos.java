@@ -6,7 +6,7 @@ import java.util.Date;
 import lombok.Data;
 
 @Data
-public class Movimientos implements Serializable{
+public class Movimientos implements Serializable {
 
 	/**
 	 * 
@@ -20,8 +20,8 @@ public class Movimientos implements Serializable{
 	private String origenDestino;
 	private int idUsuario;
 	private String observaciones;
-	
+
 	private Usuario usuario;
-	
+
 	private Productos productos;
 }

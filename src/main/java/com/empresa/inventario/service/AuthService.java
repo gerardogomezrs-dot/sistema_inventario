@@ -54,7 +54,7 @@ public class AuthService implements IAuthService, Serializable {
 		}
 
 		if (password.equals(passwordDecoficado)) {
-			logger.info("Binvenido");
+			logger.info("Bienvenido");
 		} else {
 			throw new ExceptionMessage("Contraseña incorrecta");
 		}

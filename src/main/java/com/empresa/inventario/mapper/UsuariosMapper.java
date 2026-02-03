@@ -7,10 +7,7 @@ import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.utils.PasswordUtil;
 
 public class UsuariosMapper {
-	
-	public UsuariosMapper() {
-		
-	}
+
 
 	public Usuario mapRow(ResultSet rs) throws Exception{
 		Usuario p = new Usuario();
@@ -18,7 +15,7 @@ public class UsuariosMapper {
 		p.setNombre(rs.getString("nombre"));
 		p.setRol(rs.getString("rol"));
 		p.setPermisos(rs.getString("permisos"));
-		p.setUserName(rs.getString("userName"));
+		p.setUserName(rs.getString("user_name"));
 		String passwordDecodificado = rs.getString("password");
 		String password = PasswordUtil.decrypt(passwordDecodificado); 
 		p.setPassword(password);
@@ -33,7 +30,7 @@ public class UsuariosMapper {
 		p.setNombre(rs.getString("nombre"));
 		p.setRol(rs.getString("rol"));
 		p.setPermisos(rs.getString("permisos"));
-		p.setUserName(rs.getString("userName"));
+		p.setUserName(rs.getString("user_name"));
 		p.setPassword(rs.getString("password"));
 		p.setActivo(rs.getBoolean("activo"));
 		return p;

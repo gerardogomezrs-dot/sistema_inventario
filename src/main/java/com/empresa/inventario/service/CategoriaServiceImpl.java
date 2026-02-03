@@ -25,6 +25,8 @@ public class CategoriaServiceImpl implements ICategoriaService {
 
 	private CategoriasDAO dao = new CategoriasDAO();
 
+	private Categorias cat;
+
 	@Override
 	public void save(List<Categorias> list) throws Exception {
 		for (Categorias categorias : list) {
@@ -73,7 +75,7 @@ public class CategoriaServiceImpl implements ICategoriaService {
 	public List<Categorias> cargarArchivo(UploadedFile file) {
 		List<Categorias> categorias = new ArrayList<Categorias>();
 		String fileName = "";
-		fileName = file.getFileName().toLowerCase();		
+		fileName = file.getFileName().toLowerCase();
 		if (fileName.endsWith(".csv")) {
 			try {
 				categorias = leerCSV(file);
@@ -105,7 +107,10 @@ public class CategoriaServiceImpl implements ICategoriaService {
 
 			String nombreCategoria = cellNombre.getStringCellValue();
 			String descripcionCategoria = cellDescripcion.getStringCellValue().toString();
-			categorias.add(new Categorias(0, nombreCategoria, descripcionCategoria));
+			cat = new Categorias();
+			cat.setNombre(nombreCategoria);
+			cat.setDescripcion(descripcionCategoria);
+			categorias.add(cat);
 
 		}
 		workbook.close();
@@ -118,14 +123,15 @@ public class CategoriaServiceImpl implements ICategoriaService {
 			String[] fila;
 			while ((fila = csvReader.readNext()) != null) {
 				if (fila.length >= 2) {
-					categorias.add(new Categorias(0, fila[0], fila[1]));
+					cat = new Categorias();
+					cat.setNombre(fila[0]);
+					cat.setDescripcion(fila[1]);
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return categorias;
-
 	}
 
 }

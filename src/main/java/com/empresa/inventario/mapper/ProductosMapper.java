@@ -8,10 +8,6 @@ import com.empresa.inventario.model.Productos;
 
 public class ProductosMapper {
 	
-	public ProductosMapper() {
-		
-	}
-	
 	public Productos mapRow(ResultSet rs) throws SQLException{
 		Productos p = new Productos();
 		p.setIdProducto(rs.getInt("id_producto"));

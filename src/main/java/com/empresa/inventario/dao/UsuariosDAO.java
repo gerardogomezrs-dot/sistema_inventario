@@ -19,7 +19,7 @@ public class UsuariosDAO {
 	public Usuario login(String userName, String password) throws Exception {
 
 		Usuario p = null;
-		String sql = "SELECT * FROM usuarios WHERE userName = ? ";
+		String sql = "SELECT * FROM usuarios WHERE user_name = ? ";
 
 		try (Connection con = Conexion.getConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -64,7 +64,7 @@ public class UsuariosDAO {
 
 		Connection conexion = Conexion.getConexion();
 
-		String sql = "INSERT INTO usuarios " + "(nombre, rol, permisos,userName, password, activo) "
+		String sql = "INSERT INTO usuarios " + "(nombre, rol, permisos,user_name, password, activo) "
 				+ "VALUES (?, ?, ?, ?, ?, ?)";
 
 		PreparedStatement ps = conexion.prepareStatement(sql);
@@ -86,7 +86,7 @@ public class UsuariosDAO {
 
 		Connection conexion = Conexion.getConexion();
 
-		String sql = "UPDATE usuarios SET " + "nombre = ?, " + "rol = ?, " + "permisos = ?, " + "userName = ?, "
+		String sql = "UPDATE usuarios SET " + "nombre = ?, " + "rol = ?, " + "permisos = ?, " + "user_name = ?, "
 				+ "password = ?, " + "activo = ? " + "WHERE id_usuario = ?";
 
 		PreparedStatement ps = conexion.prepareStatement(sql);
