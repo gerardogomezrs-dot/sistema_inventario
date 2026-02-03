@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.empresa.inventario.model.Usuario;
-import com.empresa.inventario.utils.PasswordUtil;
 
 public class UsuariosMapper {
 
@@ -17,11 +16,10 @@ public class UsuariosMapper {
 		p.setPermisos(rs.getString("permisos"));
 		p.setUserName(rs.getString("user_name"));
 		String passwordDecodificado = rs.getString("password");
-		String password = PasswordUtil.decrypt(passwordDecodificado); 
+		String password = passwordDecodificado; 
 		p.setPassword(password);
 		p.setActivo(rs.getBoolean("activo"));
-		return p;
-		
+		return p;	
 	}
 	
 	public Usuario mapRowLogin(ResultSet rs) throws SQLException{

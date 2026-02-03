@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import com.empresa.inventario.dao.UsuariosDAO;
 import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Usuario;
-import com.empresa.inventario.utils.PasswordUtil;
 
 @Named("authService")
 @ApplicationScoped
@@ -21,9 +20,7 @@ public class AuthService implements IAuthService, Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
 	private UsuariosDAO dao = new UsuariosDAO();
-
 	private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
 	@Override
@@ -48,11 +45,11 @@ public class AuthService implements IAuthService, Serializable {
 
 		String passwordDecoficado = null;
 		try {
-			passwordDecoficado = PasswordUtil.decrypt(usuario.getPassword());
+			passwordDecoficado = usuario.getPassword();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
 		if (password.equals(passwordDecoficado)) {
 			logger.info("Bienvenido");
 		} else {

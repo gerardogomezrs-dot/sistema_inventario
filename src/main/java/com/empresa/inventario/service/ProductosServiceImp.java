@@ -30,7 +30,7 @@ import com.opencsv.CSVReader;
 public class ProductosServiceImp implements IProductoService {
 
 	private ProductosDAO productosDAO;
-	
+
 	private Productos productos;
 
 	@Override
@@ -134,7 +134,7 @@ public class ProductosServiceImp implements IProductoService {
 		for (Row row : sheet) {
 			if (row.getRowNum() == 0)
 				continue;
-			
+
 			Cell cellNombre = row.getCell(0);
 			Cell cellDescripcion = row.getCell(1);
 			Cell cellCodigoBarras = row.getCell(2);
@@ -146,18 +146,16 @@ public class ProductosServiceImp implements IProductoService {
 			Cell cellUbicacion = row.getCell(8);
 			Cell cellActivo = row.getCell(9);
 
-			
 			productos = new Productos();
-			
-			DataFormatter dataFormatter =new DataFormatter();
-			
-			
+
+			DataFormatter dataFormatter = new DataFormatter();
+
 			productos.setNombre(dataFormatter.formatCellValue(cellNombre));
 			productos.setDescripcion(dataFormatter.formatCellValue(cellDescripcion));
 			productos.setCodigoBarras(dataFormatter.formatCellValue(cellCodigoBarras));
 			String idCategoria = dataFormatter.formatCellValue(cellIdCategoria);
 			int stock = NumberUtils.toInt(idCategoria, 0);
-			
+
 			productos.setIdCategoria(stock);
 			productos.setUnidad(dataFormatter.formatCellValue(cellUnidad));
 			String precioUnitario = dataFormatter.formatCellValue(cellPrecioUnitario);
@@ -171,7 +169,7 @@ public class ProductosServiceImp implements IProductoService {
 			productos.setStockMinimo(stockMin);
 			productos.setUbicacion(dataFormatter.formatCellValue(cellUbicacion));
 			productos.setActivo(Boolean.parseBoolean(dataFormatter.formatCellValue(cellActivo)));
-			
+
 			productosList.add(productos);
 		}
 		return productosList;
@@ -185,7 +183,7 @@ public class ProductosServiceImp implements IProductoService {
 			csvReader.readNext();
 			while ((fila = csvReader.readNext()) != null) {
 				if (fila.length >= 2) {
-				
+
 					p = new Productos();
 					p.setCodigoBarras(fila[1]);
 					p.setNombre(fila[0]);
