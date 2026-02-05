@@ -1,10 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui">
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
-    <title>Registrar Movimiento</title>
-    <style>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
+    <style type="text/css">
         .ui-panelgrid .ui-grid-responsive .ui-grid-row {
             border: none !important;
         }
@@ -18,79 +22,189 @@
             width: 300px;
         }
 
-        /* Contenedor para poner form y tabla lado a lado */
-        .flex-container {
+        /* Estilo para el diseño de dos columnas (Formulario izquierda, Tabla derecha) */
+        .main-container {
             display: flex;
-            justify-content: space-around;
             align-items: flex-start;
             gap: 20px;
             padding: 20px;
         }
+
+        .form-side {
+            flex: 0 0 600px;
+        }
+
+        .table-side {
+            flex: 1;
+        }
+
+        /* Estilo para que el input sea invisible pero reciba datos del láser */
+        .hidden-scanner {
+            opacity: 0 !important;
+            position: absolute !important;
+            left: -9999px !important;
+            height: 0 !important;
+        }
+
+        .scanner-box {
+            border: 2px dashed #2196F3;
+            padding: 15px;
+            text-align: center;
+            background: #f0f7ff;
+            border-radius: 5px;
+        }
+
+        .scanner-text {
+            color: #2196F3;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Alinea los textos a la derecha para que "apunten" al input */
+        .label {
+            width: 150px;
+            /* Ajusta este ancho según tu palabra más larga */
+            text-align: right;
+            font-weight: bold;
+            padding-right: 15px;
+            /* Espacio entre el texto y el campo */
+            vertical-align: middle;
+        }
+
+        /* El contenedor de los inputs */
+        .value {
+            text-align: left;
+            vertical-align: middle;
+        }
     </style>
+
+    <script type="text/javascript">
+        //<![CDATA[
+        // Función para forzar el foco en el input invisible
+        function forceFocus() {
+            var isManual = "#{productoBean.modoManual}" === "true";
+            if (!isManual) {
+                var input = document.getElementById('formProducto:barcodeScanner');
+                if (input) {
+                    input.focus();
+                }
+            }
+        }
+
+        $(document).ready(function () { forceFocus(); });
+        $(document).click(function () { forceFocus(); });
+        //]]>
+    </script>
+
+    <title>Registrar Movimiento</title>
 </h:head>
 
 <h:body>
-    <h:form id="formMovimiento">
-        <div class="flex-container">
 
-            <p:panel header="Registro de Movimiento" style="width: 550px;">
-                <p:messages id="msgs" closable="true" />
+    <h:form id="formMovimiento" enctype="multipart/form-data">
+        <p:growl id="messages" showDetail="true" />
+        <div class="main-container">
 
-                <h:panelGrid columns="2" columnClasses="label, value" cellpadding="5">
+            <div class="form-side">
+                <p:panel header="Registro de Movimientos" style="width: 600px; margin: 0 auto;">
 
-                    <p:outputLabel for="producto" value="Producto: *" />
-                    <p:selectOneMenu id="producto" value="#{movimientosBean.movimientos.idProducto}" required="true"
-                        style="width:100%">
-                        <f:selectItem itemLabel="Selecciona un producto" itemValue="" noSelectionOption="true" />
-                        <f:selectItems value="#{movimientosBean.listProductos}" var="cat" itemLabel="#{cat.nombre}"
-                            itemValue="#{cat.idProducto}" />
-                    </p:selectOneMenu>
+                    <p:messages id="msgs" closable="true">
+                        <p:autoUpdate />
+                    </p:messages>
 
-                    <p:outputLabel for="movimiento" value="Tipo de Movimiento: *" />
-                    <p:selectOneMenu id="movimiento" value="#{movimientosBean.movimientos.tipoMovimiento}"
-                        required="true" filter="true" filterMatchMode="contains" style="width:100%">
-                        <f:selectItem itemLabel="Seleccione una opción" itemValue="" noSelectionOption="true" />
-                        <f:selectItem itemLabel="Entrada" itemValue="Entrada" />
-                        <f:selectItem itemLabel="Salida" itemValue="Salida" />
-                        <f:selectItem itemLabel="Ajuste" itemValue="Ajuste" />
-                    </p:selectOneMenu>
+                    <h:panelGrid columns="2" cellpadding="5" columnClasses="label,value">
 
-                    <p:outputLabel value="Cantidad:" />
-                    <p:inputNumber value="#{movimientosBean.movimientos.cantidad}" decimalPlaces="0"
-                        style="width:100%" />
 
-                    <p:outputLabel value="Fecha:" />
-                    <p:calendar value="#{movimientosBean.movimientos.fechaHora}" pattern="dd/MM/yyyy HH:mm:ss"
-                        timeZone="America/Mexico_City" showButtonPanel="true" style="width:100%" />
+                        <h:outputLabel id="lblProducto"
+                            value="#{movimientosBean.mostrarScanner ? 'Scanner (Código): *' : 'Producto: *'}"
+                            style="font-weight: bold;" />
 
-                    <p:outputLabel value="Origen Destino:" />
-                    <p:inputText value="#{movimientosBean.movimientos.origenDestino}" style="width:100%" />
+                        <h:panelGroup id="grupoProducto">
+                            <div style="display: flex; gap: 5px; align-items: center;">
 
-                    <p:outputLabel value="Usuario logueado:" />
-                    <p:inputText value="#{loginBean.usuario.nombre}" disabled="true"
-                        style="width:100%; opacity: 0.7;" />
+                                <p:inputText id="scannerInput" value="#{movimientosBean.movimientos.codigoBarras}"
+                                    rendered="#{movimientosBean.mostrarScanner}" placeholder="Escanee con la App..."
+                                    style="width: 250px;" autocomplete="off"
+                                    onkeydown="return manejarEntradaApp(event);">
+                                    <p:ajax event="change" listener="#{movimientosBean.cargarInfoScanner()}"
+                                        process="@this" update="panelInfoExtra" />
+                                </p:inputText>
 
-                    <p:outputLabel value="Observaciones:" />
-                    <p:inputTextarea rows="3" value="#{movimientosBean.movimientos.observaciones}"
-                        style="width:100%;" />
+                                <p:selectOneMenu id="producto" value="#{movimientosBean.movimientos.idProducto}"
+                                    rendered="#{!movimientosBean.mostrarScanner}" style="width: 250px;">
+                                    <f:selectItem itemLabel="Selecciona un producto" itemValue=""
+                                        noSelectionOption="true" />
+                                    <f:selectItems value="#{movimientosBean.listProductos}" var="cat"
+                                        itemLabel="#{cat.nombre}" itemValue="#{cat.idProducto}" />
+                                </p:selectOneMenu>
 
-                </h:panelGrid>
+                                <p:commandButton
+                                    icon="#{movimientosBean.mostrarScanner ? 'pi pi-list' : 'pi pi-barcode'}"
+                                    actionListener="#{movimientosBean.toggleScanner()}"
+                                    update="lblProducto grupoProducto panelInfoExtra" process="@this" immediate="true"
+                                    title="Alternar entrada" />
+                            </div>
+                        </h:panelGroup>
 
-                <h:inputHidden value="#{movimientosBean.movimientos.idUsuario}" />
+                        <p:outputLabel value="Información:" rendered="#{movimientosBean.mostrarScanner}" />
 
-                <p:separator />
+                        <h:panelGroup id="panelInfoExtra">
 
-                <p:commandButton value="Guardar" icon="pi pi-save" action="#{movimientosBean.save}"
-                    update="formMovimiento" oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
+                            <p:inputText value="#{movimientosBean.infoProductoExtra}" readonly="true"
+                                rendered="#{movimientosBean.mostrarScanner}"
+                                style="width: 250px; background:#f0f4f7; font-weight:bold; color:#0d6efd;"
+                                placeholder="Esperando lectura..." />
+                        </h:panelGroup>
+                        <p:spacer width="20" height="40" />
 
-                <p:commandButton value="Regresar" icon="pi pi-arrow-left"
-                    action="#{movimientosBean.irATablaMovimientos}" immediate="true" style="margin-left: 10px;"
-                    styleClass="ui-button-secondary" />
-            </p:panel>
+                        <p:outputLabel for="movimiento" value="Tipo de Movimiento: *" />
+                        <p:selectOneMenu id="movimiento" value="#{movimientosBean.movimientos.tipoMovimiento}"
+                            filter="true" filterMatchMode="contains">
+                            <f:selectItem itemLabel="Seleccione una opción" itemValue="" noSelectionOption="true" />
+                            <f:selectItem itemLabel="Entrada" itemValue="Entrada" />
+                            <f:selectItem itemLabel="Salida" itemValue="Salida" />
+                            <f:selectItem itemLabel="Ajuste" itemValue="Ajuste" />
+                        </p:selectOneMenu>
 
-            <p:panel header="Datos del Formulario" style="flex-grow: 1;">
-                <p:dataTable id="tablaDatos" value="#{movimientosBean.listaMovimientosGuardar}" var="mov"
-                    emptyMessage="No hay movimientos registrados" rows="10" paginator="true" paginatorPosition="bottom">
+                        <h:outputLabel value="Cantidad:" />
+                        <p:inputText value="#{movimientosBean.movimientos.cantidad}" required="false" />
+
+                        <h:outputLabel value="Fecha:" />
+                        <p:calendar value="#{movimientosBean.movimientos.fechaHora}" pattern="dd/MM/yyyy HH:mm:ss"
+                            timeZone="America/Mexico_City" showButtonPanel="true" />
+
+                        <h:outputLabel value="Origen Destino:" />
+                        <p:inputText value="#{movimientosBean.movimientos.origenDestino}" />
+
+                        <h:outputLabel value="Usuario logueado:" />
+                        <p:inputText value="#{loginBean.usuario.nombre}" />
+
+                        <h:outputLabel value="Observaciones:" />
+                        <p:inputTextarea rows="3" value="#{movimientosBean.movimientos.observaciones}" />
+
+                    </h:panelGrid>
+
+                    <h:inputText value="#{movimientosBean.movimientos.idUsuario}" />
+                    <h:inputText value="#{movimientosBean.movimientos.idProducto}" />
+
+                    <p:separator />
+
+                    <p:separator />
+
+                    <p:commandButton value="Guardar" icon="pi pi-save" action="#{movimientosBean.save}" process="@form"
+                        update="formMovimiento"
+                        oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
+
+                    <p:commandButton value="Regresar" icon="pi pi-chevron-left"
+                        action="#{movimientosBean.irATablaMovimientos}" immediate="true" style="margin-left: 10px;" />
+
+                </p:panel>
+            </div>
+
+            <div class="table-side">
+                <p:dataTable id="tablaRegistros" value="#{movimientosBean.listaMovimientosGuardar}" var="mov" rows="10"
+                    paginator="true" paginatorPosition="bottom" emptyMessage="No hay movimientos registrados">
 
                     <p:column headerText="Producto">
                         <h:outputText value="#{mov.idProducto}" />
@@ -114,35 +228,24 @@
                         <h:outputText value="#{mov.origenDestino}" />
                     </p:column>
 
-                    <p:column headerText="Usuario Responsable">
+                    <p:column headerText="Responsable">
                         <h:outputText value="#{loginBean.usuario.nombre}" />
                     </p:column>
 
-                    <p:column headerText="Id Usuario oculto" visible="false">
-                        <h:outputText value="#{mov.idUsuario}" />
-                    </p:column>
-
-                    <p:column headerText="Observaciones">
-                        <h:outputText value="#{mov.observaciones}" />
-                    </p:column>
-
                 </p:dataTable>
-
                 <p:separator />
 
-                <p:commandButton value="Guardar" icon="pi pi-save" action="#{movimientosBean.saveTable}" process="@this"
-                    update="tablaDatos msgs"
+                <p:commandButton value="Guardar Tabla" icon="pi pi-save" action="#{movimientosBean.saveTable}"
+                    process="@form" update="tablaRegistros"
                     oncomplete="if (!args.validationFailed) PF('dlgConfirmacionGuardar').show();" />
-            </p:panel>
-
+            </div>
 
         </div>
 
-        <p:dialog header="Mensaje" widgetVar="dlgConfirmacion" modal="true" closable="false" resizable="false">
-            <h:panelGrid columns="1" style="text-align: center;">
-                <h:outputText value="Datos guardados correctamente." />
-                <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacion').hide();" />
-            </h:panelGrid>
+        <p:dialog header="Mensaje" widgetVar="dlgConfirmacion" modal="true" closable="false">
+            <h:outputText value="Datos guardados correctamente." />
+            <br /><br />
+            <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacion').hide();" />
         </p:dialog>
 
         <p:dialog header="Mensaje" widgetVar="dlgConfirmacionGuardar" modal="true" closable="false">
@@ -150,7 +253,9 @@
             <br /><br />
             <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacionGuardar').hide();" />
         </p:dialog>
+
     </h:form>
+
 </h:body>
 
 </html>

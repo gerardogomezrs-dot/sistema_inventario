@@ -79,4 +79,13 @@ public class PasswordUtil {
         return new SecretKeySpec(finalKey, "AES");
     }
     
+    
+    public static void main(String[] args) {
+		try {
+			String passwordCodificado = PasswordUtil.encrypt("12345678");
+			System.err.println(passwordCodificado);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

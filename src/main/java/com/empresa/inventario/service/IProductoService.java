@@ -17,4 +17,6 @@ public interface IProductoService {
 	List<Productos> getAll() throws Exception;
 
 	List<Productos> cargaArchivos(UploadedFile uploadedFile) throws Exception;
+	
+	Productos getByCodigoBarras(String codigoBarras) throws Exception;
 	}

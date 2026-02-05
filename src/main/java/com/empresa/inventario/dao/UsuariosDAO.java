@@ -10,6 +10,7 @@ import java.util.List;
 import com.empresa.inventario.mapper.UsuariosMapper;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.utils.Conexion;
+import com.empresa.inventario.utils.PasswordUtil;
 
 public class UsuariosDAO {
 
@@ -72,7 +73,7 @@ public class UsuariosDAO {
 		ps.setString(2, usuario.getRol());
 		ps.setString(3, usuario.getPermisos());
 		ps.setString(4, usuario.getUserName());
-		ps.setString(5, usuario.getPassword());
+		ps.setString(5, PasswordUtil.encrypt(usuario.getPassword()));
 		ps.setBoolean(6, usuario.isActivo());
 
 		ps.executeUpdate();
@@ -94,7 +95,7 @@ public class UsuariosDAO {
 		ps.setString(2, usuario.getRol());
 		ps.setString(3, usuario.getPermisos());
 		ps.setString(4, usuario.getUserName());
-		ps.setString(5, usuario.getPassword());
+		ps.setString(5, PasswordUtil.encrypt(usuario.getPassword()));
 		ps.setBoolean(6, usuario.isActivo());
 		ps.setInt(7, usuario.getIdUsuario());
 		ps.executeUpdate();

@@ -143,5 +143,26 @@ public class ProductosDAO {
 		}
 		return p;
 	}
+	
+	public Productos getByIdCodigoBarras(String codigoBarras) throws Exception {
+		String sql = "SELECT * FROM productos where codigo_barras = ?";
+		Productos p = new Productos();
+		try (Connection con = Conexion.getConexion();
+				PreparedStatement ps = con.prepareStatement(sql);
+				) {
+			ps.setString(1, codigoBarras);
+			ResultSet rs = ps.executeQuery();
+			// Usamos while para iterar sobre cada fila del ResultSet
+			if (rs.next()) {
+			p  =	mapper.mapRowBy(rs);
+			
+				// Agregamos el producto a la lista en cada iteración
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		}
+		return p;
+	}
 
 }

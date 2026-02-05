@@ -206,4 +206,14 @@ public class ProductosServiceImp implements IProductoService {
 		return productos;
 	}
 
+	@Override
+	public Productos getByCodigoBarras(String codigoBarras) throws Exception {
+		Productos productos =  new  Productos();
+		if(codigoBarras != null) {
+			productos = productosDAO.getByIdCodigoBarras(codigoBarras);
+		}
+		
+		return productos;
+	}
+
 }

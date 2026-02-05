@@ -7,9 +7,8 @@
 
 <h:head>
     <title>Sistema de Inventario - Panel de Control</title>
-     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
-    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
-    <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces"/>
+    <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+    
     <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
     
     <style>
@@ -26,6 +25,13 @@
         }
         .menu-grid .ui-button { width: 100%; margin-bottom: 5px; }
         .ui-panel { margin-top: 10px; }
+        
+        /* Mejoramos el estilo del botón de salida */
+        .btn-logout {
+            background-color: #d9534f !important; 
+            color: white !important; 
+            border: none !important;
+        }
     </style>
 </h:head>
 
@@ -35,8 +41,11 @@
         <p:menubar>
             <p:menuitem value="Inicio" url="dashboard.xhtml" icon="pi pi-home"/>
             <f:facet name="options">
-                <p:commandButton value="Cerrar Sesión" action="#{loginBean.logout}" 
-                                 icon="pi pi-power-off" style="background-color: #d9534f; color: white; border: none;" />
+                <p:commandButton value="Cerrar Sesión" 
+                                 action="#{loginBean.logout}" 
+                                 icon="pi pi-power-off" 
+                                 ajax="false"
+                                 styleClass="btn-logout" />
             </f:facet>
         </p:menubar>
 
@@ -46,7 +55,7 @@
                     <p:panel header="Datos de la Sesión">
                         <p:messages id="messages" showDetail="true" closable="true" />
                         
-                        <h:panelGrid columns="2" cellpadding="10">
+                        <h:panelGrid columns="2" cellpadding="10" style="width:100%">
                             <h:outputText value="Nombre:" style="font-weight:bold" />
                             <h:outputText value="#{loginBean.usuario.nombre}" />
 
@@ -62,12 +71,12 @@
                 <div class="ui-g-12 ui-md-8">
                     <p:panel header="Menú Principal">
                         <h:panelGrid columns="2" cellpadding="10" styleClass="menu-grid" style="width:100%">
+                            <p:commandButton value="Ver Perfil" 
+                                             action="#{navegacionAlmacenBean.irAPerfil()}" 
+                                             icon="pi pi-user"
+                                             ajax="false" />
                             
-                           <p:commandButton value="Ver Perfil" 
-                                             action="#{navBean.irAUsuarios()}" 
-                                             icon="pi pi-users" />
-                            
-                        </h:panelGrid>
+                            </h:panelGrid>
                     </p:panel>
                 </div>
             </div>

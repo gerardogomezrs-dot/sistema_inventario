@@ -42,9 +42,9 @@
 
     <h:form id="formReporte">
 
-     <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{inventarioReporteBean.irAReportePrincipal}" immediate="true"
-            style="margin-left:10px;" />
-            
+        <p:commandButton value="Regresar" icon="pi pi-chevron-left"
+            action="#{inventarioReporteBean.irAReportePrincipal}" immediate="true" style="margin-left:10px;" />
+
         <p:panel header="Reporte de Inventario Valorizado">
 
             <p:dataTable id="tblMovimientos" value="#{inventarioReporteBean.listaInventarioValorizado}" var="mov"
@@ -84,11 +84,15 @@
                 </p:column>
 
                 <p:column headerText="Precio Unitario" style="text-align: right;">
-                    <h:outputText value="#{mov.precioUnitario}" />
+                    <h:outputText value="#{mov.precioUnitario}">
+                        <f:convertNumber type="currency" currencySymbol="$" />
+                    </h:outputText>
                 </p:column>
 
                 <p:column headerText="Precio Total" style="text-align: right;">
-                    <h:outputText value="#{mov.precioTotal}" />
+                    <h:outputText value="#{mov.precioTotal}">
+                        <f:convertNumber type="currency" currencySymbol="$" />
+                    </h:outputText>
                 </p:column>
 
 

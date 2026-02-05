@@ -24,4 +24,6 @@ public class Movimientos implements Serializable {
 	private Usuario usuario;
 
 	private Productos productos;
+	
+	private String codigoBarras;
 }
