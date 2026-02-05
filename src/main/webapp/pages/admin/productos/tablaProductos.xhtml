@@ -14,6 +14,9 @@
 
     <!-- FORM PRINCIPAL -->
     <h:form id="form">
+
+            <ui:include src="/pages/admin/menu.xhtml" />
+
         <p:growl id="msgs" showDetail="true" />
 
         <p:commandButton value="Nuevo Producto" icon="pi pi-save" action="#{productoBean.irANuevoProducto}" />

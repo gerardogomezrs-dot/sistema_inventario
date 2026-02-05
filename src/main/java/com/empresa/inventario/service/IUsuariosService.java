@@ -13,5 +13,7 @@ public interface IUsuariosService {
 	void delete(int idUsuario) throws Exception;
 
 	List<Usuario> getAll() throws Exception;
+	
+	void updateProfile(Usuario usuario) throws Exception;
 
 }

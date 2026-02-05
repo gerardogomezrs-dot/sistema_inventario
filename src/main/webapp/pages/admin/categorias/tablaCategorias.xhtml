@@ -10,6 +10,8 @@
 </h:head>
 <h:body>
     <h:form id="form">
+        <ui:include src="/pages/admin/menu.xhtml" />
+
         <p:growl id="msgs" showDetail="true" />
 
         <p:commandButton value="Nueva Categoria" icon="pi pi-save" action="#{categoriasBean.irANuevaCategoria}" />

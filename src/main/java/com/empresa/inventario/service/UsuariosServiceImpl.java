@@ -79,6 +79,14 @@ public class UsuariosServiceImpl implements IUsuariosService, Serializable {
 
 	}
 
+	@Override
+	public void updateProfile(Usuario usuario) throws Exception {
+		
+		dao = new UsuariosDAO();
+		dao.actualizar(usuario);
+		
+	}
+
 
 
 }

@@ -61,12 +61,10 @@ public class LoginBean implements Serializable {
 					FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("sessionUsuario",
 							usuario);
 
-					// ESTA ES LA CLAVE: Mantener mensajes a través de la redirección
 					FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
 
 					añadirMensaje(FacesMessage.SEVERITY_INFO, "¡Bienvenido!",
 							"Hola " + usuario.getNombre() + ", has iniciado sesión correctamente.");
-					// 2. Retornamos la ruta directamente
 					ruta = "/pages/almacen/dashboard.xhtml?faces-redirect=true";
 				}
 

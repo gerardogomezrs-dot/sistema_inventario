@@ -112,5 +112,24 @@ public class UsuariosDAO {
 		statement.close();
 		connection.close();
 	}
+	
+	public void actualizarPerfilUsuario(Usuario usuario) throws Exception {
+
+		Connection conexion = Conexion.getConexion();
+
+		String sql = "UPDATE usuarios SET " + "nombre = ?,  user_name = ?, "
+				+ "password = ?, " + "activo = ? " + "WHERE id_usuario = ?";
+
+		PreparedStatement ps = conexion.prepareStatement(sql);
+
+		ps.setString(1, usuario.getNombre());
+		ps.setString(4, usuario.getUserName());
+		ps.setString(5, PasswordUtil.encrypt(usuario.getPassword()));
+		ps.setBoolean(6, usuario.isActivo());
+		ps.setInt(7, usuario.getIdUsuario());
+		ps.executeUpdate();
+		ps.close();
+		conexion.close();
+	}
 
 }

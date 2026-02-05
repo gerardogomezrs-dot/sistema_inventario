@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+    <f:facet name="first">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    </f:facet>
+
+    <title>Perfil de Usuario</title>
+
+    <style>
+        .label {
+            font-weight: bold;
+            width: 150px;
+        }
+
+        .value {
+            width: 300px;
+        }
+
+        .flex-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+        }
+
+        /* Estilo visual para campos readonly */
+        .ui-state-disabled,
+        .readonly {
+            background-color: #f4f4f4 !important;
+            opacity: 0.8;
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <h:form id="formPerfilUsuario">
+                <ui:include src="/pages/admin/menu.xhtml" />
+
+        <div class="flex-container">
+            <p:panel header="Perfil Usuario" style="width: 600px; margin: 0 auto;">
+
+                <p:messages id="mensajes" showDetail="true" closable="true" />
+
+                <h:panelGrid columns="2" columnClasses="label,value" cellpadding="5">
+                    <p:outputLabel for="nombre" value="Nombre Completo:" />
+                    <p:inputText id="nombre" value="#{perfilUsuarioBean.usuario.nombre}" required="true" />
+
+                    <p:outputLabel for="userName" value="Nombre Usuario:" />
+                    <p:inputText id="userName" value="#{perfilUsuarioBean.usuario.userName}" required="true" />
+
+                    <p:outputLabel for="pass" value="Password:" />
+                    <p:password id="pass" value="#{perfilUsuarioBean.usuario.password}" required="true" />
+
+                    <p:outputLabel value="Permisos Asignados:" />
+                    <p:inputText value="#{perfilUsuarioBean.usuario.permisos}" readonly="true" styleClass="readonly" />
+
+                    <p:outputLabel value="Rol:" />
+                    <p:inputText value="#{perfilUsuarioBean.usuario.rol}" readonly="true" styleClass="readonly" />
+
+                    <p:outputLabel value="Estado:" />
+                    <p:selectBooleanCheckbox value="#{perfilUsuarioBean.usuario.activo}" />
+                </h:panelGrid>
+
+                <p:separator />
+
+                <div style="margin-top: 10px;">
+                    <p:commandButton value="Guardar" icon="pi pi-save" update="formPerfilUsuario"
+                        action="#{perfilUsuarioBean.actualizarPerfil}"
+                        oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
+
+                    <p:commandButton value="Regresar" icon="pi pi-chevron-left" immediate="true"
+                        style="margin-left: 10px;" action="#{perfilUsuarioBean.irAIndex}" />
+                </div>
+            </p:panel>
+        </div>
+    </h:form>
+
+    <p:dialog header="Mensaje" widgetVar="dlgConfirmacion" modal="true" appendTo="@(body)">
+        <h:form id="formDialogo">
+            <h:panelGrid columns="1" style="text-align: center;">
+                <h:outputText value="Datos guardados correctamente." />
+                <p:commandButton value="Aceptar" onclick="PF('dlgConfirmacion').hide();" type="button" />
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+</h:body>
+
+</html>
