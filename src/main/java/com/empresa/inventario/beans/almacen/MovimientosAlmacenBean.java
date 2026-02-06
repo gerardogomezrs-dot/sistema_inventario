@@ -7,18 +7,21 @@ import javax.inject.Named;
 
 import lombok.Data;
 
-@Named("reportesAlmacenBean") // Nombre para usar en el XHTML
+@Named("movimientosAlmacenBean") // Nombre para usar en el XHTML
 @javax.faces.view.ViewScoped
 @Data
-public class ReportesBean implements Serializable{/**
+public class MovimientosAlmacenBean implements Serializable{/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public ReportesBean() {
+	public MovimientosAlmacenBean() {
+		
 	}
+	
 	@PostConstruct
 	public void init() {
 		
 	}
+
 }

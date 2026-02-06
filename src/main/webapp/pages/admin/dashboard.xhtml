@@ -40,11 +40,17 @@
 
     <h:form id="formPrincipal">
 
-<ui:include src="/pages/admin/menu.xhtml" />
+ <p:menubar>
+            <p:menuitem value="Inicio" url="dashboard.xhtml" icon="pi pi-home" />
+            <f:facet name="options">
+                <p:commandButton value="Cerrar Sesión" action="#{loginBean.logout}" icon="pi pi-power-off"
+                    style="background-color: #d9534f; color: white; border: none;" />
+            </f:facet>
+        </p:menubar>
         <div class="ui-fluid">
             <div class="ui-g">
                 <div class="ui-g-12 ui-md-4">
-                    <p:panel header="Datos de la Sesión">
+                    <p:panel header="Bienvenido">
                         <p:messages id="messages" showDetail="true" closable="true" />
 
                         <h:panelGrid columns="2" cellpadding="10">

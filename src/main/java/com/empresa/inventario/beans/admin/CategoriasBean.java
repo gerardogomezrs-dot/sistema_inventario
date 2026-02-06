@@ -22,11 +22,9 @@ import lombok.Data;
 @javax.faces.view.ViewScoped
 @Data
 public class CategoriasBean implements Serializable {
-
 	/**
 	 * 
 	 */
-
 	private static final long serialVersionUID = 1L;
 
 	private List<Categorias> filteredList; // Lista para almacenar los resultados filtrados
