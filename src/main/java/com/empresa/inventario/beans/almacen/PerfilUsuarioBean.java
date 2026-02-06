@@ -1,22 +1,19 @@
-package com.empresa.inventario.beans.admin;
+package com.empresa.inventario.beans.almacen;
 
 import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
-import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Usuario;
-import com.empresa.inventario.service.IUsuariosService;
 
 import lombok.Data;
 
-@Named("perfilUsuarioBean") // Nombre para usar en el XHTML
+@Named("perfilUsuarioAlmacenBean") // Nombre para usar en el XHTML
 @javax.faces.view.ViewScoped
 @Data
 public class PerfilUsuarioBean implements Serializable {
@@ -29,21 +26,19 @@ public class PerfilUsuarioBean implements Serializable {
 
 	private Usuario usuario;
 
-	@Inject
-	private transient IUsuariosService iUsuariosService;
-
 	public PerfilUsuarioBean() {
 
 	}
 
 	@PostConstruct
 	public void init() {
+
 		Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.get("sessionUsuario");
 
 		if (user != null) {
 			usuario = user;
-			logger.info("LOG: Usuario recuperado de sesión: " + user.getNombre() + " "+ user.getPassword());
+			logger.info("LOG: Usuario recuperado de sesión: " + user.getNombre() + " " + user.getPassword());
 			String passwordDecodificado = null;
 			try {
 				passwordDecodificado = user.getPassword();
@@ -57,18 +52,11 @@ public class PerfilUsuarioBean implements Serializable {
 			logger.info("LOG: No hay ninguna sesión activa con 'sessionUsuario'");
 
 		}
+
 	}
 
 	public String irAIndex() {
-		return "/pages/admin/dashboard?faces-redirect=true";
-	}
-
-	public void actualizarPerfil() throws Exception {
-
-		if (usuario == null) {
-			throw new ExceptionMessage("Vacio");
-		}
-		iUsuariosService.updateProfile(usuario);
+		return "/pages/almacen/dashboard?faces-redirect=true";
 	}
 
 }

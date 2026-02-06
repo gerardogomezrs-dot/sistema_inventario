@@ -15,6 +15,9 @@ public class NavegacionAlmacenBean implements Serializable{/**
 	private static final long serialVersionUID = 1L;
 	
 	public String irAPerfil() {
-	    return "/pages/almacen/usuario/cuentaPerfil.xhtml?faces-redirect=true";
+	    return "/pages/almacen/usuario/cuentaPerfilAlmacen.xhtml?faces-redirect=true";
+	}
+	public String irAGestionCategorias() {
+	    return "/pages/almacen/categorias/consultaCategorias.xhtml?faces-redirect=true";
 	}
 }
