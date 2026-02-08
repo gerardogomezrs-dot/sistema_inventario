@@ -13,6 +13,7 @@ import javax.inject.Named;
 
 import org.primefaces.model.UploadedFile;
 
+import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Categorias;
 import com.empresa.inventario.model.Productos;
 import com.empresa.inventario.service.ICategoriaService;
@@ -112,6 +113,7 @@ public class ProductoBean implements Serializable {
 	}
 
 	public void cargaArchivos() throws Exception {
+		try {
 		if (uploadedFile == null || uploadedFile.getContents() == null) {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
@@ -122,6 +124,9 @@ public class ProductoBean implements Serializable {
 
 		FacesContext.getCurrentInstance().addMessage(null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
+	}catch (ExceptionMessage e) {
+		añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+	}
 	}
 
 	public String getIndex() {
@@ -135,5 +140,10 @@ public class ProductoBean implements Serializable {
 	public String irANuevoProducto() {
 		return "/pages/admin/productos/productos.xhtml?faces-redirect=true";
 	}
+	
+	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
+	}
+
 
 }

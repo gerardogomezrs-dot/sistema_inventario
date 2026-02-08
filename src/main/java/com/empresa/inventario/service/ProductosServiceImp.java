@@ -107,7 +107,6 @@ public class ProductosServiceImp implements IProductoService {
 
 		String fileName = "";
 		fileName = uploadedFile.getFileName().toLowerCase();
-		System.err.println("fileName " + fileName);
 
 		if (fileName.endsWith(".csv")) {
 			try {
@@ -123,6 +122,10 @@ public class ProductosServiceImp implements IProductoService {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+		
+		else {
+			throw new ExceptionMessage("Formato no admitido");
 		}
 		return productos;
 	}

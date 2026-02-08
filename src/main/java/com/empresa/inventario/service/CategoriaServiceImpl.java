@@ -89,6 +89,8 @@ public class CategoriaServiceImpl implements ICategoriaService {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		} else {
+			throw new ExceptionMessage("Formato no admitido");
 		}
 
 		return categorias;
@@ -98,7 +100,7 @@ public class CategoriaServiceImpl implements ICategoriaService {
 	private List<Categorias> leerExcel(UploadedFile file) throws Exception {
 		List<Categorias> categorias = new ArrayList<Categorias>();
 		Workbook workbook = WorkbookFactory.create(file.getInputstream());
-		Sheet sheet = workbook.getSheetAt(0); // Primera hoja
+		Sheet sheet = workbook.getSheetAt(0);
 		for (Row row : sheet) {
 			if (row.getRowNum() == 0)
 				continue;
@@ -118,6 +120,7 @@ public class CategoriaServiceImpl implements ICategoriaService {
 	}
 
 	private List<Categorias> leerCSV(UploadedFile file) throws Exception {
+		System.out.println("Nombre archiivo csv " + file.getFileName());
 		List<Categorias> categorias = new ArrayList<Categorias>();
 		try (CSVReader csvReader = new CSVReader(new InputStreamReader(file.getInputstream()))) {
 			String[] fila;
@@ -126,6 +129,7 @@ public class CategoriaServiceImpl implements ICategoriaService {
 					cat = new Categorias();
 					cat.setNombre(fila[0]);
 					cat.setDescripcion(fila[1]);
+					categorias.add(cat);
 				}
 			}
 		} catch (Exception e) {

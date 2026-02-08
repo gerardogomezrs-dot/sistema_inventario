@@ -13,10 +13,9 @@
                 <h:outputLabel value="Descripción:" />
                 <p:inputTextarea value="#{categoriasAlmacenBean.categorias.descripcion}" rows="3" />
 
-                <p:commandButton value="Guardar" icon="pi pi-save" action="#"
-                    update=":form:tablaCategorias :form:msgs"
+                <p:commandButton value="Guardar" icon="pi pi-save" action="#{categoriasAlmacenBean.actualizar}"
+                    update=":formPrincipal:tablaCategorias :formPrincipal:msgs"
                     oncomplete="if (!args.validationFailed) { PF('wdgEditar').hide(); }" />
-
             </h:panelGrid>
         </h:form>
     </p:dialog>

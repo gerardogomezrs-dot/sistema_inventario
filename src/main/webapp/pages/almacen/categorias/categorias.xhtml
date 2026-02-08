@@ -1,11 +1,9 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core" 
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
 
@@ -14,7 +12,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
     </f:facet>
-    
+
     <title>Registrar Categorias</title>
 
     <style>
@@ -39,7 +37,7 @@
             gap: 20px;
             padding: 20px;
         }
-        
+
         /* Ajuste para que el botón de carga se alinee bien */
         .upload-section {
             margin-top: 15px;
@@ -53,54 +51,51 @@
 
 <h:body>
 
-           
+
 
     <h:form id="formCategoria" enctype="multipart/form-data">
 
-            <ui:include src="/pages/admin/menu.xhtml" />
+        <ui:include src="/pages/almacen/menu.xhtml" />
+
+        <p:growl id="mensajes" showDetail="true" />
 
         <div class="flex-container">
             <p:panel header="Registro de Categorias" style="width: 600px; margin: 0 auto;">
 
-                <p:messages id="mensajes" showDetail="true" closable="true">
-                    <p:autoUpdate />
-                </p:messages>
+
 
                 <h:panelGrid columns="2" columnClasses="label,value">
                     <p:outputLabel for="nombre" value="Nombre:" />
-                    <p:inputText id="nombre" value="#{categoriasBean.categorias.nombre}" required="false" />
+                    <p:inputText id="nombre" value="#{categoriasAlmacenBean.categorias.nombre}" required="false" />
 
                     <p:outputLabel for="descripcion" value="Descripción:" />
-                    <p:inputTextarea id="descripcion" value="#{categoriasBean.categorias.descripcion}" rows="3" />
+                    <p:inputTextarea id="descripcion" value="#{categoriasAlmacenBean.categorias.descripcion}"
+                        rows="3" />
                 </h:panelGrid>
-                
+
                 <p:separator />
 
-                <p:commandButton value="Guardar" icon="pi pi-save" 
-                                 action="#{categoriasBean.listaTabla}"
-                                 update="formCategoria" 
-                                 oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
+                <p:commandButton value="Guardar" icon="pi pi-save"
+                    action="#{categoriasAlmacenBean.guardarCategoriasTabla}" update="formCategoria"
+                    oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
 
-                <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{categoriasBean.irATablaCategoria}"
-                                 immediate="true" style="margin-left: 10px;" />
+                <p:commandButton value="Regresar" icon="pi pi-chevron-left"
+                    action="#{categoriasAlmacenBean.irATablaCategoria}" immediate="true" style="margin-left: 10px;" />
 
                 <div class="upload-section">
-                    <h:outputLabel value="Cargar desde archivo (CSV, Excel):" style="display:block; margin-bottom:5px; font-weight:bold;"/>
-                    <p:fileUpload value="#{categoriasBean.uploadedFile}" mode="simple" skinSimple="true" 
-                                  label="Seleccionar Archivo" chooseIcon="pi pi-upload"/>
-                    
-                    <p:commandButton value="Procesar Archivo" 
-                                     action="#{categoriasBean.cargarArchivo}" 
-                                     ajax="false"
-                                     styleClass="ui-button-help" 
-                                     style="margin-top: 5px;" 
-                                     icon="pi pi-file-import"/>
+                    <h:outputLabel value="Cargar desde archivo (CSV, Excel):"
+                        style="display:block; margin-bottom:5px; font-weight:bold;" />
+                    <p:fileUpload value="#{categoriasAlmacenBean.uploadedFile}" mode="simple" skinSimple="true"
+                        label="Seleccionar Archivo" chooseIcon="pi pi-upload" />
+
+                    <p:commandButton value="Procesar Archivo" action="#{categoriasAlmacenBean.cargarArchivo}"
+                        ajax="false" styleClass="ui-button-help" style="margin-top: 5px;" icon="pi pi-file-import" />
                 </div>
             </p:panel>
 
             <p:panel header="Datos del Formulario" style="flex-grow: 1;">
-                <p:dataTable id="tablaDatos" value="#{categoriasBean.listaTablaCategorias}" var="mov"
-                             emptyMessage="No hay categorias registrados" rows="10" paginator="true" paginatorPosition="bottom">
+                <p:dataTable id="tablaDatos" value="#{categoriasAlmacenBean.listaTablaCategorias}" var="mov"
+                    emptyMessage="No hay categorias registrados" rows="10" paginator="true" paginatorPosition="bottom">
 
                     <p:column headerText="Categoria: ">
                         <h:outputText value="#{mov.nombre}" />
@@ -113,27 +108,28 @@
 
                 <p:separator />
 
-                <p:commandButton value="Guardar" icon="pi pi-save" action="#{categoriasBean.guardar}" 
-                                 process="@form"
-                                 update="tablaDatos"
-                                 oncomplete="if (!args.validationFailed) PF('dlgConfirmacionGuardar').show();" />
+                <p:commandButton value="Guardar" icon="pi pi-save" action="#{categoriasAlmacenBean.guardar}"
+                    process="@form" update="tablaDatos"
+                    oncomplete="if (!args.validationFailed) PF('dlgConfirmacionGuardar').show();" />
             </p:panel>
         </div>
 
         <p:dialog header="Mensaje" widgetVar="dlgConfirmacion" modal="true" closable="false" resizable="false">
             <h:panelGrid columns="1" style="text-align: center; width: 100%;">
                 <h:outputText value="Datos guardados correctamente." />
-                <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacion').hide();" style="margin-top: 10px;"/>
+                <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacion').hide();"
+                    style="margin-top: 10px;" />
             </h:panelGrid>
         </p:dialog>
-        
+
         <p:dialog header="Mensaje" widgetVar="dlgConfirmacionGuardar" modal="true" closable="false" resizable="false">
             <h:panelGrid columns="1" style="text-align: center; width: 100%;">
                 <h:outputText value="Datos guardados correctamente." />
-                <p:commandButton value="Aceptar" type="button"
-                    onclick="PF('dlgConfirmacionGuardar').hide();" style="margin-top: 10px;"/>
+                <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacionGuardar').hide();"
+                    style="margin-top: 10px;" />
             </h:panelGrid>
         </p:dialog>
     </h:form>
 </h:body>
+
 </html>

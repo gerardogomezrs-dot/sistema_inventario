@@ -45,7 +45,7 @@
                 <p:commandButton icon="pi pi-trash" styleClass="p-button-danger" process="@this"
                     update=":form:tablaCategorias :form:msgs" action="#{categoriasBean.eliminarCategoria}">
                     <f:setPropertyActionListener value="#{prod}" target="#{categoriasBean.categorias}" />
-                    <p:confirm header="Confirmación" message="¿Está seguro de eliminar este usuario?"
+                    <p:confirm header="Confirmación" message="¿Está seguro de eliminar esta categoria?"
                         icon="pi pi-exclamation-triangle" />
                 </p:commandButton>
             </p:column>

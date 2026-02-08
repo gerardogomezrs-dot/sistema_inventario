@@ -105,6 +105,7 @@ public class CategoriasBean implements Serializable {
 	}
 
 	public void cargarArchivo() {
+		try {
 		if (uploadedFile == null || uploadedFile.getContents() == null) {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
@@ -114,6 +115,10 @@ public class CategoriasBean implements Serializable {
 
 		FacesContext.getCurrentInstance().addMessage(null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
+		
+	}catch (ExceptionMessage e) {
+		añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+	}
 	}
 
 	public String irANuevaCategoria() {
@@ -127,6 +132,11 @@ public class CategoriasBean implements Serializable {
 
 	public String irADashboard() {
 		return "/pages/admin/dashboard.xhtml?faces-redirect=true";
+	}
+
+	
+	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
 
 }

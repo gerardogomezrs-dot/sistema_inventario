@@ -13,11 +13,7 @@ import com.empresa.inventario.utils.Conexion;
 
 public class CategoriasDAO {
 
-	private CategoriaMapper mapper = new CategoriaMapper();;
-
-	public CategoriasDAO() {
-
-	}
+	private CategoriaMapper mapper = new CategoriaMapper();
 
 	public void guardar(Categorias e) throws Exception {
 		Connection conexion = Conexion.getConexion();
@@ -58,11 +54,9 @@ public class CategoriasDAO {
 				PreparedStatement ps = con.prepareStatement(sql);
 				ResultSet rs = ps.executeQuery()) {
 
-			// Usamos while para iterar sobre cada fila del ResultSet
 			while (rs.next()) {
 				Categorias p = new Categorias();
 				p = mapper.mapRow(rs);
-				// Agregamos el producto a la lista en cada iteración
 				lista.add(p);
 
 			}
