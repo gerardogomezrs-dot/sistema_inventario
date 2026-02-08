@@ -39,7 +39,7 @@
             </p:column>
 
             <p:column headerText="Acciones">
-                <p:commandButton icon="pi pi-pencil" process="@this" update=":formEditar"
+                <p:commandButton icon="pi pi-pencil" process="@this" update=""
                     oncomplete="PF('wdgEditar').show()">
                     <f:setPropertyActionListener value="#{prod}" target="#{categoriasAlmacenBean.categorias}" />
                 </p:commandButton>
