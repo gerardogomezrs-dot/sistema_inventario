@@ -44,14 +44,13 @@ public class ProductoBean implements Serializable {
 	private Productos producto;
 
 	@Inject
-	private transient IProductoService iProductoService;
+	private IProductoService iProductoService;
 
 	@Inject
-	private transient ICategoriaService iCategoriaService;
+	private ICategoriaService iCategoriaService;
 
 	public ProductoBean() {
 		producto = new Productos();
-
 	}
 
 	@PostConstruct
@@ -66,22 +65,16 @@ public class ProductoBean implements Serializable {
 	}
 
 	public void guardar() {
-
 		listaProductosGuardar.add(producto);
-
 		this.producto = new Productos();
 
 	}
 
 	public void guardarProductoTabla() throws Exception {
-
 		List<Productos> listaProductos = listaProductosGuardar;
-
 		iProductoService.create(listaProductos);
-
 		this.listaProductosGuardar.clear();
 		this.producto = new Productos();
-
 	}
 
 	public void guardarCambios() throws Exception {
@@ -107,7 +100,6 @@ public class ProductoBean implements Serializable {
 	}
 
 	public void ListaProductos() throws Exception {
-
 		this.list = iProductoService.getAll();
 
 	}
@@ -118,7 +110,6 @@ public class ProductoBean implements Serializable {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
 		}
-
 		listaProductosGuardar = new ArrayList<Productos>();
 		listaProductosGuardar = iProductoService.cargaArchivos(uploadedFile);
 
@@ -144,6 +135,5 @@ public class ProductoBean implements Serializable {
 	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
-
 
 }

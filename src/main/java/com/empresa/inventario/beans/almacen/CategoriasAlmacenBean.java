@@ -44,7 +44,6 @@ public class CategoriasAlmacenBean implements Serializable {
 
 	public CategoriasAlmacenBean() {
 		categorias = new Categorias();
-
 	}
 
 	@PostConstruct
@@ -69,10 +68,11 @@ public class CategoriasAlmacenBean implements Serializable {
 	}
 
 	public void guardarCategoriasTabla() {
-		System.out.println("Guardando elementos a la tabla");
 		if (this.categorias != null) {
 			listaTablaCategorias.add(categorias);
 			this.categorias = new Categorias();
+		}else {
+			throw new ExceptionMessage("Ingresa valores");
 		}
 
 	}

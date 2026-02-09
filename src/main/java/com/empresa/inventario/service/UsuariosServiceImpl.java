@@ -23,16 +23,20 @@ public class UsuariosServiceImpl implements IUsuariosService, Serializable {
 	private UsuariosDAO dao;
 
 	@Override
-	public void save(Usuario usuario) throws Exception {
+	public void save(Usuario usuario) throws ExceptionMessage {
+
+		String nombreUsuario = "";
+
 		try {
-			if (usuario == null) {
-				throw new ExceptionMessage("Vacio");
-			} else {
-				dao = new UsuariosDAO();
-				dao.guardar(usuario);
-			}
-		} catch (SQLException e) {
+			dao = new UsuariosDAO();
+			nombreUsuario = dao.validarUserName(usuario.getUserName());
+			dao.guardar(usuario);
+		} catch (Exception e) {
 			e.printStackTrace();
+		}
+
+		if (nombreUsuario.equals(usuario.getUserName())) {
+			throw new ExceptionMessage("Este usuario ya existe, intenta con otro");
 		}
 
 	}
@@ -57,7 +61,6 @@ public class UsuariosServiceImpl implements IUsuariosService, Serializable {
 		try {
 			if (id == 0) {
 				throw new ExceptionMessage("Ingresa el id");
-
 			} else {
 				dao.eliminarUsuario(id);
 			}
@@ -81,12 +84,10 @@ public class UsuariosServiceImpl implements IUsuariosService, Serializable {
 
 	@Override
 	public void updateProfile(Usuario usuario) throws Exception {
-		
+
 		dao = new UsuariosDAO();
 		dao.actualizar(usuario);
-		
+
 	}
-
-
 
 }

@@ -27,12 +27,11 @@ public class UsuariosBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
-	private transient IUsuariosService iUsuariosService;
+	private IUsuariosService iUsuariosService;
 
 	private List<Usuario> list;
 
 	private Usuario usuario;
-
 
 	public UsuariosBean() {
 		usuario = new Usuario();
@@ -61,21 +60,32 @@ public class UsuariosBean implements Serializable {
 
 	public void guardar() {
 		try {
-			if (usuario == null) {
-				throw new ExceptionMessage("Vacio");
-			} else {
-				iUsuariosService.save(usuario);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
+			iUsuariosService.save(usuario);
+
+		} catch (ExceptionMessage e) {
+
+			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage());
+
+			FacesContext context = FacesContext.getCurrentInstance();
+			context.validationFailed();
+			context.renderResponse(); // 🔴 MUY IMPORTANTE
+			return; // 🔴 CORTA la ejecución
+		} catch (Exception e) {
+			añadirMensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", "Consulte al administrador.");
+
+			FacesContext context = FacesContext.getCurrentInstance();
+			context.validationFailed();
+			context.renderResponse();
+			e.printStackTrace();
+			return;
+		}
 	}
 
 	public void eliminar() throws Exception {
 		try {
 			iUsuariosService.delete(usuario.getIdUsuario());
-			list = iUsuariosService.getAll(); // refresca la tabla
+			list = iUsuariosService.getAll();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 					"Usurio eliminado", "El usuario fue eliminado correctamente"));
 		} catch (SQLException e) {
@@ -90,7 +100,7 @@ public class UsuariosBean implements Serializable {
 				throw new ExceptionMessage("Vacio");
 			} else {
 				iUsuariosService.update(usuario);
-				list = iUsuariosService.getAll(); // refresca la tabla
+				list = iUsuariosService.getAll();
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 						"Usuario actualizado", "El usuario fue actualizado correctamente"));
 			}
@@ -102,13 +112,17 @@ public class UsuariosBean implements Serializable {
 	public void listaUsuarios() throws Exception {
 		list = iUsuariosService.getAll();
 	}
-	
+
 	public void actualizarPerfil() throws Exception {
-		
-		if(usuario == null) {
+
+		if (usuario == null) {
 			throw new ExceptionMessage("Vacio");
 		}
 		iUsuariosService.updateProfile(usuario);
+	}
+
+	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
 
 }

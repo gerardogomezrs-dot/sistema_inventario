@@ -32,11 +32,8 @@ public class CategoriasDAO {
 
 	public void actualizar(Categorias e) throws Exception {
 		Connection conexion = Conexion.getConexion();
-
 		String sql = "UPDATE categorias SET " + "nombre = ?, " + "descripcion = ? " + " WHERE id_categoria = ?";
-
 		PreparedStatement ps = conexion.prepareStatement(sql);
-
 		ps.setString(1, e.getNombre());
 		ps.setString(2, e.getDescripcion());
 		ps.setInt(3, e.getIdCategoria());
@@ -53,12 +50,10 @@ public class CategoriasDAO {
 		try (Connection con = Conexion.getConexion();
 				PreparedStatement ps = con.prepareStatement(sql);
 				ResultSet rs = ps.executeQuery()) {
-
 			while (rs.next()) {
 				Categorias p = new Categorias();
 				p = mapper.mapRow(rs);
 				lista.add(p);
-
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -68,16 +63,12 @@ public class CategoriasDAO {
 	}
 
 	public void eliminarCategoria(int idCategoria) throws Exception {
-
 		Connection connection = Conexion.getConexion();
-
 		String sql = "DELETE FROM CATEGORIAS WHERE ID_CATEGORIA = ?";
 		PreparedStatement statement = connection.prepareStatement(sql);
-
 		statement.setInt(1, idCategoria);
 		statement.executeUpdate();
 		statement.close();
 		connection.close();
-
 	}
 }

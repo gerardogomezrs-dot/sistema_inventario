@@ -16,7 +16,7 @@ import com.empresa.inventario.service.IUsuariosService;
 
 import lombok.Data;
 
-@Named("perfilUsuarioBean") // Nombre para usar en el XHTML
+@Named("perfilUsuarioBean") 
 @javax.faces.view.ViewScoped
 @Data
 public class PerfilUsuarioBean implements Serializable {
@@ -30,7 +30,7 @@ public class PerfilUsuarioBean implements Serializable {
 	private Usuario usuario;
 
 	@Inject
-	private transient IUsuariosService iUsuariosService;
+	private IUsuariosService iUsuariosService;
 
 	public PerfilUsuarioBean() {
 

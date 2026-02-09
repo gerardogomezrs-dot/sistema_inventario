@@ -39,8 +39,9 @@
 
 
     <h:form id="formPrincipal">
+        <p:growl id="messages" showDetail="true" />
 
- <p:menubar>
+        <p:menubar>
             <p:menuitem value="Inicio" url="dashboard.xhtml" icon="pi pi-home" />
             <f:facet name="options">
                 <p:commandButton value="Cerrar Sesión" action="#{loginBean.logout}" icon="pi pi-power-off"
@@ -51,7 +52,6 @@
             <div class="ui-g">
                 <div class="ui-g-12 ui-md-4">
                     <p:panel header="Bienvenido">
-                        <p:messages id="messages" showDetail="true" closable="true" />
 
                         <h:panelGrid columns="2" cellpadding="10">
                             <h:outputText value="Nombre:" style="font-weight:bold" />

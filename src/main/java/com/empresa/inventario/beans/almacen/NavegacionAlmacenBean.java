@@ -20,4 +20,8 @@ public class NavegacionAlmacenBean implements Serializable{/**
 	public String irAGestionCategorias() {
 	    return "/pages/almacen/categorias/consultaCategorias.xhtml?faces-redirect=true";
 	}
+	
+	public String irAGestionProductos() {
+	    return "/pages/almacen/productos/tablaProductos.xhtml?faces-redirect=true";
+	}
 }

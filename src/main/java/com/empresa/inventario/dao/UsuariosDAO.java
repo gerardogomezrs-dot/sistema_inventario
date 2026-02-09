@@ -37,6 +37,28 @@ public class UsuariosDAO {
 		}
 		return p; 
 	}
+	
+	public String validarUserName(String userName) throws Exception {
+
+		String userNameValidar = "";
+		String sql = "SELECT user_name FROM usuarios WHERE user_name = ? ";
+
+		try (Connection con = Conexion.getConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setString(1, userName);
+
+			try (ResultSet rs = ps.executeQuery()) {
+
+				if (rs.next()) { 
+					userNameValidar = mapper.mapRowUserName(rs);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e; 
+		}
+		return userNameValidar; 
+	}
 
 	public List<Usuario> getAll() throws Exception {
 		String sql = "SELECT * FROM usuarios";
@@ -46,11 +68,9 @@ public class UsuariosDAO {
 				PreparedStatement ps = con.prepareStatement(sql);
 				ResultSet rs = ps.executeQuery()) {
 
-			// Usamos while para iterar sobre cada fila del ResultSet
 			while (rs.next()) {
 				Usuario p = new Usuario();
 				p = mapper.mapRow(rs);
-				// Agregamos el producto a la lista en cada iteración
 				lista.add(p);
 			}
 		} catch (SQLException e) {

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
+    <title>Sistema de Inventario</title>
+</h:head>
+
+<h:body>
+    <!-- FORM PRINCIPAL -->
+    <h:form id="form">
+        <ui:include src="/pages/admin/menu.xhtml" />
+
+        <p:growl id="msgs" showDetail="true" />
+        <p:separator />
+        <p:commandButton value="Nuevo Producto" icon="pi pi-save" action="#{productosAlmacenBean.irANuevoProducto}" />
+        <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{productosAlmacenBean.menuPrincipal}"
+            immediate="true" style="margin-left:10px;" />
+        <p:separator />
+        <p:dataTable id="tablaProductos" var="prod" value="#{productosAlmacenBean.list}" rows="10" paginator="true"
+            emptyMessage="No se encontraron productos">
+            <p:column headerText="ID">
+                <h:outputText value="#" />
+            </p:column>
+
+            <p:column headerText="Nombre">
+                <h:outputText value="#" />
+            </p:column>
+
+            <p:column headerText="Codigo de Barras">
+                <p:barcode value="#" type="code128" format="svg" width="150" height="60" />
+            </p:column>
+
+            <p:column headerText="Descripción">
+                <h:outputText value="#" />
+            </p:column>
+
+            <p:column headerText="Categoría">
+                <h:outputText value="#" />
+            </p:column>
+
+            <p:column headerText="Unidad">
+                <h:outputText value="#" />
+            </p:column>
+
+            <p:column headerText="Precio Unitario">
+                <h:outputText value="#" />
+            </p:column>
+
+            <p:column headerText="Stock Actual">
+                <h:outputText value="#" />
+            </p:column>
+
+            <p:column headerText="Stock Minimo">
+                <h:outputText value="#" />
+            </p:column>
+
+            <p:column headerText="Ubicación">
+                <h:outputText value="#" />
+            </p:column>
+
+             <p:column headerText="Acciones">
+
+                <!-- EDITAR -->
+                <p:commandButton icon="pi pi-pencil" process="@this" update=":dialogoEditar"
+                    oncomplete="PF('wdgEditar').show()">
+                    <f:setPropertyActionListener value="#{prod}" target="#" />
+                </p:commandButton>
+
+                <!-- ELIMINAR CON CONFIRMACIÓN -->
+                <p:commandButton icon="pi pi-trash" styleClass="p-button-danger" process="@this"
+                    update=":form:tablaProductos :form:msgs" action="#">
+
+                    <f:setPropertyActionListener value="#{prod}" target="#" />
+
+                    <p:confirm header="Confirmación" message="¿Está seguro de eliminar este producto?"
+                        icon="pi pi-exclamation-triangle" />
+                </p:commandButton>
+            </p:column>
+        </p:dataTable>
+
+    </h:form>
+</h:body>
+
+</html>

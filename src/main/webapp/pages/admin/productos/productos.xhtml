@@ -86,18 +86,13 @@
 <h:body>
 
     <h:form id="formProducto" enctype="multipart/form-data">
-                <ui:include src="/pages/admin/menu.xhtml" />
+        <ui:include src="/pages/admin/menu.xhtml" />
 
         <p:growl id="messages" showDetail="true" />
         <div class="main-container">
 
             <div class="form-side">
                 <p:panel header="Registro de Producto" style="width: 600px; margin: 0 auto;">
-
-                    <p:messages id="msgs" closable="true">
-                        <p:autoUpdate />
-                    </p:messages>
-
                     <h:panelGrid columns="2" columnClasses="label,value">
 
                         <h:outputLabel value="Método de Entrada:" />

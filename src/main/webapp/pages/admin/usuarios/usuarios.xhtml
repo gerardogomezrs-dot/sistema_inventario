@@ -1,27 +1,43 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core" 
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
 	<link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
 	<link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
-	 <style>
-        .ui-panelgrid .ui-grid-responsive .ui-grid-row { border: none !important; }
-        .label { font-weight: bold; width: 150px; }
-        .value { width: 300px; }
-    </style>
+	<style>
+		.ui-panelgrid .ui-grid-responsive .ui-grid-row {
+			border: none !important;
+		}
+
+		.label {
+			font-weight: bold;
+			width: 150px;
+		}
+
+		.value {
+			width: 300px;
+		}
+	</style>
+	<script type="text/javascript">
+    function manejarRegistro(args) {
+        // args.validationFailed será true si llamaste a .validationFailed() en el Bean
+        if (!args.validationFailed) {
+            PF('dlgConfirmacion').show();
+        }
+    }
+</script>
 	<title>Registrar Usuarios</title>
 </h:head>
+
 <h:body>
+
+	<p:growl id="msjs" showDetail="true" />
+
 	<h:form id="formUsuario">
-        <ui:include src="/pages/admin/menu.xhtml" />
-
+		<ui:include src="/pages/admin/menu.xhtml" />
 		<p:panel header="Registro de Usuarios" style="width: 600px; margin: 0 auto;">
-
-			<p:messages autoUpdate="true" />
 
 			<h:panelGrid columns="2" columnClasses="label,value">
 
@@ -34,7 +50,7 @@
 				<h:outputLabel value="Permisos:" />
 				<p:inputText value="#{usuariosBean.usuario.permisos}" required="false" />
 
-					<h:outputLabel value="Nombre Usuario:" />
+				<h:outputLabel value="Nombre Usuario:" />
 				<p:inputText value="#{usuariosBean.usuario.userName}" required="false" />
 
 				<h:outputLabel value="Password :" />
@@ -43,30 +59,34 @@
 				<h:outputLabel value="Activo :" />
 				<p:selectBooleanCheckbox value="#{usuariosBean.usuario.activo}" required="false" />
 
-
 			</h:panelGrid>
 
 			<p:separator />
 
-			<p:commandButton value="Guardar" icon="pi pi-save" action="#{usuariosBean.guardar}" process="@form"
-				oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
+			<p:commandButton value="Guardar" 
+                     icon="pi pi-save" 
+                     action="#{usuariosBean.guardar}" 
+                     process="@form"
+                     update=":msjs @form" 
+                     oncomplete="manejarRegistro(args)" />
 
-
-			<p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{usuariosBean.irATablaUsuario}"
-				immediate="true" style="margin-left: 10px;" />
+			<p:commandButton value="Regresar"
+			                 icon="pi pi-chevron-left"
+			                 action="#{usuariosBean.irATablaUsuario}"
+			                 immediate="true"
+			                 style="margin-left: 10px;" />
 		</p:panel>
 
 		<!-- Dialog -->
 		<p:dialog header="Mensaje" widgetVar="dlgConfirmacion" modal="true" closable="false">
-
 			<h:outputText value="Datos guardados correctamente." />
 			<br /><br />
-			<p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacion').hide(); location.reload();" />
+			<p:commandButton value="Aceptar"
+			                 type="button"
+			                 onclick="PF('dlgConfirmacion').hide(); location.reload();" />
 		</p:dialog>
-
 
 	</h:form>
 
 </h:body>
-
 </html>

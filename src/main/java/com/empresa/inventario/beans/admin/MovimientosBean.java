@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -12,6 +13,7 @@ import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Movimientos;
 import com.empresa.inventario.model.Productos;
 import com.empresa.inventario.model.Usuario;
@@ -82,7 +84,16 @@ public class MovimientosBean implements Serializable {
 	}
 
 	public List<Movimientos> listaMovimientos() throws Exception {
-		return list = service.getAll();
+		try {
+		list = service.getAll();
+		} 
+		catch (ExceptionMessage e) {
+			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+			}
+		catch (Exception e) {
+			
+		}
+		return list;
 	}
 
 	public void save() throws Exception {
@@ -120,7 +131,6 @@ public class MovimientosBean implements Serializable {
 	}
 
 	public void cargarInfoScanner() throws Exception {
-		System.out.println("escaneado");
 		String codigo = this.movimientos.getCodigoBarras();
 
 		if (codigo != null && !codigo.isEmpty()) {
@@ -130,5 +140,9 @@ public class MovimientosBean implements Serializable {
 		} else {
 			this.infoProductoExtra = "Código no válido";
 		}
+	}
+	
+	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
 }

@@ -61,24 +61,17 @@
 
         <div class="flex-container">
             <p:panel header="Registro de Categorias" style="width: 600px; margin: 0 auto;">
-
-
-
                 <h:panelGrid columns="2" columnClasses="label,value">
                     <p:outputLabel for="nombre" value="Nombre:" />
                     <p:inputText id="nombre" value="#{categoriasAlmacenBean.categorias.nombre}" required="false" />
-
                     <p:outputLabel for="descripcion" value="Descripción:" />
                     <p:inputTextarea id="descripcion" value="#{categoriasAlmacenBean.categorias.descripcion}"
                         rows="3" />
                 </h:panelGrid>
-
                 <p:separator />
-
                 <p:commandButton value="Guardar" icon="pi pi-save"
                     action="#{categoriasAlmacenBean.guardarCategoriasTabla}" update="formCategoria"
                     oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
-
                 <p:commandButton value="Regresar" icon="pi pi-chevron-left"
                     action="#{categoriasAlmacenBean.irATablaCategoria}" immediate="true" style="margin-left: 10px;" />
 
@@ -100,14 +93,11 @@
                     <p:column headerText="Categoria: ">
                         <h:outputText value="#{mov.nombre}" />
                     </p:column>
-
                     <p:column headerText="Descripcion: ">
                         <h:outputText value="#{mov.descripcion}" />
                     </p:column>
                 </p:dataTable>
-
                 <p:separator />
-
                 <p:commandButton value="Guardar" icon="pi pi-save" action="#{categoriasAlmacenBean.guardar}"
                     process="@form" update="tablaDatos"
                     oncomplete="if (!args.validationFailed) PF('dlgConfirmacionGuardar').show();" />

@@ -72,7 +72,6 @@ public class LoginBean implements Serializable {
 			}
 
 		} catch (ExceptionMessage e) {
-			// 3. Captura tu excepción personalizada del Service
 			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 			return null;
 		} catch (Exception e) {

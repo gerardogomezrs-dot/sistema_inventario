@@ -34,4 +34,9 @@ public class UsuariosMapper {
 		return p;
 		
 	}
+
+	public String mapRowUserName(ResultSet rs) throws Exception {
+		String userName = rs.getNString("user_name");
+		return userName;
+	}
 }
