@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core" 
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
     <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
@@ -16,14 +14,17 @@
             background-color: #f4f7f9;
             margin: 20px;
         }
+
         /* Quitar degradados de la cabecera de la tabla */
-        .ui-datatable .ui-datatable-header, .ui-datatable .ui-column-header {
+        .ui-datatable .ui-datatable-header,
+        .ui-datatable .ui-column-header {
             background: #ffffff !important;
             border-bottom: 2px solid #ebedef !important;
             text-transform: uppercase;
             font-size: 12px;
             letter-spacing: 0.5px;
         }
+
         /* Estilo de los Badges */
         .badge {
             padding: 4px 8px;
@@ -32,36 +33,52 @@
             font-weight: bold;
             text-transform: uppercase;
         }
-        .badge-admin { background: #E3F2FD; color: #1976D2; }
-        .badge-almacen { background: #E8F5E9; color: #388E3C; }
-        .badge-permisos { background: #FFF3E0; color: #F57C00; }
-        
+
+        .badge-admin {
+            background: #E3F2FD;
+            color: #1976D2;
+        }
+
+        .badge-almacen {
+            background: #E8F5E9;
+            color: #388E3C;
+        }
+
+        .badge-permisos {
+            background: #FFF3E0;
+            color: #F57C00;
+        }
+
         /* Espaciado de botones de acción */
-        .action-btn { margin-right: 5px !important; }
+        .action-btn {
+            margin-right: 5px !important;
+        }
     </style>
 </h:head>
 <h:body>
 
     <h:form id="form">
+
+        <ui:include src="/pages/admin/menu.xhtml" />
+
         <p:growl id="msgs" showDetail="true" />
+        <p:separator />
 
         <p:toolbar style="margin-bottom: 20px; border: none; background: transparent;">
             <f:facet name="left">
-                <p:commandButton value="Regresar" icon="pi pi-chevron-left" 
-                                 action="#{usuariosBean.irAIndex}" immediate="true"
-                                 styleClass="ui-button-flat" />
+                <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{usuariosBean.irAIndex}"
+                    immediate="true" styleClass="ui-button-flat" />
             </f:facet>
             <f:facet name="right">
-                <p:commandButton value="Nuevo Usuario" icon="pi pi-plus" 
-                                 action="#{usuariosBean.irANuevoUsuario}" 
-                                 styleClass="ui-button-raised ui-button-primary" />
+                <p:commandButton value="Nuevo Usuario" icon="pi pi-plus" action="#{usuariosBean.irANuevoUsuario}"
+                    styleClass="ui-button-raised ui-button-primary" />
             </f:facet>
         </p:toolbar>
+        <p:separator />
 
         <p:dataTable id="tablaUsuarios" var="prod" value="#{usuariosBean.list}" rows="10" paginator="true"
-                    paginatorPosition="bottom"
-                    emptyMessage="No se encontraron usuarios" 
-                    styleClass="ui-datatable-striped ui-datatable-sm">
+            paginatorPosition="bottom" emptyMessage="No se encontraron usuarios"
+            styleClass="ui-datatable-striped ui-datatable-sm">
 
             <p:column headerText="ID" style="width: 50px; text-align: center;">
                 <h:outputText value="#{prod.idUsuario}" style="color: #888; font-weight: bold;" />
@@ -88,30 +105,31 @@
 
             <p:column headerText="Acciones" style="width: 120px; text-align: center;">
                 <p:commandButton icon="pi pi-pencil" process="@this" update=":formEditar"
-                                 oncomplete="PF('wdgEditar').show()"
-                                 styleClass="ui-button-text-icon-only ui-button-secondary action-btn"
-                                 title="Editar">
+                    oncomplete="PF('wdgEditar').show()"
+                    styleClass="ui-button-text-icon-only ui-button-secondary action-btn" title="Editar">
                     <f:setPropertyActionListener value="#{prod}" target="#{usuariosBean.usuario}" />
                 </p:commandButton>
 
-                <p:commandButton icon="pi pi-trash" styleClass="ui-button-text-icon-only ui-button-danger" 
-                                 process="@this"
-                                 update=":form:tablaUsuarios :form:msgs" action="#{usuariosBean.eliminar}"
-                                 title="Eliminar">
+                <p:commandButton icon="pi pi-trash" styleClass="ui-button-text-icon-only ui-button-danger"
+                    process="@this" update=":form:tablaUsuarios :form:msgs" action="#{usuariosBean.eliminar}"
+                    title="Eliminar">
                     <f:setPropertyActionListener value="#{prod}" target="#{usuariosBean.usuario}" />
                     <p:confirm header="Confirmación" message="¿Está seguro de eliminar este usuario?"
-                               icon="pi pi-exclamation-triangle" />
+                        icon="pi pi-exclamation-triangle" />
                 </p:commandButton>
             </p:column>
         </p:dataTable>
 
         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
-            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat" icon="pi pi-times" />
-            <p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes ui-button-danger" icon="pi pi-check" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat"
+                icon="pi pi-times" />
+            <p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes ui-button-danger"
+                icon="pi pi-check" />
         </p:confirmDialog>
     </h:form>
 
     <ui:include src="/pages/admin/usuarios/actualizarUsuarios.xhtml" />
 
 </h:body>
+
 </html>

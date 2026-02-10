@@ -28,7 +28,7 @@ public class ReportesMapper {
 		movimiento.setUbicacion(resultSet.getString("ubicacionProducto"));
 		movimiento.setStockActual(resultSet.getString("stockActual"));
 		movimiento.setUnidad(resultSet.getString("unidad"));
-		movimiento.setPrecioUnitario(resultSet.getInt("precioUnitario"));
+		movimiento.setPrecioUnitario(resultSet.getDouble("precioUnitario"));
 		movimiento.setPrecioTotal(resultSet.getInt("valorTotal"));
 		return movimiento;
 	}

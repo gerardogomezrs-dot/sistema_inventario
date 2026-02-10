@@ -16,12 +16,12 @@
                 <p:inputTextarea value="#{productoBean.producto.descripcion}" rows="3" />
 
                 <p:outputLabel for="categoria" value="Categoría:" />
-                <p:selectOneMenu id="categoria" value="#{productoBean.producto.idCategoria}">
+                <p:selectOneMenu id="categoria" value="#{productoBean.producto.idCategoria}" style="width: 200px;">
 
                     <f:selectItem itemLabel="Seleccione una categoría" itemValue="" noSelectionOption="true" />
 
                     <f:selectItems value="#{productoBean.listaCategorias}" var="cat" itemLabel="#{cat.nombre}"
-                        itemValue="#{cat.idCategoria}" />
+                        itemValue="#{cat.idCategoria}" style="width: 200px;"/>
 
                 </p:selectOneMenu>
 

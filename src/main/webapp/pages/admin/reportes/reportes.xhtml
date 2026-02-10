@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
     <title>Gestión de Reportes | Inventario</title>
     <style>
@@ -52,12 +51,25 @@
         .report-btn .ui-button-icon-left {
             font-size: 1.5rem !important;
         }
+
+        /* Estilo para el contenedor del footer */
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
     </style>
+     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
+    <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
+    <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
 </h:head>
 
 <h:body>
     <div class="report-container">
         <h:form id="menuForm">
+                    <ui:include src="/pages/admin/menu.xhtml" />
+
             <p:growl id="messages" showDetail="true" />
 
             <p:panel header="Panel de Control: Gestión de Reportes" styleClass="custom-menu-panel">
@@ -82,7 +94,15 @@
                 </div>
 
                 <f:facet name="footer">
-                    <small>Seleccione un módulo para generar el informe detallado.</small>
+                    <div class="footer-container">
+                        <small>Seleccione un módulo para generar el informe detallado.</small>
+                        
+                        <p:commandButton value="Regresar al Inicio" 
+                                         icon="pi pi-home" 
+                                         action="#{inventarioReporteBean.irADashboard}"
+                                         styleClass="ui-button-flat"
+                                         immediate="true" />
+                    </div>
                 </f:facet>
             </p:panel>
         </h:form>

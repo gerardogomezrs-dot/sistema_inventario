@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
+    <style type="text/css">
+        .ui-panelgrid .ui-grid-responsive .ui-grid-row {
+            border: none !important;
+        }
+
+        .label {
+            font-weight: bold;
+            width: 150px;
+        }
+
+        .value {
+            width: 300px;
+        }
+
+        /* Estilo para el diseño de dos columnas (Formulario izquierda, Tabla derecha) */
+        .main-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .form-side {
+            flex: 0 0 600px;
+        }
+
+        .table-side {
+            flex: 1;
+        }
+
+        /* Estilo para que el input sea invisible pero reciba datos del láser */
+        .hidden-scanner {
+            opacity: 0 !important;
+            position: absolute !important;
+            left: -9999px !important;
+            height: 0 !important;
+        }
+
+        .scanner-box {
+            border: 2px dashed #2196F3;
+            padding: 15px;
+            text-align: center;
+            background: #f0f7ff;
+            border-radius: 5px;
+        }
+
+        .scanner-text {
+            color: #2196F3;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</h:head>
+
+<h:body>
+
+    <h:form id="formProducto" enctype="multipart/form-data">
+        <ui:include src="/pages/almacen/menu.xhtml" />
+
+        <p:growl id="messages" showDetail="true" />
+
+        <div class="main-container">
+
+            <div class="form-side">
+                <p:panel header="Registro de Producto" style="width: 600px; margin: 0 auto;">
+                    <h:panelGrid columns="2" columnClasses="label,value">
+
+                        <h:outputLabel value="Codigo de Barras:" />
+
+
+                        <p:inputText id="barcodeManual" value="#{productosAlmacenBean.producto.codigoBarras}"
+                            required="false" placeholder="Ingrese código manualmente..." style="width: 100%;">
+                            <p:ajax event="blur" process="@this" />
+                        </p:inputText>
+
+                        <h:outputLabel value="Nombre:" />
+                        <p:inputText value="#{productosAlmacenBean.producto.nombre}" required="false" />
+
+                        <h:outputLabel value="Descripción:" />
+                        <p:inputTextarea value="#{productosAlmacenBean.producto.descripcion}" rows="3" />
+
+                        <p:outputLabel for="categoria" value="Categoría:" />
+                        <p:selectOneMenu id="categoria" value="#{productosAlmacenBean.producto.idCategoria}"
+                            style="width: 200px;">
+                            <f:selectItem itemLabel="Seleccione una categoría" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{productosAlmacenBean.listaCategorias}" var="cat"
+                                itemLabel="#{cat.nombre}" itemValue="#{cat.idCategoria}" />
+                        </p:selectOneMenu>
+
+                        <h:outputLabel value="Unidad:" />
+                        <p:inputText value="#{productosAlmacenBean.producto.unidad}" />
+
+                        <h:outputLabel value="Precio Unitario:" />
+                        <p:inputText value="#{productosAlmacenBean.producto.precioUnitario}" />
+
+                        <h:outputLabel value="Stock Actual:" />
+                        <p:inputText value="#{productosAlmacenBean.producto.stockActual}" />
+
+                        <h:outputLabel value="Stock Mínimo:" />
+                        <p:inputText value="#{productosAlmacenBean.producto.stockMinimo}" />
+
+                        <h:outputLabel value="Ubicación:" />
+                        <p:inputText value="#{productosAlmacenBean.producto.ubicacion}" />
+
+                        <h:outputLabel value="Activo:" />
+                        <p:selectBooleanCheckbox value="#{productosAlmacenBean.producto.activo}" />
+
+                    </h:panelGrid>
+
+                    <p:separator />
+
+                    <p:commandButton value="Guardar" icon="pi pi-save" action="#{productosAlmacenBean.guardarTabla}"
+                        process="@form" update="formProducto"
+                        oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
+
+                    <p:commandButton value="Regresar" icon="pi pi-chevron-left"
+                        action="#{productosAlmacenBean.irATablaProductos}" immediate="true" style="margin-left: 10px;" />
+
+                    <div class="upload-section" style="margin-top: 20px;">
+                        <h:outputLabel value="Cargar desde archivo (CSV, Excel):"
+                            style="display:block; margin-bottom:5px; font-weight:bold;" />
+                        <p:fileUpload value="#{productosAlmacenBean.uploadedFile}" mode="simple" skinSimple="true"
+                            label="Seleccionar Archivo" chooseIcon="pi pi-upload" />
+
+                        <p:commandButton value="Procesar Archivo" action="#{productosAlmacenBean.cargaArchivos}"
+                            ajax="false" styleClass="ui-button-help" style="margin-top: 5px;"
+                            icon="pi pi-file-import" />
+                    </div>
+                </p:panel>
+            </div>
+
+            <div class="table-side">
+                <p:dataTable id="tablaRegistros" value="#{productosAlmacenBean.listaProductosGuardar}" var="prod"
+                    emptyMessage="No hay productos registrados en esta sesión." scrollable="true" scrollHeight="500">
+
+                    <f:facet name="header">Productos Guardados</f:facet>
+
+                    <p:column headerText="Código" width="100">
+                        <h:outputText value="#{prod.codigoBarras}" />
+                    </p:column>
+
+                    <p:column headerText="Nombre">
+                        <h:outputText value="#{prod.nombre}" />
+                    </p:column>
+
+                    <p:column headerText="Categoría">
+                        <h:outputText value="#{prod.idCategoria}" />
+                    </p:column>
+
+                    <p:column headerText="Precio" width="80">
+                        <h:outputText value="#{prod.precioUnitario}">
+                            <f:convertNumber type="currency" currencySymbol="$" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Stock" width="60">
+                        <h:outputText value="#{prod.stockActual}" />
+                    </p:column>
+
+                    <p:column headerText="Estado" width="70">
+                        <h:outputText value="#{prod.activo ? 'Sí' : 'No'}" />
+                    </p:column>
+                </p:dataTable>
+                <p:separator />
+
+                <p:commandButton value="Guardar Tabla" icon="pi pi-save"
+                    action="#{productosAlmacenBean.guardarProductoTabla}" process="@form" update="tablaRegistros"
+                    oncomplete="if (!args.validationFailed) PF('dlgConfirmacionGuardar').show();" />
+            </div>
+        </div>
+
+        <p:dialog header="Mensaje" widgetVar="dlgConfirmacion" modal="true" closable="false">
+            <h:outputText value="Datos guardados correctamente." />
+            <br /><br />
+            <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacion').hide();" />
+        </p:dialog>
+
+        <p:dialog header="Mensaje" widgetVar="dlgConfirmacionGuardar" modal="true" closable="false">
+            <h:outputText value="Datos guardados correctamente." />
+            <br /><br />
+            <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacionGuardar').hide();" />
+        </p:dialog>
+    </h:form>
+</h:body>
+
+</html>

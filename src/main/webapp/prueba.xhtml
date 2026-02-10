@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" 
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Registrar Movimiento</title>
+    <style>
+        .ui-panelgrid .ui-grid-responsive .ui-grid-row { border: none !important; }
+        .label { font-weight: bold; width: 150px; }
+        .value { width: 300px; }
+        .flex-container { display: flex; justify-content: space-around; align-items: flex-start; gap: 20px; padding: 20px; }
+        .scanner-input { font-size: 16px; letter-spacing: 2px; text-transform: uppercase; }
+    </style>
+    
+    <script type="text/javascript">
+        // <![CDATA[
+        function handleScanner(event) {
+            const inputId = 'formMovimiento:txtCodigo';
+            
+            if (event.target.id === inputId) {
+                // 1. Bloqueo radical de teclas de control (Evita que el escáner abra "Este Equipo" o "Guardar")
+                if (event.ctrlKey || event.altKey || event.metaKey) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    return false;
+                }
+                
+                // 2. Si es Enter, dejamos que el p:ajax lo maneje, pero prevenimos el submit default del form
+                if (event.key === 'Enter') {
+                    // No hacemos nada aquí para dejar que p:ajax event="keydown" actúe
+                    return true;
+                }
+            }
+        }
+
+        $(document).ready(function() {
+            // Foco inicial
+            setTimeout(function() {
+                var input = document.getElementById('formMovimiento:txtCodigo');
+                if(input) input.focus();
+            }, 500);
+
+            // Mantener foco inteligente: solo si el usuario no está en otro input o botón
+            setInterval(function() {
+                var activeEl = document.activeElement;
+                var input = document.getElementById('formMovimiento:txtCodigo');
+                if (input && (activeEl.tagName === 'BODY' || activeEl.id === '')) {
+                    input.focus();
+                }
+            }, 2000);
+        });
+        // ]]>
+    </script>
+</h:head>
+
+<h:body onkeydown="return handleScanner(event);">
+    <h:form id="formMovimiento">
+        <p:focus for="txtCodigo" />
+        
+        <h:panelGrid columns="3" cellpadding="5">
+            <p:outputLabel for="txtCodigo" value="Escanear Código:" />
+            
+            <p:inputText id="txtCodigo" 
+                        value="#{scannerBean.codigoIngresado}"
+                        styleClass="scanner-input"
+                        placeholder="Pase el código por el escáner..."
+                        autocomplete="off">
+                <p:ajax event="keydown" 
+                        listener="#{scannerBean.procesarEscaneo}"
+                        update="tablaItems txtCodigo messages"
+                        onstart="return (event.keyCode == 13);" />
+            </p:inputText>
+            
+            <p:commandButton value="Guardar Todo" 
+                           action="#{scannerBean.guardar}"
+                           update="@form" 
+                           styleClass="ui-button-success"
+                           onclick="return confirm('¿Guardar todos los items?');" />
+        </h:panelGrid>
+        
+        <p:commandButton value="Limpiar Código" 
+                       onclick="PF('clearInput').show();"
+                       style="margin-left: 10px;" 
+                       type="button" />
+        
+        <p:confirmDialog message="¿Limpiar el código escaneado?" 
+                        header="Confirmar" 
+                        severity="alert" 
+                        widgetVar="clearInput">
+            <p:commandButton value="Sí" 
+                           oncomplete="PF('clearInput').hide();"
+                           actionListener="#{scannerBean.limpiarCodigo}"
+                           update="txtCodigo" />
+            <p:commandButton value="No" 
+                           onclick="PF('clearInput').hide();" 
+                           type="button" />
+        </p:confirmDialog>
+        
+        <p:dataTable id="tablaItems" 
+                    value="#{scannerBean.listaTemporal}" 
+                    var="item"
+                    emptyMessage="No hay productos escaneados"
+                    style="margin-top: 20px;">
+            <p:column headerText="Producto">
+                <h:outputText value="#{item.producto.nombre}" />
+            </p:column>
+            <p:column headerText="Cantidad">
+                <h:outputText value="#{item.cantidad}" />
+            </p:column>
+            <p:column headerText="Acciones">
+                <p:commandButton icon="pi pi-trash" 
+                               title="Eliminar"
+                               actionListener="#{scannerBean.eliminarItem(item)}"
+                               update="tablaItems"
+                               styleClass="ui-button-danger" />
+            </p:column>
+        </p:dataTable>
+        
+        <p:messages id="messages" showDetail="true" closable="true">
+            <p:autoUpdate />
+        </p:messages>
+    </h:form>
+</h:body>
+</html>

@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core" 
-      xmlns:p="http://primefaces.org/ui">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
     <title>Sistema de Inventario - Panel de Control</title>
-     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
     <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
-    <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces"/>
+    <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
     <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
-    
+
     <style>
         /* Estilo para simular el p:tag en PrimeFaces 7 */
         .badge-info {
@@ -24,28 +23,36 @@
             border: 1px solid #2196f3;
             display: inline-block;
         }
-        .menu-grid .ui-button { width: 100%; margin-bottom: 5px; }
-        .ui-panel { margin-top: 10px; }
+
+        .menu-grid .ui-button {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+        .ui-panel {
+            margin-top: 10px;
+        }
     </style>
 </h:head>
 
 <h:body>
+
+
     <h:form id="formPrincipal">
-        
+        <p:growl id="messages" showDetail="true" />
+
         <p:menubar>
-            <p:menuitem value="Inicio" url="dashboard.xhtml" icon="pi pi-home"/>
+            <p:menuitem value="Inicio" url="dashboard.xhtml" icon="pi pi-home" />
             <f:facet name="options">
-                <p:commandButton value="Cerrar Sesión" action="#{loginBean.logout}" 
-                                 icon="pi pi-power-off" style="background-color: #d9534f; color: white; border: none;" />
+                <p:commandButton value="Cerrar Sesión" action="#{loginBean.logout}" icon="pi pi-power-off"
+                    style="background-color: #d9534f; color: white; border: none;" />
             </f:facet>
         </p:menubar>
-
         <div class="ui-fluid">
             <div class="ui-g">
                 <div class="ui-g-12 ui-md-4">
-                    <p:panel header="Datos de la Sesión">
-                        <p:messages id="messages" showDetail="true" closable="true" />
-                        
+                    <p:panel header="Bienvenido">
+
                         <h:panelGrid columns="2" cellpadding="10">
                             <h:outputText value="Nombre:" style="font-weight:bold" />
                             <h:outputText value="#{loginBean.usuario.nombre}" />
@@ -55,6 +62,9 @@
 
                             <h:outputText value="Usuario:" style="font-weight:bold" />
                             <h:outputText value="#{loginBean.usuario.userName}" />
+
+                            <p:commandButton value="Ver mas " icon="pi pi-chevron-left"
+                                action="#{navBean.irAPerfilUsuario}" immediate="true" style="margin-left: 10px;" />
                         </h:panelGrid>
                     </p:panel>
                 </div>
@@ -62,30 +72,23 @@
                 <div class="ui-g-12 ui-md-8">
                     <p:panel header="Menú Principal de Gestión">
                         <h:panelGrid columns="2" cellpadding="10" styleClass="menu-grid" style="width:100%">
-                            
-                            <p:commandButton value="Gestionar Productos" 
-                                             action="#{navBean.irAProductos()}" 
-                                             icon="pi pi-briefcase" />
-                            
-                            <p:commandButton value="Gestionar Usuarios" 
-                                             action="#{navBean.irAUsuarios()}" 
-                                             icon="pi pi-users" />
-                            
-                            <p:commandButton value="Gestionar Categorías" 
-                                             action="#{navBean.irACategorias()}" 
-                                             icon="pi pi-tags" />
-                            
-                            <p:commandButton value="Gestionar Movimientos" 
-                                             action="#{navBean.irAMovimientos()}"
-                                             icon="pi pi-search" />
 
-                                             
-                            <p:commandButton value="Gestionar Reportes" 
-                 action="#{navBean.irAReportes()}"
-                 icon="pi pi-chart-bar" 
-                 styleClass="ui-button-info" 
-                 ajax="false" />
-                            
+                            <p:commandButton value="Gestionar Productos" action="#{navBean.irAProductos()}"
+                                icon="pi pi-briefcase" />
+
+                            <p:commandButton value="Gestionar Usuarios" action="#{navBean.irAUsuarios()}"
+                                icon="pi pi-users" />
+
+                            <p:commandButton value="Gestionar Categorías" action="#{navBean.irACategorias()}"
+                                icon="pi pi-tags" />
+
+                            <p:commandButton value="Gestionar Movimientos" action="#{navBean.irAMovimientos()}"
+                                icon="pi pi-search" />
+
+
+                            <p:commandButton value="Gestionar Reportes" action="#{navBean.irAReportes()}"
+                                icon="pi pi-chart-bar" styleClass="ui-button-info" ajax="false" />
+
                         </h:panelGrid>
                     </p:panel>
                 </div>
@@ -94,4 +97,5 @@
 
     </h:form>
 </h:body>
+
 </html>

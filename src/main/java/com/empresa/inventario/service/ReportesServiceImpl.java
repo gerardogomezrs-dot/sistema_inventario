@@ -39,13 +39,8 @@ public class ReportesServiceImpl implements IReporteService, Serializable{
 
 	@Override
 	public List<ReportesMovimiento> reporteInventarioValorizado() throws Exception {
-		
 		List<ReportesMovimiento> reportesMovimientos = new ArrayList<ReportesMovimiento>();
 		reportesMovimientos = dao.getInventarioValorizado();
-		
-		for(ReportesMovimiento movimiento: reportesMovimientos) {
-			System.out.println("precio: " + movimiento.getPrecioUnitario() + " " + " PRECIO TOTAL " + movimiento.getPrecioTotal());
-		}
 		return reportesMovimientos;
 	}
 
@@ -55,5 +50,4 @@ public class ReportesServiceImpl implements IReporteService, Serializable{
 		list = dao.getStockBajo();
 		return list;
 	}
-	
 }
