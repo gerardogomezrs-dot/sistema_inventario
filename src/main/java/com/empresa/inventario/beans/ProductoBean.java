@@ -11,6 +11,8 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.primefaces.model.UploadedFile;
+
 import com.empresa.inventario.model.Categorias;
 import com.empresa.inventario.model.Productos;
 import com.empresa.inventario.service.ICategoriaService;
@@ -31,9 +33,12 @@ public class ProductoBean implements Serializable {
 	private boolean modoManual = false; // Inicia en modo escáner (oculto)
 
 	private List<Categorias> listaCategorias;
+
 	private List<Productos> listaProductosGuardar = new ArrayList<Productos>();
 
 	private List<Productos> list;
+
+	private UploadedFile uploadedFile;
 
 	private Productos producto;
 
@@ -63,6 +68,8 @@ public class ProductoBean implements Serializable {
 
 		listaProductosGuardar.add(producto);
 
+		this.producto = new Productos();
+
 	}
 
 	public void guardarProductoTabla() throws Exception {
@@ -70,6 +77,9 @@ public class ProductoBean implements Serializable {
 		List<Productos> listaProductos = listaProductosGuardar;
 
 		iProductoService.create(listaProductos);
+
+		this.listaProductosGuardar.clear();
+		this.producto = new Productos();
 
 	}
 
@@ -99,6 +109,19 @@ public class ProductoBean implements Serializable {
 
 		this.list = iProductoService.getAll();
 
+	}
+
+	public void cargaArchivos() throws Exception {
+		if (uploadedFile == null || uploadedFile.getContents() == null) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
+		}
+
+		listaProductosGuardar = new ArrayList<Productos>();
+		listaProductosGuardar = iProductoService.cargaArchivos(uploadedFile);
+
+		FacesContext.getCurrentInstance().addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
 	}
 
 	public String getIndex() {

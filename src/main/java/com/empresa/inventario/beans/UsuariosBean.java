@@ -104,5 +104,4 @@ public class UsuariosBean implements Serializable {
 		list = iUsuariosService.getAll();
 	}
 
-
 }

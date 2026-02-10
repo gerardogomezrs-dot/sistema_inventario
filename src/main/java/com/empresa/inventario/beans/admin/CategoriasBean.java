@@ -27,7 +27,11 @@ public class CategoriasBean implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+<<<<<<< HEAD
 	private List<Categorias> filteredList;
+=======
+	private List<Categorias> filteredList; 
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
 
 	private List<Categorias> list;
 
@@ -98,6 +102,7 @@ public class CategoriasBean implements Serializable {
 	}
 
 	public void eliminarCategoria() throws Exception {
+<<<<<<< HEAD
 		try {
 			if (categorias != null) {
 				categoriaService.delete(categorias.getIdCategoria());
@@ -114,10 +119,17 @@ public class CategoriasBean implements Serializable {
 			e.printStackTrace();
 			return;
 		}
+=======
+		categoriaService.delete(categorias.getIdCategoria());
+		list = categoriaService.getAllCategorias();
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+				"Categoria eliminada", "La categoria fue eliminada correctamente"));
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
 	}
 
 	public void cargarArchivo() {
 		try {
+<<<<<<< HEAD
 			if (uploadedFile == null || uploadedFile.getContents() == null) {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
@@ -131,6 +143,21 @@ public class CategoriasBean implements Serializable {
 		} catch (ExceptionMessage e) {
 			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 		}
+=======
+		if (uploadedFile == null || uploadedFile.getContents() == null) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
+		}
+		listaTablaCategorias = new ArrayList<Categorias>();
+		listaTablaCategorias = categoriaService.cargarArchivo(uploadedFile);
+
+		FacesContext.getCurrentInstance().addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
+		
+	}catch (ExceptionMessage e) {
+		añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+	}
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
 	}
 
 	public String irANuevaCategoria() {
@@ -146,6 +173,10 @@ public class CategoriasBean implements Serializable {
 		return "/pages/admin/dashboard.xhtml?faces-redirect=true";
 	}
 
+<<<<<<< HEAD
+=======
+	
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
 	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}

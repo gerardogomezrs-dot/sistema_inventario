@@ -109,5 +109,9 @@ public class ReportesBean implements Serializable {
 	public String irAReportePrincipal() {
 		return "/pages/admin/reportes/reportes.xhtml?faces-redirect=true";
 	}
+	
+	public String irADashboard() {
+		return "/pages/admin/dashboard.xhtml?faces-redirect=true";
+	}
 
 }

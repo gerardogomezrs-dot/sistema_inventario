@@ -127,6 +127,10 @@ public class MovimientosBean implements Serializable {
 	public void toggleScanner() {
 		this.mostrarScanner = !this.mostrarScanner;
 		this.movimientos.setCodigoBarras(null);
+<<<<<<< HEAD
+=======
+		;
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
 	}
 
 	public void cargarInfoScanner() throws Exception {

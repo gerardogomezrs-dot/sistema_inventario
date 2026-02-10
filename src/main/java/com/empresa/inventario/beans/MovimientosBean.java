@@ -24,7 +24,6 @@ import lombok.Data;
 @javax.faces.view.ViewScoped
 @Data
 public class MovimientosBean implements Serializable {
-
 	/**
 	 * 
 	 */
@@ -35,11 +34,15 @@ public class MovimientosBean implements Serializable {
 
 	private List<Movimientos> list;
 
-	private List<Movimientos> filteredList; // Lista para almacenar los resultados filtrados
+	private List<Movimientos> filteredList;
 
 	private Movimientos movimientos;
 
 	private List<Productos> listProductos;
+	
+	private Boolean mostrarScanner = false;
+	
+	private String infoProductoExtra;
 
 	@Inject
 	private IMovimientosService service;
@@ -56,18 +59,15 @@ public class MovimientosBean implements Serializable {
 	@PostConstruct
 	public void init() {
 		try {
-			this.movimientos = new Movimientos(); // Inicializamos el objeto
+			this.movimientos = new Movimientos(); 
 			listaMovimientos();
 			listProductos = iProductoService.getAll();
 
-			// 1. Recuperamos el objeto "usuario" completo que guardaste en el login
-			// Asegúrate de importar tu clase Usuario/Model correspondiente
 			Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 					.get("sessionUsuario");
 
-			// 2. Si el usuario existe en sesión, le sacamos el ID
 			if (user != null) {
-				this.movimientos.setIdUsuario(user.getIdUsuario()); // O el nombre de tu getter del ID
+				this.movimientos.setIdUsuario(user.getIdUsuario()); 
 				logger.info("LOG: Usuario recuperado de sesión: " + user.getNombre());
 
 			} else {
@@ -87,10 +87,18 @@ public class MovimientosBean implements Serializable {
 
 	public void save() throws Exception {
 		listaMovimientosGuardar.add(movimientos);
+		int idActual = this.movimientos.getIdUsuario(); 
+	    this.movimientos = new Movimientos();
+	    this.movimientos.setIdUsuario(idActual);
 	}
 
 	public void saveTable() throws Exception {
+		if(listaMovimientosGuardar != null && !listaMovimientosGuardar.isEmpty()) {
 		service.save(listaMovimientosGuardar);
+		}
+		if(listaMovimientosGuardar != null) {
+			listaMovimientosGuardar.clear();
+		}
 	}
 
 	public String irANuevoMovimiento() {
@@ -104,5 +112,26 @@ public class MovimientosBean implements Serializable {
 	public String irATablaMovimientos() {
 		return "/pages/admin/movimientos/tablaMovimientos.xhtml?faces-redirect=true";
 	}
-
+	
+	public void toggleScanner() {
+		this.mostrarScanner = !this.mostrarScanner;	
+		this.movimientos.setCodigoBarras(null);;
+	}
+	
+	public void cargarInfoScanner() throws Exception {
+		System.out.println("escaneado");
+		String codigo = this.movimientos.getCodigoBarras();
+	    
+	    if (codigo != null && !codigo.isEmpty()) {
+	        // Lógica para buscar el producto (ejemplo)
+	        // Producto p = service.buscarPorCodigo(codigo);
+	        this.infoProductoExtra = "Cargado: " + codigo + " - Producto encontrado"; 
+	        Productos productos = iProductoService.getByCodigoBarras(codigo);
+	        System.out.println("Id producto " + productos.getIdProducto() + " " + "Nombre Producto " + productos.getNombre());
+	        movimientos.setIdProducto(productos.getIdProducto());
+	    } else {
+	        this.infoProductoExtra = "Código no válido";
+	    }
+	}
+	
 }

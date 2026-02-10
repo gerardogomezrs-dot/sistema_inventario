@@ -108,7 +108,11 @@ public class ProductosServiceImp implements IProductoService {
 	@Override
 	public List<Productos> cargaArchivos(UploadedFile uploadedFile) throws Exception {
 		List<Productos> productos = new ArrayList<Productos>();
+<<<<<<< HEAD
 		System.out.println("Carga archivo " +uploadedFile.getFileName());
+=======
+
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
 		String fileName = "";
 		fileName = uploadedFile.getFileName().toLowerCase();
 
@@ -127,7 +131,14 @@ public class ProductosServiceImp implements IProductoService {
 				e.printStackTrace();
 			}
 		}
+<<<<<<< HEAD
 
+=======
+		
+		else {
+			throw new ExceptionMessage("Formato no admitido");
+		}
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
 		return productos;
 	}
 
@@ -187,9 +198,16 @@ public class ProductosServiceImp implements IProductoService {
 			csvReader.readNext();
 			while ((fila = csvReader.readNext()) != null) {
 				if (fila.length >= 2) {
+<<<<<<< HEAD
 					p = new Productos();
 					p.setNombre(fila[0]);
 					p.setCodigoBarras(fila[1]);
+=======
+
+					p = new Productos();
+					p.setCodigoBarras(fila[1]);
+					p.setNombre(fila[0]);
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
 					p.setDescripcion(fila[2]);
 					p.setIdCategoria(Integer.parseInt(fila[3]));
 					p.setUnidad(fila[4]);
@@ -211,6 +229,7 @@ public class ProductosServiceImp implements IProductoService {
 
 	@Override
 	public Productos getByCodigoBarras(String codigoBarras) throws Exception {
+<<<<<<< HEAD
 		Productos productos = new Productos();
 		if (codigoBarras != null) {
 			productos = productosDAO.getByIdCodigoBarras(codigoBarras);
@@ -230,4 +249,14 @@ public class ProductosServiceImp implements IProductoService {
 		
 	}
 
+=======
+		Productos productos =  new  Productos();
+		if(codigoBarras != null) {
+			productos = productosDAO.getByIdCodigoBarras(codigoBarras);
+		}
+		
+		return productos;
+	}
+
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
 }

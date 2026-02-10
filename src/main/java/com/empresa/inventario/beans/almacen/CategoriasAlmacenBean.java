@@ -71,7 +71,11 @@ public class CategoriasAlmacenBean implements Serializable {
 		if (this.categorias != null) {
 			listaTablaCategorias.add(categorias);
 			this.categorias = new Categorias();
+<<<<<<< HEAD
 		} else {
+=======
+		}else {
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
 			throw new ExceptionMessage("Ingresa valores");
 		}
 
@@ -103,11 +107,16 @@ public class CategoriasAlmacenBean implements Serializable {
 		}
 	}
 
+<<<<<<< HEAD
 	public void eliminarCategoria() {
+=======
+	public void eliminarCategoria() throws Exception {
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
 		try {
 			if (categorias != null) {
 				categoriaService.delete(categorias.getIdCategoria());
 				list = categoriaService.getAllCategorias();
+<<<<<<< HEAD
 
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 						"Categoria eliminada", "La categoria fue eliminada correctamente"));
@@ -152,6 +161,37 @@ public class CategoriasAlmacenBean implements Serializable {
 		}
 	}
 
+=======
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+						"Categoria eliminada", "La categoria fue eliminada correctamente"));
+			}
+		} catch (Exception e) {
+			añadirMensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", "Ocurrió un error en el servidor. ");
+			e.printStackTrace();
+			System.out.println("error: " + e.getMessage());
+		}
+	}
+	
+	
+	public void cargarArchivo() {
+		try {
+		if(uploadedFile == null || uploadedFile.getContents() == null) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
+		}
+				
+		listaTablaCategorias = new ArrayList<Categorias>();
+		listaTablaCategorias = categoriaService.cargarArchivo(uploadedFile);
+		
+		FacesContext.getCurrentInstance().addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
+		
+		}catch (ExceptionMessage e) {
+			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+		}
+	}
+	
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
 	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}

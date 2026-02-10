@@ -6,6 +6,10 @@ import lombok.Data;
 
 @Data
 public class Categorias implements Serializable {
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
 	/**
 	 * 
 	 */

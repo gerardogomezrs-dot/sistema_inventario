@@ -18,33 +18,49 @@
         <p:growl id="msgs" showDetail="true" />
         <p:separator />
         <p:commandButton value="Nuevo Producto" icon="pi pi-save" action="#{productosAlmacenBean.irANuevoProducto}" />
+<<<<<<< HEAD
         <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{productosAlmacenBean.irADashboard}"
+=======
+        <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{productosAlmacenBean.menuPrincipal}"
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
             immediate="true" style="margin-left:10px;" />
         <p:separator />
         <p:dataTable id="tablaProductos" var="prod" value="#{productosAlmacenBean.list}" rows="10" paginator="true"
             emptyMessage="No se encontraron productos">
             <p:column headerText="ID">
-                <h:outputText value="#{prod.idProducto}" />
+                <h:outputText value="#" />
             </p:column>
 
             <p:column headerText="Nombre">
-                <h:outputText value="#{prod.nombre}" />
+                <h:outputText value="#" />
             </p:column>
 
             <p:column headerText="Codigo de Barras">
+<<<<<<< HEAD
                 <p:barcode value="#{prod.codigoBarras}" type="code128" format="svg" width="150" height="60" />
+=======
+                <p:barcode value="#" type="code128" format="svg" width="150" height="60" />
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
             </p:column>
 
             <p:column headerText="Descripción">
-                <h:outputText value="#{prod.descripcion}" />
+                <h:outputText value="#" />
             </p:column>
 
             <p:column headerText="Categoría">
+<<<<<<< HEAD
                 <h:outputText value="#{prod.categorias.nombre}" />
+=======
+                <h:outputText value="#" />
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
             </p:column>
 
             <p:column headerText="Unidad">
-                <h:outputText value="#{prod.unidad}" />
+                <h:outputText value="#" />
+            </p:column>
+
+            <p:column headerText="Precio Unitario">
+                <h:outputText value="#" />
             </p:column>
 
             <p:column headerText="Precio Unitario">
@@ -52,36 +68,51 @@
             </p:column>
 
             <p:column headerText="Stock Actual">
-                <h:outputText value="#{prod.stockActual}" />
+                <h:outputText value="#" />
             </p:column>
 
             <p:column headerText="Stock Minimo">
+<<<<<<< HEAD
                 <h:outputText value="#{prod.stockMinimo}" />
+=======
+                <h:outputText value="#" />
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
             </p:column>
 
             <p:column headerText="Ubicación">
-                <h:outputText value="#{prod.ubicacion}" />
+                <h:outputText value="#" />
             </p:column>
 
-            <p:column headerText="Acciones">
+             <p:column headerText="Acciones">
 
                 <!-- EDITAR -->
                 <p:commandButton icon="pi pi-pencil" process="@this" update=":dialogoEditar"
                     oncomplete="PF('wdgEditar').show()">
+<<<<<<< HEAD
                     <f:setPropertyActionListener value="#{prod}" target="#{productosAlmacenBean.producto}" />
+=======
+                    <f:setPropertyActionListener value="#{prod}" target="#" />
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
                 </p:commandButton>
 
                 <!-- ELIMINAR CON CONFIRMACIÓN -->
                 <p:commandButton icon="pi pi-trash" styleClass="p-button-danger" process="@this"
+<<<<<<< HEAD
                     update=":form:tablaProductos :form:msgs" action="#{productosAlmacenBean.eliminar}">
 
                     <f:setPropertyActionListener value="#{prod}" target="#{productosAlmacenBean.producto}" />
+=======
+                    update=":form:tablaProductos :form:msgs" action="#">
+
+                    <f:setPropertyActionListener value="#{prod}" target="#" />
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
 
                     <p:confirm header="Confirmación" message="¿Está seguro de eliminar este producto?"
                         icon="pi pi-exclamation-triangle" />
                 </p:commandButton>
             </p:column>
         </p:dataTable>
+<<<<<<< HEAD
         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
 
             <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat"
@@ -94,6 +125,10 @@
     <!-- DIALOGO EDITAR -->
     <ui:include src="/pages/almacen/productos/actualizarProductos.xhtml" />
 
+=======
+
+    </h:form>
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
 </h:body>
 
 </html>

@@ -11,8 +11,11 @@ public interface IProductoService {
 	List<Productos> create(List<Productos> productos) throws Exception;
 
 	void delete(int idProducto) throws Exception;
+<<<<<<< HEAD
 	
 	void bajaProducto(int idProducto) throws Exception;
+=======
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
 
 	void update(Productos productos) throws Exception;
 
