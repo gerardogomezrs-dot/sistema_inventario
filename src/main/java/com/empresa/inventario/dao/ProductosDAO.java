@@ -70,7 +70,7 @@ public class ProductosDAO {
 		Connection conexion = Conexion.getConexion();
 
 		String sql = "UPDATE productos SET " + "codigo_barras = ?, " + "nombre = ?, " + "descripcion = ?, "
-				+ "categoria = ?, " + "unidad = ?, " + "precio_unitario = ?, " + "stock_actual = ?, "
+				+ "id_categoria = ?, " + "unidad = ?, " + "precio_unitario = ?, " + "stock_actual = ?, "
 				+ "stock_minimo = ?, " + "ubicacion = ?, " + "activo = ? " + "WHERE id_producto = ?";
 
 		PreparedStatement ps = conexion.prepareStatement(sql);
@@ -155,6 +155,21 @@ public class ProductosDAO {
 			throw e;
 		}
 		return p;
+	}
+	
+	
+	public void bajaProducto(int idProducto) throws Exception {
+
+		Connection connection = Conexion.getConexion();
+
+		String sql = "UPDATE productos  SET activo = 0  WHERE ID_PRODUCTO = ?";
+		PreparedStatement statement = connection.prepareStatement(sql);
+
+		statement.setInt(1, idProducto);
+		statement.executeUpdate();
+		statement.close();
+		connection.close();
+
 	}
 
 }

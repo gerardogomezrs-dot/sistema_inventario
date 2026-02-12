@@ -30,7 +30,6 @@ public class LoginBean implements Serializable {
 	@Inject
 	private IAuthService authService;
 
-	// 1. Cambiamos void por String para controlar la navegación
 	public String login() {
 		try {
 			usuario = new Usuario();
@@ -39,7 +38,7 @@ public class LoginBean implements Serializable {
 			if (usuario == null) {
 				resetearSesion();
 				añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error de Inventario", "Usuario o password inválido");
-				return null; // Se queda en login.xhtml
+				return null; 
 			} else {
 				String ruta = "";
 
@@ -48,12 +47,12 @@ public class LoginBean implements Serializable {
 					FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("sessionUsuario",
 							usuario);
 
-					// ESTA ES LA CLAVE: Mantener mensajes a través de la redirección
+					
 					FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
 
 					añadirMensaje(FacesMessage.SEVERITY_INFO, "¡Bienvenido!",
 							"Hola " + usuario.getNombre() + ", has iniciado sesión correctamente.");
-					// 2. Retornamos la ruta directamente
+
 					ruta = "/pages/admin/dashboard.xhtml?faces-redirect=true";
 				}
 

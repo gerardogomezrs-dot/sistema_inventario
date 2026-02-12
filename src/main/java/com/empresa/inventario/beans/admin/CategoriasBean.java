@@ -3,6 +3,7 @@ package com.empresa.inventario.beans.admin;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -27,7 +28,7 @@ public class CategoriasBean implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private List<Categorias> filteredList; 
+	private List<Categorias> filteredList;
 
 	private List<Categorias> list;
 
@@ -38,6 +39,8 @@ public class CategoriasBean implements Serializable {
 	private UploadedFile uploadedFile;
 
 	private List<Categorias> categoriasList;
+
+	private Integer progreso = 0;
 
 	@Inject
 	private ICategoriaService categoriaService;
@@ -56,29 +59,41 @@ public class CategoriasBean implements Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	public void listaTabla() {
-
 		if (this.categorias != null) {
 			listaTablaCategorias.add(this.categorias);
 			this.categorias = new Categorias();
 		}
-
 	}
 
 	public void guardar() throws Exception {
+		progreso = 0;
 		if (listaTablaCategorias != null && !listaTablaCategorias.isEmpty()) {
-			categoriaService.save(listaTablaCategorias);
+			this.progreso = 0;
+			List<Categorias> copiaParaGuardar = new ArrayList<>(this.listaTablaCategorias);
+
+			if (copiaParaGuardar.isEmpty()) {
+				return;
+			}
+			CompletableFuture.runAsync(() -> {
+				try {
+					categoriaService.save(copiaParaGuardar, (valor) -> {
+						this.progreso = valor;
+					});
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			});
 		}
 
-		if (listaTablaCategorias != null) {
-			listaTablaCategorias.clear();
-		}
+		listaTablaCategorias.clear();
 
 		this.categorias = new Categorias();
+	}
 
+	public void onComplete() {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 				"Categoria guardada", "La categoria fue guardada correctamente"));
 	}
@@ -98,27 +113,39 @@ public class CategoriasBean implements Serializable {
 	}
 
 	public void eliminarCategoria() throws Exception {
-		categoriaService.delete(categorias.getIdCategoria());
-		list = categoriaService.getAllCategorias();
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-				"Categoria eliminada", "La categoria fue eliminada correctamente"));
+		try {
+			if (categorias != null) {
+				categoriaService.delete(categorias.getIdCategoria());
+				list = categoriaService.getAllCategorias();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+						"Categoria eliminada", "La categoria fue eliminada correctamente"));
+			}
+		} catch (Exception e) {
+			añadirMensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", "Consulte al administrador.");
+
+			FacesContext context = FacesContext.getCurrentInstance();
+			context.validationFailed();
+			context.renderResponse();
+			e.printStackTrace();
+			return;
+		}
 	}
 
 	public void cargarArchivo() {
 		try {
-		if (uploadedFile == null || uploadedFile.getContents() == null) {
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
-		}
-		listaTablaCategorias = new ArrayList<Categorias>();
-		listaTablaCategorias = categoriaService.cargarArchivo(uploadedFile);
+			if (uploadedFile == null || uploadedFile.getContents() == null) {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
+			}
+			listaTablaCategorias = new ArrayList<Categorias>();
+			listaTablaCategorias = categoriaService.cargarArchivo(uploadedFile);
 
-		FacesContext.getCurrentInstance().addMessage(null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
-		
-	}catch (ExceptionMessage e) {
-		añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
-	}
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
+
+		} catch (ExceptionMessage e) {
+			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+		}
 	}
 
 	public String irANuevaCategoria() {
@@ -127,16 +154,13 @@ public class CategoriasBean implements Serializable {
 
 	public String irATablaCategoria() {
 		return "/pages/admin/categorias/tablaCategorias.xhtml?faces-redirect=true";
-
 	}
 
 	public String irADashboard() {
 		return "/pages/admin/dashboard.xhtml?faces-redirect=true";
 	}
 
-	
 	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
-
 }

@@ -12,13 +12,11 @@
             padding: 20px;
         }
 
-        /* Contenedor principal centrado */
         .report-container {
             max-width: 900px;
             margin: 0 auto;
         }
 
-        /* Mejora visual del Panel */
         .ui-panel.custom-menu-panel .ui-panel-titlebar {
             background: #2c3e50;
             color: white;
@@ -26,7 +24,6 @@
             font-size: 1.2rem;
         }
 
-        /* Grid de botones estilo "Cards" */
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -34,7 +31,6 @@
             padding: 20px 0;
         }
 
-        /* Estilo moderno para los botones */
         .report-btn {
             height: 100px !important;
             font-size: 1.1rem !important;
@@ -47,19 +43,17 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
         }
 
-        /* Iconos más grandes dentro de los botones */
         .report-btn .ui-button-icon-left {
             font-size: 1.5rem !important;
         }
 
-        /* Estilo para el contenedor del footer */
         .footer-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
     </style>
-<link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+   <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
     <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
     <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
     <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
@@ -68,41 +62,33 @@
 <h:body>
     <div class="report-container">
         <h:form id="menuForm">
-            <ui:include src="/pages/admin/menu.xhtml" />
-
+            <ui:include src="/pages/almacen/menu.xhtml" />
             <p:growl id="messages" showDetail="true" />
 
             <p:panel header="Panel de Control: Gestión de Reportes" styleClass="custom-menu-panel">
 
                 <div class="dashboard-grid">
 
-                    <p:commandButton value="Reporte Movimientos"
-                        action="#{inventarioReporteBean.irAReporteMovimientos()}" icon="pi pi-search"
+                    <p:commandButton value="Reporte Movimientos" action="#{reportesAlmacenBean.irAReporteMovimientos}" icon="pi pi-search"
                         styleClass="report-btn ui-button-outlined" />
 
-                    <p:commandButton value="Inventario Valorizado"
-                        action="#{inventarioReporteBean.irAReporteInventarioValorizado}" icon="pi pi-dollar"
+                    <p:commandButton value="Inventario Valorizado" action="#{reportesAlmacenBean.irAReporteInventarioValorizado}" icon="pi pi-dollar"
                         styleClass="report-btn ui-button-success" />
 
-                    <p:commandButton value="Reabastecimiento" action="#{inventarioReporteBean.irAReporteStockBajo}"
-                        icon="pi pi-shopping-cart" styleClass="report-btn ui-button-warning" />
+                    <p:commandButton value="Reabastecimiento" action="#{reportesAlmacenBean.irAReporteStockBajo}" icon="pi pi-shopping-cart"
+                        styleClass="report-btn ui-button-warning" />
 
                 </div>
-
                 <f:facet name="footer">
                     <div class="footer-container">
                         <small>Seleccione un módulo para generar el informe detallado.</small>
-
                         <p:commandButton value="Regresar al Inicio" icon="pi pi-home"
-                            action="#{inventarioReporteBean.irADashboard}" styleClass="ui-button-flat"
-                            immediate="true" />
+                            action="#{reportesAlmacenBean.irADashboard}" styleClass="ui-button-flat" immediate="true" />
                     </div>
                 </f:facet>
             </p:panel>
         </h:form>
     </div>
-    <ui:include src="/pages/admin/footer.xhtml" />
-
+    <ui:include src="/pages/almacen/footer.xhtml" />
 </h:body>
-
 </html>

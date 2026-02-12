@@ -57,7 +57,20 @@
 
         <ui:include src="/pages/almacen/menu.xhtml" />
 
-        <p:growl id="mensajes" showDetail="true" />
+        <p:growl id="msgs" showDetail="true" />
+
+        <p:progressBar widgetVar="pbAjax" 
+                   ajax="true" 
+                   value="#{categoriasAlmacenBean.progreso}" 
+                   labelTemplate="{value}%" 
+                   styleClass="animated" 
+                   interval="500">
+        
+        <p:ajax event="complete" 
+                listener="#{categoriasAlmacenBean.onComplete}" 
+                update="msgs" 
+                oncomplete="alert('¡Proceso Finalizado!');"/>
+    </p:progressBar>
 
         <div class="flex-container">
             <p:panel header="Registro de Categorias" style="width: 600px; margin: 0 auto;">
@@ -98,9 +111,15 @@
                     </p:column>
                 </p:dataTable>
                 <p:separator />
-                <p:commandButton value="Guardar" icon="pi pi-save" action="#{categoriasAlmacenBean.guardar}"
-                    process="@form" update="tablaDatos"
-                    oncomplete="if (!args.validationFailed) PF('dlgConfirmacionGuardar').show();" />
+                <p:commandButton value="Guardar" 
+                 icon="pi pi-save" 
+                 action="#{categoriasAlmacenBean.guardar}" 
+                 process="@form"
+                 update="tablaDatos, msgs" 
+                 widgetVar="btnGuardar"
+                 onclick="PF('pbAjax').start(); PF('btnGuardar').disable();"
+                 oncomplete="if (args.validationFailed) { PF('pbAjax').cancel(); PF('btnGuardar').enable(); } else { PF('dlgConfirmacionGuardar').show(); }" />
+            
             </p:panel>
         </div>
 
@@ -120,6 +139,9 @@
             </h:panelGrid>
         </p:dialog>
     </h:form>
+
+            <ui:include src="/pages/almacen/footer.xhtml" />
+
 </h:body>
 
 </html>

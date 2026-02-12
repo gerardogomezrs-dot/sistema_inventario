@@ -31,11 +31,10 @@
         }
     </style>
 </h:head>
-
 <h:body>
     <h:form id="formPerfilUsuario">
         <ui:include src="/pages/admin/menu.xhtml" />
-
+        <p:separator />
         <div class="flex-container">
             <p:panel header="Perfil Usuario" style="width: 600px; margin: 0 auto;">
 
@@ -53,7 +52,7 @@
                         required="true" />
                     <h:outputText value=" Mostrar password" />
                     <h:selectBooleanCheckbox onchange="PF('pw').jq.attr('type', this.checked ? 'text' : 'password')" />
-                    
+
 
                     <p:outputLabel value="Permisos Asignados:" />
                     <p:inputText value="#{perfilUsuarioBean.usuario.permisos}" readonly="true" styleClass="readonly" />
@@ -78,7 +77,6 @@
             </p:panel>
         </div>
     </h:form>
-
     <p:dialog header="Mensaje" widgetVar="dlgConfirmacion" modal="true" appendTo="@(body)">
         <h:form id="formDialogo">
             <h:panelGrid columns="1" style="text-align: center;">
@@ -87,6 +85,7 @@
             </h:panelGrid>
         </h:form>
     </p:dialog>
+    <ui:include src="/pages/admin/footer.xhtml" />
 </h:body>
 
 </html>

@@ -1,49 +1,47 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
     xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-
-
-    <p:dialog id="dialogoEditar" header="Editar Producto" widgetVar="wdgEditar" modal="true" appendTo="@(body)"
+ <p:dialog id="dialogoEditar" header="Editar Producto" widgetVar="wdgEditar" modal="true" appendTo="@(body)"
         resizable="false">
 
         <h:form id="formEditar">
             <h:panelGrid columns="2" cellpadding="5">
 
                 <p:outputLabel for="nombre" value="Nombre:" />
-                <p:inputText id="nombre" value="#{productoBean.producto.nombre}" required="true" />
+                <p:inputText id="nombre" value="#{productosAlmacenBean.producto.nombre}" required="true" />
 
                 <h:outputLabel value="Descripción:" />
-                <p:inputTextarea value="#{productoBean.producto.descripcion}" rows="3" />
+                <p:inputTextarea value="#{productosAlmacenBean.producto.descripcion}" rows="3" />
 
                 <p:outputLabel for="categoria" value="Categoría:" />
-                <p:selectOneMenu id="categoria" value="#{productoBean.producto.idCategoria}" style="width: 200px;">
+                <p:selectOneMenu id="categoria" value="#{productosAlmacenBean.producto.idCategoria}">
 
                     <f:selectItem itemLabel="Seleccione una categoría" itemValue="" noSelectionOption="true" />
 
-                    <f:selectItems value="#{productoBean.listaCategorias}" var="cat" itemLabel="#{cat.nombre}"
-                        itemValue="#{cat.idCategoria}" style="width: 200px;"/>
+                    <f:selectItems value="#{productosAlmacenBean.listaCategorias}" var="cat" itemLabel="#{cat.nombre}"
+                        itemValue="#{cat.idCategoria}" />
 
                 </p:selectOneMenu>
 
                 <h:outputLabel value="Unidad:" />
-                <p:inputText value="#{productoBean.producto.unidad}" />
+                <p:inputText value="#{productosAlmacenBean.producto.unidad}" />
 
                 <h:outputLabel value="Precio Unitario:" />
-                <p:inputText value="#{productoBean.producto.precioUnitario}" placeholder="$ 0.00" />
+                <p:inputText value="#{productosAlmacenBean.producto.precioUnitario}" placeholder="$ 0.00" />
                 
                 <h:outputLabel value="Stock Actual:" />
-                <p:inputText value="#{productoBean.producto.stockActual}" />
+                <p:inputText value="#{productosAlmacenBean.producto.stockActual}" />
 
                 <h:outputLabel value="Stock Mínimo:" />
-                <p:inputText value="#{productoBean.producto.stockMinimo}" />
+                <p:inputText value="#{productosAlmacenBean.producto.stockMinimo}" />
 
                 <h:outputLabel value="Ubicación:" />
-                <p:inputText value="#{productoBean.producto.ubicacion}" />
+                <p:inputText value="#{productosAlmacenBean.producto.ubicacion}" />
 
                 <h:outputLabel value="Activo:" />
-                <p:selectBooleanCheckbox value="#{productoBean.producto.activo}" />
+                <p:selectBooleanCheckbox value="#{productosAlmacenBean.producto.activo}" />
 
-                <p:commandButton value="Guardar" icon="pi pi-save" action="#{productoBean.guardarCambios}"
+                <p:commandButton value="Guardar" icon="pi pi-save" action="#{productosAlmacenBean.actualizar}"
                     update=":form:tablaProductos :form:msgs"
                     oncomplete="if (!args.validationFailed) { PF('wdgEditar').hide(); }" />
 

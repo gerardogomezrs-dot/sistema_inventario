@@ -4,58 +4,120 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
-    <title>Login Sistema</title>
+    <title>Acceso al Sistema</title>
     <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
 
     <style>
         body {
-            background-color: #f4f4f9;
+            /* Gradiente moderno para el fondo */
+            background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         .login-card {
-            width: 350px;
+            width: 380px;
+            border-radius: 12px !important;
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3) !important;
+            border: none !important;
+        }
+
+        .login-card .ui-panel-titlebar {
+            background: #232222 !important;
+            border: none !important;
+            text-align: center;
+            font-size: 1.5em;
+            color: #dadada;
+            padding-top: 20px !important;
+        }
+
+        .login-card .ui-panel-content {
+            padding: 20px 30px !important;
+        }
+
+        .login-card .ui-panel-footer {
+            background: #ffffff !important;
+            border: none !important;
+            padding: 0 30px 30px 30px !important;
+        }
+
+        /* Estilo para los grupos de input */
+        .ui-inputgroup {
+            margin-bottom: 15px;
+        }
+
+        .ui-inputgroup-addon {
+            background-color: #f8f9fa !important;
+        }
+
+        .btn-login {
+            background-color: #1e5ed3 !important;
+            border: none !important;
+            height: 40px;
+            font-weight: bold !important;
+            transition: background 0.3s;
+        }
+
+        .btn-login:hover {
+            background-color: #2f56d6 !important;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .logo-container i {
+            font-size: 3rem;
+            color: #2428f3;
         }
     </style>
 </h:head>
 
 <h:body>
 
-    <h:form>
+    <h:form id="loginForm">
 
         <p:growl id="messages" showDetail="true" />
 
-        <!-- Usamos p:panel (sí soporta facets en PF 7) -->
         <p:panel styleClass="login-card">
 
             <f:facet name="header">
-                <h:outputText value="Bienvenido" />
+                <div class="logo-container">
+                    <i class="pi pi-user-circle"></i>
+                </div>
+                <h:outputText value="Iniciar Sesión" />
             </f:facet>
 
             <div class="ui-fluid">
-
-                <div class="p-field">
-                    <p:outputLabel for="username" value="Usuario" />
-                    <p:inputText id="username" value="#{loginBean.userName}" required="true" />
+                <p:outputLabel for="username" value="Nombre de Usuario"
+                    style="display:block; margin-bottom:5px; color:#666; font-size: 0.9em;" />
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon"><i class="pi pi-user"></i></span>
+                    <p:inputText id="username" value="#{loginBean.userName}" required="true" placeholder="Ej. admin" />
                 </div>
 
-                <div class="p-field" style="margin-top: 10px">
-                    <p:outputLabel for="password" value="Clave" />
-                    <p:password id="password" value="#{loginBean.password}" required="true" feedback="false" />
+                <p:outputLabel for="password" value="Contraseña"
+                    style="display:block; margin-bottom:5px; color:#666; font-size: 0.9em;" />
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon"><i class="pi pi-lock"></i></span>
+                    <p:password id="password" value="#{loginBean.password}" required="true" feedback="false"
+                        placeholder="********" />
                 </div>
-
             </div>
 
             <f:facet name="footer">
-                <p:commandButton value="Ingresar" action="#{loginBean.login}" ajax="false" icon="pi pi-check"
-                    styleClass="ui-button-success" style="width:100%" />
+                <p:commandButton value="INGRESAR" action="#{loginBean.login}" ajax="false" icon="pi pi-sign-in"
+                    styleClass="btn-login" />
             </f:facet>
 
         </p:panel>
+
+
 
     </h:form>
 

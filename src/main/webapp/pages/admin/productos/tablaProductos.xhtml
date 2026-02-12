@@ -15,18 +15,16 @@
     <!-- FORM PRINCIPAL -->
     <h:form id="form">
 
-            <ui:include src="/pages/admin/menu.xhtml" />
+        <ui:include src="/pages/admin/menu.xhtml" />
 
         <p:growl id="msgs" showDetail="true" />
+        <p:separator />
 
         <p:commandButton value="Nuevo Producto" icon="pi pi-save" action="#{productoBean.irANuevoProducto}" />
 
         <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{productoBean.menuPrincipal}"
             immediate="true" style="margin-left:10px;" />
-
-                <p:separator />
-
-
+        <p:separator />
         <p:dataTable id="tablaProductos" var="prod" value="#{productoBean.list}" rows="10" paginator="true"
             emptyMessage="No se encontraron productos">
 
@@ -69,7 +67,6 @@
             <p:column headerText="Ubicación">
                 <h:outputText value="#{prod.ubicacion}" />
             </p:column>
-
             <p:column headerText="Acciones">
                 <!-- EDITAR -->
                 <p:commandButton icon="pi pi-pencil" process="@this" update=":dialogoEditar"
@@ -94,7 +91,6 @@
 
             <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat"
                 icon="pi pi-times" />
-
             <p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes p-button-danger"
                 icon="pi pi-check" />
         </p:confirmDialog>
@@ -102,10 +98,8 @@
     </h:form>
 
     <!-- DIALOGO EDITAR -->
-    <ui:include src="/pages/admin/productos/actualizarProductos.xhtml">
-
-    </ui:include>
-
+    <ui:include src="/pages/admin/productos/actualizarProductos.xhtml" />
+    <ui:include src="/pages/admin/footer.xhtml" />
 
 </h:body>
 

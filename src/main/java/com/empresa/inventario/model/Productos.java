@@ -30,4 +30,6 @@ public class Productos implements Serializable{
 	private boolean activo;
 
 	private Categorias categorias;
+	
+	
 }

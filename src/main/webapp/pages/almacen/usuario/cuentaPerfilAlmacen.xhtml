@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html  xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
     xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
     <title>Sistema de Inventario - Panel de Control</title>
-     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
     <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
-    <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces"/>
+    <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
     <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
-    
+
     <style>
         /* Estilo para simular el p:tag en PrimeFaces 7 */
         .badge-info {
@@ -23,14 +23,22 @@
             border: 1px solid #2196f3;
             display: inline-block;
         }
-        .menu-grid .ui-button { width: 100%; margin-bottom: 5px; }
-        .ui-panel { margin-top: 10px; }
+
+        .menu-grid .ui-button {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+        .ui-panel {
+            margin-top: 10px;
+        }
     </style>
 </h:head>
 
 <h:body>
     <h:form id="formPerfilUsuario">
         <ui:include src="/pages/admin/menu.xhtml" />
+        <p:separator />
 
         <div class="flex-container">
             <p:panel header="Perfil Usuario" style="width: 600px; margin: 0 auto;">
@@ -49,7 +57,7 @@
                         required="true" />
                     <h:outputText value=" Mostrar password" />
                     <h:selectBooleanCheckbox onchange="PF('pw').jq.attr('type', this.checked ? 'text' : 'password')" />
-                    
+
 
                     <p:outputLabel value="Permisos Asignados:" />
                     <p:inputText value="#{perfilUsuarioBean.usuario.permisos}" readonly="true" styleClass="readonly" />
@@ -83,5 +91,9 @@
             </h:panelGrid>
         </h:form>
     </p:dialog>
+
+            <ui:include src="/pages/almacen/footer.xhtml" />
+
 </h:body>
+
 </html>

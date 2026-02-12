@@ -35,33 +35,30 @@
             color: white !important;
         }
     </style>
-
     <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
 </h:head>
 
 <h:body>
-
     <h:form id="formReporte">
-        <ui:include src="/pages/admin/menu.xhtml" />
+            <ui:include src="/pages/almacen/menu.xhtml" />
         <p:separator />
         <p:commandButton value="Regresar" icon="pi pi-chevron-left"
-            action="#{inventarioReporteBean.irAReportePrincipal}" immediate="true" style="margin-left:10px;" />
+            action="#{reportesAlmacenBean.irAReportePrincipal}" immediate="true" style="margin-left:10px;" />
         <p:separator />
-
         <p:panel header="Reporte de Movimientos (Kardex)">
 
             <h:panelGrid columns="5" cellpadding="5" style="margin-bottom: 20px;">
                 <p:outputLabel value="Desde:" />
-                <p:calendar value="#{inventarioReporteBean.fechaInicio}" pattern="dd/MM/yyyy" />
+                <p:calendar value="#{reportesAlmacenBean.fechaInicio}" pattern="dd/MM/yyyy" />
 
                 <p:outputLabel value="Hasta:" />
-                <p:calendar value="#{inventarioReporteBean.fechaFin}" pattern="dd/MM/yyyy" />
+                <p:calendar value="#{reportesAlmacenBean.fechaFin}" pattern="dd/MM/yyyy" />
 
-                <p:commandButton value="Consultar" actionListener="#{inventarioReporteBean.buscar}"
+                <p:commandButton value="Consultar" actionListener="#{reportesAlmacenBean.buscar}"
                     update="tblMovimientos" icon="pi pi-search" />
             </h:panelGrid>
 
-            <p:dataTable id="tblMovimientos" value="#{inventarioReporteBean.listaReporteMovimientos}" var="mov"
+            <p:dataTable id="tblMovimientos" value="#{reportesAlmacenBean.listaReporteMovimientos}" var="mov"
                 paginator="true" rows="20" reflow="true"
                 emptyMessage="No se encontraron movimientos en este rango de fechas">
 
@@ -72,7 +69,7 @@
                         <p:commandButton value="Exportar Excel" icon="pi pi-file-excel" ajax="false"
                             styleClass="btn-excel">
                             <p:dataExporter type="xls" target="tblMovimientos"
-                                fileName="#{inventarioReporteBean.nombreArchivo_3}" pageOnly="false" />
+                                fileName="#{reportesAlmacenBean.nombreArchivo_3}" pageOnly="false" />
                         </p:commandButton>
                     </div>
                 </f:facet>
@@ -100,8 +97,7 @@
                 </p:column>
             </p:dataTable>
         </p:panel>
-        <ui:include src="/pages/admin/footer.xhtml" />
-
+        <ui:include src="/pages/almacen/footer.xhtml" />
     </h:form>
 </h:body>
 

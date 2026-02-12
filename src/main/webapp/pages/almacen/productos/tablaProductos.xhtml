@@ -18,72 +18,85 @@
         <p:growl id="msgs" showDetail="true" />
         <p:separator />
         <p:commandButton value="Nuevo Producto" icon="pi pi-save" action="#{productosAlmacenBean.irANuevoProducto}" />
-        <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{productosAlmacenBean.menuPrincipal}"
+        <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{productosAlmacenBean.irADashboard}"
             immediate="true" style="margin-left:10px;" />
         <p:separator />
         <p:dataTable id="tablaProductos" var="prod" value="#{productosAlmacenBean.list}" rows="10" paginator="true"
             emptyMessage="No se encontraron productos">
             <p:column headerText="ID">
-                <h:outputText value="#" />
+                <h:outputText value="#{prod.idProducto}" />
             </p:column>
 
             <p:column headerText="Nombre">
-                <h:outputText value="#" />
+                <h:outputText value="#{prod.nombre}" />
             </p:column>
 
             <p:column headerText="Codigo de Barras">
-                <p:barcode value="#" type="code128" format="svg" width="150" height="60" />
+                <p:barcode value="#{prod.codigoBarras}" type="code128" format="svg" width="150" height="60" />
             </p:column>
 
             <p:column headerText="Descripción">
-                <h:outputText value="#" />
+                <h:outputText value="#{prod.descripcion}" />
             </p:column>
 
             <p:column headerText="Categoría">
-                <h:outputText value="#" />
+                <h:outputText value="#{prod.categorias.nombre}" />
             </p:column>
 
             <p:column headerText="Unidad">
-                <h:outputText value="#" />
+                <h:outputText value="#{prod.unidad}" />
             </p:column>
 
             <p:column headerText="Precio Unitario">
-                <h:outputText value="#" />
+                <h:outputText value="#{prod.precioUnitario}" />
             </p:column>
 
             <p:column headerText="Stock Actual">
-                <h:outputText value="#" />
+                <h:outputText value="#{prod.stockActual}" />
             </p:column>
 
             <p:column headerText="Stock Minimo">
-                <h:outputText value="#" />
+                <h:outputText value="#{prod.stockMinimo}" />
             </p:column>
 
             <p:column headerText="Ubicación">
-                <h:outputText value="#" />
+                <h:outputText value="#{prod.ubicacion}" />
             </p:column>
 
-             <p:column headerText="Acciones">
+            <p:column headerText="Acciones">
 
                 <!-- EDITAR -->
                 <p:commandButton icon="pi pi-pencil" process="@this" update=":dialogoEditar"
                     oncomplete="PF('wdgEditar').show()">
-                    <f:setPropertyActionListener value="#{prod}" target="#" />
+                    <f:setPropertyActionListener value="#{prod}" target="#{productosAlmacenBean.producto}" />
                 </p:commandButton>
 
                 <!-- ELIMINAR CON CONFIRMACIÓN -->
                 <p:commandButton icon="pi pi-trash" styleClass="p-button-danger" process="@this"
-                    update=":form:tablaProductos :form:msgs" action="#">
+                    update=":form:tablaProductos :form:msgs" action="#{productosAlmacenBean.eliminar}">
 
-                    <f:setPropertyActionListener value="#{prod}" target="#" />
+                    <f:setPropertyActionListener value="#{prod}" target="#{productosAlmacenBean.producto}" />
 
                     <p:confirm header="Confirmación" message="¿Está seguro de eliminar este producto?"
                         icon="pi pi-exclamation-triangle" />
                 </p:commandButton>
             </p:column>
         </p:dataTable>
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
 
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat"
+                icon="pi pi-times" />
+            <p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes p-button-danger"
+                icon="pi pi-check" />
+        </p:confirmDialog>
     </h:form>
+
+    <!-- DIALOGO EDITAR -->
+    <ui:include src="/pages/almacen/productos/actualizarProductos.xhtml" />
+
+    <ui:include src="/pages/almacen/footer.xhtml" />
+
+
 </h:body>
 
 </html>

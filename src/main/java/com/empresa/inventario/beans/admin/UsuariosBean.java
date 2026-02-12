@@ -16,7 +16,7 @@ import com.empresa.inventario.service.IUsuariosService;
 
 import lombok.Data;
 
-@Named("usuariosBean") // Nombre para usar en el XHTML
+@Named("usuariosBean") 
 @javax.faces.view.ViewScoped
 @Data
 public class UsuariosBean implements Serializable {
@@ -69,11 +69,10 @@ public class UsuariosBean implements Serializable {
 
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.validationFailed();
-			context.renderResponse(); // 🔴 MUY IMPORTANTE
-			return; // 🔴 CORTA la ejecución
+			context.renderResponse();
+			return;
 		} catch (Exception e) {
 			añadirMensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", "Consulte al administrador.");
-
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.validationFailed();
 			context.renderResponse();
@@ -87,7 +86,7 @@ public class UsuariosBean implements Serializable {
 			iUsuariosService.delete(usuario.getIdUsuario());
 			list = iUsuariosService.getAll();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-					"Usurio eliminado", "El usuario fue eliminado correctamente"));
+					"Usuario eliminado", "El usuario fue eliminado correctamente"));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

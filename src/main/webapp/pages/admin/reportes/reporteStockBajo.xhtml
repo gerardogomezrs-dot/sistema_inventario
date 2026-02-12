@@ -43,11 +43,13 @@
 
     <h:form id="formReporte">
 
-            <ui:include src="/pages/admin/menu.xhtml" />
+        <ui:include src="/pages/admin/menu.xhtml" />
+        <p:separator />
 
-        <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{inventarioReporteBean.irAReportePrincipal}" immediate="true"
-            style="margin-left:10px;" />
-            
+        <p:commandButton value="Regresar" icon="pi pi-chevron-left"
+            action="#{inventarioReporteBean.irAReportePrincipal}" immediate="true" style="margin-left:10px;" />
+        <p:separator />
+
         <p:panel header="Reporte de Stock Bajo">
 
             <p:dataTable id="tblMovimientos" value="#{inventarioReporteBean.listaStockBajo}" var="mov" paginator="true"
@@ -94,6 +96,8 @@
 
             </p:dataTable>
         </p:panel>
+        <ui:include src="/pages/admin/footer.xhtml" />
+
     </h:form>
 
 </h:body>

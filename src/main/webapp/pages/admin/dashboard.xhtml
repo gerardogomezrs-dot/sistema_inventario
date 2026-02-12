@@ -34,10 +34,7 @@
         }
     </style>
 </h:head>
-
 <h:body>
-
-
     <h:form id="formPrincipal">
         <p:growl id="messages" showDetail="true" />
 
@@ -89,12 +86,16 @@
                             <p:commandButton value="Gestionar Reportes" action="#{navBean.irAReportes()}"
                                 icon="pi pi-chart-bar" styleClass="ui-button-info" ajax="false" />
 
+                            <p:commandButton value="Gestionar Proveedores"
+                                action="#{navegacionAlmacenBean.irAGestionProveedores}" icon="pi pi-home" ajax="false"
+                                styleClass="ui-button-raised" />
+
                         </h:panelGrid>
                     </p:panel>
                 </div>
             </div>
         </div>
-
+        <ui:include src="/pages/admin/footer.xhtml" />
     </h:form>
 </h:body>
 

@@ -62,6 +62,7 @@
         <ui:include src="/pages/admin/menu.xhtml" />
 
         <p:growl id="msgs" showDetail="true" />
+        <p:separator />
 
         <p:toolbar style="margin-bottom: 20px; border: none; background: transparent;">
             <f:facet name="left">
@@ -73,6 +74,7 @@
                     styleClass="ui-button-raised ui-button-primary" />
             </f:facet>
         </p:toolbar>
+        <p:separator />
 
         <p:dataTable id="tablaUsuarios" var="prod" value="#{usuariosBean.list}" rows="10" paginator="true"
             paginatorPosition="bottom" emptyMessage="No se encontraron usuarios"
@@ -127,6 +129,7 @@
     </h:form>
 
     <ui:include src="/pages/admin/usuarios/actualizarUsuarios.xhtml" />
+            		<ui:include src="/pages/admin/footer.xhtml" />
 
 </h:body>
 

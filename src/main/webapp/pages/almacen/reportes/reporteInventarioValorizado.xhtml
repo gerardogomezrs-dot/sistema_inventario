@@ -4,7 +4,7 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
-    <title>Reporte de Inventario</title>
+    <title>Reporte de Inventario Valorizado</title>
     <style>
         .ui-panelgrid .ui-grid-responsive .ui-grid-row {
             border: none !important;
@@ -38,32 +38,22 @@
 
     <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
 </h:head>
-
 <h:body>
-
     <h:form id="formReporte">
+
         <ui:include src="/pages/admin/menu.xhtml" />
+
         <p:separator />
+
         <p:commandButton value="Regresar" icon="pi pi-chevron-left"
             action="#{inventarioReporteBean.irAReportePrincipal}" immediate="true" style="margin-left:10px;" />
         <p:separator />
 
-        <p:panel header="Reporte de Movimientos (Kardex)">
+        <p:panel header="Reporte de Inventario Valorizado">
 
-            <h:panelGrid columns="5" cellpadding="5" style="margin-bottom: 20px;">
-                <p:outputLabel value="Desde:" />
-                <p:calendar value="#{inventarioReporteBean.fechaInicio}" pattern="dd/MM/yyyy" />
+            <p:dataTable id="tblMovimientos" value="#{inventarioReporteBean.listaInventarioValorizado}" var="mov"
+                paginator="true" rows="20" emptyMessage="No se encontraron movimientos">
 
-                <p:outputLabel value="Hasta:" />
-                <p:calendar value="#{inventarioReporteBean.fechaFin}" pattern="dd/MM/yyyy" />
-
-                <p:commandButton value="Consultar" actionListener="#{inventarioReporteBean.buscar}"
-                    update="tblMovimientos" icon="pi pi-search" />
-            </h:panelGrid>
-
-            <p:dataTable id="tblMovimientos" value="#{inventarioReporteBean.listaReporteMovimientos}" var="mov"
-                paginator="true" rows="20" reflow="true"
-                emptyMessage="No se encontraron movimientos en este rango de fechas">
 
                 <f:facet name="header">
                     <div style="display: flex; justify-content: center; align-items: center; gap: 15px;">
@@ -72,36 +62,47 @@
                         <p:commandButton value="Exportar Excel" icon="pi pi-file-excel" ajax="false"
                             styleClass="btn-excel">
                             <p:dataExporter type="xls" target="tblMovimientos"
-                                fileName="#{inventarioReporteBean.nombreArchivo_3}" pageOnly="false" />
+                                fileName="#{inventarioReporteBean.nombreArchivo_2}" pageOnly="false" />
                         </p:commandButton>
                     </div>
                 </f:facet>
-
-                <p:column headerText="Fecha" sortBy="#{mov.fechaHora}">
-                    <h:outputText value="#{mov.fechaHora}">
-                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
-                    </h:outputText>
+                <p:column headerText="Codigo Barras">
+                    <h:outputText value="#{mov.codigoBarras}" />
                 </p:column>
+
 
                 <p:column headerText="Producto" filterBy="#{mov.nombreProducto}" filterMatchMode="contains">
                     <h:outputText value="#{mov.nombreProducto}" />
                 </p:column>
 
-                <p:column headerText="Tipo">
-                    <h:outputText value="#{mov.tipoMovimiento}" />
+                <p:column headerText="Categoria">
+                    <h:outputText value="#{mov.categoria}" />
                 </p:column>
 
-                <p:column headerText="Cantidad" style="text-align: right;">
-                    <h:outputText value="#{mov.cantidad}" />
+                <p:column headerText="Ubicacion" style="text-align: right;">
+                    <h:outputText value="#{mov.ubicacion}" />
                 </p:column>
 
-                <p:column headerText="Usuario">
-                    <h:outputText value="#{mov.usuarioResponsable}" />
+                <p:column headerText="Stock Actual" style="text-align: right;">
+                    <h:outputText value="#{mov.stockActual}" />
                 </p:column>
+
+                <p:column headerText="Precio Unitario" style="text-align: right;">
+                    <h:outputText value="#{mov.precioUnitario}">
+                        <f:convertNumber type="currency" currencySymbol="$" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Precio Total" style="text-align: right;">
+                    <h:outputText value="#{mov.precioTotal}">
+                        <f:convertNumber type="currency" currencySymbol="$" />
+                    </h:outputText>
+                </p:column>
+
+
             </p:dataTable>
         </p:panel>
         <ui:include src="/pages/admin/footer.xhtml" />
-
     </h:form>
 </h:body>
 

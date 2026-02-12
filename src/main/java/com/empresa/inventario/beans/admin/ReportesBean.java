@@ -49,7 +49,6 @@ public class ReportesBean implements Serializable {
 
 	@PostConstruct
 	public void init() throws Exception {
-
 		Calendar cal = Calendar.getInstance();
 		this.fechaFin = cal.getTime();
 		cal.add(Calendar.DAY_OF_MONTH, -30);
@@ -88,7 +87,7 @@ public class ReportesBean implements Serializable {
 	public void buscarInventarioValorizado() throws Exception {
 		listaInventarioValorizado = iReporteService.reporteInventarioValorizado();
 	}
-
+	
 	public void buscarStockBajo() throws Exception {
 		listaStockBajo = iReporteService.reporteStockBajo();
 	}

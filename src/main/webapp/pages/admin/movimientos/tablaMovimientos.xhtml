@@ -40,11 +40,13 @@
         <ui:include src="/pages/admin/menu.xhtml" />
 
         <p:growl id="msgs" showDetail="true" />
+        <p:separator />
 
         <p:commandButton value="Nuevo Movimiento" icon="pi pi-save" action="#{movimientosBean.irANuevoMovimiento}" />
 
         <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{movimientosBean.irADashboard}"
             immediate="true" style="margin-left:10px;" />
+        <p:separator />
 
         <p:dataTable id="tablaMovimientos" var="prod" value="#{movimientosBean.list}" rows="10" paginator="true"
             filteredValue="#{movimientosBean.filteredList}" emptyMessage="No se encontraron Movimientos"
@@ -83,6 +85,7 @@
             </p:column>
         </p:dataTable>
     </h:form>
+    <ui:include src="/pages/admin/footer.xhtml" />
 
 </h:body>
 

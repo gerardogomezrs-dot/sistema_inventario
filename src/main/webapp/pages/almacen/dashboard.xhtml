@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui">
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
     <title>Sistema de Inventario - Panel de Control</title>
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
-
+    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
+    <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
     <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
 
     <style>
@@ -51,13 +53,13 @@
             </f:facet>
         </p:menubar>
 
-         <p:growl id="msgs" showDetail="true" />
+        <p:growl id="msgs" showDetail="true" />
 
         <div class="ui-fluid">
             <div class="ui-g">
                 <div class="ui-g-12 ui-md-4">
                     <p:panel header="Datos de la Sesión">
-                       
+
 
                         <h:panelGrid columns="2" cellpadding="10" style="width:100%">
                             <h:outputText value="Nombre:" style="font-weight:bold" />
@@ -81,15 +83,26 @@
                                 action="#{navegacionAlmacenBean.irAGestionCategorias()}" icon="pi pi-tags"
                                 ajax="false" />
 
-                                 <p:commandButton value="Gestionar Productos"
-                                action="#{navegacionAlmacenBean.irAGestionProductos}" icon="pi pi-tags"
+                            <p:commandButton value="Gestionar Productos"
+                                action="#{navegacionAlmacenBean.irAGestionProductos}" icon="pi pi-briefcase"
                                 ajax="false" />
+
+                            <p:commandButton value="Gestionar Reportes"
+                                action="#{navegacionAlmacenBean.irAGestionReportes}" icon="pi pi-chart-bar"
+                                ajax="false" />
+
+                            <p:commandButton value="Gestionar Proveedores"
+                                action="#{navegacionAlmacenBean.irAGestionProveedores}" icon="pi pi-home" ajax="false"
+                                styleClass="ui-button-raised" />
 
                         </h:panelGrid>
                     </p:panel>
                 </div>
             </div>
         </div>
+
+        <ui:include src="/pages/almacen/footer.xhtml" />
+
 
     </h:form>
 </h:body>

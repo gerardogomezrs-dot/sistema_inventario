@@ -41,6 +41,10 @@ public class NavegacionBean implements Serializable {
         return "/pages/admin/usuarios/usuarioPerfil?faces-redirect=true";
     }
     
+    public String irAProveedores() {
+    	return "/pages/admin/proveedores/proveedores?faces-redirect=true";
+    }
+    
     public String irADashboard() {
 		return "/pages/admin/dashboard.xhtml?faces-redirect=true";
 	}

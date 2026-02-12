@@ -3,7 +3,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
     xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-
 <h:head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
@@ -37,28 +36,21 @@
         .table-side {
             flex: 1;
         }
+
+       
     </style>
-
-
-    <title>Registrar Producto</title>
 </h:head>
 
 <h:body>
-
     <h:form id="formProducto" enctype="multipart/form-data">
-        <ui:include src="/pages/admin/menu.xhtml" />
-        <p:growl id="msgs" showDetail="true" />
-         <p:progressBar widgetVar="pbAjax" 
-                   ajax="true" 
-                   value="#{productoBean.progreso}" 
-                   labelTemplate="{value}%" 
-                   styleClass="animated" 
-                   interval="500">
-        <p:ajax event="complete" 
-                listener="#{productoBean.onComplete}" 
-                update="msgs" 
-                oncomplete="alert('¡Proceso Finalizado!');"/>
-    </p:progressBar>
+        <ui:include src="/pages/almacen/menu.xhtml" />
+
+        <p:growl id="messages" showDetail="true" />
+        <p:progressBar widgetVar="pbAjax" ajax="true" value="#{productosAlmacenBean.progreso}" labelTemplate="{value}%"
+            styleClass="animated" interval="500">
+            <p:ajax event="complete" listener="#{productosAlmacenBean.onComplete}" update="messages"
+                oncomplete="alert('¡Proceso Finalizado!');" />
+        </p:progressBar>
 
         <div class="main-container">
 
@@ -69,62 +61,62 @@
                         <h:outputLabel value="Codigo de Barras:" />
 
 
-                        <p:inputText id="barcodeManual" value="#{productoBean.producto.codigoBarras}"
+                        <p:inputText id="barcodeManual" value="#{productosAlmacenBean.producto.codigoBarras}"
                             required="false" placeholder="Ingrese código manualmente..." style="width: 100%;">
                             <p:ajax event="blur" process="@this" />
                         </p:inputText>
 
                         <h:outputLabel value="Nombre:" />
-                        <p:inputText value="#{productoBean.producto.nombre}" required="false" />
+                        <p:inputText value="#{productosAlmacenBean.producto.nombre}" required="false" />
 
                         <h:outputLabel value="Descripción:" />
-                        <p:inputTextarea value="#{productoBean.producto.descripcion}" rows="3" />
+                        <p:inputTextarea value="#{productosAlmacenBean.producto.descripcion}" rows="3" />
 
                         <p:outputLabel for="categoria" value="Categoría:" />
-                        <p:selectOneMenu id="categoria" value="#{productoBean.producto.idCategoria}"
+                        <p:selectOneMenu id="categoria" value="#{productosAlmacenBean.producto.idCategoria}"
                             style="width: 200px;">
                             <f:selectItem itemLabel="Seleccione una categoría" itemValue="" noSelectionOption="true" />
-                            <f:selectItems value="#{productoBean.listaCategorias}" var="cat"
+                            <f:selectItems value="#{productosAlmacenBean.listaCategorias}" var="cat"
                                 itemLabel="#{cat.nombre}" itemValue="#{cat.idCategoria}" />
                         </p:selectOneMenu>
 
                         <h:outputLabel value="Unidad:" />
-                        <p:inputText value="#{productoBean.producto.unidad}" />
+                        <p:inputText value="#{productosAlmacenBean.producto.unidad}" />
 
                         <h:outputLabel value="Precio Unitario:" />
-                        <p:inputText value="#{productoBean.producto.precioUnitario}" />
+                        <p:inputText value="#{productosAlmacenBean.producto.precioUnitario}" />
 
                         <h:outputLabel value="Stock Actual:" />
-                        <p:inputText value="#{productoBean.producto.stockActual}" />
+                        <p:inputText value="#{productosAlmacenBean.producto.stockActual}" />
 
                         <h:outputLabel value="Stock Mínimo:" />
-                        <p:inputText value="#{productoBean.producto.stockMinimo}" />
+                        <p:inputText value="#{productosAlmacenBean.producto.stockMinimo}" />
 
                         <h:outputLabel value="Ubicación:" />
-                        <p:inputText value="#{productoBean.producto.ubicacion}" />
+                        <p:inputText value="#{productosAlmacenBean.producto.ubicacion}" />
 
                         <h:outputLabel value="Activo:" />
-                        <p:selectBooleanCheckbox value="#{productoBean.producto.activo}" />
+                        <p:selectBooleanCheckbox value="#{productosAlmacenBean.producto.activo}" />
 
                     </h:panelGrid>
 
                     <p:separator />
 
-                    <p:commandButton value="Guardar" icon="pi pi-save" action="#{productoBean.guardarTabla}"
+                    <p:commandButton value="Guardar" icon="pi pi-save" action="#{productosAlmacenBean.guardarTabla}"
                         process="@form" update="formProducto"
                         oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
 
                     <p:commandButton value="Regresar" icon="pi pi-chevron-left"
-                        action="#{productoBean.irATablaProductos}" immediate="true"
+                        action="#{productosAlmacenBean.irATablaProductos}" immediate="true"
                         style="margin-left: 10px;" />
 
                     <div class="upload-section" style="margin-top: 20px;">
                         <h:outputLabel value="Cargar desde archivo (CSV, Excel):"
                             style="display:block; margin-bottom:5px; font-weight:bold;" />
-                        <p:fileUpload value="#{productoBean.uploadedFile}" mode="simple" skinSimple="true"
+                        <p:fileUpload value="#{productosAlmacenBean.uploadedFile}" mode="simple" skinSimple="true"
                             label="Seleccionar Archivo" chooseIcon="pi pi-upload" />
 
-                        <p:commandButton value="Procesar Archivo" action="#{productoBean.cargaArchivos}"
+                        <p:commandButton value="Procesar Archivo" action="#{productosAlmacenBean.cargaArchivos}"
                             ajax="false" styleClass="ui-button-help" style="margin-top: 5px;"
                             icon="pi pi-file-import" />
                     </div>
@@ -132,7 +124,7 @@
             </div>
 
             <div class="table-side">
-                <p:dataTable id="tablaRegistros" value="#{productoBean.listaProductosGuardar}" var="prod"
+                <p:dataTable id="tablaRegistros" value="#{productosAlmacenBean.listaProductosGuardar}" var="prod"
                     emptyMessage="No hay productos registrados en esta sesión." scrollable="true" scrollHeight="500">
 
                     <f:facet name="header">Productos Guardados</f:facet>
@@ -158,39 +150,29 @@
                     <p:column headerText="Stock" width="60">
                         <h:outputText value="#{prod.stockActual}" />
                     </p:column>
-
                     <p:column headerText="Estado" width="70">
                         <h:outputText value="#{prod.activo ? 'Sí' : 'No'}" />
                     </p:column>
                 </p:dataTable>
-
                 <p:separator />
-
-           <p:commandButton value="Guardar" 
-                 icon="pi pi-save" 
-                 action="#{productoBean.guardarProductoTabla}" 
-                 process="@form"
-                 update="tablaRegistros, msgs" 
-                 widgetVar="btnGuardar"
-                 onclick="PF('pbAjax').start(); PF('btnGuardar').disable();"
-                 oncomplete="if (args.validationFailed) { PF('pbAjax').cancel(); PF('btnGuardar').enable(); } else { PF('dlgConfirmacionGuardar').show(); }" />
+                <p:commandButton value="Guardar" icon="pi pi-save" action="#{productosAlmacenBean.guardarProductoTabla}"
+                    process="@form" update="tablaRegistros, messages" widgetVar="btnGuardar"
+                    onclick="PF('pbAjax').start(); PF('btnGuardar').disable();"
+                    oncomplete="if (args.validationFailed) { PF('pbAjax').cancel(); PF('btnGuardar').enable(); } else { PF('dlgConfirmacionGuardar').show(); }" />
             </div>
-
         </div>
-
         <p:dialog header="Mensaje" widgetVar="dlgConfirmacion" modal="true" closable="false">
             <h:outputText value="Datos guardados correctamente." />
             <br /><br />
             <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacion').hide();" />
         </p:dialog>
-
         <p:dialog header="Mensaje" widgetVar="dlgConfirmacionGuardar" modal="true" closable="false">
             <h:outputText value="Datos guardados correctamente." />
             <br /><br />
             <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacionGuardar').hide();" />
         </p:dialog>
-        		<ui:include src="/pages/admin/footer.xhtml" />
     </h:form>
+            <ui:include src="/pages/almacen/footer.xhtml" />
 
 </h:body>
 

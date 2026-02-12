@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
@@ -35,30 +36,46 @@ public class ProductosServiceImp implements IProductoService {
 
 	@Override
 	public void delete(int idProducto) throws Exception {
-		if (idProducto == 0) {
-			throw new ExceptionMessage("Sin Datos");
-		} else {
-			productosDAO.eliminarProducto(idProducto);
+		try {
+			if (idProducto == 0) {
+				throw new ExceptionMessage("Sin Datos");
+			} else {
+				productosDAO.eliminarProducto(idProducto);
+			}
+		} catch (Exception e) {
+			throw new ExceptionMessage("No se puede eliminar el producto");
 		}
 	}
 
 	@Override
-	public List<Productos> create(List<Productos> productosLista) throws Exception {
+	public List<Productos> create(List<Productos> productosLista, Consumer<Integer> progresoCallback) throws Exception {
+		if(productosLista == null || productosLista.isEmpty()) {
+			throw new ExceptionMessage("Lista vacia");
+		}
+		
+		
+		List<Productos> listaProducto = new ArrayList<Productos>();
+		
+		
 		for (Productos productos : productosLista) {
 			try {
-				if (productos == null) {
-					throw new ExceptionMessage("Vacio");
-				} else {
 					productos.setCodigoBarras(CrearCodigoBarra.generarCodigoBarra(productos.getCodigoBarras()));
-					ProductosDAO dao = new ProductosDAO();
-					dao.guardar(productos);
-				}
-
-			} catch (SQLException e) {
+					
+					listaProducto.add(productos);
+			} catch (Exception e) {
 				e.printStackTrace();
-
 			}
 		}
+		
+		int total = listaProducto.size();
+		
+		for(int i = 0; i<total; i++) {
+			ProductosDAO dao = new ProductosDAO();
+			dao.guardar(listaProducto.get(i));
+			int porcentaje = (int) (((double) (i + 1) / total) * 100);
+			progresoCallback.accept(porcentaje);
+		}
+		
 		return productosLista;
 
 	}
@@ -73,7 +90,6 @@ public class ProductosServiceImp implements IProductoService {
 				getProductos = productosDAO.getAll();
 			}
 			if (getProductos.size() == 0) {
-				throw new ExceptionMessage("Vacio");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -104,7 +120,7 @@ public class ProductosServiceImp implements IProductoService {
 	@Override
 	public List<Productos> cargaArchivos(UploadedFile uploadedFile) throws Exception {
 		List<Productos> productos = new ArrayList<Productos>();
-
+		System.out.println("Carga archivo " + uploadedFile.getFileName());
 		String fileName = "";
 		fileName = uploadedFile.getFileName().toLowerCase();
 
@@ -123,10 +139,7 @@ public class ProductosServiceImp implements IProductoService {
 				e.printStackTrace();
 			}
 		}
-		
-		else {
-			throw new ExceptionMessage("Formato no admitido");
-		}
+
 		return productos;
 	}
 
@@ -186,10 +199,9 @@ public class ProductosServiceImp implements IProductoService {
 			csvReader.readNext();
 			while ((fila = csvReader.readNext()) != null) {
 				if (fila.length >= 2) {
-
 					p = new Productos();
-					p.setCodigoBarras(fila[1]);
 					p.setNombre(fila[0]);
+					p.setCodigoBarras(fila[1]);
 					p.setDescripcion(fila[2]);
 					p.setIdCategoria(Integer.parseInt(fila[3]));
 					p.setUnidad(fila[4]);
@@ -211,12 +223,23 @@ public class ProductosServiceImp implements IProductoService {
 
 	@Override
 	public Productos getByCodigoBarras(String codigoBarras) throws Exception {
-		Productos productos =  new  Productos();
-		if(codigoBarras != null) {
+		Productos productos = new Productos();
+		if (codigoBarras != null) {
 			productos = productosDAO.getByIdCodigoBarras(codigoBarras);
 		}
-		
+
 		return productos;
+	}
+
+	@Override
+	public void bajaProducto(int idProducto) throws Exception {
+
+		try {
+			productosDAO.bajaProducto(idProducto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 }

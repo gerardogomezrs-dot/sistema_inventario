@@ -3,6 +3,7 @@ package com.empresa.inventario.service;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
@@ -28,24 +29,28 @@ public class CategoriaServiceImpl implements ICategoriaService {
 	private Categorias cat;
 
 	@Override
-	public void save(List<Categorias> list) throws Exception {
-		for (Categorias categorias : list) {
-			if (categorias == null) {
-				throw new ExceptionMessage("Vacio");
-			} else {
-				dao.guardar(categorias);
-			}
+	public void save(List<Categorias> list, Consumer<Integer> progresoCallback) throws Exception {
+		// 1. Validación de seguridad
+		if (list == null || list.isEmpty()) {
+			System.out.println("DEBUG: La lista llegó vacía al Service.");
+			return;
+		}
+
+		int total = list.size();
+		int batchSize = 50; // Tamaño óptimo sugerido
+		for (int i = 0; i < total; i++) {
+			dao.guardar(list.get(i));
+			// Optimizamos el callback para que no sature la interfaz/log
+	        if (i % batchSize == 0 || i == total - 1) {
+	            int porcentaje = (int) (((double) (i + 1) / total) * 100);
+	            progresoCallback.accept(porcentaje);
+	        }
 		}
 	}
 
 	@Override
 	public void update(Categorias categorias) throws Exception {
-		if (categorias == null) {
-			throw new ExceptionMessage("Vacio");
-		} else {
 			dao.actualizar(categorias);
-		}
-
 	}
 
 	@Override
@@ -54,7 +59,7 @@ public class CategoriaServiceImpl implements ICategoriaService {
 		categorias = dao.getAllCategorias();
 		try {
 			if (categorias.size() == 0) {
-				throw new ExceptionMessage("Lista Vacia");
+				// throw new ExceptionMessage("Lista Vacia");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -64,11 +69,14 @@ public class CategoriaServiceImpl implements ICategoriaService {
 
 	@Override
 	public void delete(int idCategoria) throws Exception {
-		if (idCategoria == 0) {
-			throw new ExceptionMessage("Ingrese el id");
-		} else {
-			dao.eliminarCategoria(idCategoria);
+		try {
+			
+				dao.eliminarCategoria(idCategoria);
+			
+		} catch (Exception e) {
+			throw new ExceptionMessage("No se puede eliminar la categoria");
 		}
+
 	}
 
 	@Override
@@ -83,18 +91,15 @@ public class CategoriaServiceImpl implements ICategoriaService {
 				e.printStackTrace();
 			}
 		}
-		if (fileName.endsWith("xlsx") || fileName.endsWith("lsx")) {
+		if (fileName.endsWith(".xlsx") || fileName.endsWith(".lsx")) {
 			try {
 				categorias = leerExcel(file);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		} else {
-			throw new ExceptionMessage("Formato no admitido");
 		}
 
 		return categorias;
-
 	}
 
 	private List<Categorias> leerExcel(UploadedFile file) throws Exception {
@@ -113,16 +118,15 @@ public class CategoriaServiceImpl implements ICategoriaService {
 			cat.setNombre(nombreCategoria);
 			cat.setDescripcion(descripcionCategoria);
 			categorias.add(cat);
-
 		}
 		workbook.close();
 		return categorias;
 	}
 
 	private List<Categorias> leerCSV(UploadedFile file) throws Exception {
-		System.out.println("Nombre archiivo csv " + file.getFileName());
 		List<Categorias> categorias = new ArrayList<Categorias>();
 		try (CSVReader csvReader = new CSVReader(new InputStreamReader(file.getInputstream()))) {
+			csvReader.readNext();
 			String[] fila;
 			while ((fila = csvReader.readNext()) != null) {
 				if (fila.length >= 2) {

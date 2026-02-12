@@ -83,7 +83,7 @@
         //<![CDATA[
         // Función para forzar el foco en el input invisible
         function forceFocus() {
-            var isManual = "#{productoBean.modoManual}" === "true";
+            var isManual = "#{movimientosBean.modoManual}" === "true";
             if (!isManual) {
                 var input = document.getElementById('formProducto:barcodeScanner');
                 if (input) {
@@ -104,7 +104,7 @@
 
     <h:form id="formMovimiento" enctype="multipart/form-data">
 
-            <ui:include src="/pages/admin/menu.xhtml" />
+        <ui:include src="/pages/admin/menu.xhtml" />
 
         <p:growl id="messages" showDetail="true" />
         <div class="main-container">
@@ -133,7 +133,7 @@
                                     <p:ajax event="change" listener="#{movimientosBean.cargarInfoScanner()}"
                                         process="@this" update="panelInfoExtra" />
                                 </p:inputText>
-                                
+
                                 <p:selectOneMenu id="producto" value="#{movimientosBean.movimientos.idProducto}"
                                     rendered="#{!movimientosBean.mostrarScanner}" style="width: 250px;">
                                     <f:selectItem itemLabel="Selecciona un producto" itemValue=""
@@ -141,7 +141,7 @@
                                     <f:selectItems value="#{movimientosBean.listProductos}" var="cat"
                                         itemLabel="#{cat.nombre}" itemValue="#{cat.idProducto}" />
                                 </p:selectOneMenu>
-                                
+
 
                                 <p:commandButton
                                     icon="#{movimientosBean.mostrarScanner ? 'pi pi-list' : 'pi pi-barcode'}"
@@ -190,8 +190,6 @@
                     </h:panelGrid>
 
                     <h:inputHidden value="#{movimientosBean.movimientos.idUsuario}" />
-
-                    <h:inputText value="#{movimientosBean.movimientos.idProducto}" />
 
                     <p:separator />
 
@@ -260,6 +258,7 @@
         </p:dialog>
 
     </h:form>
+    <ui:include src="/pages/admin/footer.xhtml" />
 
 </h:body>
 

@@ -15,19 +15,25 @@ public class CategoriasDAO {
 
 	private CategoriaMapper mapper = new CategoriaMapper();
 
+
 	public void guardar(Categorias e) throws Exception {
-		Connection conexion = Conexion.getConexion();
+	    String sql = "INSERT INTO categorias (nombre, descripcion) VALUES (?, ?)";
 
-		String sql = "INSERT INTO categorias " + "(nombre, descripcion) " + "VALUES (?, ?)";
-
-		PreparedStatement ps = conexion.prepareStatement(sql);
-
-		ps.setString(1, e.getNombre());
-		ps.setString(2, e.getDescripcion());
-		ps.executeUpdate();
-
-		ps.close();
-		conexion.close();
+	    // Al declarar esto dentro del try, Java lo cierra solo al terminar (o al fallar)
+	    try (Connection conexion = Conexion.getConexion();
+	         PreparedStatement ps = conexion.prepareStatement(sql)) {
+	        
+	        ps.setString(1, e.getNombre());
+	        ps.setString(2, e.getDescripcion());
+	        
+	        ps.executeUpdate();
+	        
+	        // No hace falta ps.close() ni conexion.close() manual, 
+	        // el try-with-resources lo hace por ti.
+	    } catch (SQLException ex) {
+	        System.err.println("Error al insertar categoría: " + ex.getMessage());
+	        throw ex; // Re-lanzamos para que el Service sepa que falló
+	    }
 	}
 
 	public void actualizar(Categorias e) throws Exception {

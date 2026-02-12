@@ -33,6 +33,8 @@ public class MovimientosBean implements Serializable {
 	private static final Logger logger = LoggerFactory.getLogger(MovimientosBean.class);
 
 	private static final long serialVersionUID = 1L;
+	
+	private boolean modoManual = false; 
 
 	private List<Movimientos> list;
 
@@ -127,12 +129,10 @@ public class MovimientosBean implements Serializable {
 	public void toggleScanner() {
 		this.mostrarScanner = !this.mostrarScanner;
 		this.movimientos.setCodigoBarras(null);
-		;
 	}
 
 	public void cargarInfoScanner() throws Exception {
 		String codigo = this.movimientos.getCodigoBarras();
-
 		if (codigo != null && !codigo.isEmpty()) {
 			this.infoProductoExtra = "Cargado: " + codigo + " - Producto encontrado";
 			Productos productos = iProductoService.getByCodigoBarras(codigo);

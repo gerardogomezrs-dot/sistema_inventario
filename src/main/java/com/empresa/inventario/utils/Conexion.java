@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class Conexion {
-	private static final String URL = "jdbc:mysql://localhost:3306/inventarios";
+	private static final String URL = "jdbc:mysql://localhost:3306/inventarios?rewriteBatchedStatements=true";
 	private static final String USER = "root";
 	private static final String PASS = "root";
 

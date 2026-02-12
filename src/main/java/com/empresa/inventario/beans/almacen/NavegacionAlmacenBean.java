@@ -24,4 +24,8 @@ public class NavegacionAlmacenBean implements Serializable{/**
 	public String irAGestionProductos() {
 	    return "/pages/almacen/productos/tablaProductos.xhtml?faces-redirect=true";
 	}
+	
+	public String irAGestionReportes() {
+	    return "/pages/almacen/reportes/reportes.xhtml?faces-redirect=true";
+	}
 }

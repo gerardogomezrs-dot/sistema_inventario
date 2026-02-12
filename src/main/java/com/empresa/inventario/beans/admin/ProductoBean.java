@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -21,7 +22,7 @@ import com.empresa.inventario.service.IProductoService;
 
 import lombok.Data;
 
-@Named("productoBean") // Nombre para usar en el XHTML
+@Named("productoBean")
 @javax.faces.view.ViewScoped
 @Data
 public class ProductoBean implements Serializable {
@@ -30,8 +31,6 @@ public class ProductoBean implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	private boolean modoManual = false; // Inicia en modo escáner (oculto)
 
 	private List<Categorias> listaCategorias;
 
@@ -42,6 +41,9 @@ public class ProductoBean implements Serializable {
 	private UploadedFile uploadedFile;
 
 	private Productos producto;
+	
+	private Integer progreso = 0;
+
 
 	@Inject
 	private IProductoService iProductoService;
@@ -58,29 +60,48 @@ public class ProductoBean implements Serializable {
 		try {
 			ListaProductos();
 			listaCategorias = iCategoriaService.getAllCategorias();
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void guardar() {
+	public void guardarTabla() {
 		listaProductosGuardar.add(producto);
 		this.producto = new Productos();
-
 	}
 
 	public void guardarProductoTabla() throws Exception {
+		this.progreso = 0;
 		List<Productos> listaProductos = listaProductosGuardar;
-		iProductoService.create(listaProductos);
+
+		List<Productos> copiar = new ArrayList<Productos>(listaProductos);
+		if(copiar.isEmpty()) {
+			return;
+		}
+		CompletableFuture.runAsync(() -> {
+			try {
+				iProductoService.create(copiar, (valor) ->{
+					this.progreso = valor;
+				});
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+		
 		this.listaProductosGuardar.clear();
 		this.producto = new Productos();
 	}
+	
+	public void onComplete() {
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+				"Categoria guardada", "El producto fue guardado correctamente"));
+	}
+
 
 	public void guardarCambios() throws Exception {
-		try {
-			iProductoService.update(producto); // UPDATE real
-			ListaProductos(); // refresca tabla
+		try {		
+			iProductoService.update(producto);
+			ListaProductos();
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Producto actualizado correctamente"));
 		} catch (SQLException e) {
@@ -88,39 +109,45 @@ public class ProductoBean implements Serializable {
 		}
 	}
 
-	public void eliminar() throws Exception {
+	public void eliminar() {
 		try {
-			iProductoService.delete(producto.getIdProducto()); // o DAO
-			list = iProductoService.getAll(); // refresca la tabla
+			iProductoService.delete(producto.getIdProducto());
+			list = iProductoService.getAll();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 					"Producto eliminado", "El producto fue eliminado correctamente"));
-		} catch (SQLException e) {
+		} catch (ExceptionMessage e) {
+			añadirMensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", e.getMessage());
+			FacesContext context = FacesContext.getCurrentInstance();
+			context.validationFailed();
+			context.renderResponse();
+			e.printStackTrace();
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void ListaProductos() throws Exception {
 		this.list = iProductoService.getAll();
-
 	}
 
 	public void cargaArchivos() throws Exception {
 		try {
-		if (uploadedFile == null || uploadedFile.getContents() == null) {
+			if (uploadedFile == null || uploadedFile.getContents() == null) {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
+			}
+			listaProductosGuardar = new ArrayList<Productos>();
+			System.out.println("Nombre archivo: " + uploadedFile.getFileName());
+			listaProductosGuardar = iProductoService.cargaArchivos(uploadedFile);
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
+		} catch (ExceptionMessage e) {
+			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 		}
-		listaProductosGuardar = new ArrayList<Productos>();
-		listaProductosGuardar = iProductoService.cargaArchivos(uploadedFile);
-
-		FacesContext.getCurrentInstance().addMessage(null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
-	}catch (ExceptionMessage e) {
-		añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
-	}
 	}
 
-	public String getIndex() {
+	public String irATablaProductos() {
 		return "/pages/admin/productos/tablaProductos?faces-redirect=true";
 	}
 
@@ -131,7 +158,7 @@ public class ProductoBean implements Serializable {
 	public String irANuevoProducto() {
 		return "/pages/admin/productos/productos.xhtml?faces-redirect=true";
 	}
-	
+
 	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
