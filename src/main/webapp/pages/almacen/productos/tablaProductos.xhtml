@@ -18,7 +18,15 @@
         <p:growl id="msgs" showDetail="true" />
         <p:separator />
         <p:commandButton value="Nuevo Producto" icon="pi pi-save" action="#{productosAlmacenBean.irANuevoProducto}" />
+<<<<<<< HEAD
         <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{productosAlmacenBean.irADashboard}"
+=======
+<<<<<<< HEAD
+        <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{productosAlmacenBean.irADashboard}"
+=======
+        <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{productosAlmacenBean.menuPrincipal}"
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
             immediate="true" style="margin-left:10px;" />
         <p:separator />
         <p:dataTable id="tablaProductos" var="prod" value="#{productosAlmacenBean.list}" rows="10" paginator="true"
@@ -32,7 +40,15 @@
             </p:column>
 
             <p:column headerText="Codigo de Barras">
+<<<<<<< HEAD
                 <p:barcode value="#{prod.codigoBarras}" type="code128" format="svg" width="150" height="60" />
+=======
+<<<<<<< HEAD
+                <p:barcode value="#{prod.codigoBarras}" type="code128" format="svg" width="150" height="60" />
+=======
+                <p:barcode value="#" type="code128" format="svg" width="150" height="60" />
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
             </p:column>
 
             <p:column headerText="Descripción">
@@ -40,11 +56,23 @@
             </p:column>
 
             <p:column headerText="Categoría">
+<<<<<<< HEAD
                 <h:outputText value="#{prod.categorias.nombre}" />
+=======
+<<<<<<< HEAD
+                <h:outputText value="#{prod.categorias.nombre}" />
+=======
+                <h:outputText value="#" />
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
             </p:column>
 
             <p:column headerText="Unidad">
                 <h:outputText value="#{prod.unidad}" />
+            </p:column>
+
+            <p:column headerText="Precio Unitario">
+                <h:outputText value="#{prod.precioUnitario}" />
             </p:column>
 
             <p:column headerText="Precio Unitario">
@@ -56,7 +84,15 @@
             </p:column>
 
             <p:column headerText="Stock Minimo">
+<<<<<<< HEAD
                 <h:outputText value="#{prod.stockMinimo}" />
+=======
+<<<<<<< HEAD
+                <h:outputText value="#{prod.stockMinimo}" />
+=======
+                <h:outputText value="#" />
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
             </p:column>
 
             <p:column headerText="Ubicación">
@@ -68,20 +104,44 @@
                 <!-- EDITAR -->
                 <p:commandButton icon="pi pi-pencil" process="@this" update=":dialogoEditar"
                     oncomplete="PF('wdgEditar').show()">
+<<<<<<< HEAD
                     <f:setPropertyActionListener value="#{prod}" target="#{productosAlmacenBean.producto}" />
+=======
+<<<<<<< HEAD
+                    <f:setPropertyActionListener value="#{prod}" target="#{productosAlmacenBean.producto}" />
+=======
+                    <f:setPropertyActionListener value="#{prod}" target="#" />
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
                 </p:commandButton>
 
                 <!-- ELIMINAR CON CONFIRMACIÓN -->
                 <p:commandButton icon="pi pi-trash" styleClass="p-button-danger" process="@this"
+<<<<<<< HEAD
                     update=":form:tablaProductos :form:msgs" action="#{productosAlmacenBean.eliminar}">
 
                     <f:setPropertyActionListener value="#{prod}" target="#{productosAlmacenBean.producto}" />
+=======
+<<<<<<< HEAD
+                    update=":form:tablaProductos :form:msgs" action="#{productosAlmacenBean.eliminar}">
+
+                    <f:setPropertyActionListener value="#{prod}" target="#{productosAlmacenBean.producto}" />
+=======
+                    update=":form:tablaProductos :form:msgs" action="#">
+
+                    <f:setPropertyActionListener value="#{prod}" target="#" />
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
 
                     <p:confirm header="Confirmación" message="¿Está seguro de eliminar este producto?"
                         icon="pi pi-exclamation-triangle" />
                 </p:commandButton>
             </p:column>
         </p:dataTable>
+<<<<<<< HEAD
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+=======
+<<<<<<< HEAD
         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
 
             <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat"
@@ -94,9 +154,26 @@
     <!-- DIALOGO EDITAR -->
     <ui:include src="/pages/almacen/productos/actualizarProductos.xhtml" />
 
+=======
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
+
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat"
+                icon="pi pi-times" />
+            <p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes p-button-danger"
+                icon="pi pi-check" />
+        </p:confirmDialog>
+    </h:form>
+<<<<<<< HEAD
+
+    <!-- DIALOGO EDITAR -->
+    <ui:include src="/pages/almacen/productos/actualizarProductos.xhtml" />
+
     <ui:include src="/pages/almacen/footer.xhtml" />
 
 
+=======
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
 </h:body>
 
 </html>

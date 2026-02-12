@@ -70,7 +70,15 @@ public class ProductosDAO {
 		Connection conexion = Conexion.getConexion();
 
 		String sql = "UPDATE productos SET " + "codigo_barras = ?, " + "nombre = ?, " + "descripcion = ?, "
+<<<<<<< HEAD
 				+ "id_categoria = ?, " + "unidad = ?, " + "precio_unitario = ?, " + "stock_actual = ?, "
+=======
+<<<<<<< HEAD
+				+ "id_categoria = ?, " + "unidad = ?, " + "precio_unitario = ?, " + "stock_actual = ?, "
+=======
+				+ "categoria = ?, " + "unidad = ?, " + "precio_unitario = ?, " + "stock_actual = ?, "
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
 				+ "stock_minimo = ?, " + "ubicacion = ?, " + "activo = ? " + "WHERE id_producto = ?";
 
 		PreparedStatement ps = conexion.prepareStatement(sql);
@@ -132,6 +140,26 @@ public class ProductosDAO {
 			if (rs.next()) {
 
 				p = rs.getInt("stock_actual");
+<<<<<<< HEAD
+=======
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		}
+		return p;
+	}
+
+	public Productos getByIdCodigoBarras(String codigoBarras) throws Exception {
+		String sql = "SELECT * FROM productos where codigo_barras = ?";
+		Productos p = new Productos();
+		try (Connection con = Conexion.getConexion(); PreparedStatement ps = con.prepareStatement(sql);) {
+			ps.setString(1, codigoBarras);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				p = mapper.mapRowBy(rs);
+
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

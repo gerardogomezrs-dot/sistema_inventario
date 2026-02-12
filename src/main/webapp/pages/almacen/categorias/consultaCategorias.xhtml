@@ -13,6 +13,9 @@
     <h:form id="formPrincipal">
 
         <ui:include src="/pages/almacen/menu.xhtml" />
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
         <p:growl id="msgs" showDetail="true" />
         <p:separator />
         <p:commandButton value="Nueva Categoria" icon="pi pi-save"
@@ -21,6 +24,18 @@
             immediate="true" style="margin-left:10px;" />
         <p:separator />
 
+=======
+
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
+        <p:growl id="msgs" showDetail="true" />
+        <p:separator />
+        <p:commandButton value="Nueva Categoria" icon="pi pi-save"
+            action="#{categoriasAlmacenBean.irANuevaCategoria}" />
+        <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{categoriasAlmacenBean.irADashboard}"
+            immediate="true" style="margin-left:10px;" />
+        <p:separator />
+
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
         <p:dataTable id="tablaCategorias" var="prod" value="#{categoriasAlmacenBean.list}"
             filteredValue="#{categoriasAlmacenBean.filteredList}" rows="10" paginator="true"
             emptyMessage="No se encontraron categorias" style="margin-top:20px;">
@@ -38,14 +53,32 @@
             </p:column>
 
             <p:column headerText="Acciones">
+<<<<<<< HEAD
                 <p:commandButton icon="pi pi-pencil" process="@this" update=":formEditar"
                     oncomplete="PF('wdgEditar').show()">
+=======
+<<<<<<< HEAD
+                <p:commandButton icon="pi pi-pencil" process="@this" update=":formEditar"
+                    oncomplete="PF('wdgEditar').show()">
+=======
+                <p:commandButton icon="pi pi-pencil" process="@this" update=":formEditar" oncomplete="PF('wdgEditar').show()">
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
                     <f:setPropertyActionListener value="#{prod}" target="#{categoriasAlmacenBean.categorias}" />
                 </p:commandButton>
 
                 <p:commandButton icon="pi pi-trash" styleClass="p-button-danger" process="@this"
+<<<<<<< HEAD
                     update=":formPrincipal:tablaCategorias :formPrincipal:msgs"
                     action="#{categoriasAlmacenBean.eliminarCategoria}">
+=======
+<<<<<<< HEAD
+                    update=":formPrincipal:tablaCategorias :formPrincipal:msgs"
+                    action="#{categoriasAlmacenBean.eliminarCategoria}">
+=======
+                    update=":formPrincipal:tablaCategorias :formPrincipal:msgs" action="#{categoriasAlmacenBean.eliminarCategoria}">
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
                     <f:setPropertyActionListener value="#{prod}" target="#{categoriasAlmacenBean.categorias}" />
                     <p:confirm header="Confirmación" message="¿Está seguro de eliminar esta categoria?"
                         icon="pi pi-exclamation-triangle" />
@@ -58,10 +91,20 @@
         </p:confirmDialog>
     </h:form>
 
+<<<<<<< HEAD
     <ui:include src="/pages/almacen/categorias/actualizarCategorias.xhtml" />
 
             <ui:include src="/pages/almacen/footer.xhtml" />
 
+=======
+<<<<<<< HEAD
+    <ui:include src="/pages/almacen/categorias/actualizarCategorias.xhtml" />
+=======
+
+    <ui:include src="/pages/almacen/categorias/actualizarCategorias.xhtml" />
+
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
 
 </h:body>
 

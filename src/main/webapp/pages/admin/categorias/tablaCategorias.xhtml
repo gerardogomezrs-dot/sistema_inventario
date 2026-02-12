@@ -45,9 +45,20 @@
                 </p:commandButton>
 
                 <p:commandButton icon="pi pi-trash" styleClass="p-button-danger" process="@this"
+<<<<<<< HEAD
                     update=":form:tablaCategorias :form:msgs"
                     action="#{categoriasAlmacenBean.eliminarCategoria}">
                     <f:setPropertyActionListener value="#{prod}" target="#{categoriasAlmacenBean.categorias}" />
+=======
+<<<<<<< HEAD
+                    update=":form:tablaCategorias :form:msgs"
+                    action="#{categoriasAlmacenBean.eliminarCategoria}">
+                    <f:setPropertyActionListener value="#{prod}" target="#{categoriasAlmacenBean.categorias}" />
+=======
+                    update=":form:tablaCategorias :form:msgs" action="#{categoriasBean.eliminarCategoria}">
+                    <f:setPropertyActionListener value="#{prod}" target="#{categoriasBean.categorias}" />
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
                     <p:confirm header="Confirmación" message="¿Está seguro de eliminar esta categoria?"
                         icon="pi pi-exclamation-triangle" />
                 </p:commandButton>
@@ -61,7 +72,10 @@
     </h:form>
 
     <ui:include src="/pages/admin/categorias/actualizarCategorias.xhtml" />
+<<<<<<< HEAD
         		<ui:include src="/pages/admin/footer.xhtml" />
+=======
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
 
 </h:body>
 

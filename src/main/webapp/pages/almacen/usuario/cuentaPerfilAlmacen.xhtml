@@ -1,16 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
+<<<<<<< HEAD
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+=======
+<<<<<<< HEAD
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+=======
+<html  xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
     xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
     <title>Sistema de Inventario - Panel de Control</title>
+<<<<<<< HEAD
+    <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+=======
+<<<<<<< HEAD
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
     <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
     <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
     <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
 
+=======
+     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
+    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
+    <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
+    <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
+<<<<<<< HEAD
+
+=======
+    
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
     <style>
         /* Estilo para simular el p:tag en PrimeFaces 7 */
         .badge-info {
@@ -23,6 +47,10 @@
             border: 1px solid #2196f3;
             display: inline-block;
         }
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
 
         .menu-grid .ui-button {
             width: 100%;
@@ -32,13 +60,27 @@
         .ui-panel {
             margin-top: 10px;
         }
+<<<<<<< HEAD
+=======
+=======
+        .menu-grid .ui-button { width: 100%; margin-bottom: 5px; }
+        .ui-panel { margin-top: 10px; }
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
     </style>
 </h:head>
 
 <h:body>
     <h:form id="formPerfilUsuario">
         <ui:include src="/pages/admin/menu.xhtml" />
+<<<<<<< HEAD
         <p:separator />
+=======
+<<<<<<< HEAD
+        <p:separator />
+=======
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
 
         <div class="flex-container">
             <p:panel header="Perfil Usuario" style="width: 600px; margin: 0 auto;">
@@ -57,7 +99,15 @@
                         required="true" />
                     <h:outputText value=" Mostrar password" />
                     <h:selectBooleanCheckbox onchange="PF('pw').jq.attr('type', this.checked ? 'text' : 'password')" />
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+
+=======
+                    
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
 
                     <p:outputLabel value="Permisos Asignados:" />
                     <p:inputText value="#{perfilUsuarioBean.usuario.permisos}" readonly="true" styleClass="readonly" />
@@ -95,5 +145,12 @@
             <ui:include src="/pages/almacen/footer.xhtml" />
 
 </h:body>
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+
+=======
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
 </html>

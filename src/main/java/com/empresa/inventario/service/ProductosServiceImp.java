@@ -37,12 +37,22 @@ public class ProductosServiceImp implements IProductoService {
 	@Override
 	public void delete(int idProducto) throws Exception {
 		try {
+<<<<<<< HEAD
 			if (idProducto == 0) {
 				throw new ExceptionMessage("Sin Datos");
 			} else {
 				productosDAO.eliminarProducto(idProducto);
 			}
 		} catch (Exception e) {
+			throw new ExceptionMessage("No se puede eliminar el producto");
+=======
+		if (idProducto == 0) {
+			throw new ExceptionMessage("Sin Datos");
+		} else {
+			productosDAO.eliminarProducto(idProducto);
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
+		}
+		}catch (Exception e) {
 			throw new ExceptionMessage("No se puede eliminar el producto");
 		}
 	}
@@ -120,7 +130,15 @@ public class ProductosServiceImp implements IProductoService {
 	@Override
 	public List<Productos> cargaArchivos(UploadedFile uploadedFile) throws Exception {
 		List<Productos> productos = new ArrayList<Productos>();
+<<<<<<< HEAD
 		System.out.println("Carga archivo " + uploadedFile.getFileName());
+=======
+<<<<<<< HEAD
+		System.out.println("Carga archivo " +uploadedFile.getFileName());
+=======
+
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
 		String fileName = "";
 		fileName = uploadedFile.getFileName().toLowerCase();
 
@@ -139,7 +157,18 @@ public class ProductosServiceImp implements IProductoService {
 				e.printStackTrace();
 			}
 		}
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+
+=======
+		
+		else {
+			throw new ExceptionMessage("Formato no admitido");
+		}
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
 		return productos;
 	}
 
@@ -199,9 +228,22 @@ public class ProductosServiceImp implements IProductoService {
 			csvReader.readNext();
 			while ((fila = csvReader.readNext()) != null) {
 				if (fila.length >= 2) {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
 					p = new Productos();
 					p.setNombre(fila[0]);
 					p.setCodigoBarras(fila[1]);
+=======
+
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
+					p = new Productos();
+					p.setNombre(fila[0]);
+<<<<<<< HEAD
+					p.setCodigoBarras(fila[1]);
+=======
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
 					p.setDescripcion(fila[2]);
 					p.setIdCategoria(Integer.parseInt(fila[3]));
 					p.setUnidad(fila[4]);
@@ -223,6 +265,11 @@ public class ProductosServiceImp implements IProductoService {
 
 	@Override
 	public Productos getByCodigoBarras(String codigoBarras) throws Exception {
+<<<<<<< HEAD
+		Productos productos = new Productos();
+		if (codigoBarras != null) {
+=======
+<<<<<<< HEAD
 		Productos productos = new Productos();
 		if (codigoBarras != null) {
 			productos = productosDAO.getByIdCodigoBarras(codigoBarras);
@@ -231,6 +278,28 @@ public class ProductosServiceImp implements IProductoService {
 		return productos;
 	}
 
+	@Override
+	public void bajaProducto(int idProducto) throws Exception {
+		
+		try {
+			productosDAO.bajaProducto(idProducto);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+=======
+		Productos productos =  new  Productos();
+		if(codigoBarras != null) {
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
+			productos = productosDAO.getByIdCodigoBarras(codigoBarras);
+		}
+
+		return productos;
+	}
+
+<<<<<<< HEAD
 	@Override
 	public void bajaProducto(int idProducto) throws Exception {
 
@@ -242,4 +311,7 @@ public class ProductosServiceImp implements IProductoService {
 
 	}
 
+=======
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
 }

@@ -4,7 +4,15 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
+<<<<<<< HEAD
     <title>Acceso al Sistema</title>
+=======
+<<<<<<< HEAD
+    <title>Acceso al Sistema</title>
+=======
+    <title>Login Sistema</title>
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
     <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
 
     <style>
@@ -27,7 +35,11 @@
         }
 
         .login-card .ui-panel-titlebar {
+<<<<<<< HEAD
             background: #232222 !important;
+=======
+            background: #ffffff !important;
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
             border: none !important;
             text-align: center;
             font-size: 1.5em;
@@ -94,11 +106,16 @@
             </f:facet>
 
             <div class="ui-fluid">
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
                 <p:outputLabel for="username" value="Nombre de Usuario"
                     style="display:block; margin-bottom:5px; color:#666; font-size: 0.9em;" />
                 <div class="ui-inputgroup">
                     <span class="ui-inputgroup-addon"><i class="pi pi-user"></i></span>
                     <p:inputText id="username" value="#{loginBean.userName}" required="true" placeholder="Ej. admin" />
+<<<<<<< HEAD
                 </div>
 
                 <p:outputLabel for="password" value="Contraseña"
@@ -107,12 +124,43 @@
                     <span class="ui-inputgroup-addon"><i class="pi pi-lock"></i></span>
                     <p:password id="password" value="#{loginBean.password}" required="true" feedback="false"
                         placeholder="********" />
+=======
+                </div>
+
+                <p:outputLabel for="password" value="Contraseña"
+                    style="display:block; margin-bottom:5px; color:#666; font-size: 0.9em;" />
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon"><i class="pi pi-lock"></i></span>
+                    <p:password id="password" value="#{loginBean.password}" required="true" feedback="false"
+                        placeholder="********" />
+=======
+
+                <div class="p-field">
+                    <p:outputLabel for="username" value="Usuario" />
+                    <p:inputText id="username" value="#{loginBean.userName}" required="true" />
+                </div>
+
+                <div class="p-field" style="margin-top: 10px">
+                    <p:outputLabel for="password" value="Clave" />
+                    <p:password id="password" value="#{loginBean.password}" required="true" feedback="false" />
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
                 </div>
             </div>
 
             <f:facet name="footer">
+<<<<<<< HEAD
                 <p:commandButton value="INGRESAR" action="#{loginBean.login}" ajax="false" icon="pi pi-sign-in"
                     styleClass="btn-login" />
+=======
+<<<<<<< HEAD
+                <p:commandButton value="INGRESAR" action="#{loginBean.login}" ajax="false" icon="pi pi-sign-in"
+                    styleClass="btn-login" />
+=======
+                <p:commandButton value="Ingresar" action="#{loginBean.login}" ajax="false" icon="pi pi-check"
+                    styleClass="ui-button-success" style="width:100%" />
+>>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
+>>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
             </f:facet>
 
         </p:panel>
