@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -31,7 +29,6 @@ public class CategoriaServiceImpl implements ICategoriaService {
 	private Categorias cat;
 
 	@Override
-<<<<<<< HEAD
 	public void save(List<Categorias> list, Consumer<Integer> progresoCallback) throws Exception {
 		// 1. Validación de seguridad
 		if (list == null || list.isEmpty()) {
@@ -48,42 +45,12 @@ public class CategoriaServiceImpl implements ICategoriaService {
 	            int porcentaje = (int) (((double) (i + 1) / total) * 100);
 	            progresoCallback.accept(porcentaje);
 	        }
-=======
-	public void save(List<Categorias> list) throws Exception {
-<<<<<<< HEAD
-		try {
-			for (Categorias categorias : list) {
-				if (categorias == null) {
-					throw new ExceptionMessage("Vacio");
-				} else {
-					dao.guardar(categorias);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-=======
-		for (Categorias categorias : list) {
-			if (categorias == null) {
-				throw new ExceptionMessage("Vacio");
-			} else {
-				dao.guardar(categorias);
-			}
->>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
->>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
 		}
 	}
 
 	@Override
 	public void update(Categorias categorias) throws Exception {
 			dao.actualizar(categorias);
-<<<<<<< HEAD
-=======
-		}
-<<<<<<< HEAD
-=======
-
->>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
->>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
 	}
 
 	@Override
@@ -102,7 +69,6 @@ public class CategoriaServiceImpl implements ICategoriaService {
 
 	@Override
 	public void delete(int idCategoria) throws Exception {
-<<<<<<< HEAD
 		try {
 			
 				dao.eliminarCategoria(idCategoria);
@@ -111,94 +77,6 @@ public class CategoriaServiceImpl implements ICategoriaService {
 			throw new ExceptionMessage("No se puede eliminar la categoria");
 		}
 
-=======
-<<<<<<< HEAD
-		try {
-			if (idCategoria == 0) {
-				throw new ExceptionMessage("Ingrese el id");
-			} else {
-				dao.eliminarCategoria(idCategoria);
-			}
-		} catch (Exception e) {
-			throw new ExceptionMessage("No se puede eliminar la categoria");
-=======
-		if (idCategoria == 0) {
-			throw new ExceptionMessage("Ingrese el id");
-		} else {
-			dao.eliminarCategoria(idCategoria);
->>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
-		}
-
-	}
-
-	@Override
-	public List<Categorias> cargarArchivo(UploadedFile file) {
-		List<Categorias> categorias = new ArrayList<Categorias>();
-		String fileName = "";
-		fileName = file.getFileName().toLowerCase();
-		if (fileName.endsWith(".csv")) {
-			try {
-				categorias = leerCSV(file);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		if (fileName.endsWith("xlsx") || fileName.endsWith("lsx")) {
-			try {
-				categorias = leerExcel(file);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		if (!fileName.endsWith("xlsx") || !fileName.endsWith("lsx") || !fileName.endsWith("csv")) {
-			throw new ExceptionMessage("Formato no soportado");
-		}
-		return categorias;
-	}
-
-	private List<Categorias> leerExcel(UploadedFile file) throws Exception {
-		List<Categorias> categorias = new ArrayList<Categorias>();
-		Workbook workbook = WorkbookFactory.create(file.getInputstream());
-		Sheet sheet = workbook.getSheetAt(0);
-		for (Row row : sheet) {
-			if (row.getRowNum() == 0)
-				continue;
-			Cell cellNombre = row.getCell(0);
-			Cell cellDescripcion = row.getCell(1);
-
-			String nombreCategoria = cellNombre.getStringCellValue();
-			String descripcionCategoria = cellDescripcion.getStringCellValue().toString();
-			cat = new Categorias();
-			cat.setNombre(nombreCategoria);
-			cat.setDescripcion(descripcionCategoria);
-			categorias.add(cat);
-		}
-		workbook.close();
-		return categorias;
-	}
-
-	private List<Categorias> leerCSV(UploadedFile file) throws Exception {
-		List<Categorias> categorias = new ArrayList<Categorias>();
-		try (CSVReader csvReader = new CSVReader(new InputStreamReader(file.getInputstream()))) {
-			csvReader.readNext();
-			String[] fila;
-			while ((fila = csvReader.readNext()) != null) {
-				if (fila.length >= 2) {
-					cat = new Categorias();
-					cat.setNombre(fila[0]);
-					cat.setDescripcion(fila[1]);
-					categorias.add(cat);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return categorias;
-	}
-
-	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
->>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
 	}
 
 	@Override

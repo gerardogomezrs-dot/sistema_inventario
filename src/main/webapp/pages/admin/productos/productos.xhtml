@@ -81,12 +81,8 @@
                         <p:inputTextarea value="#{productoBean.producto.descripcion}" rows="3" />
 
                         <p:outputLabel for="categoria" value="Categoría:" />
-<<<<<<< HEAD
                         <p:selectOneMenu id="categoria" value="#{productoBean.producto.idCategoria}"
                             style="width: 200px;">
-=======
-                        <p:selectOneMenu id="categoria" value="#{productoBean.producto.idCategoria}" style="width: 200px;">
->>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
                             <f:selectItem itemLabel="Seleccione una categoría" itemValue="" noSelectionOption="true" />
                             <f:selectItems value="#{productoBean.listaCategorias}" var="cat"
                                 itemLabel="#{cat.nombre}" itemValue="#{cat.idCategoria}" />

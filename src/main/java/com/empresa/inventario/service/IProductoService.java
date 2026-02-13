@@ -12,16 +12,8 @@ public interface IProductoService {
 	List<Productos> create(List<Productos> productos, Consumer<Integer> progresoCallback) throws Exception;
 
 	void delete(int idProducto) throws Exception;
-<<<<<<< HEAD
 	
 	void bajaProducto(int idProducto) throws Exception;
-=======
-<<<<<<< HEAD
-	
-	void bajaProducto(int idProducto) throws Exception;
-=======
->>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
->>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
 
 	void update(Productos productos) throws Exception;
 

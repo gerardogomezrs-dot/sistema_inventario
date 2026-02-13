@@ -59,12 +59,16 @@
 
                 <f:facet name="header">
                     <div style="display: flex; justify-content: center; align-items: center; gap: 15px;">
-                        <span style="font-weight: bold;">Lista de Movimientos</span>
+                        <span style="font-weight: bold;"></span>
 
                         <p:commandButton value="Exportar Excel" icon="pi pi-file-excel" ajax="false"
                             styleClass="btn-excel">
                             <p:dataExporter type="xls" target="tblMovimientos"
                                 fileName="#{inventarioReporteBean.nombreArchivo_2}" pageOnly="false" />
+                        </p:commandButton>
+
+                         <p:commandButton value="Exportar Pdf" icon="pi pi-file-excel" ajax="false" styleClass="btn-pdf">
+                        <p:dataExporter type="pdf" target="tblMovimientos" fileName="#{inventarioReporteBean.nombreArchivo_2}" />
                         </p:commandButton>
                     </div>
                 </f:facet>

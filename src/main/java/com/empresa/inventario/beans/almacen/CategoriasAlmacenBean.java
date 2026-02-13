@@ -39,9 +39,8 @@ public class CategoriasAlmacenBean implements Serializable {
 	private UploadedFile uploadedFile;
 
 	private List<Categorias> categoriasList;
-	
-	private Integer progreso = 0;
 
+	private Integer progreso = 0;
 
 	@Inject
 	private ICategoriaService categoriaService;
@@ -75,15 +74,7 @@ public class CategoriasAlmacenBean implements Serializable {
 		if (this.categorias != null) {
 			listaTablaCategorias.add(categorias);
 			this.categorias = new Categorias();
-<<<<<<< HEAD
 		} else {
-=======
-<<<<<<< HEAD
-		} else {
-=======
-		}else {
->>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
->>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
 			throw new ExceptionMessage("Ingresa valores");
 		}
 	}
@@ -111,8 +102,6 @@ public class CategoriasAlmacenBean implements Serializable {
 			listaTablaCategorias.clear();
 		}
 		this.categorias = new Categorias();
-
-
 	}
 
 	public List<Categorias> listCategorias() throws Exception {
@@ -128,23 +117,11 @@ public class CategoriasAlmacenBean implements Serializable {
 		}
 	}
 
-<<<<<<< HEAD
 	public void eliminarCategoria() {
-=======
-<<<<<<< HEAD
-	public void eliminarCategoria() {
-=======
-	public void eliminarCategoria() throws Exception {
->>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
->>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
 		try {
 			if (categorias != null) {
 				categoriaService.delete(categorias.getIdCategoria());
 				list = categoriaService.getAllCategorias();
-<<<<<<< HEAD
-
-=======
-<<<<<<< HEAD
 
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 						"Categoria eliminada", "La categoria fue eliminada correctamente"));
@@ -167,7 +144,6 @@ public class CategoriasAlmacenBean implements Serializable {
 			context.validationFailed();
 			context.renderResponse();
 			e.printStackTrace();
-
 		}
 	}
 
@@ -177,70 +153,16 @@ public class CategoriasAlmacenBean implements Serializable {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
 			}
-
 			listaTablaCategorias = new ArrayList<Categorias>();
 			listaTablaCategorias = categoriaService.cargarArchivo(uploadedFile);
-
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
-
 		} catch (ExceptionMessage e) {
 			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 		}
 	}
 
-=======
->>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-						"Categoria eliminada", "La categoria fue eliminada correctamente"));
-			} else {
-				añadirMensaje(FacesMessage.SEVERITY_WARN, "Atención", "No se seleccionó ninguna categoría.");
-			}
-
-		} catch (ExceptionMessage e) {
-			añadirMensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", e.getMessage());
-			FacesContext context = FacesContext.getCurrentInstance();
-			context.validationFailed();
-			context.renderResponse();
-			e.printStackTrace();
-
-		}
-
-		catch (Exception e) {
-			añadirMensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", "Consulte al administrador.");
-			FacesContext context = FacesContext.getCurrentInstance();
-			context.validationFailed();
-			context.renderResponse();
-			e.printStackTrace();
-
-		}
-	}
-
-	public void cargarArchivo() {
-		try {
-			if (uploadedFile == null || uploadedFile.getContents() == null) {
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
-			}
-
-			listaTablaCategorias = new ArrayList<Categorias>();
-			listaTablaCategorias = categoriaService.cargarArchivo(uploadedFile);
-
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
-
-		} catch (ExceptionMessage e) {
-			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
-		}
-	}
-<<<<<<< HEAD
-
-=======
-	
->>>>>>> 5affef339816ef2c5228384dfb57cca732b4a05e
->>>>>>> 3d3eb6255d4bd97c1c31234f83079587041eaf8d
 	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
-
 }

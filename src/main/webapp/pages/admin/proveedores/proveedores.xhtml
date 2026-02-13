@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
+
+    <style type="text/css">
+        /* Reset de bordes para PanelGrid */
+        .ui-panelgrid.ui-panelgrid-blank .ui-panelgrid-content {
+            border: none !important;
+        }
+
+        .main-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 20px;
+            flex-wrap: wrap;
+            /* Mejora la responsividad */
+        }
+
+        .form-side {
+            flex: 0 0 450px;
+            max-width: 100%;
+        }
+
+        .table-side {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .upload-section {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .bold-label {
+            font-weight: bold;
+        }
+    </style>
+    <title>Registro de Proveedores</title>
+</h:head>
+
+<h:body>
+    <h:form id="formProveedor" enctype="multipart/form-data">
+        <ui:include src="/pages/admin/menu.xhtml" />
+
+        <p:growl id="msgs" showDetail="true" skipDetailIfEqualsSummary="true" />
+
+        <p:progressBar widgetVar="pbAjax" ajax="true" value="#{proveedorBean.progreso}" labelTemplate="{value}%"
+            styleClass="animated" interval="500">
+            <p:ajax event="complete" listener="#{proveedorBean.onComplete}" update="msgs"
+                oncomplete="alert('¡Proceso Finalizado!');" />
+        </p:progressBar>
+
+        <div class="main-container">
+            <div class="form-side">
+                <p:panel header="Registro de Proveedor" styleClass="ui-fluid">
+                    <p:panelGrid columns="2" layout="grid" columnClasses="ui-grid-col-4 bold-label, ui-grid-col-8"
+                        styleClass="ui-panelgrid-blank">
+
+                        <p:outputLabel for="nombreEmpresa" value="Nombre Empresa:" />
+                        <p:inputText id="nombreEmpresa" value="#{proveedorBean.proveedor.nombreEmpresa}"
+                            required="true" />
+
+                        <p:outputLabel value="Contacto Nombre:" />
+                        <p:inputText value="#{proveedorBean.proveedor.contactoEmpresa}" />
+
+                        <p:outputLabel value="Teléfono:" />
+                        <p:inputText value="#{proveedorBean.proveedor.telefono}" />
+
+                        <p:outputLabel value="Email:" />
+                        <p:inputText value="#{proveedorBean.proveedor.email}" />
+
+                        <p:outputLabel value="Dirección:" />
+                        <p:inputText value="#{proveedorBean.proveedor.direccion}" />
+
+                        <p:outputLabel value="Activo:" />
+                        <p:inputText value="#{proveedorBean.proveedor.activo}" />
+
+                        <p:outputLabel for="fechaReg" value="Fecha Registro:" />
+                        <p:datePicker id="fechaReg" value="#{proveedorBean.proveedor.fechaRegistro}"
+                            pattern="dd/MM/yyyy" showIcon="true" monthNavigator="true" yearNavigator="true"
+                            showOnFocus="false" />
+                    </p:panelGrid>
+
+                    <div style="margin-top: 15px;">
+                        <p:commandButton value="Guardar" icon="pi pi-save" action="#{proveedorBean.guardarTabla}"
+                            process="@form" update="msgs formProveedor"
+                            oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();"
+                            style="width: auto; margin-right: 10px;" />
+
+                        <p:commandButton value="Regresar" icon="pi pi-chevron-left"
+                            action="#{proveedorBean.irATablaProvedor}" immediate="true" styleClass="ui-button-secondary"
+                            style="width: auto;" />
+                    </div>
+
+                    <div class="upload-section">
+                        <p:outputLabel value="Cargar desde archivo (CSV, Excel):" styleClass="bold-label"
+                            style="display:block; margin-bottom:10px;" />
+
+                        <p:fileUpload value="#{proveedorBean.uploadedFile}" mode="simple" skinSimple="true"
+                            label="Seleccionar Archivo" chooseIcon="pi pi-upload" />
+
+                        <p:commandButton value="Procesar Archivo" action="#{proveedorBean.cargaArchivos}" ajax="false"
+                            styleClass="ui-button-help" style="margin-top: 10px;" icon="pi pi-file-import" />
+                    </div>
+                </p:panel>
+            </div>
+
+            <div class="table-side">
+                <p:dataTable id="tablaRegistros" value="#{proveedorBean.listaProveedorGuardar}" var="prod"
+                    emptyMessage="No hay proveedores registrados." scrollable="true" scrollHeight="450" size="small"
+                    reflow="true">
+
+                    <f:facet name="header">Proveedores Guardados</f:facet>
+
+                    <p:column headerText="Nombre Empresa" width="100">
+                        <h:outputText value="#{prod.nombreEmpresa}" />
+                    </p:column>
+
+                    <p:column headerText="Nombre Contacto">
+                        <h:outputText value="#{prod.contactoEmpresa}" />
+                    </p:column>
+                    <p:column headerText="Teléfono" width="90">
+                        <h:outputText value="#{prod.telefono}" />
+                    </p:column>
+                    <p:column headerText="Email">
+                        <h:outputText value="#{prod.email}" />
+                    </p:column>
+                    <p:column headerText="Direccion" width="60" style="text-align: center;">
+                        <h:outputText value="#{prod.direccion}" />
+                    </p:column>
+                    <p:column headerText="Activo" width="70" style="text-align: center;">
+                        <h:outputText value="#{prod.activo}" />
+                    </p:column>
+                    <p:column headerText="Fecha Registro" width="120" style="text-align: center;">
+                        <h:outputText value="#{prod.fechaRegistro}" />
+                    </p:column>
+
+                </p:dataTable>
+
+                <p:separator style="margin: 20px 0;" />
+
+                <p:commandButton value="Confirmar Guardado Final" icon="pi pi-check-circle"
+                    action="#{proveedorBean.guardarProductoTabla}" process="@form" update="tablaRegistros, msgs"
+                    widgetVar="btnGuardar" onclick="PF('pbAjax').start(); PF('btnGuardar').disable();"
+                    oncomplete="PF('btnGuardar').enable(); if (!args.validationFailed) { PF('dlgConfirmacionGuardar').show(); } else { PF('pbAjax').cancel(); }" />
+            </div>
+        </div>
+
+        <p:dialog header="Confirmación" widgetVar="dlgConfirmacion" modal="true" closable="false" showEffect="fade">
+            <h:outputText value="Datos del proveedor añadidos correctamente." />
+            <f:facet name="footer">
+                <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacion').hide();"
+                    styleClass="ui-button-primary" />
+            </f:facet>
+        </p:dialog>
+
+        <p:dialog header="Éxito" widgetVar="dlgConfirmacionGuardar" modal="true" closable="false" showEffect="fade">
+            <h:outputText value="¡Todo el proceso se ha guardado en la base de datos!" />
+            <f:facet name="footer">
+                <p:commandButton value="Finalizar" type="button" onclick="PF('dlgConfirmacionGuardar').hide();" />
+            </f:facet>
+        </p:dialog>
+
+        <ui:include src="/pages/admin/footer.xhtml" />
+    </h:form>
+</h:body>
+
+</html>

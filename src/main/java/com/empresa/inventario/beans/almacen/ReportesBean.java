@@ -80,20 +80,15 @@ public class ReportesBean implements Serializable {
 
 	public void buscarStockBajo() throws Exception {
 		listaStockBajo = iReporteService.reporteStockBajo();
-
 	}
 
 	public void buscarInventarioValorizado() throws Exception {
-
 		listaInventarioValorizado = iReporteService.reporteInventarioValorizado();
-
 	}
 
 	public void buscar() throws Exception {
 		listaReporteMovimientos = iReporteService.movimientos(fechaInicio, fechaFin);
-
 	}
-
 	public String irAReporteMovimientos() {
 		return "/pages/almacen/reportes/reporteMovimientos.xhtml?faces-redirect=true";
 	}

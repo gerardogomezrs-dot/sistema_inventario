@@ -42,7 +42,7 @@ public class NavegacionBean implements Serializable {
     }
     
     public String irAProveedores() {
-    	return "/pages/admin/proveedores/proveedores?faces-redirect=true";
+    	return "/pages/admin/proveedores/tablaProveedores?faces-redirect=true";
     }
     
     public String irADashboard() {

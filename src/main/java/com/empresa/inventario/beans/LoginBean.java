@@ -38,7 +38,7 @@ public class LoginBean implements Serializable {
 			if (usuario == null) {
 				resetearSesion();
 				añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error de Inventario", "Usuario o password inválido");
-				return null; 
+				return null;
 			} else {
 				String ruta = "";
 
@@ -47,7 +47,6 @@ public class LoginBean implements Serializable {
 					FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("sessionUsuario",
 							usuario);
 
-					
 					FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
 
 					añadirMensaje(FacesMessage.SEVERITY_INFO, "¡Bienvenido!",
@@ -93,18 +92,18 @@ public class LoginBean implements Serializable {
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 		return "/login.xhtml?faces-redirect=true";
 	}
-	
+
 	public String redireccionarInicio() {
 		usuario = new Usuario();
 		usuario = authService.login(userName, password);
 		String ruta = "";
-		if(usuario.getRol().equals("admin")) {
+		if (usuario.getRol().equals("admin")) {
 			ruta = "/pages/admin/dashboard.xhtml?faces-redirect=true";
 		}
-		if(usuario.getRol().equals("almacen")) {
+		if (usuario.getRol().equals("almacen")) {
 			ruta = "/pages/almacen/dashboard.xhtml?faces-redirect=true";
 		}
-		if(usuario.getRol().equals("ventas")) {
+		if (usuario.getRol().equals("ventas")) {
 			ruta = "/pages/almacen/dashboard.xhtml?faces-redirect=true";
 		}
 		return ruta;

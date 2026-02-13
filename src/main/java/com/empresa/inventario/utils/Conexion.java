@@ -7,7 +7,6 @@ public class Conexion {
 	private static final String URL = "jdbc:mysql://localhost:3306/inventarios?rewriteBatchedStatements=true";
 	private static final String USER = "root";
 	private static final String PASS = "root";
-
 	public static Connection getConexion() throws Exception {
 		Class.forName("com.mysql.cj.jdbc.Driver");
 		return DriverManager.getConnection(URL, USER, PASS);
