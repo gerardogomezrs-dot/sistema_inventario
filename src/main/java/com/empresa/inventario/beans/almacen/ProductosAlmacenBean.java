@@ -25,9 +25,7 @@ import lombok.Data;
 @javax.faces.view.ViewScoped
 @Data
 public class ProductosAlmacenBean implements Serializable {
-	/**
-	* 
-	*/
+	
 	private static final long serialVersionUID = 1L;
 	private List<Categorias> listaCategorias;
 	private List<Productos> listaProductosGuardar = new ArrayList<Productos>();

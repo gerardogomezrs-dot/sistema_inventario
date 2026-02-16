@@ -14,11 +14,7 @@ import com.empresa.inventario.model.Proveedor;
 @ApplicationScoped
 public class ProveedorServiceImpl implements Serializable, IProveedorService {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
 	private ProveedorDAO dao;
 
 	@Override
@@ -30,8 +26,36 @@ public class ProveedorServiceImpl implements Serializable, IProveedorService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return proveedors;
 	}
 
+	@Override
+	public void save(List<Proveedor> proveedor) {
+		try {
+			for (Proveedor pro : proveedor) {
+				dao = new ProveedorDAO();
+				dao.guardar(pro);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void delete(int idProveedor) {
+		try {
+			dao.eliminarProveedor(idProveedor);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void update(Proveedor proveedor) {
+		try {
+			dao.update(proveedor);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

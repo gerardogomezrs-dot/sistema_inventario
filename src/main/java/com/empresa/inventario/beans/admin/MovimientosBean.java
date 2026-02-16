@@ -26,9 +26,6 @@ import lombok.Data;
 @javax.faces.view.ViewScoped
 @Data
 public class MovimientosBean implements Serializable {
-	/**
-	 * 
-	 */
 
 	private static final Logger logger = LoggerFactory.getLogger(MovimientosBean.class);
 

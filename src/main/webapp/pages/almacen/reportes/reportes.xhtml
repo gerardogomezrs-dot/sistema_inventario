@@ -53,7 +53,7 @@
             align-items: center;
         }
     </style>
-   <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
     <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
     <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
     <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
@@ -68,16 +68,15 @@
             <p:panel header="Panel de Control: Gestión de Reportes" styleClass="custom-menu-panel">
 
                 <div class="dashboard-grid">
+                    <p:commandButton value="Reporte Movimientos" action="#{reportesAlmacenBean.irAReporteMovimientos}"
+                        icon="pi pi-search" styleClass="report-btn ui-button-outlined" />
 
-                    <p:commandButton value="Reporte Movimientos" action="#{reportesAlmacenBean.irAReporteMovimientos}" icon="pi pi-search"
-                        styleClass="report-btn ui-button-outlined" />
-
-                    <p:commandButton value="Inventario Valorizado" action="#{reportesAlmacenBean.irAReporteInventarioValorizado}" icon="pi pi-dollar"
+                    <p:commandButton value="Inventario Valorizado"
+                        action="#{reportesAlmacenBean.irAReporteInventarioValorizado}" icon="pi pi-dollar"
                         styleClass="report-btn ui-button-success" />
 
-                    <p:commandButton value="Reabastecimiento" action="#{reportesAlmacenBean.irAReporteStockBajo}" icon="pi pi-shopping-cart"
-                        styleClass="report-btn ui-button-warning" />
-
+                    <p:commandButton value="Reabastecimiento" action="#{reportesAlmacenBean.irAReporteStockBajo}"
+                        icon="pi pi-shopping-cart" styleClass="report-btn ui-button-warning" />
                 </div>
                 <f:facet name="footer">
                     <div class="footer-container">
@@ -91,4 +90,5 @@
     </div>
     <ui:include src="/pages/almacen/footer.xhtml" />
 </h:body>
+
 </html>

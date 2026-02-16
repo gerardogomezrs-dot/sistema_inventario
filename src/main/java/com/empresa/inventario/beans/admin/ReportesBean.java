@@ -19,9 +19,7 @@ import lombok.Data;
 @javax.faces.view.ViewScoped
 @Data
 public class ReportesBean implements Serializable {
-	/**
-	* 
-	*/
+	
 	private static final long serialVersionUID = 1L;
 
 	@Inject
@@ -43,9 +41,7 @@ public class ReportesBean implements Serializable {
 
 	private String nombreArchivo_3;
 
-	public ReportesBean() {
-
-	}
+	public ReportesBean() {}
 
 	@PostConstruct
 	public void init() throws Exception {

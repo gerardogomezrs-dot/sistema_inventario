@@ -23,11 +23,10 @@ import lombok.Data;
 @javax.faces.view.ViewScoped
 @Data
 public class CategoriasBean implements Serializable {
-	/**
-	 * 
-	 */
+	
+	
 	private static final long serialVersionUID = 1L;
-
+	
 	private List<Categorias> filteredList;
 
 	private List<Categorias> list;
@@ -71,7 +70,6 @@ public class CategoriasBean implements Serializable {
 		if (listaTablaCategorias != null && !listaTablaCategorias.isEmpty()) {
 			this.progreso = 0;
 			List<Categorias> copiaParaGuardar = new ArrayList<>(this.listaTablaCategorias);
-
 			if (copiaParaGuardar.isEmpty()) {
 				return;
 			}
@@ -85,7 +83,6 @@ public class CategoriasBean implements Serializable {
 				}
 			});
 		}
-
 		listaTablaCategorias.clear();
 
 		this.categorias = new Categorias();

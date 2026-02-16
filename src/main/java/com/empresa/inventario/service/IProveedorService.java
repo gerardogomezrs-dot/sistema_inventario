@@ -7,5 +7,8 @@ import com.empresa.inventario.model.Proveedor;
 public interface IProveedorService {
 	
 	List<Proveedor> proveedors();
+	void save(List<Proveedor> proveedor);
+	void delete(int idProveedor);
+	void update(Proveedor proveedor);
 
 }

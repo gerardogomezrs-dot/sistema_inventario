@@ -8,35 +8,31 @@
 
         <h:form id="formEditar">
             <h:panelGrid columns="2" cellpadding="5">
+                <p:outputLabel for="nombreEmpresa" value="Nombre Empresa:" />
+                <p:inputText id="nombreEmpresa" value="#{proveedorBean.proveedor.nombreEmpresa}" required="true" />
 
-                <p:outputLabel for="nombre" value="Nombre:" />
-                <p:inputText id="nombre" value="#" required="true" />
+                <p:outputLabel value="Contacto Nombre:" />
+                <p:inputText value="#{proveedorBean.proveedor.contactoEmpresa}" />
 
-                <h:outputLabel value="Descripción:" />
-                <p:inputTextarea value="#" rows="3" />
+                <p:outputLabel value="Teléfono:" />
+                <p:inputText value="#{proveedorBean.proveedor.telefono}" />
 
-                <h:outputLabel value="Unidad:" />
-                <p:inputText value="#" />
+                <p:outputLabel value="Email:" />
+                <p:inputText value="#{proveedorBean.proveedor.email}" />
 
-                <h:outputLabel value="Precio Unitario:" />
-                <p:inputText value="#"  />
-                
-                <h:outputLabel value="Stock Actual:" />
-                <p:inputText value="#" />
+                <p:outputLabel value="Dirección:" />
+                <p:inputText value="#{proveedorBean.proveedor.direccion}" />
 
-                <h:outputLabel value="Stock Mínimo:" />
-                <p:inputText value="#" />
+                <p:outputLabel value="Activo:" />
+                <p:selectBooleanCheckbox value="#{proveedorBean.proveedor.activo}" />
 
-                <h:outputLabel value="Ubicación:" />
-                <p:inputText value="#" />
+                <p:outputLabel for="fechaReg" value="Fecha Registro:" />
+                <p:datePicker id="fechaReg" value="#{proveedorBean.proveedor.fechaRegistro}" pattern="dd/MM/yyyy"
+                    showIcon="true" monthNavigator="true" yearNavigator="true" showOnFocus="false"
+                    readonlyInput="true"/>
 
-                <h:outputLabel value="Activo:" />
-                <p:selectBooleanCheckbox value="#" />
-
-                <p:commandButton value="Guardar" icon="pi pi-save" action="#"
-                    update=":form:tablaProveedor :form:msgs"
+                <p:commandButton value="Guardar" icon="pi pi-save" action="#{proveedorBean.actualizarProveedor}" update=":form:tablaProveedor :form:msgs"
                     oncomplete="if (!args.validationFailed) { PF('wdgEditar').hide(); }" />
-
             </h:panelGrid>
         </h:form>
     </p:dialog>

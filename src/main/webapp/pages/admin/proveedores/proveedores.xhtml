@@ -66,30 +66,24 @@
                         styleClass="ui-panelgrid-blank">
 
                         <p:outputLabel for="nombreEmpresa" value="Nombre Empresa:" />
-                        <p:inputText id="nombreEmpresa" value="#{proveedorBean.proveedor.nombreEmpresa}"
-                            required="true" />
+                        <p:inputText id="nombreEmpresa" value="#{proveedorBean.proveedor.nombreEmpresa}" />
 
                         <p:outputLabel value="Contacto Nombre:" />
                         <p:inputText value="#{proveedorBean.proveedor.contactoEmpresa}" />
 
                         <p:outputLabel value="Teléfono:" />
                         <p:inputText value="#{proveedorBean.proveedor.telefono}" />
-
                         <p:outputLabel value="Email:" />
                         <p:inputText value="#{proveedorBean.proveedor.email}" />
-
                         <p:outputLabel value="Dirección:" />
                         <p:inputText value="#{proveedorBean.proveedor.direccion}" />
-
                         <p:outputLabel value="Activo:" />
-                        <p:inputText value="#{proveedorBean.proveedor.activo}" />
-
+                        <p:selectBooleanCheckbox value="#{proveedorBean.proveedor.activo}" />
                         <p:outputLabel for="fechaReg" value="Fecha Registro:" />
                         <p:datePicker id="fechaReg" value="#{proveedorBean.proveedor.fechaRegistro}"
                             pattern="dd/MM/yyyy" showIcon="true" monthNavigator="true" yearNavigator="true"
                             showOnFocus="false" />
                     </p:panelGrid>
-
                     <div style="margin-top: 15px;">
                         <p:commandButton value="Guardar" icon="pi pi-save" action="#{proveedorBean.guardarTabla}"
                             process="@form" update="msgs formProveedor"
@@ -100,7 +94,6 @@
                             action="#{proveedorBean.irATablaProvedor}" immediate="true" styleClass="ui-button-secondary"
                             style="width: auto;" />
                     </div>
-
                     <div class="upload-section">
                         <p:outputLabel value="Cargar desde archivo (CSV, Excel):" styleClass="bold-label"
                             style="display:block; margin-bottom:10px;" />
@@ -113,18 +106,14 @@
                     </div>
                 </p:panel>
             </div>
-
             <div class="table-side">
                 <p:dataTable id="tablaRegistros" value="#{proveedorBean.listaProveedorGuardar}" var="prod"
                     emptyMessage="No hay proveedores registrados." scrollable="true" scrollHeight="450" size="small"
                     reflow="true">
-
                     <f:facet name="header">Proveedores Guardados</f:facet>
-
                     <p:column headerText="Nombre Empresa" width="100">
                         <h:outputText value="#{prod.nombreEmpresa}" />
                     </p:column>
-
                     <p:column headerText="Nombre Contacto">
                         <h:outputText value="#{prod.contactoEmpresa}" />
                     </p:column>
@@ -143,13 +132,12 @@
                     <p:column headerText="Fecha Registro" width="120" style="text-align: center;">
                         <h:outputText value="#{prod.fechaRegistro}" />
                     </p:column>
-
                 </p:dataTable>
 
                 <p:separator style="margin: 20px 0;" />
 
                 <p:commandButton value="Confirmar Guardado Final" icon="pi pi-check-circle"
-                    action="#{proveedorBean.guardarProductoTabla}" process="@form" update="tablaRegistros, msgs"
+                    action="#{proveedorBean.guardarTablaProveedor}" process="@form" update="tablaRegistros, msgs"
                     widgetVar="btnGuardar" onclick="PF('pbAjax').start(); PF('btnGuardar').disable();"
                     oncomplete="PF('btnGuardar').enable(); if (!args.validationFailed) { PF('dlgConfirmacionGuardar').show(); } else { PF('pbAjax').cancel(); }" />
             </div>

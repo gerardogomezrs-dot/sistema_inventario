@@ -57,6 +57,9 @@
                             <p:dataExporter type="xls" target="tblMovimientos"
                                 fileName="#{reportesAlmacenBean.nombreArchivo_1}" pageOnly="false" />
                         </p:commandButton>
+                        <p:commandButton value="Exportar Pdf" icon="pi pi-file-excel" ajax="false" styleClass="btn-pdf">
+                        <p:dataExporter type="pdf" target="tblMovimientos"  fileName="#{reportesAlmacenBean.nombreArchivo_1}" />
+                        </p:commandButton>
                     </div>
                 </f:facet>
                 <p:column headerText="Codigo Barras">

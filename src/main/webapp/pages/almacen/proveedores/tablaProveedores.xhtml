@@ -58,14 +58,14 @@
                 <!-- EDITAR -->
                 <p:commandButton icon="pi pi-pencil" process="@this" update=":dialogoEditar"
                     oncomplete="PF('wdgEditar').show()">
-                    <f:setPropertyActionListener value="#{prod}" target="#{proveedorBean.producto}" />
+                    <f:setPropertyActionListener value="#{prod}" target="#{proveedorBean.proveedor}" />
                 </p:commandButton>
 
                 <!-- ELIMINAR CON CONFIRMACIÓN -->
                 <p:commandButton icon="pi pi-trash" styleClass="p-button-danger" process="@this"
                     update=":form:tablaProveedor :form:msgs" action="#{proveedorBean.eliminar}">
 
-                    <f:setPropertyActionListener value="#{prod}" target="#{proveedorBean.producto}" />
+                    <f:setPropertyActionListener value="#{prod}" target="#{proveedorBean.proveedor}" />
 
                     <p:confirm header="Confirmación" message="¿Está seguro de eliminar este producto?"
                         icon="pi pi-exclamation-triangle" />

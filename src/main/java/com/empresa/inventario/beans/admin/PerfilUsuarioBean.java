@@ -16,13 +16,12 @@ import com.empresa.inventario.service.IUsuariosService;
 
 import lombok.Data;
 
-@Named("perfilUsuarioBean") 
+@Named("perfilUsuarioBean")
 @javax.faces.view.ViewScoped
 @Data
 public class PerfilUsuarioBean implements Serializable {
-	/**
-	* 
-	*/
+	
+	
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger logger = LoggerFactory.getLogger(PerfilUsuarioBean.class);
@@ -43,19 +42,16 @@ public class PerfilUsuarioBean implements Serializable {
 
 		if (user != null) {
 			usuario = user;
-			logger.info("LOG: Usuario recuperado de sesión: " + user.getNombre() + " "+ user.getPassword());
 			String passwordDecodificado = null;
 			try {
 				passwordDecodificado = user.getPassword();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			usuario.setPassword(passwordDecodificado);
 
 		} else {
 			logger.info("LOG: No hay ninguna sesión activa con 'sessionUsuario'");
-
 		}
 	}
 
@@ -70,5 +66,4 @@ public class PerfilUsuarioBean implements Serializable {
 		}
 		iUsuariosService.updateProfile(usuario);
 	}
-
 }

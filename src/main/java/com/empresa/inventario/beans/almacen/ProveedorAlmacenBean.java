@@ -16,12 +16,10 @@ import lombok.Data;
 @Named("proveedorAlmacenBean")
 @javax.faces.view.ViewScoped
 @Data
-public class ProveedorAlmacenBean implements Serializable{/**
-	 * 
-	 */
+public class ProveedorAlmacenBean implements Serializable{
+	
 	private static final long serialVersionUID = 1L;
 	
-
 	private List<Proveedor> listaProveedorGuardar = new ArrayList<Proveedor>();
 
 	private List<Proveedor> list;

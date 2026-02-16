@@ -13,13 +13,11 @@ import com.empresa.inventario.model.Usuario;
 
 import lombok.Data;
 
-@Named("perfilUsuarioAlmacenBean") // Nombre para usar en el XHTML
+@Named("perfilUsuarioAlmacenBean")
 @javax.faces.view.ViewScoped
 @Data
 public class PerfilUsuarioBean implements Serializable {
-	/**
-	* 
-	*/
+	
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger logger = LoggerFactory.getLogger(PerfilUsuarioBean.class);
@@ -43,7 +41,6 @@ public class PerfilUsuarioBean implements Serializable {
 			try {
 				passwordDecodificado = user.getPassword();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			usuario.setPassword(passwordDecodificado);

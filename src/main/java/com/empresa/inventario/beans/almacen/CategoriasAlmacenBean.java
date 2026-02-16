@@ -23,9 +23,7 @@ import lombok.Data;
 @javax.faces.view.ViewScoped
 @Data
 public class CategoriasAlmacenBean implements Serializable {
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 
 	private List<Categorias> filteredList;
@@ -67,7 +65,7 @@ public class CategoriasAlmacenBean implements Serializable {
 	}
 
 	public String irATablaCategoria() {
-		return "/pages/almacen/categorias/consultaCategorias.xhtml?faces-redirect=true";
+		return "/pages/almacen/categorias/tablaCategorias.xhtml?faces-redirect=true";
 	}
 
 	public void guardarCategoriasTabla() {
@@ -135,7 +133,6 @@ public class CategoriasAlmacenBean implements Serializable {
 			context.validationFailed();
 			context.renderResponse();
 			e.printStackTrace();
-
 		}
 
 		catch (Exception e) {
