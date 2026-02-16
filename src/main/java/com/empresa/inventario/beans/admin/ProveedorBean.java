@@ -12,6 +12,7 @@ import javax.inject.Named;
 
 import org.primefaces.model.UploadedFile;
 
+import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Proveedor;
 import com.empresa.inventario.service.IProveedorService;
 
@@ -63,9 +64,9 @@ public class ProveedorBean implements Serializable {
 		this.proveedor = new Proveedor();
 	}
 
-	public void guardarTablaProveedor() {	
+	public void guardarTablaProveedor() {
 		List<Proveedor> proveedors = new ArrayList<Proveedor>(listaProveedorGuardar);
-		System.out.println("Tamaño de lista "+ proveedors.size());
+		System.out.println("Tamaño de lista " + proveedors.size());
 		iProveedorService.save(proveedors);
 		listaProveedorGuardar = new ArrayList<Proveedor>();
 	}
@@ -73,26 +74,51 @@ public class ProveedorBean implements Serializable {
 	public void cargarListaProveedores() {
 		list = iProveedorService.proveedors();
 	}
-	
+
 	public void eliminarProveedor() {
 		try {
-		iProveedorService.delete(proveedor.getIdProveedor());
-		this.list = iProveedorService.proveedors(); 
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-				"Proveedor eliminado", "El Provedor fue eliminado correctamente"));
-		}catch (Exception e) {
-				e.printStackTrace();
-		}
-	}
-	
-	public void actualizarProveedor() {
-		try {
-		iProveedorService.update(proveedor);
-		this.list = iProveedorService.proveedors(); 
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-				"Proveedor Actualizado", "El Provedor fue actualizado correctamente"));
-		}catch (Exception e) {
+			iProveedorService.delete(proveedor.getIdProveedor());
+			this.list = iProveedorService.proveedors();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+					"Proveedor eliminado", "El Provedor fue eliminado correctamente"));
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+
+	public void actualizarProveedor() {
+		try {
+			iProveedorService.update(proveedor);
+			this.list = iProveedorService.proveedors();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+					"Proveedor Actualizado", "El Provedor fue actualizado correctamente"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void cargaArchivos() {
+		try {
+			if (uploadedFile == null || uploadedFile.getContents() == null) {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
+			}
+			listaProveedorGuardar = new ArrayList<Proveedor>();
+			listaProveedorGuardar = iProveedorService.uploadFiles(uploadedFile);
+
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
+
+		} catch (ExceptionMessage e) {
+			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
+	}
+
 }

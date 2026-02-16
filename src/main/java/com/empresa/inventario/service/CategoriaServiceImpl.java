@@ -30,17 +30,15 @@ public class CategoriaServiceImpl implements ICategoriaService {
 
 	@Override
 	public void save(List<Categorias> list, Consumer<Integer> progresoCallback) throws Exception {
-		// 1. Validación de seguridad
 		if (list == null || list.isEmpty()) {
 			System.out.println("DEBUG: La lista llegó vacía al Service.");
 			return;
 		}
 
 		int total = list.size();
-		int batchSize = 50; // Tamaño óptimo sugerido
+		int batchSize = 50; 
 		for (int i = 0; i < total; i++) {
 			dao.guardar(list.get(i));
-			// Optimizamos el callback para que no sature la interfaz/log
 	        if (i % batchSize == 0 || i == total - 1) {
 	            int porcentaje = (int) (((double) (i + 1) / total) * 100);
 	            progresoCallback.accept(porcentaje);
@@ -70,9 +68,7 @@ public class CategoriaServiceImpl implements ICategoriaService {
 	@Override
 	public void delete(int idCategoria) throws Exception {
 		try {
-			
-				dao.eliminarCategoria(idCategoria);
-			
+			dao.eliminarCategoria(idCategoria);
 		} catch (Exception e) {
 			throw new ExceptionMessage("No se puede eliminar la categoria");
 		}

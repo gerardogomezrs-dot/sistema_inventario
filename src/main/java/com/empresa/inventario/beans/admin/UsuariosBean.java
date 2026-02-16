@@ -16,7 +16,7 @@ import com.empresa.inventario.service.IUsuariosService;
 
 import lombok.Data;
 
-@Named("usuariosBean") 
+@Named("usuariosBean")
 @javax.faces.view.ViewScoped
 @Data
 public class UsuariosBean implements Serializable {
@@ -57,7 +57,6 @@ public class UsuariosBean implements Serializable {
 
 	public void guardar() {
 		try {
-
 			iUsuariosService.save(usuario);
 
 		} catch (ExceptionMessage e) {
