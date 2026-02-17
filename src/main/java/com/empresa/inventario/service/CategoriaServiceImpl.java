@@ -31,8 +31,7 @@ public class CategoriaServiceImpl implements ICategoriaService {
 	@Override
 	public void save(List<Categorias> list, Consumer<Integer> progresoCallback) throws Exception {
 		if (list == null || list.isEmpty()) {
-			System.out.println("DEBUG: La lista llegó vacía al Service.");
-			return;
+			throw new ExceptionMessage("Lista vacia");
 		}
 
 		int total = list.size();
@@ -48,7 +47,11 @@ public class CategoriaServiceImpl implements ICategoriaService {
 
 	@Override
 	public void update(Categorias categorias) throws Exception {
+			try {
 			dao.actualizar(categorias);
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
 	}
 
 	@Override
@@ -57,7 +60,7 @@ public class CategoriaServiceImpl implements ICategoriaService {
 		categorias = dao.getAllCategorias();
 		try {
 			if (categorias.size() == 0) {
-				// throw new ExceptionMessage("Lista Vacia");
+				 throw new ExceptionMessage("Lista Vacia");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -72,7 +75,6 @@ public class CategoriaServiceImpl implements ICategoriaService {
 		} catch (Exception e) {
 			throw new ExceptionMessage("No se puede eliminar la categoria");
 		}
-
 	}
 
 	@Override
@@ -95,6 +97,10 @@ public class CategoriaServiceImpl implements ICategoriaService {
 			}
 		}
 
+		if (!fileName.endsWith(".xlsx") && !fileName.endsWith(".lsx") && !fileName.endsWith(".csv")) {
+			throw new ExceptionMessage("Formato no soportado");
+		}
+		
 		return categorias;
 	}
 

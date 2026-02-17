@@ -9,7 +9,6 @@
 
     <style>
         body {
-            /* Gradiente moderno para el fondo */
             background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
             display: flex;
             justify-content: center;
@@ -45,7 +44,6 @@
             padding: 0 30px 30px 30px !important;
         }
 
-        /* Estilo para los grupos de input */
         .ui-inputgroup {
             margin-bottom: 15px;
         }
@@ -77,22 +75,16 @@
         }
     </style>
 </h:head>
-
 <h:body>
-
     <h:form id="loginForm">
-
         <p:growl id="messages" showDetail="true" />
-
         <p:panel styleClass="login-card">
-
             <f:facet name="header">
                 <div class="logo-container">
                     <i class="pi pi-user-circle"></i>
                 </div>
                 <h:outputText value="Iniciar Sesión" />
             </f:facet>
-
             <div class="ui-fluid">
                 <p:outputLabel for="username" value="Nombre de Usuario"
                     style="display:block; margin-bottom:5px; color:#666; font-size: 0.9em;" />
@@ -100,7 +92,6 @@
                     <span class="ui-inputgroup-addon"><i class="pi pi-user"></i></span>
                     <p:inputText id="username" value="#{loginBean.userName}" required="true" placeholder="Ej. admin" />
                 </div>
-
                 <p:outputLabel for="password" value="Contraseña"
                     style="display:block; margin-bottom:5px; color:#666; font-size: 0.9em;" />
                 <div class="ui-inputgroup">
@@ -109,18 +100,11 @@
                         placeholder="********" />
                 </div>
             </div>
-
             <f:facet name="footer">
                 <p:commandButton value="INGRESAR" action="#{loginBean.login}" ajax="false" icon="pi pi-sign-in"
                     styleClass="btn-login" />
             </f:facet>
-
         </p:panel>
-
-
-
     </h:form>
-
 </h:body>
-
 </html>

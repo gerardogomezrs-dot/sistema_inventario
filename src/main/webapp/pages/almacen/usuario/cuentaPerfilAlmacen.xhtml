@@ -37,7 +37,7 @@
 
 <h:body>
     <h:form id="formPerfilUsuario">
-        <ui:include src="/pages/admin/menu.xhtml" />
+        <ui:include src="/pages/almacen/menu.xhtml" />
         <p:separator />
 
         <div class="flex-container">
@@ -47,33 +47,32 @@
 
                 <h:panelGrid columns="2" columnClasses="label,value" cellpadding="5">
                     <p:outputLabel for="nombre" value="Nombre Completo:" />
-                    <p:inputText id="nombre" value="#{perfilUsuarioBean.usuario.nombre}" required="true" />
+                    <p:inputText id="nombre" value="#{perfilUsuarioAlmacenBean.usuario.nombre}" required="true" />
 
                     <p:outputLabel for="userName" value="Nombre Usuario:" />
-                    <p:inputText id="userName" value="#{perfilUsuarioBean.usuario.userName}" required="true" />
+                    <p:inputText id="userName" value="#{perfilUsuarioAlmacenBean.usuario.userName}" required="true" />
 
                     <p:outputLabel for="pass" value="Password:" />
-                    <p:password id="pass" widgetVar="pw" value="#{perfilUsuarioBean.usuario.password}"
+                    <p:inputText id="pass" widgetVar="pw" value="#{perfilUsuarioAlmacenBean.usuario.password}"
                         required="true" />
                     <h:outputText value=" Mostrar password" />
                     <h:selectBooleanCheckbox onchange="PF('pw').jq.attr('type', this.checked ? 'text' : 'password')" />
 
-
                     <p:outputLabel value="Permisos Asignados:" />
-                    <p:inputText value="#{perfilUsuarioBean.usuario.permisos}" readonly="true" styleClass="readonly" />
+                    <p:inputText value="#{perfilUsuarioAlmacenBean.usuario.permisos}" readonly="true" styleClass="readonly" />
 
                     <p:outputLabel value="Rol:" />
-                    <p:inputText value="#{perfilUsuarioBean.usuario.rol}" readonly="true" styleClass="readonly" />
+                    <p:inputText value="#{perfilUsuarioAlmacenBean.usuario.rol}" readonly="true" styleClass="readonly" />
 
                     <p:outputLabel value="Estado:" />
-                    <p:selectBooleanCheckbox value="#{perfilUsuarioBean.usuario.activo}" />
+                    <p:selectBooleanCheckbox value="#{perfilUsuarioAlmacenBean.usuario.activo}" disabled="true" />
                 </h:panelGrid>
 
                 <p:separator />
 
                 <div style="margin-top: 10px;">
                     <p:commandButton value="Guardar" icon="pi pi-save" update="formPerfilUsuario"
-                        action="#{perfilUsuarioBean.actualizarPerfil}"
+                        action="#{perfilUsuarioAlmacenBean.actualizarPerfil}"
                         oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
 
                     <p:commandButton value="Regresar" icon="pi pi-chevron-left" immediate="true"
@@ -91,9 +90,7 @@
             </h:panelGrid>
         </h:form>
     </p:dialog>
-
-            <ui:include src="/pages/almacen/footer.xhtml" />
-
+    <ui:include src="/pages/almacen/footer.xhtml" />
 </h:body>
 
 </html>

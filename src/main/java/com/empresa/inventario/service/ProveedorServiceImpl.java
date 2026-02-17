@@ -16,6 +16,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.primefaces.model.UploadedFile;
 import com.empresa.inventario.dao.ProveedorDAO;
+import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Proveedor;
 import com.opencsv.CSVReader;
 
@@ -70,7 +71,6 @@ public class ProveedorServiceImpl implements Serializable, IProveedorService {
 
 	@Override
 	public List<Proveedor> uploadFiles(UploadedFile file) {
-		System.out.println("Recibo desde el bean: " + file.getFileName());
 		List<Proveedor> proveedors = new ArrayList<Proveedor>();
 		String fileName = "";
 		fileName = file.getFileName().toLowerCase();
@@ -88,6 +88,10 @@ public class ProveedorServiceImpl implements Serializable, IProveedorService {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+
+		if (!fileName.endsWith(".xlsx") && !fileName.endsWith(".lsx") && !fileName.endsWith(".csv")) {
+			throw new ExceptionMessage("Formato no soportado");
 		}
 		return proveedors;
 	}
@@ -133,7 +137,7 @@ public class ProveedorServiceImpl implements Serializable, IProveedorService {
 		try (CSVReader csvReader = new CSVReader(new InputStreamReader(file.getInputstream()))) {
 			csvReader.readNext();
 			String[] fila;
-			while((fila = csvReader.readNext()) != null) {
+			while ((fila = csvReader.readNext()) != null) {
 				if (fila.length >= 2) {
 					prov = new Proveedor();
 					prov.setNombreEmpresa(fila[0]);
@@ -145,7 +149,7 @@ public class ProveedorServiceImpl implements Serializable, IProveedorService {
 					proveedor.add(prov);
 				}
 			}
-		} catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return proveedor;

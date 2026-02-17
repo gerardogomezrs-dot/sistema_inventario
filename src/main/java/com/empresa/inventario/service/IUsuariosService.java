@@ -17,4 +17,6 @@ public interface IUsuariosService {
 	
 	void updateProfile(Usuario usuario) throws Exception;
 
+	Usuario getByIdUsuario(int usuario) throws Exception;
+
 }

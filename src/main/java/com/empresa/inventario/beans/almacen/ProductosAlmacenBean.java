@@ -134,6 +134,7 @@ public class ProductosAlmacenBean implements Serializable {
 	}
 
 	public void cargaArchivos() throws Exception {
+		try{
 		if (uploadedFile == null || uploadedFile.getContents() == null) {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
@@ -142,6 +143,9 @@ public class ProductosAlmacenBean implements Serializable {
 		listaProductosGuardar = iProductoService.cargaArchivos(uploadedFile);
 		FacesContext.getCurrentInstance().addMessage(null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
+		}catch (ExceptionMessage e) {
+			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+		}
 	}
 
 	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {

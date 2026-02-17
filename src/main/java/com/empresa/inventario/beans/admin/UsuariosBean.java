@@ -109,7 +109,6 @@ public class UsuariosBean implements Serializable {
 	}
 
 	public void actualizarPerfil() throws Exception {
-
 		if (usuario == null) {
 			throw new ExceptionMessage("Vacio");
 		}

@@ -27,9 +27,6 @@ import lombok.Data;
 @Data
 public class ProductoBean implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private List<Categorias> listaCategorias;

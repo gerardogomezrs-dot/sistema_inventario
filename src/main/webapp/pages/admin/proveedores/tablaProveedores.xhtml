@@ -52,13 +52,9 @@
             </p:column>
 
             <p:column headerText="Activo" width="80" style="text-align: center;">
-                <p:selectBooleanCheckbox value="#{prod.activo}" readonlyInput="true" />
+                <p:selectBooleanCheckbox value="#{prod.activo}" readonlyInput="true" disabled="true" />
             </p:column>
-
-            <p:column headerText="Fecha Registro">
-                <h:outputText value="#{prod.fechaRegistro}" />
-            </p:column>
-
+            
             <p:column headerText="Acciones" width="120" style="text-align: center;">
                 <p:commandButton icon="pi pi-pencil" process="@this" update=":dialogoEditar"
                     oncomplete="PF('wdgEditar').show()" styleClass="edit-button rounded-button ui-button-success">

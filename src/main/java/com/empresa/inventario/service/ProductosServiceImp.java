@@ -31,7 +31,6 @@ import com.opencsv.CSVReader;
 public class ProductosServiceImp implements IProductoService {
 
 	private ProductosDAO productosDAO;
-
 	private Productos productos;
 
 	@Override
@@ -56,7 +55,6 @@ public class ProductosServiceImp implements IProductoService {
 		
 		List<Productos> listaProducto = new ArrayList<Productos>();
 		
-		
 		for (Productos productos : productosLista) {
 			try {
 					productos.setCodigoBarras(CrearCodigoBarra.generarCodigoBarra(productos.getCodigoBarras()));
@@ -68,7 +66,6 @@ public class ProductosServiceImp implements IProductoService {
 		}
 		
 		int total = listaProducto.size();
-		
 		for(int i = 0; i<total; i++) {
 			ProductosDAO dao = new ProductosDAO();
 			dao.guardar(listaProducto.get(i));
@@ -105,22 +102,17 @@ public class ProductosServiceImp implements IProductoService {
 			if (productos == null) {
 				throw new ExceptionMessage("Vacio");
 			} else {
-
 				ProductosDAO dao = new ProductosDAO();
 				dao.actualizar(productos);
 			}
-
 		} catch (SQLException e) {
 			e.printStackTrace();
-
 		}
-
 	}
 
 	@Override
 	public List<Productos> cargaArchivos(UploadedFile uploadedFile) throws Exception {
 		List<Productos> productos = new ArrayList<Productos>();
-		System.out.println("Carga archivo " + uploadedFile.getFileName());
 		String fileName = "";
 		fileName = uploadedFile.getFileName().toLowerCase();
 
@@ -131,7 +123,6 @@ public class ProductosServiceImp implements IProductoService {
 				e.printStackTrace();
 			}
 		}
-
 		if (fileName.endsWith("xlsx") || fileName.endsWith("lsx")) {
 			try {
 				productos = leerExcel(uploadedFile);
@@ -139,7 +130,9 @@ public class ProductosServiceImp implements IProductoService {
 				e.printStackTrace();
 			}
 		}
-
+		if (!fileName.endsWith(".xlsx") && !fileName.endsWith(".lsx") && !fileName.endsWith(".csv")) {
+			throw new ExceptionMessage("Formato no soportado");
+		}
 		return productos;
 	}
 
@@ -150,7 +143,6 @@ public class ProductosServiceImp implements IProductoService {
 		for (Row row : sheet) {
 			if (row.getRowNum() == 0)
 				continue;
-
 			Cell cellNombre = row.getCell(0);
 			Cell cellDescripcion = row.getCell(1);
 			Cell cellCodigoBarras = row.getCell(2);
@@ -211,13 +203,11 @@ public class ProductosServiceImp implements IProductoService {
 					p.setUbicacion(fila[8]);
 					p.setActivo(Boolean.parseBoolean(fila[9]));
 					productos.add(p);
-
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return productos;
 	}
 
@@ -227,19 +217,16 @@ public class ProductosServiceImp implements IProductoService {
 		if (codigoBarras != null) {
 			productos = productosDAO.getByIdCodigoBarras(codigoBarras);
 		}
-
 		return productos;
 	}
 
 	@Override
 	public void bajaProducto(int idProducto) throws Exception {
-
 		try {
 			productosDAO.bajaProducto(idProducto);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 }

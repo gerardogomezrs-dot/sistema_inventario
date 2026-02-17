@@ -31,12 +31,11 @@ public class ProveedorAlmacenBean implements Serializable{
 	private Integer progreso = 0;
 	
 	public ProveedorAlmacenBean (){
-		
+		proveedor = new Proveedor();		
 	}
 	
 	@PostConstruct
 	public void init() {
-		
 	}
 
 	public String irADashboard() {

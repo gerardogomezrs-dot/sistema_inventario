@@ -7,9 +7,6 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IUsuariosService;
@@ -20,19 +17,17 @@ import lombok.Data;
 @javax.faces.view.ViewScoped
 @Data
 public class PerfilUsuarioBean implements Serializable {
-	
-	
-	private static final long serialVersionUID = 1L;
 
-	private static final Logger logger = LoggerFactory.getLogger(PerfilUsuarioBean.class);
+	private static final long serialVersionUID = 1L;
 
 	private Usuario usuario;
 
 	@Inject
 	private IUsuariosService iUsuariosService;
 
-	public PerfilUsuarioBean() {
+	private Usuario usuario2;
 
+	public PerfilUsuarioBean() {
 	}
 
 	@PostConstruct
@@ -40,19 +35,14 @@ public class PerfilUsuarioBean implements Serializable {
 		Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.get("sessionUsuario");
 
-		if (user != null) {
-			usuario = user;
-			String passwordDecodificado = null;
-			try {
-				passwordDecodificado = user.getPassword();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			usuario.setPassword(passwordDecodificado);
+		try {
+			int id = user.getIdUsuario();
+			usuario = iUsuariosService.getByIdUsuario(id);
+		} catch (Exception e) {
 
-		} else {
-			logger.info("LOG: No hay ninguna sesión activa con 'sessionUsuario'");
+			e.printStackTrace();
 		}
+
 	}
 
 	public String irAIndex() {
@@ -60,7 +50,6 @@ public class PerfilUsuarioBean implements Serializable {
 	}
 
 	public void actualizarPerfil() throws Exception {
-
 		if (usuario == null) {
 			throw new ExceptionMessage("Vacio");
 		}

@@ -19,7 +19,7 @@ import lombok.Data;
 @javax.faces.view.ViewScoped
 @Data
 public class ReportesBean implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	@Inject
@@ -41,7 +41,8 @@ public class ReportesBean implements Serializable {
 
 	private String nombreArchivo_3;
 
-	public ReportesBean() {}
+	public ReportesBean() {
+	}
 
 	@PostConstruct
 	public void init() throws Exception {
@@ -83,7 +84,7 @@ public class ReportesBean implements Serializable {
 	public void buscarInventarioValorizado() throws Exception {
 		listaInventarioValorizado = iReporteService.reporteInventarioValorizado();
 	}
-	
+
 	public void buscarStockBajo() throws Exception {
 		listaStockBajo = iReporteService.reporteStockBajo();
 	}
@@ -103,9 +104,8 @@ public class ReportesBean implements Serializable {
 	public String irAReportePrincipal() {
 		return "/pages/admin/reportes/reportes.xhtml?faces-redirect=true";
 	}
-	
+
 	public String irADashboard() {
 		return "/pages/admin/dashboard.xhtml?faces-redirect=true";
 	}
-
 }

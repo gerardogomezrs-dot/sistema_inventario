@@ -90,4 +90,16 @@ public class UsuariosServiceImpl implements IUsuariosService, Serializable {
 
 	}
 
+	@Override
+	public Usuario getByIdUsuario(int usuario) throws Exception {
+		Usuario usuario2 = new Usuario();
+		try {
+			dao = new UsuariosDAO();
+				usuario2 = 	 dao.getById(usuario);
+		} catch (Exception e) {
+			e.printStackTrace();
+			}
+		return usuario2;
+	}
+
 }

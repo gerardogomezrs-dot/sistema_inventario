@@ -48,7 +48,7 @@
                     <p:inputText id="userName" value="#{perfilUsuarioBean.usuario.userName}" required="true" />
 
                     <p:outputLabel for="pass" value="Password:" />
-                    <p:password id="pass" widgetVar="pw" value="#{perfilUsuarioBean.usuario.password}"
+                    <p:inputText id="pass" widgetVar="pw" value="#{perfilUsuarioBean.usuario.password}"
                         required="true" />
                     <h:outputText value=" Mostrar password" />
                     <h:selectBooleanCheckbox onchange="PF('pw').jq.attr('type', this.checked ? 'text' : 'password')" />

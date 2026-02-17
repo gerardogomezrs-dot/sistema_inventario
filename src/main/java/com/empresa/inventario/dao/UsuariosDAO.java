@@ -27,17 +27,39 @@ public class UsuariosDAO {
 
 			try (ResultSet rs = ps.executeQuery()) {
 
-				if (rs.next()) { 
+				if (rs.next()) {
 					p = mapper.mapRowLogin(rs);
 				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw e; 
+			throw e;
 		}
-		return p; 
+		return p;
 	}
-	
+
+	public Usuario getById(int idUsuario) throws Exception {
+		System.err.println("id Recibido " +idUsuario);
+		Usuario p = new Usuario();
+		String sql = "SELECT * FROM usuarios WHERE id_usuario = ? ";
+
+		try (Connection con = Conexion.getConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setInt(1, idUsuario);
+
+			try (ResultSet rs = ps.executeQuery()) {
+
+				if (rs.next()) {
+					p = mapper.mapRowPerfil(rs);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		}
+		return p;
+	}
+
 	public String validarUserName(String userName) throws Exception {
 
 		String userNameValidar = "";
@@ -49,15 +71,15 @@ public class UsuariosDAO {
 
 			try (ResultSet rs = ps.executeQuery()) {
 
-				if (rs.next()) { 
+				if (rs.next()) {
 					userNameValidar = mapper.mapRowUserName(rs);
 				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw e; 
+			throw e;
 		}
-		return userNameValidar; 
+		return userNameValidar;
 	}
 
 	public List<Usuario> getAll() throws Exception {
@@ -132,13 +154,13 @@ public class UsuariosDAO {
 		statement.close();
 		connection.close();
 	}
-	
+
 	public void actualizarPerfilUsuario(Usuario usuario) throws Exception {
 
 		Connection conexion = Conexion.getConexion();
 
-		String sql = "UPDATE usuarios SET " + "nombre = ?,  user_name = ?, "
-				+ "password = ?, " + "activo = ? " + "WHERE id_usuario = ?";
+		String sql = "UPDATE usuarios SET " + "nombre = ?,  user_name = ?, " + "password = ?, " + "activo = ? "
+				+ "WHERE id_usuario = ?";
 
 		PreparedStatement ps = conexion.prepareStatement(sql);
 

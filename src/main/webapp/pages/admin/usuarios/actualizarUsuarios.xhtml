@@ -15,21 +15,15 @@
 
                 <h:outputLabel value="Permisos:" />
                 <p:inputTextarea value="#{usuariosBean.usuario.permisos}" rows="3" />
-
                 <p:outputLabel for="nombreUsuario" value="Nombre Usuario:" />
                 <p:inputText id="nombreUsuario" value="#{usuariosBean.usuario.userName}" required="true" />
-
                 <p:outputLabel for="password" value="password:" />
                 <p:inputText id="password" value="#{usuariosBean.usuario.password}"  required="true" />
-
                 <h:outputLabel value="Activo :" />
                 <p:selectBooleanCheckbox value="#{usuariosBean.usuario.activo}" required="false" />
-
-
                 <p:commandButton value="Guardar" action="#{usuariosBean.actualizar}"
                     update=":form:tablaUsuarios :form:msgs"
                     oncomplete="if (!args.validationFailed) { PF('wdgEditar').hide(); }" />
-
             </h:panelGrid>
         </h:form>
     </p:dialog>
