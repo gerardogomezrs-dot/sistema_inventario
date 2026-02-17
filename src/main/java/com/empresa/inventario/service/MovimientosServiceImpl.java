@@ -16,14 +16,13 @@ import com.empresa.inventario.model.Movimientos;
 @ApplicationScoped
 public class MovimientosServiceImpl implements IMovimientosService, Serializable {
 
+	private static final long serialVersionUID = 1L;
+
+	
 	private MovimientosDAO dao = new MovimientosDAO();
 
 	private ProductosDAO productosDAO = new ProductosDAO();
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 	@Override
 	public List<Movimientos> save(List<Movimientos> movimientosL) throws Exception {
@@ -59,17 +58,18 @@ public class MovimientosServiceImpl implements IMovimientosService, Serializable
 	@Override
 	public List<Movimientos> getAll() throws Exception {
 		List<Movimientos> list = new ArrayList<Movimientos>();
+		List<Movimientos> movimientos = null;
 		list = dao.getAll();
 		try {
 		if (list.size() != 0) {
-			
+		 movimientos = new ArrayList<Movimientos>(list);
 		} else if(list.size() == 0) {
-			//throw new ExceptionMessage("Lista Vacia");
+			throw new ExceptionMessage("Lista Vacia");
 		}
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
-		return list;
+		return movimientos;
 	}
 
 }

@@ -45,7 +45,7 @@ public class PerfilUsuarioBean implements Serializable {
 
 	}
 
-	public String irAIndex() {
+	public String irADashboard() {
 		return "/pages/admin/dashboard?faces-redirect=true";
 	}
 

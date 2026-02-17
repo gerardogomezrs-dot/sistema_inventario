@@ -3,6 +3,7 @@ package com.empresa.inventario.beans.admin;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -65,10 +66,34 @@ public class ProveedorBean implements Serializable {
 	}
 
 	public void guardarTablaProveedor() {
+		progreso = 0;
+		if(listaProveedorGuardar != null && !listaProveedorGuardar.isEmpty()) {
+			this.progreso = 0;
 		List<Proveedor> proveedors = new ArrayList<Proveedor>(listaProveedorGuardar);
-		System.out.println("Tamaño de lista " + proveedors.size());
-		iProveedorService.save(proveedors);
-		listaProveedorGuardar = new ArrayList<Proveedor>();
+		if(proveedors.isEmpty()) {
+			return;
+		}
+		for(Proveedor proveedor: proveedors) {
+			System.err.println(proveedor.getNombreEmpresa());
+		}
+		CompletableFuture.runAsync(() ->{
+			try {
+				iProveedorService.save(proveedors, (valor) -> {
+					this.progreso = valor;
+				});
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+		
+		}
+		listaProveedorGuardar.clear();
+		this.proveedor = new Proveedor();
+	}
+	
+	public void onComplete() {
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+				"Registro guardado", "El registro fue guardado correctamente"));
 	}
 
 	public void cargarListaProveedores() {
@@ -80,7 +105,7 @@ public class ProveedorBean implements Serializable {
 			iProveedorService.delete(proveedor.getIdProveedor());
 			this.list = iProveedorService.proveedors();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-					"Proveedor eliminado", "El Provedor fue eliminado correctamente"));
+					"Registro eliminado", "El Registro fue eliminado correctamente"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -91,7 +116,7 @@ public class ProveedorBean implements Serializable {
 			iProveedorService.update(proveedor);
 			this.list = iProveedorService.proveedors();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-					"Proveedor Actualizado", "El Provedor fue actualizado correctamente"));
+					"Registro Actualizado", "El Registro fue actualizado correctamente"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -23,7 +23,7 @@ import lombok.Data;
 @javax.faces.view.ViewScoped
 @Data
 public class CategoriasAlmacenBean implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	private List<Categorias> filteredList;
@@ -102,6 +102,11 @@ public class CategoriasAlmacenBean implements Serializable {
 		this.categorias = new Categorias();
 	}
 
+	public void onComplete() {
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+				"Registro guardado", "El registro fue guardado correctamente"));
+	}
+
 	public List<Categorias> listCategorias() throws Exception {
 		return list = categoriaService.getAllCategorias();
 	}
@@ -111,7 +116,7 @@ public class CategoriasAlmacenBean implements Serializable {
 			categoriaService.update(categorias);
 			categoriaService.update(categorias);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-					"Categoria actualizada", "La categoria fue actualizada correctamente"));
+					"Registro actualizado", "El rgistro fue actualizado correctamente"));
 		}
 	}
 
@@ -120,9 +125,8 @@ public class CategoriasAlmacenBean implements Serializable {
 			if (categorias != null) {
 				categoriaService.delete(categorias.getIdCategoria());
 				list = categoriaService.getAllCategorias();
-
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-						"Categoria eliminada", "La categoria fue eliminada correctamente"));
+						"Registro eliminado", "El registro fue eliminado correctamente"));
 			} else {
 				añadirMensaje(FacesMessage.SEVERITY_WARN, "Atención", "No se seleccionó ninguna categoría.");
 			}

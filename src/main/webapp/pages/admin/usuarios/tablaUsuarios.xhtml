@@ -15,7 +15,6 @@
             margin: 20px;
         }
 
-        /* Quitar degradados de la cabecera de la tabla */
         .ui-datatable .ui-datatable-header,
         .ui-datatable .ui-column-header {
             background: #ffffff !important;
@@ -25,7 +24,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* Estilo de los Badges */
         .badge {
             padding: 4px 8px;
             border-radius: 4px;
@@ -49,7 +47,6 @@
             color: #F57C00;
         }
 
-        /* Espaciado de botones de acción */
         .action-btn {
             margin-right: 5px !important;
         }
@@ -60,13 +57,11 @@
     <h:form id="form">
 
         <ui:include src="/pages/admin/menu.xhtml" />
-
         <p:growl id="msgs" showDetail="true" />
         <p:separator />
-
         <p:toolbar style="margin-bottom: 20px; border: none; background: transparent;">
             <f:facet name="left">
-                <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{usuariosBean.irAIndex}"
+                <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{usuariosBean.irADashboard}"
                     immediate="true" styleClass="ui-button-flat" />
             </f:facet>
             <f:facet name="right">
@@ -75,7 +70,6 @@
             </f:facet>
         </p:toolbar>
         <p:separator />
-
         <p:dataTable id="tablaUsuarios" var="prod" value="#{usuariosBean.list}" rows="10" paginator="true"
             paginatorPosition="bottom" emptyMessage="No se encontraron usuarios"
             styleClass="ui-datatable-striped ui-datatable-sm">
@@ -114,12 +108,11 @@
                     process="@this" update=":form:tablaUsuarios :form:msgs" action="#{usuariosBean.eliminar}"
                     title="Eliminar">
                     <f:setPropertyActionListener value="#{prod}" target="#{usuariosBean.usuario}" />
-                    <p:confirm header="Confirmación" message="¿Está seguro de eliminar este usuario?"
+                    <p:confirm header="Confirmación" message="¿Está seguro de eliminar este registro?"
                         icon="pi pi-exclamation-triangle" />
                 </p:commandButton>
             </p:column>
         </p:dataTable>
-
         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
             <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat"
                 icon="pi pi-times" />
@@ -129,8 +122,7 @@
     </h:form>
 
     <ui:include src="/pages/admin/usuarios/actualizarUsuarios.xhtml" />
-            		<ui:include src="/pages/admin/footer.xhtml" />
-
+    <ui:include src="/pages/admin/footer.xhtml" />
 </h:body>
 
 </html>

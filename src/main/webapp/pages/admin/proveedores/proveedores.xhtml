@@ -56,7 +56,7 @@
         <p:progressBar widgetVar="pbAjax" ajax="true" value="#{proveedorBean.progreso}" labelTemplate="{value}%"
             styleClass="animated" interval="500">
             <p:ajax event="complete" listener="#{proveedorBean.onComplete}" update="msgs"
-                oncomplete="alert('¡Proceso Finalizado!');" />
+                />
         </p:progressBar>
 
         <div class="main-container">

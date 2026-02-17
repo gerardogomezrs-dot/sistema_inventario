@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
@@ -15,6 +16,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.primefaces.model.UploadedFile;
+
 import com.empresa.inventario.dao.ProveedorDAO;
 import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Proveedor;
@@ -40,16 +42,26 @@ public class ProveedorServiceImpl implements Serializable, IProveedorService {
 	}
 
 	@Override
-	public void save(List<Proveedor> proveedor) {
+	public void save(List<Proveedor> proveedor, Consumer<Integer> progresoCallback) {
 		try {
-			for (Proveedor pro : proveedor) {
-				dao = new ProveedorDAO();
-				dao.guardar(pro);
+			if (proveedor == null || proveedor.isEmpty()) {
+				throw new ExceptionMessage("Lista vacia");
+			}
+			int total = proveedor.size();
+			int batchSize = 50; 
+			for(int i = 0; i<total; i++) {
+				dao.guardar(proveedor.get(i));
+				if (i % batchSize == 0 || i == total - 1) {
+		            int porcentaje = (int) (((double) (i + 1) / total) * 100);
+		            progresoCallback.accept(porcentaje);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+	
+	
 
 	@Override
 	public void delete(int idProveedor) {
@@ -89,7 +101,6 @@ public class ProveedorServiceImpl implements Serializable, IProveedorService {
 				e.printStackTrace();
 			}
 		}
-
 		if (!fileName.endsWith(".xlsx") && !fileName.endsWith(".lsx") && !fileName.endsWith(".csv")) {
 			throw new ExceptionMessage("Formato no soportado");
 		}

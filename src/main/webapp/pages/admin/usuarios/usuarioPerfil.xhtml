@@ -61,7 +61,7 @@
                     <p:inputText value="#{perfilUsuarioBean.usuario.rol}" readonly="true" styleClass="readonly" />
 
                     <p:outputLabel value="Estado:" />
-                    <p:selectBooleanCheckbox value="#{perfilUsuarioBean.usuario.activo}" />
+                    <p:selectBooleanCheckbox value="#{perfilUsuarioBean.usuario.activo}" disabled="true" />
                 </h:panelGrid>
 
                 <p:separator />
@@ -72,7 +72,7 @@
                         oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
 
                     <p:commandButton value="Regresar" icon="pi pi-chevron-left" immediate="true"
-                        style="margin-left: 10px;" action="#{perfilUsuarioBean.irAIndex}" />
+                        style="margin-left: 10px;" action="#{perfilUsuarioBean.irADashboard}" />
                 </div>
             </p:panel>
         </div>
@@ -87,5 +87,4 @@
     </p:dialog>
     <ui:include src="/pages/admin/footer.xhtml" />
 </h:body>
-
 </html>

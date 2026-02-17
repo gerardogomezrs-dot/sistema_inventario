@@ -5,7 +5,52 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
+    <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
     <title>Gestión de Proveedores</title>
+    <style type="text/css">
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f7f9;
+            margin: 20px;
+        }
+
+        .ui-datatable .ui-datatable-header,
+        .ui-datatable .ui-column-header {
+            background: #ffffff !important;
+            border-bottom: 2px solid #ebedef !important;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .badge-admin {
+            background: #E3F2FD;
+            color: #1976D2;
+        }
+
+        .badge-almacen {
+            background: #E8F5E9;
+            color: #388E3C;
+        }
+
+        .badge-permisos {
+            background: #FFF3E0;
+            color: #F57C00;
+        }
+
+        .action-btn {
+            margin-right: 5px !important;
+        }
+    </style>
 </h:head>
 
 <h:body>
@@ -14,14 +59,18 @@
 
         <p:growl id="msgs" showDetail="true" skipDetailIfEqualsSummary="true" />
 
-        <div style="margin: 20px 0;">
-            <p:commandButton value="Nuevo Proveedor" icon="pi pi-plus" action="#{proveedorBean.irANuevoProveedor}"
-                styleClass="ui-button-success" />
+        <p:toolbar style="margin-bottom: 20px; border: none; background: transparent;">
+            <f:facet name="left">
+                <p:commandButton value="Nuevo Proveedor" icon="pi pi-plus" action="#{proveedorBean.irANuevoProveedor}"
+                    styleClass="ui-button-success" />
+            </f:facet>
 
-            <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{proveedorBean.irADashboard}"
-                immediate="true" style="margin-left:10px;" styleClass="ui-button-secondary" />
-        </div>
-
+            <f:facet name="right">
+                <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{proveedorBean.irADashboard}"
+                    immediate="true" styleClass="ui-button-flat" />
+            </f:facet>
+        </p:toolbar>
+        <p:separator />
         <p:dataTable id="tablaProveedor" var="prod" value="#{proveedorBean.list}" rows="10" paginator="true"
             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
             currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} proveedores"
@@ -54,7 +103,7 @@
             <p:column headerText="Activo" width="80" style="text-align: center;">
                 <p:selectBooleanCheckbox value="#{prod.activo}" readonlyInput="true" disabled="true" />
             </p:column>
-            
+
             <p:column headerText="Acciones" width="120" style="text-align: center;">
                 <p:commandButton icon="pi pi-pencil" process="@this" update=":dialogoEditar"
                     oncomplete="PF('wdgEditar').show()" styleClass="edit-button rounded-button ui-button-success">
@@ -64,7 +113,7 @@
                     update=":form:tablaProveedor :form:msgs" action="#{proveedorBean.eliminarProveedor}"
                     style="margin-left: 5px;">
                     <f:setPropertyActionListener value="#{prod}" target="#{proveedorBean.proveedor}" />
-                    <p:confirm header="Confirmación" message="¿Está seguro de eliminar este proveedor?"
+                    <p:confirm header="Confirmación" message="¿Está seguro de eliminar este registro?"
                         icon="pi pi-exclamation-triangle" />
                 </p:commandButton>
             </p:column>

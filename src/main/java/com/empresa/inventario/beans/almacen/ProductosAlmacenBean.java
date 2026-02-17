@@ -99,7 +99,7 @@ public class ProductosAlmacenBean implements Serializable {
 
 	public void onComplete() {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-				"Categoria guardada", "El producto fue guardado correctamente"));
+				"Registro guardado", "El registro fue guardado correctamente"));
 	}
 
 	public void actualizar() {
@@ -107,7 +107,7 @@ public class ProductosAlmacenBean implements Serializable {
 			iProductoService.update(producto);
 			ListaProductos();
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Producto actualizado correctamente"));
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Registro actualizado correctamente"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -118,7 +118,7 @@ public class ProductosAlmacenBean implements Serializable {
 			iProductoService.delete(producto.getIdProducto());
 			list = iProductoService.getAll();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-					"Producto eliminado", "El producto fue dado de correctamente"));
+					"Registro eliminado", "El registro fue dado de correctamente"));
 		} catch (ExceptionMessage e) {
 			añadirMensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", e.getMessage());
 			FacesContext context = FacesContext.getCurrentInstance();
@@ -151,5 +151,6 @@ public class ProductosAlmacenBean implements Serializable {
 	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
+	
 
 }

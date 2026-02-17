@@ -5,7 +5,7 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
-     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
     <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
     <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
     <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
@@ -40,8 +40,8 @@
         <p:menubar>
             <p:menuitem value="Inicio" url="dashboard.xhtml" icon="pi pi-home" />
             <f:facet name="options">
-                <p:commandButton value="Cerrar Sesión" action="#{loginBean.logout}" icon="pi pi-power-off" ajax="false"
-                    styleClass="btn-logout" />
+                <p:commandButton value="Cerrar Sesión" action="#{loginBean.logout}" icon="pi pi-power-off"
+                    style="background-color: #d9534f; color: white; border: none;" />
             </f:facet>
         </p:menubar>
 
@@ -84,8 +84,11 @@
                                 ajax="false" />
 
                             <p:commandButton value="Gestionar Proveedores"
-                                action="#{navegacionAlmacenBean.irAGestionProveedores}" icon="fa fa-industry" ajax="false"
-                                styleClass="ui-button-raised" />
+                                action="#{navegacionAlmacenBean.irAGestionProveedores}" icon="fa fa-industry"
+                                ajax="false" styleClass="ui-button-raised" />
+
+                            <p:commandButton value="Gestionar Movimientos"
+                                action="#{navegacionAlmacenBean.irAGestionMovimientos}" icon="pi pi-search" />
 
                         </h:panelGrid>
                     </p:panel>

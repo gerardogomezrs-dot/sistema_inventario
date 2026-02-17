@@ -1,16 +1,14 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:f="http://xmlns.jcp.org/jsf/core">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 
- <p:menubar>
-            <p:menuitem value="Inicio" url="../dashboard.xhtml" icon="pi pi-home" />
-            <f:facet name="options">
-                <p:commandButton value="Cerrar Sesión" action="#{loginBean.logout}" icon="pi pi-power-off"
-                    style="background-color: #d9534f; color: white; border: none;" />
-            </f:facet>
-        </p:menubar>
+    <p:menubar>
+        <p:menuitem value="Inicio" url="../dashboard.xhtml" icon="pi pi-home" />
+        <f:facet name="options">
+            <p:commandButton value="Cerrar Sesión" action="#{loginBean.logout}" icon="pi pi-power-off"
+                style="background-color: #d9534f; color: white; border: none;" />
+        </f:facet>
+    </p:menubar>
 
 </ui:composition>

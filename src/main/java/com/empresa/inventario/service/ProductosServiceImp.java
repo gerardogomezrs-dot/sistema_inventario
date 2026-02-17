@@ -48,31 +48,30 @@ public class ProductosServiceImp implements IProductoService {
 
 	@Override
 	public List<Productos> create(List<Productos> productosLista, Consumer<Integer> progresoCallback) throws Exception {
-		if(productosLista == null || productosLista.isEmpty()) {
+		if (productosLista == null || productosLista.isEmpty()) {
 			throw new ExceptionMessage("Lista vacia");
 		}
-		
-		
+
 		List<Productos> listaProducto = new ArrayList<Productos>();
-		
+
 		for (Productos productos : productosLista) {
 			try {
-					productos.setCodigoBarras(CrearCodigoBarra.generarCodigoBarra(productos.getCodigoBarras()));
-					
-					listaProducto.add(productos);
+				productos.setCodigoBarras(CrearCodigoBarra.generarCodigoBarra(productos.getCodigoBarras()));
+
+				listaProducto.add(productos);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		
+
 		int total = listaProducto.size();
-		for(int i = 0; i<total; i++) {
+		for (int i = 0; i < total; i++) {
 			ProductosDAO dao = new ProductosDAO();
 			dao.guardar(listaProducto.get(i));
 			int porcentaje = (int) (((double) (i + 1) / total) * 100);
 			progresoCallback.accept(porcentaje);
 		}
-		
+
 		return productosLista;
 
 	}
@@ -87,6 +86,7 @@ public class ProductosServiceImp implements IProductoService {
 				getProductos = productosDAO.getAll();
 			}
 			if (getProductos.size() == 0) {
+				throw new ExceptionMessage("Lista Vacia ");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

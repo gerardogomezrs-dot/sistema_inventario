@@ -91,7 +91,7 @@ public class ProductoBean implements Serializable {
 	
 	public void onComplete() {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-				"Categoria guardada", "El producto fue guardado correctamente"));
+				"Registro guardad", "El registro fue guardado correctamente"));
 	}
 
 
@@ -100,7 +100,7 @@ public class ProductoBean implements Serializable {
 			iProductoService.update(producto);
 			ListaProductos();
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Producto actualizado correctamente"));
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Registro actualizado correctamente"));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -111,7 +111,7 @@ public class ProductoBean implements Serializable {
 			iProductoService.delete(producto.getIdProducto());
 			list = iProductoService.getAll();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-					"Producto eliminado", "El producto fue eliminado correctamente"));
+					"Registro eliminado", "El Registro fue eliminado correctamente"));
 		} catch (ExceptionMessage e) {
 			añadirMensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", e.getMessage());
 			FacesContext context = FacesContext.getCurrentInstance();

@@ -56,7 +56,6 @@ public class ReportesBean implements Serializable {
 		exportarReporteReabastecimiento();
 		exportarReporteInventarioValorizado();
 		exportarReporteMovimientos();
-
 	}
 
 	public void exportarReporteReabastecimiento() {

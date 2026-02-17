@@ -51,7 +51,7 @@ public class UsuariosBean implements Serializable {
 		return "/pages/admin/usuarios/tablaUsuarios.xhtml?faces-redirect=true";
 	}
 
-	public String irAIndex() {
+	public String irADashboard() {
 		return "/pages/admin/dashboard?faces-redirect=true";
 	}
 

@@ -22,7 +22,6 @@
             width: 300px;
         }
 
-        /* Estilo para el diseño de dos columnas (Formulario izquierda, Tabla derecha) */
         .main-container {
             display: flex;
             align-items: flex-start;
@@ -57,7 +56,7 @@
         <p:ajax event="complete" 
                 listener="#{productoBean.onComplete}" 
                 update="msgs" 
-                oncomplete="alert('¡Proceso Finalizado!');"/>
+                />
     </p:progressBar>
 
         <div class="main-container">

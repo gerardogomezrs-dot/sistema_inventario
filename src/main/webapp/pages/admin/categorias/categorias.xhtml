@@ -57,18 +57,12 @@
 
         <ui:include src="/pages/admin/menu.xhtml" />
         <p:growl id="msgs" showDetail="true" />
-        <p:progressBar widgetVar="pbAjax" 
-                   ajax="true" 
-                   value="#{categoriasBean.progreso}" 
-                   labelTemplate="{value}%" 
-                   styleClass="animated" 
-                   interval="500">
-        
-        <p:ajax event="complete" 
-                listener="#{categoriasBean.onComplete}" 
-                update="msgs" 
-                oncomplete="alert('¡Proceso Finalizado!');"/>
-    </p:progressBar>
+        <p:progressBar widgetVar="pbAjax" ajax="true" value="#{categoriasBean.progreso}" labelTemplate="{value}%"
+            styleClass="animated" interval="500">
+
+            <p:ajax event="complete" listener="#{categoriasBean.onComplete}" update="msgs"
+                />
+        </p:progressBar>
 
         <div class="flex-container">
             <p:panel header="Registro de Categorias" style="width: 600px; margin: 0 auto;">
@@ -82,10 +76,8 @@
 
                 <p:separator />
 
-                <p:commandButton value="Guardar" icon="pi pi-save" 
-                action="#{categoriasBean.listaTabla}"
-                    update="formCategoria" 
-                    oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
+                <p:commandButton value="Guardar" icon="pi pi-save" action="#{categoriasBean.listaTabla}"
+                    update="formCategoria" oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
 
                 <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{categoriasBean.irATablaCategoria}"
                     immediate="true" style="margin-left: 10px;" />
@@ -114,14 +106,10 @@
                     </p:column>
                 </p:dataTable>
                 <p:separator />
-                <p:commandButton value="Guardar" 
-                 icon="pi pi-save" 
-                 action="#{categoriasBean.guardar}" 
-                 process="@form"
-                 update="tablaDatos, msgs" 
-                 widgetVar="btnGuardar"
-                 onclick="PF('pbAjax').start(); PF('btnGuardar').disable();"
-                 oncomplete="if (args.validationFailed) { PF('pbAjax').cancel(); PF('btnGuardar').enable(); } else { PF('dlgConfirmacionGuardar').show(); }" />
+                <p:commandButton value="Guardar" icon="pi pi-save" action="#{categoriasBean.guardar}" process="@form"
+                    update="tablaDatos, msgs" widgetVar="btnGuardar"
+                    onclick="PF('pbAjax').start(); PF('btnGuardar').disable();"
+                    oncomplete="if (args.validationFailed) { PF('pbAjax').cancel(); PF('btnGuardar').enable(); } else { PF('dlgConfirmacionGuardar').show(); }" />
             </p:panel>
         </div>
 
@@ -140,7 +128,7 @@
                     style="margin-top: 10px;" />
             </h:panelGrid>
         </p:dialog>
-                		<ui:include src="/pages/admin/footer.xhtml" />
+        <ui:include src="/pages/admin/footer.xhtml" />
 
     </h:form>
 </h:body>

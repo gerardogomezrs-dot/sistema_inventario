@@ -77,11 +77,13 @@ public class CategoriasBean implements Serializable {
 					categoriaService.save(copiaParaGuardar, (valor) -> {
 						this.progreso = valor;
 					});
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			});
 		}
+		
 		listaTablaCategorias.clear();
 
 		this.categorias = new Categorias();
@@ -89,7 +91,7 @@ public class CategoriasBean implements Serializable {
 
 	public void onComplete() {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-				"Categoria guardada", "La categoria fue guardada correctamente"));
+				"Registro guardado", "El registro fue guardado correctamente"));
 	}
 
 	public void actualizar() throws Exception {
@@ -98,7 +100,7 @@ public class CategoriasBean implements Serializable {
 		} else {
 			categoriaService.update(categorias);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-					"Categoria actualizada", "La categoria fue actualizada correctamente"));
+					"Registro actualizado", "El registro fue actualizado correctamente"));
 		}
 	}
 
@@ -112,11 +114,10 @@ public class CategoriasBean implements Serializable {
 				categoriaService.delete(categorias.getIdCategoria());
 				list = categoriaService.getAllCategorias();
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-						"Categoria eliminada", "La categoria fue eliminada correctamente"));
+						"Registro eliminado", "El registro fue eliminado correctamente"));
 			}
 		} catch (Exception e) {
 			añadirMensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", "Consulte al administrador.");
-
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.validationFailed();
 			context.renderResponse();

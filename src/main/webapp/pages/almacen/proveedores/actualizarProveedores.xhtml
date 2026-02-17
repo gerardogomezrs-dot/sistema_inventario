@@ -9,31 +9,30 @@
         <h:form id="formEditar">
             <h:panelGrid columns="2" cellpadding="5">
 
-               <p:outputLabel for="nombreEmpresa" value="Nombre Empresa:" />
-                        <p:inputText id="nombreEmpresa" value="#{proveedorBean.proveedor.nombreEmpresa}"
-                            required="true" />
+                <p:outputLabel for="nombreEmpresa" value="Nombre Empresa:" />
+                <p:inputText id="nombreEmpresa" value="#{proveedorAlmacenBean.proveedor.nombreEmpresa}"
+                    required="true" />
 
-                        <p:outputLabel value="Contacto Nombre:" />
-                        <p:inputText value="#{proveedorBean.proveedor.contactoEmpresa}" />
+                <p:outputLabel value="Contacto Nombre:" />
+                <p:inputText value="#{proveedorAlmacenBean.proveedor.contactoEmpresa}" />
 
-                        <p:outputLabel value="Teléfono:" />
-                        <p:inputText value="#{proveedorBean.proveedor.telefono}" />
+                <p:outputLabel value="Teléfono:" />
+                <p:inputText value="#{proveedorAlmacenBean.proveedor.telefono}" />
 
-                        <p:outputLabel value="Email:" />
-                        <p:inputText value="#{proveedorBean.proveedor.email}" />
+                <p:outputLabel value="Email:" />
+                <p:inputText value="#{proveedorAlmacenBean.proveedor.email}" />
 
-                        <p:outputLabel value="Dirección:" />
-                        <p:inputText value="#{proveedorBean.proveedor.direccion}" />
+                <p:outputLabel value="Dirección:" />
+                <p:inputText value="#{proveedorAlmacenBean.proveedor.direccion}" />
+                
+                <p:outputLabel value="Activo:" />
+                <p:selectBooleanCheckbox value="#{proveedorAlmacenBean.proveedor.activo}" />
 
-                        <p:outputLabel value="Activo:" />
-                        <p:inputText value="#{proveedorBean.proveedor.activo}" />
+                <p:outputLabel for="fechaReg" value="Fecha Registro:" />
+                <p:datePicker id="fechaReg" value="#{proveedorAlmacenBean.proveedor.fechaRegistro}" pattern="dd/MM/yyyy"
+                    showIcon="true" monthNavigator="true" yearNavigator="true" showOnFocus="false" />
 
-                        <p:outputLabel for="fechaReg" value="Fecha Registro:" />
-                        <p:datePicker id="fechaReg" value="#{proveedorBean.proveedor.fechaRegistro}"
-                            pattern="dd/MM/yyyy" showIcon="true" monthNavigator="true" yearNavigator="true"
-                            showOnFocus="false" />
-                            
-                <p:commandButton value="Guardar" icon="pi pi-save" action="#"
+                <p:commandButton value="Guardar" icon="pi pi-save" action="#{proveedorAlmacenBean.actualizarProveedor}"
                     update=":form:tablaProveedor :form:msgs"
                     oncomplete="if (!args.validationFailed) { PF('wdgEditar').hide(); }" />
 

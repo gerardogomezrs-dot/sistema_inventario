@@ -21,13 +21,12 @@
 		}
 	</style>
 	<script type="text/javascript">
-    function manejarRegistro(args) {
-        // args.validationFailed será true si llamaste a .validationFailed() en el Bean
-        if (!args.validationFailed) {
-            PF('dlgConfirmacion').show();
-        }
-    }
-</script>
+		function manejarRegistro(args) {
+			if (!args.validationFailed) {
+				PF('dlgConfirmacion').show();
+			}
+		}
+	</script>
 	<title>Registrar Usuarios</title>
 </h:head>
 
@@ -63,31 +62,23 @@
 
 			<p:separator />
 
-			<p:commandButton value="Guardar" 
-                     icon="pi pi-save" 
-                     action="#{usuariosBean.guardar}" 
-                     process="@form"
-                     update=":msjs @form" 
-                     oncomplete="manejarRegistro(args)" />
+			<p:commandButton value="Guardar" icon="pi pi-save" action="#{usuariosBean.guardar}" process="@form"
+				update=":msjs @form" oncomplete="manejarRegistro(args)" />
 
-			<p:commandButton value="Regresar"
-			                 icon="pi pi-chevron-left"
-			                 action="#{usuariosBean.irATablaUsuario}"
-			                 immediate="true"
-			                 style="margin-left: 10px;" />
+			<p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{usuariosBean.irATablaUsuario}"
+				immediate="true" style="margin-left: 10px;" />
 		</p:panel>
 
 		<!-- Dialog -->
 		<p:dialog header="Mensaje" widgetVar="dlgConfirmacion" modal="true" closable="false">
 			<h:outputText value="Datos guardados correctamente." />
 			<br /><br />
-			<p:commandButton value="Aceptar"
-			                 type="button"
-			                 onclick="PF('dlgConfirmacion').hide(); location.reload();" />
+			<p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacion').hide(); location.reload();" />
 		</p:dialog>
-        		<ui:include src="/pages/admin/footer.xhtml" />
+		<ui:include src="/pages/admin/footer.xhtml" />
 
 	</h:form>
 
 </h:body>
+
 </html>
