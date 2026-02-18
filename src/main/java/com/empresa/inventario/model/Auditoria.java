@@ -12,6 +12,7 @@ public class Auditoria {
 	
 	private int idAuditoria;
 	private Date fechaAuditoria;
+	private int idUsuario;
 	private String claseOrigen;
 	private String metodo;
 	private String accion;

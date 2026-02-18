@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+    <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
+    <title>Gestión de Categorias</title>
+</h:head>
+<h:body>
+    <h:form id="form">
+        <ui:include src="/pages/admin/menu.xhtml" />
+        <p:growl id="msgs" showDetail="true" />
+        <p:separator />
+        <p:dataTable id="tablaAuditoria" var="prod" value="#{auditoriaBean.list}"
+            filteredValue="#{auditoriaBean.filteredList}" rows="10" paginator="true"
+            emptyMessage="No se encontraron registros" style="margin-top:20px;">
+
+            <p:column headerText="ID">
+                <h:outputText value="#{prod.idAuditoria}" />
+            </p:column>
+
+            <p:column headerText="Fecha Auditoria">
+                <h:outputText value="#{prod.fechaAuditoria}">
+                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                </h:outputText>
+            </p:column>
+
+            <p:column headerText="Clase Origen">
+                <h:outputText value="#{prod.claseOrigen}" />
+            </p:column>
+
+            <p:column headerText="Metodo">
+                <h:outputText value="#{prod.metodo}" />
+            </p:column>
+
+            <p:column headerText="Accion">
+                <h:outputText value="#{prod.accion}" />
+            </p:column>
+
+            <p:column headerText="Nivel">
+                <h:outputText value="#{prod.nivel}" />
+            </p:column>
+        </p:dataTable>
+    </h:form>
+</h:body>
+
+</html>

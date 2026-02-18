@@ -2,6 +2,7 @@ package com.empresa.inventario.beans.admin;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -14,7 +15,10 @@ import javax.inject.Named;
 import org.primefaces.model.UploadedFile;
 
 import com.empresa.inventario.exceptions.ExceptionMessage;
+import com.empresa.inventario.model.Auditoria;
 import com.empresa.inventario.model.Categorias;
+import com.empresa.inventario.model.Usuario;
+import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.service.ICategoriaService;
 
 import lombok.Data;
@@ -39,9 +43,16 @@ public class CategoriasBean implements Serializable {
 	private List<Categorias> categoriasList;
 
 	private Integer progreso = 0;
+	
+	private int idUsuario;
+	
+	private String nombreUsuario;
 
 	@Inject
 	private ICategoriaService categoriaService;
+	
+	@Inject
+	private IAuditoriaService auditoriaService;
 
 	public CategoriasBean() {
 		categorias = new Categorias();
@@ -52,6 +63,10 @@ public class CategoriasBean implements Serializable {
 		try {
 			listaCategorias();
 			list = categoriaService.getAllCategorias();
+			Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+					.get("sessionUsuario");
+			idUsuario = user.getIdUsuario();
+			nombreUsuario = user.getNombre();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -62,6 +77,14 @@ public class CategoriasBean implements Serializable {
 			listaTablaCategorias.add(this.categorias);
 			this.categorias = new Categorias();
 		}
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo("Añadir registro a tabla ");
+		auditoria.setAccion("El usuario " +nombreUsuario+ " registro un elemento a la tabla");
+		auditoria.setNivel("INFO");
+		auditoriaService.registroAuditoria(auditoria);
 	}
 
 	public void guardar() throws Exception {
@@ -84,6 +107,15 @@ public class CategoriasBean implements Serializable {
 			});
 		}
 		
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo("Guardar");
+		auditoria.setAccion("El usuario " +nombreUsuario+ " realizo un guardado");
+		auditoria.setNivel("INFO");
+		auditoriaService.registroAuditoria(auditoria);
+		
 		listaTablaCategorias.clear();
 
 		this.categorias = new Categorias();
@@ -95,13 +127,20 @@ public class CategoriasBean implements Serializable {
 	}
 
 	public void actualizar() throws Exception {
-		if (categorias == null) {
-			throw new ExceptionMessage("Ingresa datos");
-		} else {
+		
 			categoriaService.update(categorias);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 					"Registro actualizado", "El registro fue actualizado correctamente"));
-		}
+		
+		
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo("Actualizar");
+		auditoria.setAccion("El usuario " +nombreUsuario+ " realizo una actualización");
+		auditoria.setNivel("INFO");
+		auditoriaService.registroAuditoria(auditoria);
 	}
 
 	public List<Categorias> listaCategorias() throws Exception {
@@ -124,6 +163,14 @@ public class CategoriasBean implements Serializable {
 			e.printStackTrace();
 			return;
 		}
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo("Eliminar");
+		auditoria.setAccion("El usuario " +nombreUsuario+ " realizo una eliminación");
+		auditoria.setNivel("INFO");
+		auditoriaService.registroAuditoria(auditoria);
 	}
 
 	public void cargarArchivo() {
@@ -140,7 +187,23 @@ public class CategoriasBean implements Serializable {
 
 		} catch (ExceptionMessage e) {
 			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+			Auditoria auditoria = new Auditoria();
+			auditoria.setFechaAuditoria(new Date());
+			auditoria.setIdUsuario(idUsuario);
+			auditoria.setClaseOrigen(this.getClass().getName());
+			auditoria.setMetodo("Carga masiva de archivos");
+			auditoria.setAccion("sE PRODUGO UN ERROR " +e.getMessage());
+			auditoria.setNivel("WARN");
+			auditoriaService.registroAuditoria(auditoria);
 		}
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo("Carga masiva de archivos");
+		auditoria.setAccion("El usuario " +nombreUsuario+ " realizo una carga masiva de registros");
+		auditoria.setNivel("INFO");
+		auditoriaService.registroAuditoria(auditoria);
 	}
 
 	public String irANuevaCategoria() {
