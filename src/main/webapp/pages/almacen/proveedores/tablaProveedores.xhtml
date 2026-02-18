@@ -58,9 +58,15 @@
         <ui:include src="/pages/almacen/menu.xhtml" />
         <p:growl id="msgs" showDetail="true" />
         <p:separator />
+        <p:toolbar style="margin-bottom: 20px; border: none; background: transparent;">
+            <f:facet name="left">
         <p:commandButton value="Nuevo Proveedor" icon="pi pi-save" action="#{proveedorAlmacenBean.irANuevoProveedor}" />
+            </f:facet>
+            <f:facet name="right">
         <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{proveedorAlmacenBean.irADashboard}"
             immediate="true" style="margin-left:10px;" />
+            </f:facet>
+        </p:toolbar>
         <p:separator />
         <p:dataTable id="tablaProveedor" var="prod" value="#{proveedorAlmacenBean.list}" rows="10" paginator="true"
             emptyMessage="No se encontraron proveedores">

@@ -44,8 +44,13 @@
     <h:form id="formReporte">
         <ui:include src="/pages/admin/menu.xhtml" />
         <p:separator />
-        <p:commandButton value="Regresar" icon="pi pi-chevron-left"
-            action="#{inventarioReporteBean.irAReportePrincipal}" immediate="true" style="margin-left:10px;" />
+        <p:toolbar style="margin-bottom: 20px; border: none; background: transparent;">
+            <f:facet name="left">
+                <p:commandButton value="Regresar" icon="pi pi-chevron-left"
+                    action="#{inventarioReporteBean.irAReportePrincipal}" immediate="true" style="margin-left:10px;" />
+
+            </f:facet>
+        </p:toolbar>
         <p:separator />
 
         <p:panel header="Reporte de Movimientos (Kardex)">
@@ -76,7 +81,8 @@
                         </p:commandButton>
 
                         <p:commandButton value="Exportar Pdf" icon="pi pi-file-excel" ajax="false" styleClass="btn-pdf">
-                        <p:dataExporter type="pdf" target="tblMovimientos" fileName="#{inventarioReporteBean.nombreArchivo_3}" />
+                            <p:dataExporter type="pdf" target="tblMovimientos"
+                                fileName="#{inventarioReporteBean.nombreArchivo_3}" />
                         </p:commandButton>
 
                     </div>

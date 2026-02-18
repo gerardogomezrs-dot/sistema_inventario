@@ -11,58 +11,51 @@
 <h:body>
     <h:form id="form">
         <ui:include src="/pages/admin/menu.xhtml" />
-
         <p:growl id="msgs" showDetail="true" />
-
         <p:separator />
-
-        <p:commandButton value="Nueva Categoria" icon="pi pi-save" action="#{categoriasBean.irANuevaCategoria}" />
-
-        <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{categoriasBean.irADashboard}"
-            immediate="true" style="margin-left:10px;" />
-
+        <p:toolbar style="margin-bottom: 20px; border: none; background: transparent;">
+            <f:facet name="left">
+                <p:commandButton value="Nueva Categoria" icon="pi pi-save"
+                    action="#{categoriasBean.irANuevaCategoria}" />
+            </f:facet>
+            <f:facet name="right">
+                <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{categoriasBean.irADashboard}"
+                    immediate="true" style="margin-left:10px;" />
+            </f:facet>
+        </p:toolbar>
         <p:separator />
         <p:dataTable id="tablaCategorias" var="prod" value="#{categoriasBean.list}"
             filteredValue="#{categoriasBean.filteredList}" rows="10" paginator="true"
             emptyMessage="No se encontraron categorias" style="margin-top:20px;">
-
             <p:column headerText="ID">
                 <h:outputText value="#{prod.idCategoria}" />
             </p:column>
-
             <p:column headerText="Nombre" filterBy="#{prod.nombre}" filterMatchMode="contains">
                 <h:outputText value="#{prod.nombre}" />
             </p:column>
-
             <p:column headerText="Descripcion">
                 <h:outputText value="#{prod.descripcion}" />
             </p:column>
-
             <p:column headerText="Acciones">
                 <p:commandButton icon="pi pi-pencil" process="@this" update=":formEditar"
                     oncomplete="PF('wdgEditar').show()">
                     <f:setPropertyActionListener value="#{prod}" target="#{categoriasBean.categorias}" />
                 </p:commandButton>
-
                 <p:commandButton icon="pi pi-trash" styleClass="p-button-danger" process="@this"
-                    update=":form:tablaCategorias :form:msgs"
-                    action="#{categoriasBean.eliminarCategoria}">
+                    update=":form:tablaCategorias :form:msgs" action="#{categoriasBean.eliminarCategoria}">
                     <f:setPropertyActionListener value="#{prod}" target="#{categoriasBean.categorias}" />
                     <p:confirm header="Confirmación" message="¿Está seguro de eliminar esta registro?"
                         icon="pi pi-exclamation-triangle" />
                 </p:commandButton>
             </p:column>
         </p:dataTable>
-
         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
             <p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
             <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
         </p:confirmDialog>
     </h:form>
-
     <ui:include src="/pages/admin/categorias/actualizarCategorias.xhtml" />
-        		<ui:include src="/pages/admin/footer.xhtml" />
-
+    <ui:include src="/pages/admin/footer.xhtml" />
 </h:body>
 
 </html>

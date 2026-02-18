@@ -2,6 +2,7 @@ package com.empresa.inventario.beans.admin;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -14,9 +15,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.empresa.inventario.exceptions.ExceptionMessage;
+import com.empresa.inventario.model.Auditoria;
 import com.empresa.inventario.model.Movimientos;
 import com.empresa.inventario.model.Productos;
 import com.empresa.inventario.model.Usuario;
+import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.service.IMovimientosService;
 import com.empresa.inventario.service.IProductoService;
 
@@ -30,8 +33,8 @@ public class MovimientosBean implements Serializable {
 	private static final Logger logger = LoggerFactory.getLogger(MovimientosBean.class);
 
 	private static final long serialVersionUID = 1L;
-	
-	private boolean modoManual = false; 
+
+	private boolean modoManual = false;
 
 	private List<Movimientos> list;
 
@@ -53,6 +56,15 @@ public class MovimientosBean implements Serializable {
 
 	private List<Movimientos> listaMovimientosGuardar = new ArrayList<Movimientos>();
 
+	private int idUsuario;
+
+	private String nombreUsuario;
+
+	private Usuario user;
+
+	@Inject
+	private IAuditoriaService auditoriaService;
+
 	public MovimientosBean() {
 
 	}
@@ -64,7 +76,7 @@ public class MovimientosBean implements Serializable {
 			listaMovimientos();
 			listProductos = iProductoService.getAll();
 
-			Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+			user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 					.get("sessionUsuario");
 
 			if (user != null) {
@@ -76,6 +88,9 @@ public class MovimientosBean implements Serializable {
 
 			}
 
+			idUsuario = user.getIdUsuario();
+			nombreUsuario = user.getNombre();
+					
 		} catch (Exception e) {
 			logger.error("Error en init de MovimientosBean: " + e.getMessage());
 			e.printStackTrace();
@@ -84,13 +99,11 @@ public class MovimientosBean implements Serializable {
 
 	public List<Movimientos> listaMovimientos() throws Exception {
 		try {
-		list = service.getAll();
-		} 
-		catch (ExceptionMessage e) {
+			list = service.getAll();
+		} catch (ExceptionMessage e) {
 			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
-			}
-		catch (Exception e) {
-			
+		} catch (Exception e) {
+
 		}
 		return list;
 	}
@@ -100,11 +113,29 @@ public class MovimientosBean implements Serializable {
 		int idActual = this.movimientos.getIdUsuario();
 		this.movimientos = new Movimientos();
 		this.movimientos.setIdUsuario(idActual);
+
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo("Añadir registro a tabla ");
+		auditoria.setAccion("El usuario " + nombreUsuario + " registro un elemento a la tabla");
+		auditoria.setNivel("INFO");
+		auditoriaService.registroAuditoria(auditoria);
 	}
 
 	public void saveTable() throws Exception {
 		if (listaMovimientosGuardar != null && !listaMovimientosGuardar.isEmpty()) {
 			service.save(listaMovimientosGuardar);
+
+			Auditoria auditoria = new Auditoria();
+			auditoria.setFechaAuditoria(new Date());
+			auditoria.setIdUsuario(idUsuario);
+			auditoria.setClaseOrigen(this.getClass().getName());
+			auditoria.setMetodo("Guardar");
+			auditoria.setAccion("El usuario " + nombreUsuario + " guardo un registro");
+			auditoria.setNivel("INFO");
+			auditoriaService.registroAuditoria(auditoria);
 		}
 		if (listaMovimientosGuardar != null) {
 			listaMovimientosGuardar.clear();
@@ -112,6 +143,14 @@ public class MovimientosBean implements Serializable {
 	}
 
 	public String irANuevoMovimiento() {
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo("Nuevo movimiento");
+		auditoria.setAccion("El usuario " + nombreUsuario + " navego hacia nuevo movimiento");
+		auditoria.setNivel("INFO");
+		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/movimientos/movimientos.xhtml?faces-redirect=true";
 	}
 
@@ -138,7 +177,7 @@ public class MovimientosBean implements Serializable {
 			this.infoProductoExtra = "Código no válido";
 		}
 	}
-	
+
 	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}

@@ -1,6 +1,7 @@
 package com.empresa.inventario.beans.admin;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
@@ -8,7 +9,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.empresa.inventario.exceptions.ExceptionMessage;
+import com.empresa.inventario.model.Auditoria;
 import com.empresa.inventario.model.Usuario;
+import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.service.IUsuariosService;
 
 import lombok.Data;
@@ -25,8 +28,13 @@ public class PerfilUsuarioBean implements Serializable {
 	@Inject
 	private IUsuariosService iUsuariosService;
 
-	private Usuario usuario2;
+	private int idUsuario;
 
+	private String nombreUsuario;
+
+	@Inject
+	private IAuditoriaService auditoriaService;
+	
 	public PerfilUsuarioBean() {
 	}
 
@@ -38,6 +46,8 @@ public class PerfilUsuarioBean implements Serializable {
 		try {
 			int id = user.getIdUsuario();
 			usuario = iUsuariosService.getByIdUsuario(id);
+			idUsuario = user.getIdUsuario();
+			nombreUsuario = user.getNombre();
 		} catch (Exception e) {
 
 			e.printStackTrace();
@@ -54,5 +64,13 @@ public class PerfilUsuarioBean implements Serializable {
 			throw new ExceptionMessage("Vacio");
 		}
 		iUsuariosService.updateProfile(usuario);
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo("Actualizar");
+		auditoria.setAccion("El usuario " + nombreUsuario + " actualizo su datos de usuario");
+		auditoria.setNivel("INFO");
+		auditoriaService.registroAuditoria(auditoria);
 	}
 }

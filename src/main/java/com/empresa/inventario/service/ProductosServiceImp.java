@@ -113,6 +113,9 @@ public class ProductosServiceImp implements IProductoService {
 	@Override
 	public List<Productos> cargaArchivos(UploadedFile uploadedFile) throws Exception {
 		List<Productos> productos = new ArrayList<Productos>();
+		if (uploadedFile.getFileName() == null || uploadedFile.getFileName().trim().isEmpty()) {
+		    throw new ExceptionMessage("Inserta un archivo");
+		}
 		String fileName = "";
 		fileName = uploadedFile.getFileName().toLowerCase();
 
@@ -132,7 +135,8 @@ public class ProductosServiceImp implements IProductoService {
 		}
 		if (!fileName.endsWith(".xlsx") && !fileName.endsWith(".lsx") && !fileName.endsWith(".csv")) {
 			throw new ExceptionMessage("Formato no soportado");
-		}
+		} else
+		
 		return productos;
 	}
 

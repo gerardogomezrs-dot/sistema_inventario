@@ -84,9 +84,16 @@ public class ProveedorServiceImpl implements Serializable, IProveedorService {
 	@Override
 	public List<Proveedor> uploadFiles(UploadedFile file) {
 		List<Proveedor> proveedors = new ArrayList<Proveedor>();
+		if (file.getFileName() == null || file.getFileName().trim().isEmpty()) {
+		    throw new ExceptionMessage("Inserta un archivo");
+		}
 		String fileName = "";
+		
+			if (file.getFileName() == null || file.getFileName().trim().isEmpty()) {
+			    throw new ExceptionMessage("Inserta un archivo");
+			}
 		fileName = file.getFileName().toLowerCase();
-
+		
 		if (fileName.endsWith(".csv")) {
 			try {
 				proveedors = leerCSV(file);

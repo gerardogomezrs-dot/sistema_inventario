@@ -80,6 +80,9 @@ public class CategoriaServiceImpl implements ICategoriaService {
 	@Override
 	public List<Categorias> cargarArchivo(UploadedFile file) {
 		List<Categorias> categorias = new ArrayList<Categorias>();
+		if (file.getFileName() == null || file.getFileName().trim().isEmpty()) {
+		    throw new ExceptionMessage("Inserta un archivo");
+		}
 		String fileName = "";
 		fileName = file.getFileName().toLowerCase();
 		if (fileName.endsWith(".csv")) {

@@ -12,15 +12,18 @@
     <h:form id="form">
         <ui:include src="/pages/admin/menu.xhtml" />
         <p:growl id="msgs" showDetail="true" />
+          <p:separator />
+
+        <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{auditoriaBean.irADashboard}"
+            immediate="true" style="margin-left:10px;" />
+
         <p:separator />
         <p:dataTable id="tablaAuditoria" var="prod" value="#{auditoriaBean.list}"
             filteredValue="#{auditoriaBean.filteredList}" rows="10" paginator="true"
             emptyMessage="No se encontraron registros" style="margin-top:20px;">
-
             <p:column headerText="ID">
                 <h:outputText value="#{prod.idAuditoria}" />
             </p:column>
-
             <p:column headerText="Fecha Auditoria">
                 <h:outputText value="#{prod.fechaAuditoria}">
                     <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
@@ -45,5 +48,4 @@
         </p:dataTable>
     </h:form>
 </h:body>
-
 </html>

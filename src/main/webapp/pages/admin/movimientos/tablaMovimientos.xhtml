@@ -42,10 +42,17 @@
         <p:growl id="msgs" showDetail="true" />
         <p:separator />
 
-        <p:commandButton value="Nuevo Movimiento" icon="pi pi-save" action="#{movimientosBean.irANuevoMovimiento}" />
+        <p:toolbar style="margin-bottom: 20px; border: none; background: transparent;">
+            <f:facet name="left">
 
-        <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{movimientosBean.irADashboard}"
-            immediate="true" style="margin-left:10px;" />
+                <p:commandButton value="Nuevo Movimiento" icon="pi pi-save"
+                    action="#{movimientosBean.irANuevoMovimiento}" />
+            </f:facet>
+            <f:facet name="right">
+                <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{movimientosBean.irADashboard}"
+                    immediate="true" style="margin-left:10px;" />
+            </f:facet>
+        </p:toolbar>
         <p:separator />
 
         <p:dataTable id="tablaMovimientos" var="prod" value="#{movimientosBean.list}" rows="10" paginator="true"

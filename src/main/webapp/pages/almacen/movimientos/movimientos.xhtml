@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
+    <style type="text/css">
+        .ui-panelgrid .ui-grid-responsive .ui-grid-row {
+            border: none !important;
+        }
+
+        .label {
+            font-weight: bold;
+            width: 150px;
+        }
+
+        .value {
+            width: 300px;
+        }
+
+        .main-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .form-side {
+            flex: 0 0 600px;
+        }
+
+        .table-side {
+            flex: 1;
+        }
+
+        .hidden-scanner {
+            opacity: 0 !important;
+            position: absolute !important;
+            left: -9999px !important;
+            height: 0 !important;
+        }
+
+        .scanner-box {
+            border: 2px dashed #2196F3;
+            padding: 15px;
+            text-align: center;
+            background: #f0f7ff;
+            border-radius: 5px;
+        }
+
+        .scanner-text {
+            color: #2196F3;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .label {
+            width: 150px;
+            text-align: right;
+            font-weight: bold;
+            padding-right: 15px;
+            vertical-align: middle;
+        }
+
+        .value {
+            text-align: left;
+            vertical-align: middle;
+        }
+    </style>
+
+    <script type="text/javascript">
+        //<![CDATA[
+        function forceFocus() {
+            var isManual = "#{movimientosBean.modoManual}" === "true";
+            if (!isManual) {
+                // Usamos el selector de jQuery para evitar problemas con IDs de JSF (:) 
+                // y asegurar que el elemento exista.
+                var input = document.getElementById('formProducto:barcodeScanner');
+                if (input) {
+                    input.focus();
+                }
+            }
+        }
+
+        $(document).ready(function () {
+            forceFocus();
+        });
+
+        $(document).click(function () {
+            forceFocus();
+        });
+        //]]>
+    </script>
+
+    <title>Registrar Movimiento</title>
+</h:head>
+
+<h:body>
+
+    <h:form id="formMovimiento" enctype="multipart/form-data">
+
+        <ui:include src="/pages/almacen/menu.xhtml" />
+
+        <p:growl id="messages" showDetail="true" />
+        <div class="main-container">
+
+            <div class="form-side">
+                <p:panel header="Registro de Movimientos" style="width: 600px; margin: 0 auto;">
+
+                    <p:messages id="msgs" closable="true">
+                        <p:autoUpdate />
+                    </p:messages>
+
+                    <h:panelGrid columns="2" cellpadding="5" columnClasses="label,value">
+
+
+                        <h:outputLabel id="lblProducto"
+                            value="#{movimientosAlmacenBean.mostrarScanner ? 'Scanner (Código): *' : 'Producto: *'}"
+                            style="font-weight: bold;" />
+
+                        <h:panelGroup id="grupoProducto">
+                            <div style="display: flex; gap: 5px; align-items: center;">
+
+                                <p:inputText id="scannerInput"
+                                    value="#{movimientosAlmacenBean.movimientos.codigoBarras}"
+                                    rendered="#{movimientosAlmacenBean.mostrarScanner}"
+                                    placeholder="Escanee con la App..." style="width: 250px;" autocomplete="off"
+                                    onkeydown="return manejarEntradaApp(event);">
+                                    <p:ajax event="change" listener="#{movimientosAlmacenBean.cargarInfoScanner()}"
+                                        process="@this" update="panelInfoExtra" />
+                                </p:inputText>
+
+                                <p:selectOneMenu id="producto" value="#{movimientosAlmacenBean.movimientos.idProducto}"
+                                    rendered="#{!movimientosAlmacenBean.mostrarScanner}" style="width: 250px;">
+                                    <f:selectItem itemLabel="Selecciona un producto" itemValue=""
+                                        noSelectionOption="true" />
+                                    <f:selectItems value="#{movimientosAlmacenBean.listProductos}" var="cat"
+                                        itemLabel="#{cat.nombre}" itemValue="#{cat.idProducto}" />
+                                </p:selectOneMenu>
+
+
+                                <p:commandButton
+                                    icon="#{movimientosAlmacenBean.mostrarScanner ? 'pi pi-list' : 'pi pi-barcode'}"
+                                    actionListener="#{movimientosAlmacenBean.toggleScanner()}"
+                                    update="lblProducto grupoProducto panelInfoExtra" process="@this" immediate="true"
+                                    title="Alternar entrada" />
+                            </div>
+                        </h:panelGroup>
+
+                        <p:outputLabel value="Información:" rendered="#{movimientosAlmacenBean.mostrarScanner}" />
+
+                        <h:panelGroup id="panelInfoExtra">
+
+                            <p:inputText value="#{movimientosAlmacenBean.infoProductoExtra}" readonly="true"
+                                rendered="#{movimientosAlmacenBean.mostrarScanner}"
+                                style="width: 250px; background:#f0f4f7; font-weight:bold; color:#0d6efd;"
+                                placeholder="Esperando lectura..." />
+                        </h:panelGroup>
+                        <p:spacer width="20" height="40" />
+
+                        <p:outputLabel for="movimiento" value="Tipo de Movimiento: *" />
+                        <p:selectOneMenu id="movimiento" value="#{movimientosAlmacenBean.movimientos.tipoMovimiento}"
+                            filter="true" filterMatchMode="contains">
+                            <f:selectItem itemLabel="Seleccione una opción" itemValue="" noSelectionOption="true" />
+                            <f:selectItem itemLabel="Entrada" itemValue="Entrada" />
+                            <f:selectItem itemLabel="Salida" itemValue="Salida" />
+                            <f:selectItem itemLabel="Ajuste" itemValue="Ajuste" />
+                        </p:selectOneMenu>
+
+                        <h:outputLabel value="Cantidad:" />
+                        <p:inputText value="#{movimientosAlmacenBean.movimientos.cantidad}" required="false" />
+
+                        <h:outputLabel value="Fecha:" />
+                        <p:calendar value="#{movimientosAlmacenBean.movimientos.fechaHora}"
+                            pattern="dd/MM/yyyy HH:mm:ss" timeZone="America/Mexico_City" showButtonPanel="true" />
+
+                        <h:outputLabel value="Origen Destino:" />
+                        <p:inputText value="#{movimientosAlmacenBean.movimientos.origenDestino}" />
+
+                        <h:outputLabel value="Usuario logueado:" />
+                        <p:inputText value="#{loginBean.usuario.nombre}" readonly="true" styleClass="readonly" />
+
+                        <h:outputLabel value="Observaciones:" />
+                        <p:inputTextarea rows="3" value="#{movimientosAlmacenBean.movimientos.observaciones}" />
+
+                    </h:panelGrid>
+
+                    <h:inputHidden value="#{movimientosAlmacenBean.movimientos.idUsuario}" />
+
+                    <p:separator />
+
+                    <p:separator />
+
+                    <p:commandButton value="Guardar" icon="pi pi-save" action="#{movimientosAlmacenBean.save}"
+                        process="@form" update="formMovimiento"
+                        oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
+
+                    <p:commandButton value="Regresar" icon="pi pi-chevron-left"
+                        action="#{movimientosAlmacenBean.irATablaMovimientos}" immediate="true"
+                        style="margin-left: 10px;" />
+
+                </p:panel>
+            </div>
+
+            <div class="table-side">
+                <p:dataTable id="tablaRegistros" value="#{movimientosAlmacenBean.listaMovimientosGuardar}" var="mov"
+                    rows="10" paginator="true" paginatorPosition="bottom" emptyMessage="No hay movimientos registrados">
+
+                    <p:column headerText="Id Producto">
+                        <h:outputText value="#{mov.idProducto}" />
+                    </p:column>
+
+                    <p:column headerText="Tipo">
+                        <h:outputText value="#{mov.tipoMovimiento}" />
+                    </p:column>
+
+                    <p:column headerText="Cant.">
+                        <h:outputText value="#{mov.cantidad}" />
+                    </p:column>
+
+                    <p:column headerText="Fecha">
+                        <h:outputText value="#{mov.fechaHora}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Origen">
+                        <h:outputText value="#{mov.origenDestino}" />
+                    </p:column>
+
+                    <p:column headerText="Responsable">
+                        <h:outputText value="#{loginBean.usuario.nombre}" readonly="true" styleClass="readonly" />
+                    </p:column>
+
+                </p:dataTable>
+                <p:separator />
+
+                <p:commandButton value="Guardar Tabla" icon="pi pi-save" action="#{movimientosAlmacenBean.saveTable}"
+                    process="@form" update="tablaRegistros"
+                    oncomplete="if (!args.validationFailed) PF('dlgConfirmacionGuardar').show();" />
+            </div>
+
+        </div>
+
+        <p:dialog header="Mensaje" widgetVar="dlgConfirmacion" modal="true" closable="false">
+            <h:outputText value="Datos guardados correctamente." />
+            <br /><br />
+            <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacion').hide();" />
+        </p:dialog>
+
+        <p:dialog header="Mensaje" widgetVar="dlgConfirmacionGuardar" modal="true" closable="false">
+            <h:outputText value="Datos guardados correctamente." />
+            <br /><br />
+            <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacionGuardar').hide();" />
+        </p:dialog>
+
+    </h:form>
+    <ui:include src="/pages/almacen/footer.xhtml" />
+
+</h:body>
+
+</html>

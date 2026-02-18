@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+    <title>Sistema de Inventario - Tabla de Movimientos</title>
+    <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
+    <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
+    <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
+    <style>
+        /* Estilo para simular el p:tag en PrimeFaces 7 */
+        .badge-info {
+            background-color: #e3f2fd;
+            color: #2196f3;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            border: 1px solid #2196f3;
+            display: inline-block;
+        }
+
+        .menu-grid .ui-button {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+        .ui-panel {
+            margin-top: 10px;
+        }
+    </style>
+</h:head>
+<h:body>
+    <h:form id="formTablaMovimientos">
+        <ui:include src="/pages/almacen/menu.xhtml" />
+
+        <p:growl id="msgs" showDetail="true" />
+        <p:separator />
+        <p:toolbar style="margin-bottom: 20px; border: none; background: transparent;">
+            <f:facet name="left">
+        <p:commandButton value="Nuevo Movimiento" icon="pi pi-save" action="#{movimientosAlmacenBean.irANuevoMovimiento}" />
+            </f:facet>
+            <f:facet name="right">
+        <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{movimientosAlmacenBean.irADashboard}"
+            immediate="true" style="margin-left:10px;" />
+            </f:facet>
+        </p:toolbar>
+        <p:separator />
+
+        <div class="flex-container">
+            <p:panel header="Tabla de Movimientos" style="width: 100%; margin: 0 auto;">
+
+                <p:dataTable id="tablaMovimientos" var="prod" value="#{movimientosAlmacenBean.list}" rows="10" paginator="true"
+                    filteredValue="#{movimientosAlmacenBean.filteredList}" emptyMessage="No se encontraron Movimientos"
+                    style="margin-top:20px;">
+
+                    <p:column headerText="ID">
+                        <h:outputText value="#{prod.idMovimiento}" />
+                    </p:column>
+
+                    <p:column headerText="Producto">
+                        <h:outputText value="#{prod.productos.nombre}" />
+                    </p:column>
+
+                    <p:column headerText="Tipo Movimiento">
+                        <h:outputText value="#{prod.tipoMovimiento}" />
+                    </p:column>
+
+                    <p:column headerText="Cantidad">
+                        <h:outputText value="#{prod.cantidad}" />
+                    </p:column>
+
+                    <p:column headerText="Fecha de Movimiento" filterBy="#{prod.fechaHora}" filterMatchMode="contains">
+                        <h:outputText value="#{prod.fechaHora}" />
+                    </p:column>
+
+                    <p:column headerText="Origen Destino">
+                        <h:outputText value="#{prod.origenDestino}" />
+                    </p:column>
+
+                    <p:column headerText="Usuario Responsable" filterBy="#{prod.idUsuario}" filterMatchMode="contains">
+                        <h:outputText value="#{prod.usuario.nombre}" />
+                    </p:column>
+
+                    <p:column headerText="Observaciones">
+                        <h:outputText value="#{prod.observaciones}" />
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+        </div>
+
+
+    </h:form>
+
+    <ui:include src="/pages/almacen/footer.xhtml" />
+</h:body>
+
+</html>

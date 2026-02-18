@@ -15,10 +15,17 @@
         <ui:include src="/pages/almacen/menu.xhtml" />
         <p:growl id="msgs" showDetail="true" />
         <p:separator />
-        <p:commandButton value="Nueva Categoria" icon="pi pi-save"
-            action="#{categoriasAlmacenBean.irANuevaCategoria}" />
-        <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{categoriasAlmacenBean.irADashboard}"
-            immediate="true" style="margin-left:10px;" />
+        <p:toolbar style="margin-bottom: 20px; border: none; background: transparent;">
+            <f:facet name="left">
+                <p:commandButton value="Nueva Categoria" icon="pi pi-save"
+                    action="#{categoriasAlmacenBean.irANuevaCategoria}" />
+            </f:facet>
+            <f:facet name="right">
+                <p:commandButton value="Regresar" icon="pi pi-chevron-left"
+                    action="#{categoriasAlmacenBean.irADashboard}" immediate="true" style="margin-left:10px;" />
+            </f:facet>
+        </p:toolbar>
+
         <p:separator />
 
         <p:dataTable id="tablaCategorias" var="prod" value="#{categoriasAlmacenBean.list}"
@@ -60,7 +67,7 @@
 
     <ui:include src="/pages/almacen/categorias/actualizarCategorias.xhtml" />
 
-            <ui:include src="/pages/almacen/footer.xhtml" />
+    <ui:include src="/pages/almacen/footer.xhtml" />
 
 
 </h:body>

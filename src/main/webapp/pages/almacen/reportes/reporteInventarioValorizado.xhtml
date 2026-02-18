@@ -44,9 +44,13 @@
         <ui:include src="/pages/almacen/menu.xhtml" />
 
         <p:separator />
+                <p:toolbar style="margin-bottom: 20px; border: none; background: transparent;">
+                    <f:facet name="left">
 
         <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{reportesAlmacenBean.irAReportePrincipal}"
             immediate="true" style="margin-left:10px;" />
+                    </f:facet>
+                </p:toolbar>
         <p:separator />
 
         <p:panel header="Reporte de Inventario Valorizado">

@@ -3,6 +3,7 @@ package com.empresa.inventario.beans.admin;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -15,8 +16,11 @@ import javax.inject.Named;
 import org.primefaces.model.UploadedFile;
 
 import com.empresa.inventario.exceptions.ExceptionMessage;
+import com.empresa.inventario.model.Auditoria;
 import com.empresa.inventario.model.Categorias;
 import com.empresa.inventario.model.Productos;
+import com.empresa.inventario.model.Usuario;
+import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.service.ICategoriaService;
 import com.empresa.inventario.service.IProductoService;
 
@@ -47,6 +51,13 @@ public class ProductoBean implements Serializable {
 
 	@Inject
 	private ICategoriaService iCategoriaService;
+	
+	private int idUsuario;
+
+	private String nombreUsuario;
+	
+	@Inject
+	private IAuditoriaService auditoriaService;
 
 	public ProductoBean() {
 		producto = new Productos();
@@ -57,6 +68,10 @@ public class ProductoBean implements Serializable {
 		try {
 			ListaProductos();
 			listaCategorias = iCategoriaService.getAllCategorias();
+			Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+					.get("sessionUsuario");
+			idUsuario = user.getIdUsuario();
+			nombreUsuario = user.getNombre();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -65,6 +80,14 @@ public class ProductoBean implements Serializable {
 	public void guardarTabla() {
 		listaProductosGuardar.add(producto);
 		this.producto = new Productos();
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo("Añadir registto");
+		auditoria.setAccion("El usuario " + nombreUsuario + " registro un elemento a la tabla");
+		auditoria.setNivel("INFO");
+		auditoriaService.registroAuditoria(auditoria);
 	}
 
 	public void guardarProductoTabla() throws Exception {
@@ -87,6 +110,14 @@ public class ProductoBean implements Serializable {
 		
 		this.listaProductosGuardar.clear();
 		this.producto = new Productos();
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo("Guardar");
+		auditoria.setAccion("El usuario " + nombreUsuario + " realizo el guardado de registros");
+		auditoria.setNivel("INFO");
+		auditoriaService.registroAuditoria(auditoria);
 	}
 	
 	public void onComplete() {
@@ -104,6 +135,15 @@ public class ProductoBean implements Serializable {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo("Actualizar");
+		auditoria.setAccion("El usuario " + nombreUsuario + " realizo una actualización");
+		auditoria.setNivel("INFO");
+		auditoriaService.registroAuditoria(auditoria);
 	}
 
 	public void eliminar() {
@@ -122,6 +162,15 @@ public class ProductoBean implements Serializable {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo("Eliminar");
+		auditoria.setAccion("El usuario " + nombreUsuario + " realizo la eliminación de un registro");
+		auditoria.setNivel("INFO");
+		auditoriaService.registroAuditoria(auditoria);
 	}
 
 	public void ListaProductos() throws Exception {
@@ -139,20 +188,53 @@ public class ProductoBean implements Serializable {
 			listaProductosGuardar = iProductoService.cargaArchivos(uploadedFile);
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
+			Auditoria auditoria = new Auditoria();
+			auditoria.setFechaAuditoria(new Date());
+			auditoria.setIdUsuario(idUsuario);
+			auditoria.setClaseOrigen(this.getClass().getName());
+			auditoria.setMetodo("Carga Masiba");
+			auditoria.setAccion("El usuario " + nombreUsuario + " realizo una carga masiva de registros");
+			auditoria.setNivel("INFO");
+			auditoriaService.registroAuditoria(auditoria);
 		} catch (ExceptionMessage e) {
 			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+			
 		}
 	}
-
+	
 	public String irATablaProductos() {
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo("Navego");
+		auditoria.setAccion("El usuario " + nombreUsuario +  " navego a Tabla productos");
+		auditoria.setNivel("INFO");
+		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/productos/tablaProductos?faces-redirect=true";
 	}
 
 	public String menuPrincipal() {
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo("Navego");
+		auditoria.setAccion("El usuario " + nombreUsuario +  " navego a Dashboard");
+		auditoria.setNivel("INFO");
+		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/dashboard?faces-redirect=true";
 	}
 
 	public String irANuevoProducto() {
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo("Navego");
+		auditoria.setAccion("El usuario " + nombreUsuario +  " navego a nuevo producto");
+		auditoria.setNivel("INFO");
+		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/productos/productos.xhtml?faces-redirect=true";
 	}
 

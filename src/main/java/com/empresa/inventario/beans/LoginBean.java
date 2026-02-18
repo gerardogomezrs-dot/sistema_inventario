@@ -1,6 +1,7 @@
 package com.empresa.inventario.beans;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
@@ -9,7 +10,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.empresa.inventario.exceptions.ExceptionMessage;
+import com.empresa.inventario.model.Auditoria;
 import com.empresa.inventario.model.Usuario;
+import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.service.IAuthService;
 
 import lombok.Data;
@@ -19,31 +22,31 @@ import lombok.Data;
 @Data
 public class LoginBean implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private String userName;
 	private String password;
 	private Usuario usuario;
+	
+	private int idUsuario;
+
+	private String nombreUsuario;
+	
+	@Inject
+	private IAuditoriaService auditoriaService;
 
 	@Inject
 	private IAuthService authService;
-
 	public String login() {
 		try {
 			usuario = new Usuario();
 			usuario = authService.login(userName, password);
-
 			if (usuario == null) {
 				resetearSesion();
 				añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error de Inventario", "Usuario o password inválido");
 				return null;
 			} else {
 				String ruta = "";
-
 				if (usuario.getRol().equals("admin")) {
-
 					FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("sessionUsuario",
 							usuario);
 
@@ -54,18 +57,27 @@ public class LoginBean implements Serializable {
 
 					ruta = "/pages/admin/dashboard.xhtml?faces-redirect=true";
 				}
-
 				if (usuario.getRol().equals("almacen")) {
 					FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("sessionUsuario",
 							usuario);
-
 					FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-
 					añadirMensaje(FacesMessage.SEVERITY_INFO, "¡Bienvenido!",
 							"Hola " + usuario.getNombre() + ", has iniciado sesión correctamente.");
 					ruta = "/pages/almacen/dashboard.xhtml?faces-redirect=true";
 				}
 
+				idUsuario = usuario.getIdUsuario();
+				nombreUsuario = usuario.getNombre();
+				
+				Auditoria auditoria = new Auditoria();
+				auditoria.setFechaAuditoria(new Date());
+				auditoria.setIdUsuario(idUsuario);
+				auditoria.setClaseOrigen(this.getClass().getName());
+				auditoria.setMetodo("Inicio de sesión");
+				auditoria.setAccion("El usuario " + nombreUsuario + " INICIO SESIÓN");
+				auditoria.setNivel("INFO");
+				auditoriaService.registroAuditoria(auditoria);
+				
 				return ruta;
 			}
 
@@ -77,13 +89,10 @@ public class LoginBean implements Serializable {
 			e.printStackTrace();
 			return null;
 		}
-
 	}
-
 	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
-
 	private void resetearSesion() {
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 	}
@@ -92,7 +101,6 @@ public class LoginBean implements Serializable {
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 		return "/login.xhtml?faces-redirect=true";
 	}
-
 	public String redireccionarInicio() {
 		usuario = new Usuario();
 		usuario = authService.login(userName, password);
@@ -108,5 +116,6 @@ public class LoginBean implements Serializable {
 		}
 		return ruta;
 	}
-
+	
+	
 }
