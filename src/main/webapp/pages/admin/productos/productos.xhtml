@@ -58,16 +58,11 @@
                 update="msgs" 
                 />
     </p:progressBar>
-
         <div class="main-container">
-
             <div class="form-side">
                 <p:panel header="Registro de Producto" style="width: 600px; margin: 0 auto;">
                     <h:panelGrid columns="2" columnClasses="label,value">
-
                         <h:outputLabel value="Codigo de Barras:" />
-
-
                         <p:inputText id="barcodeManual" value="#{productoBean.producto.codigoBarras}"
                             required="false" placeholder="Ingrese código manualmente..." style="width: 100%;">
                             <p:ajax event="blur" process="@this" />

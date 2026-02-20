@@ -2,6 +2,7 @@ package com.empresa.inventario.beans.admin;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -14,7 +15,10 @@ import javax.inject.Named;
 import org.primefaces.model.UploadedFile;
 
 import com.empresa.inventario.exceptions.ExceptionMessage;
+import com.empresa.inventario.model.Auditoria;
 import com.empresa.inventario.model.Proveedor;
+import com.empresa.inventario.model.Usuario;
+import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.service.IProveedorService;
 
 import lombok.Data;
@@ -38,6 +42,13 @@ public class ProveedorBean implements Serializable {
 
 	@Inject
 	private IProveedorService iProveedorService;
+	
+	private int idUsuario;
+
+	private String nombreUsuario;
+	
+	@Inject
+	private IAuditoriaService auditoriaService;
 
 	ProveedorBean() {
 	}
@@ -46,23 +57,59 @@ public class ProveedorBean implements Serializable {
 	public void init() {
 		proveedor = new Proveedor();
 		cargarListaProveedores();
+		Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+				.get("sessionUsuario");
+		idUsuario = user.getIdUsuario();
+		nombreUsuario = user.getNombre();
 	}
 
 	public String irADashboard() {
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo("Navegación");
+		auditoria.setAccion("El usuario " + nombreUsuario + " navego a dashboard");
+		auditoria.setNivel("INFO");
+		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/dashboard.xhtml?faces-redirect=true";
 	}
 
 	public String irANuevoProveedor() {
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo("Navegación");
+		auditoria.setAccion("El usuario " + nombreUsuario + " navego a nuevo proveedor");
+		auditoria.setNivel("INFO");
+		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/proveedores/proveedores.xhtml?faces-redirect=true";
 	}
 
 	public String irATablaProvedor() {
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo("Navegación");
+		auditoria.setAccion("El usuario " + nombreUsuario + " navego a tabla proveedor");
+		auditoria.setNivel("INFO");
+		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/proveedores/tablaProveedores.xhtml?faces-redirect=true";
 	}
 
 	public void guardarTabla() {
 		this.listaProveedorGuardar.add(this.proveedor);
 		this.proveedor = new Proveedor();
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo("Guardar Registro Tabla");
+		auditoria.setAccion("El usuario " + nombreUsuario + " realizo un guardo un registro a la tabla");
+		auditoria.setNivel("INFO");
+		auditoriaService.registroAuditoria(auditoria);
 	}
 
 	public void guardarTablaProveedor() {
@@ -83,10 +130,26 @@ public class ProveedorBean implements Serializable {
 				});
 			}catch (Exception e) {
 				e.printStackTrace();
+				Auditoria auditoria = new Auditoria();
+				auditoria.setFechaAuditoria(new Date());
+				auditoria.setIdUsuario(idUsuario);
+				auditoria.setClaseOrigen(this.getClass().getName());
+				auditoria.setMetodo("Error");
+				auditoria.setAccion("Error: " +e.getMessage());
+				auditoria.setNivel("WARN");
+				auditoriaService.registroAuditoria(auditoria);
 			}
 		});
 		
 		}
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo("Guardar Registro Tabla");
+		auditoria.setAccion("El usuario " + nombreUsuario + " realizo guardado de registros");
+		auditoria.setNivel("INFO");
+		auditoriaService.registroAuditoria(auditoria);
 		listaProveedorGuardar.clear();
 		this.proveedor = new Proveedor();
 	}
@@ -106,8 +169,25 @@ public class ProveedorBean implements Serializable {
 			this.list = iProveedorService.proveedors();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 					"Registro eliminado", "El Registro fue eliminado correctamente"));
+			Auditoria auditoria = new Auditoria();
+			auditoria.setFechaAuditoria(new Date());
+			auditoria.setIdUsuario(idUsuario);
+			auditoria.setClaseOrigen(this.getClass().getName());
+			auditoria.setMetodo("Eliminar");
+			auditoria.setAccion("El usuario " + nombreUsuario + " realizo la eliminación de un registro");
+			auditoria.setNivel("INFO");
+			auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
 			e.printStackTrace();
+			
+			Auditoria auditoria = new Auditoria();
+			auditoria.setFechaAuditoria(new Date());
+			auditoria.setIdUsuario(idUsuario);
+			auditoria.setClaseOrigen(this.getClass().getName());
+			auditoria.setMetodo("Error");
+			auditoria.setAccion("Error: " +e.getMessage());
+			auditoria.setNivel("WARN");
+			auditoriaService.registroAuditoria(auditoria);
 		}
 	}
 
@@ -117,8 +197,25 @@ public class ProveedorBean implements Serializable {
 			this.list = iProveedorService.proveedors();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 					"Registro Actualizado", "El Registro fue actualizado correctamente"));
+			Auditoria auditoria = new Auditoria();
+			auditoria.setFechaAuditoria(new Date());
+			auditoria.setIdUsuario(idUsuario);
+			auditoria.setClaseOrigen(this.getClass().getName());
+			auditoria.setMetodo("Guardar Registro Tabla");
+			auditoria.setAccion("El usuario " + nombreUsuario + " realizo la actualización de un registro");
+			auditoria.setNivel("INFO");
+			auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
 			e.printStackTrace();
+			
+			Auditoria auditoria = new Auditoria();
+			auditoria.setFechaAuditoria(new Date());
+			auditoria.setIdUsuario(idUsuario);
+			auditoria.setClaseOrigen(this.getClass().getName());
+			auditoria.setMetodo("Error");
+			auditoria.setAccion("Error: " +e.getMessage());
+			auditoria.setNivel("WARN");
+			auditoriaService.registroAuditoria(auditoria);
 		}
 	}
 
@@ -133,11 +230,35 @@ public class ProveedorBean implements Serializable {
 
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
+			Auditoria auditoria = new Auditoria();
+			auditoria.setFechaAuditoria(new Date());
+			auditoria.setIdUsuario(idUsuario);
+			auditoria.setClaseOrigen(this.getClass().getName());
+			auditoria.setMetodo("Carga de masiva de registros");
+			auditoria.setAccion("El usuario " + nombreUsuario + " realizo la carga masiva de registros");
+			auditoria.setNivel("INFO");
+			auditoriaService.registroAuditoria(auditoria);
 		} catch (ExceptionMessage e) {
 			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 
+			Auditoria auditoria = new Auditoria();
+			auditoria.setFechaAuditoria(new Date());
+			auditoria.setIdUsuario(idUsuario);
+			auditoria.setClaseOrigen(this.getClass().getName());
+			auditoria.setMetodo("Error");
+			auditoria.setAccion("Error: " +e.getMessage());
+			auditoria.setNivel("WARN");
+			auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
 			e.printStackTrace();
+			Auditoria auditoria = new Auditoria();
+			auditoria.setFechaAuditoria(new Date());
+			auditoria.setIdUsuario(idUsuario);
+			auditoria.setClaseOrigen(this.getClass().getName());
+			auditoria.setMetodo("Error");
+			auditoria.setAccion("Error: " +e.getMessage());
+			auditoria.setNivel("WARN");
+			auditoriaService.registroAuditoria(auditoria);
 		}
 	}
 

@@ -9,9 +9,7 @@
     <title>Gestión de Categorias</title>
 </h:head>
 <h:body>
-
     <h:form id="formPrincipal">
-
         <ui:include src="/pages/almacen/menu.xhtml" />
         <p:growl id="msgs" showDetail="true" />
         <p:separator />
@@ -25,9 +23,7 @@
                     action="#{categoriasAlmacenBean.irADashboard}" immediate="true" style="margin-left:10px;" />
             </f:facet>
         </p:toolbar>
-
         <p:separator />
-
         <p:dataTable id="tablaCategorias" var="prod" value="#{categoriasAlmacenBean.list}"
             filteredValue="#{categoriasAlmacenBean.filteredList}" rows="10" paginator="true"
             emptyMessage="No se encontraron categorias" style="margin-top:20px;">

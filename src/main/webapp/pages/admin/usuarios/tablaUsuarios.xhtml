@@ -6,7 +6,7 @@
 <h:head>
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
     <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
-    <title>Sistema de Inventario</title>
+    <title>Gestión de Usuarios</title>
 
     <style type="text/css">
         body {
@@ -53,18 +53,16 @@
     </style>
 </h:head>
 <h:body>
-
     <h:form id="form">
-
         <ui:include src="/pages/admin/menu.xhtml" />
         <p:growl id="msgs" showDetail="true" />
         <p:separator />
         <p:toolbar style="margin-bottom: 20px; border: none; background: transparent;">
-            <f:facet name="left">
+            <f:facet name="right">
                 <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{usuariosBean.irADashboard}"
                     immediate="true" styleClass="ui-button-flat" />
             </f:facet>
-            <f:facet name="right">
+            <f:facet name="left">
                 <p:commandButton value="Nuevo Usuario" icon="pi pi-plus" action="#{usuariosBean.irANuevoUsuario}"
                     styleClass="ui-button-raised ui-button-primary" />
             </f:facet>
@@ -120,7 +118,6 @@
                 icon="pi pi-check" />
         </p:confirmDialog>
     </h:form>
-
     <ui:include src="/pages/admin/usuarios/actualizarUsuarios.xhtml" />
     <ui:include src="/pages/admin/footer.xhtml" />
 </h:body>

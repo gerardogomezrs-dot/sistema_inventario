@@ -4,7 +4,7 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
-    <title>Reporte de Inventario</title>
+    <title>Reporte de Movimientos</title>
     <style>
         .ui-panelgrid .ui-grid-responsive .ui-grid-row {
             border: none !important;
@@ -32,6 +32,13 @@
             background-color: #217346 !important;
             /* Verde Excel */
             border-color: #217346 !important;
+            color: white !important;
+        }
+
+        .btn-pdf {
+            background-color: #D32F2F !important;
+            /* Rojo PDF */
+            border-color: #D32F2F !important;
             color: white !important;
         }
     </style>
@@ -77,17 +84,16 @@
                         <p:commandButton value="Exportar Excel" icon="pi pi-file-excel" ajax="false"
                             styleClass="btn-excel">
                             <p:dataExporter type="xls" target="tblMovimientos"
+                                preProcessor="#{inventarioReporteBean.exportarReporteMovimientos}"
                                 fileName="#{inventarioReporteBean.nombreArchivo_3}" pageOnly="false" />
                         </p:commandButton>
-
-                        <p:commandButton value="Exportar Pdf" icon="pi pi-file-excel" ajax="false" styleClass="btn-pdf">
+                        <p:commandButton value="Exportar Pdf" icon="pi pi-file-pdf" ajax="false" styleClass="btn-pdf">
                             <p:dataExporter type="pdf" target="tblMovimientos"
+                                preProcessor="#{inventarioReporteBean.exportarReporteMovimientos}"
                                 fileName="#{inventarioReporteBean.nombreArchivo_3}" />
                         </p:commandButton>
-
                     </div>
                 </f:facet>
-
                 <p:column headerText="Fecha" sortBy="#{mov.fechaHora}">
                     <h:outputText value="#{mov.fechaHora}">
                         <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />

@@ -1,4 +1,4 @@
-package com.empresa.inventario.beans.admin;
+package com.empresa.inventario.beans.almacen;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -22,14 +22,12 @@ import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.service.IReporteService;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Named("inventarioReporteBean")
+@Named("reportesAlmacenBean")
 @javax.faces.view.ViewScoped
-@Getter
-@Setter
-public class ReportesBean implements Serializable {
+@Data
+public class ReportesAlmacenBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -45,9 +43,9 @@ public class ReportesBean implements Serializable {
 	private List<ReporteInventarioValorizado> listaInventarioValorizado;
 
 	private List<ReporteStockBajo> listaStockBajo;
-
+	
 	private List<ReporteAuditoriaUsuario> listaAuditoriaUsuario;
-
+	
 	private List<ReporteRotacionInventario> listaIndiceInventario;
 	
 	private List<ReporteClasificacionABC> clasificacionABCs;
@@ -59,12 +57,12 @@ public class ReportesBean implements Serializable {
 	private String nombreArchivo_3;
 	
 	private String nombreArchivo_4;
-
+	
 	private String nombreArchivo_5;
-
+	
 	private String nombreArchivo_6;
 
-	
+
 	private int idUsuario;
 
 	private String nombreUsuario;
@@ -72,7 +70,7 @@ public class ReportesBean implements Serializable {
 	@Inject
 	private IAuditoriaService auditoriaService;
 
-	public ReportesBean() {
+	public ReportesAlmacenBean() {
 	}
 
 	@PostConstruct
@@ -86,7 +84,8 @@ public class ReportesBean implements Serializable {
 		buscarStockBajo();
 		buscarAuditoriaUsuario();
 		buscarIndiceRotacion();
-		buscarClasficacionABC();
+		buscarClasificacion();
+		
 		Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.get("sessionUsuario");
 		idUsuario = user.getIdUsuario();
@@ -102,13 +101,13 @@ public class ReportesBean implements Serializable {
 		nombreArchivo_6 = "Reporte Clasificacion ABC " + fechaHoy;
 	}
 
-	public void exportarReporteStockBajo(Object document) {
+	public void exportarReporteMovimientos(Object document) {
 		Auditoria auditoria = new Auditoria();
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
 		auditoria.setMetodo("Exportar Reporte");
-		auditoria.setAccion("El usuario " + nombreUsuario + " realizo la exportación del reporte de reabastecimiento");
+		auditoria.setAccion("El usuario " + nombreUsuario + " realizo la exportación del reporte de movimientos");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
 	}
@@ -124,17 +123,17 @@ public class ReportesBean implements Serializable {
 		auditoriaService.registroAuditoria(auditoria);
 	}
 
-	public void exportarReporteMovimientos(Object document) {
+	public void exportarReporteStockBajo(Object document) {
 		Auditoria auditoria = new Auditoria();
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
 		auditoria.setMetodo("Exportar Reporte");
-		auditoria.setAccion("El usuario " + nombreUsuario + " realizo la exportación del reporte de movimientos");
+		auditoria.setAccion("El usuario " + nombreUsuario + " realizo la exportación del reporte de reabastecimiento");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
 	}
-
+	
 	public void exportarReporteAuditoriaUsuario(Object document) {
 		Auditoria auditoria = new Auditoria();
 		auditoria.setFechaAuditoria(new Date());
@@ -146,40 +145,41 @@ public class ReportesBean implements Serializable {
 		auditoriaService.registroAuditoria(auditoria);
 	}
 	
-	public void exportarRotacionInventario(Object document) {
+	
+	public void exportarReporteRotacionInventario(Object document) {
 		Auditoria auditoria = new Auditoria();
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
 		auditoria.setMetodo("Exportar Reporte");
-		auditoria.setAccion("El usuario " + nombreUsuario + " realizo la exportación del reporte rotacion inventario");
+		auditoria.setAccion("El usuario " + nombreUsuario + " realizo la exportación del reporte de rotacion inventario");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
 	}
 	
-	public void exportarClasificacionABC(Object document) {
+	public void exportarReporteClasificacionABC(Object document) {
 		Auditoria auditoria = new Auditoria();
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
 		auditoria.setMetodo("Exportar Reporte");
-		auditoria.setAccion("El usuario " + nombreUsuario + " realizo la exportación del reporte Clasificación ABC");
+		auditoria.setAccion("El usuario " + nombreUsuario + " realizo la exportación del reporte de Clasificacion ABC");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
-	}
-
-	public void buscar() throws Exception {
-		listaReporteMovimientos = iReporteService.movimientos(fechaInicio, fechaFin);
-	}
-
-	public void buscarInventarioValorizado() throws Exception {
-		listaInventarioValorizado = iReporteService.reporteInventarioValorizado();
 	}
 
 	public void buscarStockBajo() throws Exception {
 		listaStockBajo = iReporteService.reporteStockBajo();
 	}
 
+	public void buscarInventarioValorizado() throws Exception {
+		listaInventarioValorizado = iReporteService.reporteInventarioValorizado();
+	}
+
+	public void buscar() throws Exception {
+		listaReporteMovimientos = iReporteService.movimientos(fechaInicio, fechaFin);
+	}
+	
 	public void buscarAuditoriaUsuario() throws Exception {
 		listaAuditoriaUsuario = iReporteService.reporteAuditoriaUsuario();
 	}
@@ -188,7 +188,7 @@ public class ReportesBean implements Serializable {
 		listaIndiceInventario = iReporteService.reporteRotacionInventario();
 	}
 	
-	public void buscarClasficacionABC() throws Exception {
+	public void buscarClasificacion() throws Exception {
 		clasificacionABCs = iReporteService.reporteClasificacionABC();
 	}
 
@@ -201,7 +201,7 @@ public class ReportesBean implements Serializable {
 		auditoria.setAccion("El usuario " + nombreUsuario + " navego a Reporte Movimientos");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
-		return "/pages/admin/reportes/reporteMovimientos.xhtml?faces-redirect=true";
+		return "/pages/almacen/reportes/reporteMovimientos.xhtml?faces-redirect=true";
 	}
 
 	public String irAReporteInventarioValorizado() {
@@ -213,7 +213,7 @@ public class ReportesBean implements Serializable {
 		auditoria.setAccion("El usuario " + nombreUsuario + " navego a Reporte Inventario Valorizado");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
-		return "/pages/admin/reportes/reporteInventarioValorizado.xhtml?faces-redirect=true";
+		return "/pages/almacen/reportes/reporteInventarioValorizado.xhtml?faces-redirect=true";
 	}
 
 	public String irAReporteStockBajo() {
@@ -225,31 +225,19 @@ public class ReportesBean implements Serializable {
 		auditoria.setAccion("El usuario " + nombreUsuario + " navego a Reporte Stock Bajo");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
-		return "/pages/admin/reportes/reporteStockBajo.xhtml?faces-redirect=true";
+		return "/pages/almacen/reportes/reporteStockBajo.xhtml?faces-redirect=true";
 	}
-
+	
 	public String irAReporteAuditoriaUsuario() {
 		Auditoria auditoria = new Auditoria();
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
 		auditoria.setMetodo("Navego");
-		auditoria.setAccion("El usuario " + nombreUsuario + " navego a Reporte Auditoria Usuario");
+		auditoria.setAccion("El usuario " + nombreUsuario + " navego reporte Auditoria Usuario");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
-		return "/pages/admin/reportes/reporteAuditoriaUsuario.xhtml?faces-redirect=true";
-	}
-	
-	public String irAReporteRotacionInventario() {
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Navego");
-		auditoria.setAccion("El usuario " + nombreUsuario + " navego a Reporte Auditoria Usuario");
-		auditoria.setNivel("INFO");
-		auditoriaService.registroAuditoria(auditoria);
-		return "/pages/admin/reportes/reporteRotacionInventario.xhtml?faces-redirect=true";
+		return "/pages/almacen/reportes/reporteAuditoriaUsuario.xhtml?faces-redirect=true";
 	}
 
 	public String irAReportePrincipal() {
@@ -258,10 +246,10 @@ public class ReportesBean implements Serializable {
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
 		auditoria.setMetodo("Navego");
-		auditoria.setAccion("El usuario " + nombreUsuario + " navego a Reporte Principal");
+		auditoria.setAccion("El usuario " + nombreUsuario + " navego a Reporte Principal" + "");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
-		return "/pages/admin/reportes/reportes.xhtml?faces-redirect=true";
+		return "/pages/almacen/reportes/reportes.xhtml?faces-redirect=true";
 	}
 
 	public String irADashboard() {
@@ -273,18 +261,42 @@ public class ReportesBean implements Serializable {
 		auditoria.setAccion("El usuario " + nombreUsuario + " navego a Dashboard");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
-		return "/pages/admin/dashboard.xhtml?faces-redirect=true";
+		return "/pages/almacen/dashboard.xhtml?faces-redirect=true";
 	}
 	
-	public String irAReporteClasificacionABC() {
+	public String irAAuditoriaUsuarioReporte() {
 		Auditoria auditoria = new Auditoria();
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
 		auditoria.setMetodo("Navego");
-		auditoria.setAccion("El usuario " + nombreUsuario + " navego a reporte Clasificacion ABC");
+		auditoria.setAccion("El usuario " + nombreUsuario + " navego a reporte Auditoria Usuario");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
-		return "/pages/admin/reportes/reporteClasificacion.xhtml?faces-redirect=true";
-	}	
+		return "/pages/almacen/repotes/reporteAuditoriaUsuario.xhtml?faces-redirect=true";
+	}
+	
+	public String irARotacionInventario() {
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo("Navego");
+		auditoria.setAccion("El usuario " + nombreUsuario + " navego a reporte Rotación Inventario");
+		auditoria.setNivel("INFO");
+		auditoriaService.registroAuditoria(auditoria);
+		return "/pages/almacen/reportes/reporteRotacionInventario.xhtml?faces-redirect=true";
+		}
+	
+	public String irAClasificacionABC() {
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo("Navego");
+		auditoria.setAccion("El usuario " + nombreUsuario + " navego a reporte Rotación Inventario");
+		auditoria.setNivel("INFO");
+		auditoriaService.registroAuditoria(auditoria);
+		return "/pages/almacen/reportes/reporteClasificacionABC.xhtml?faces-redirect=true";
+	}
 }

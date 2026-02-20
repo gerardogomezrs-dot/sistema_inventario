@@ -59,12 +59,11 @@
             align-items: center;
         }
     </style>
-<link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
     <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
     <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
     <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
 </h:head>
-
 <h:body>
     <div class="report-container">
         <h:form id="menuForm">
@@ -87,6 +86,19 @@
                     <p:commandButton value="Reabastecimiento" action="#{inventarioReporteBean.irAReporteStockBajo}"
                         icon="pi pi-shopping-cart" styleClass="report-btn ui-button-warning" />
 
+                    <p:commandButton value="Auditoría de Usuarios"
+                        action="#{inventarioReporteBean.irAReporteAuditoriaUsuario}" icon="pi pi-user"
+                        styleClass="report-btn ui-button-warning" />
+
+                        <p:commandButton value="Rotación de Inventario"
+                        action="#{inventarioReporteBean.irAReporteRotacionInventario}" icon="pi pi-chart-bar"
+                        styleClass="report-btn ui-button-info" />
+
+                        
+                        <p:commandButton value="Clasificación ABC"
+                        action="#{inventarioReporteBean.irAReporteClasificacionABC}" icon="pi pi-list"
+                        styleClass="report-btn ui-button-info" />
+
                 </div>
 
                 <f:facet name="footer">
@@ -102,7 +114,6 @@
         </h:form>
     </div>
     <ui:include src="/pages/admin/footer.xhtml" />
-
 </h:body>
 
 </html>

@@ -22,4 +22,9 @@ public class ReportesMovimiento {
 	private String stockMinimo;
 	private String unidad;
 	private String faltanteSugerido;
+	private String operacion;
+	private String observaciones;
+	private int totalUnidadesSalida;
+	private	String indiceRotacion;
+	
 }

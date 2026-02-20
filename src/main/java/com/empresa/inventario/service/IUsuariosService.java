@@ -11,7 +11,7 @@ public interface IUsuariosService {
 
 	void update(Usuario usuario) throws Exception;
 
-	void delete(int idUsuario) throws Exception;
+	void delete(int idUsuario, int idUsuarioSesion) throws Exception;
 
 	List<Usuario> getAll() throws Exception;
 	

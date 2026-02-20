@@ -50,9 +50,6 @@
 </h:head>
 
 <h:body>
-
-
-
     <h:form id="formCategoria" enctype="multipart/form-data">
 
         <ui:include src="/pages/admin/menu.xhtml" />
@@ -60,8 +57,7 @@
         <p:progressBar widgetVar="pbAjax" ajax="true" value="#{categoriasBean.progreso}" labelTemplate="{value}%"
             styleClass="animated" interval="500">
 
-            <p:ajax event="complete" listener="#{categoriasBean.onComplete}" update="msgs"
-                />
+            <p:ajax event="complete" listener="#{categoriasBean.onComplete}" update="msgs" />
         </p:progressBar>
 
         <div class="flex-container">

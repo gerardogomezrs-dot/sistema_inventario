@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
     <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
     <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
-
+<title>Sistema de Inventario - Panel de Control</title>
     <style>
         /* Estilo para simular el p:tag en PrimeFaces 7 */
         .badge-info {
@@ -51,8 +51,6 @@
             <div class="ui-g">
                 <div class="ui-g-12 ui-md-4">
                     <p:panel header="Datos de la Sesión">
-
-
                         <h:panelGrid columns="2" cellpadding="10" style="width:100%">
                             <h:outputText value="Nombre:" style="font-weight:bold" />
                             <h:outputText value="#{loginBean.usuario.nombre}" />
@@ -95,11 +93,7 @@
                 </div>
             </div>
         </div>
-
         <ui:include src="/pages/almacen/footer.xhtml" />
-
-
     </h:form>
 </h:body>
-
 </html>

@@ -5,7 +5,7 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
-    <title>Sistema de Inventario - Panel de Control</title>
+    <title>Sistema de Inventario - Perfil de Usuario</title>
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
     <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
     <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
@@ -39,7 +39,6 @@
     <h:form id="formPerfilUsuario">
         <ui:include src="/pages/almacen/menu.xhtml" />
         <p:separator />
-
         <div class="flex-container">
             <p:panel header="Perfil Usuario" style="width: 600px; margin: 0 auto;">
 
@@ -81,7 +80,6 @@
             </p:panel>
         </div>
     </h:form>
-
     <p:dialog header="Mensaje" widgetVar="dlgConfirmacion" modal="true" appendTo="@(body)">
         <h:form id="formDialogo">
             <h:panelGrid columns="1" style="text-align: center;">
@@ -92,5 +90,4 @@
     </p:dialog>
     <ui:include src="/pages/almacen/footer.xhtml" />
 </h:body>
-
 </html>

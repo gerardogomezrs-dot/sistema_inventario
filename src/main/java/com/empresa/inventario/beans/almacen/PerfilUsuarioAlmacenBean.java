@@ -1,4 +1,4 @@
-package com.empresa.inventario.beans.admin;
+package com.empresa.inventario.beans.almacen;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -16,10 +16,10 @@ import com.empresa.inventario.service.IUsuariosService;
 
 import lombok.Data;
 
-@Named("perfilUsuarioBean")
+@Named("perfilUsuarioAlmacenBean")
 @javax.faces.view.ViewScoped
 @Data
-public class PerfilUsuarioBean implements Serializable {
+public class PerfilUsuarioAlmacenBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -34,8 +34,9 @@ public class PerfilUsuarioBean implements Serializable {
 
 	@Inject
 	private IAuditoriaService auditoriaService;
-	
-	public PerfilUsuarioBean() {
+
+	public PerfilUsuarioAlmacenBean() {
+
 	}
 
 	@PostConstruct
@@ -45,32 +46,29 @@ public class PerfilUsuarioBean implements Serializable {
 		try {
 			int id = user.getIdUsuario();
 			usuario = iUsuariosService.getByIdUsuario(id);
+
 			idUsuario = user.getIdUsuario();
 			nombreUsuario = user.getNombre();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-	}
-
-	public String irADashboard() {
-		return "/pages/admin/dashboard?faces-redirect=true";
 	}
 
 	public void actualizarPerfil() throws Exception {
-		if (usuario == null) {
-			throw new ExceptionMessage("Vacio");
-		}
 		try {
-		iUsuariosService.updateProfile(usuario);
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Actualizar");
-		auditoria.setAccion("El usuario " + nombreUsuario + " realizo una actualización");
-		auditoria.setNivel("INFO");
-		auditoriaService.registroAuditoria(auditoria);
+			if (usuario == null) {
+				throw new ExceptionMessage("Vacio");
+			}
+			iUsuariosService.updateProfile(usuario);
+			iUsuariosService.updateProfile(usuario);
+			Auditoria auditoria = new Auditoria();
+			auditoria.setFechaAuditoria(new Date());
+			auditoria.setIdUsuario(idUsuario);
+			auditoria.setClaseOrigen(this.getClass().getName());
+			auditoria.setMetodo("Actualizar");
+			auditoria.setAccion("El usuario " + nombreUsuario + " realizo una actualización");
+			auditoria.setNivel("INFO");
+			auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Auditoria auditoria = new Auditoria();
@@ -82,5 +80,9 @@ public class PerfilUsuarioBean implements Serializable {
 			auditoria.setNivel("WARN");
 			auditoriaService.registroAuditoria(auditoria);
 		}
+	}
+
+	public String irAIndex() {
+		return "/pages/almacen/dashboard?faces-redirect=true";
 	}
 }

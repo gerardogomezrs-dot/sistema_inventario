@@ -1,7 +1,6 @@
 package com.empresa.inventario.beans.admin;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -29,6 +28,8 @@ public class UsuariosBean implements Serializable {
 	private List<Usuario> list;
 
 	private Usuario usuario;
+	
+	private int idUsuario;
 
 	public UsuariosBean() {
 		usuario = new Usuario();
@@ -38,6 +39,9 @@ public class UsuariosBean implements Serializable {
 	public void init() {
 		try {
 			listaUsuarios();
+			Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+					.get("sessionUsuario");
+			idUsuario = user.getIdUsuario();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -62,7 +66,6 @@ public class UsuariosBean implements Serializable {
 		} catch (ExceptionMessage e) {
 
 			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage());
-
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.validationFailed();
 			context.renderResponse();
@@ -79,17 +82,18 @@ public class UsuariosBean implements Serializable {
 
 	public void eliminar() throws Exception {
 		try {
-			iUsuariosService.delete(usuario.getIdUsuario());
+			iUsuariosService.delete(usuario.getIdUsuario(), idUsuario);
 			list = iUsuariosService.getAll();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 					"Usuario eliminado", "El usuario fue eliminado correctamente"));
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (ExceptionMessage e) {
+			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+		} catch (Exception e) {
+		e.printStackTrace();
 		}
-
 	}
 
-	public void actualizar() {
+	public void actualizar() throws ExceptionMessage {
 		try {
 			if (usuario == null) {
 				throw new ExceptionMessage("Vacio");
@@ -99,9 +103,12 @@ public class UsuariosBean implements Serializable {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 						"Usuario actualizado", "El usuario fue actualizado correctamente"));
 			}
+		} catch (ExceptionMessage e) {
+			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 		} catch (Exception e) {
-			e.printStackTrace();
+		e.printStackTrace();
 		}
+		
 	}
 
 	public void listaUsuarios() throws Exception {
@@ -118,5 +125,4 @@ public class UsuariosBean implements Serializable {
 	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
-
 }

@@ -34,6 +34,13 @@
             border-color: #217346 !important;
             color: white !important;
         }
+
+        .btn-pdf {
+            background-color: #D32F2F !important;
+            /* Rojo PDF */
+            border-color: #D32F2F !important;
+            color: white !important;
+        }
     </style>
 
     <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
@@ -44,13 +51,13 @@
         <ui:include src="/pages/almacen/menu.xhtml" />
 
         <p:separator />
-                <p:toolbar style="margin-bottom: 20px; border: none; background: transparent;">
-                    <f:facet name="left">
+        <p:toolbar style="margin-bottom: 20px; border: none; background: transparent;">
+            <f:facet name="left">
 
-        <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{reportesAlmacenBean.irAReportePrincipal}"
-            immediate="true" style="margin-left:10px;" />
-                    </f:facet>
-                </p:toolbar>
+                <p:commandButton value="Regresar" icon="pi pi-chevron-left"
+                    action="#{reportesAlmacenBean.irAReportePrincipal}" immediate="true" style="margin-left:10px;" />
+            </f:facet>
+        </p:toolbar>
         <p:separator />
 
         <p:panel header="Reporte de Inventario Valorizado">
@@ -66,10 +73,13 @@
                         <p:commandButton value="Exportar Excel" icon="pi pi-file-excel" ajax="false"
                             styleClass="btn-excel">
                             <p:dataExporter type="xls" target="tblMovimientos"
+                                preProcessor="#{inventarioReporteBean.exportarReporteInventarioValorizado}"
                                 fileName="#{reportesAlmacenBean.nombreArchivo_2}" pageOnly="false" />
                         </p:commandButton>
-                        <p:commandButton value="Exportar Pdf" icon="pi pi-file-excel" ajax="false" styleClass="btn-pdf">
-                        <p:dataExporter type="pdf" target="tblMovimientos"  fileName="#{reportesAlmacenBean.nombreArchivo_2}" />
+                        <p:commandButton value="Exportar Pdf" icon="pi pi-file-pdf" ajax="false" styleClass="btn-pdf">
+                            <p:dataExporter type="pdf" target="tblMovimientos"
+                                preProcessor="#{inventarioReporteBean.exportarReporteInventarioValorizado}"
+                                fileName="#{reportesAlmacenBean.nombreArchivo_2}" />
                         </p:commandButton>
 
                     </div>

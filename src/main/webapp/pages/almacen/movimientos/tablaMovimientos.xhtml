@@ -4,7 +4,7 @@
     xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
-    <title>Sistema de Inventario - Tabla de Movimientos</title>
+    <title>Gestión de Movimientos</title>
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
     <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
     <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
@@ -83,18 +83,13 @@
                     <p:column headerText="Usuario Responsable" filterBy="#{prod.idUsuario}" filterMatchMode="contains">
                         <h:outputText value="#{prod.usuario.nombre}" />
                     </p:column>
-
                     <p:column headerText="Observaciones">
                         <h:outputText value="#{prod.observaciones}" />
                     </p:column>
                 </p:dataTable>
             </p:panel>
         </div>
-
-
     </h:form>
-
     <ui:include src="/pages/almacen/footer.xhtml" />
 </h:body>
-
 </html>

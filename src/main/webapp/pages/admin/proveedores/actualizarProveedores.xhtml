@@ -29,9 +29,10 @@
                 <p:outputLabel for="fechaReg" value="Fecha Registro:" />
                 <p:datePicker id="fechaReg" value="#{proveedorBean.proveedor.fechaRegistro}" pattern="dd/MM/yyyy"
                     showIcon="true" monthNavigator="true" yearNavigator="true" showOnFocus="false"
-                    readonlyInput="true"/>
+                    readonlyInput="true" />
 
-                <p:commandButton value="Guardar" icon="pi pi-save" action="#{proveedorBean.actualizarProveedor}" update=":form:tablaProveedor :form:msgs"
+                <p:commandButton value="Guardar" icon="pi pi-save" action="#{proveedorBean.actualizarProveedor}"
+                    update=":form:tablaProveedor :form:msgs"
                     oncomplete="if (!args.validationFailed) { PF('wdgEditar').hide(); }" />
             </h:panelGrid>
         </h:form>

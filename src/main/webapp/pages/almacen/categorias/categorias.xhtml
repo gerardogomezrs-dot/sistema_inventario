@@ -50,15 +50,9 @@
 </h:head>
 
 <h:body>
-
-
-
     <h:form id="formCategoria" enctype="multipart/form-data">
-
         <ui:include src="/pages/almacen/menu.xhtml" />
-
         <p:growl id="msgs" showDetail="true" />
-
         <p:progressBar widgetVar="pbAjax" 
                    ajax="true" 
                    value="#{categoriasAlmacenBean.progreso}" 
@@ -71,7 +65,6 @@
                 update="msgs" 
                 />
     </p:progressBar>
-
         <div class="flex-container">
             <p:panel header="Registro de Categorias" style="width: 600px; margin: 0 auto;">
                 <h:panelGrid columns="2" columnClasses="label,value">

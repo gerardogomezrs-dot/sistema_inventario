@@ -39,13 +39,13 @@ public class CategoriasBean implements Serializable {
 	private List<Categorias> categoriasList;
 
 	private Integer progreso = 0;
+	
+	@Inject
+	private ICategoriaService categoriaService;
 
 	private int idUsuario;
 
 	private String nombreUsuario;
-
-	@Inject
-	private ICategoriaService categoriaService;
 
 	@Inject
 	private IAuditoriaService auditoriaService;
@@ -124,18 +124,31 @@ public class CategoriasBean implements Serializable {
 
 	public void actualizar() throws Exception {
 
-		categoriaService.update(categorias);
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-				"Registro actualizado", "El registro fue actualizado correctamente"));
+		try {
 
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Actualizar");
-		auditoria.setAccion("El usuario " + nombreUsuario + " realizo una actualización");
-		auditoria.setNivel("INFO");
-		auditoriaService.registroAuditoria(auditoria);
+			categoriaService.update(categorias);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+					"Registro actualizado", "El registro fue actualizado correctamente"));
+			Auditoria auditoria = new Auditoria();
+			auditoria.setFechaAuditoria(new Date());
+			auditoria.setIdUsuario(idUsuario);
+			auditoria.setClaseOrigen(this.getClass().getName());
+			auditoria.setMetodo("Actualizar");
+			auditoria.setAccion("El usuario " + nombreUsuario + " realizo una actualización");
+			auditoria.setNivel("INFO");
+			auditoriaService.registroAuditoria(auditoria);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Auditoria auditoria = new Auditoria();
+			auditoria.setFechaAuditoria(new Date());
+			auditoria.setIdUsuario(idUsuario);
+			auditoria.setClaseOrigen(this.getClass().getName());
+			auditoria.setMetodo("Error");
+			auditoria.setAccion("ERROR " + e.getMessage());
+			auditoria.setNivel("WARN");
+			auditoriaService.registroAuditoria(auditoria);
+		}
+
 	}
 
 	public List<Categorias> listaCategorias() throws Exception {
@@ -150,22 +163,31 @@ public class CategoriasBean implements Serializable {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 						"Registro eliminado", "El registro fue eliminado correctamente"));
 			}
+			Auditoria auditoria = new Auditoria();
+			auditoria.setFechaAuditoria(new Date());
+			auditoria.setIdUsuario(idUsuario);
+			auditoria.setClaseOrigen(this.getClass().getName());
+			auditoria.setMetodo("Eliminar");
+			auditoria.setAccion("El usuario " + nombreUsuario + " realizo una eliminación");
+			auditoria.setNivel("INFO");
+			auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
 			añadirMensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", "Consulte al administrador.");
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.validationFailed();
 			context.renderResponse();
 			e.printStackTrace();
+			Auditoria auditoria = new Auditoria();
+			auditoria.setFechaAuditoria(new Date());
+			auditoria.setIdUsuario(idUsuario);
+			auditoria.setClaseOrigen(this.getClass().getName());
+			auditoria.setMetodo("Error");
+			auditoria.setAccion("ERROR " + e.getMessage());
+			auditoria.setNivel("WARN");
+			auditoriaService.registroAuditoria(auditoria);
 			return;
 		}
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Eliminar");
-		auditoria.setAccion("El usuario " + nombreUsuario + " realizo una eliminación");
-		auditoria.setNivel("INFO");
-		auditoriaService.registroAuditoria(auditoria);
+
 	}
 
 	public void cargarArchivo() {
@@ -180,25 +202,27 @@ public class CategoriasBean implements Serializable {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
 
+			Auditoria auditoria = new Auditoria();
+			auditoria.setFechaAuditoria(new Date());
+			auditoria.setIdUsuario(idUsuario);
+			auditoria.setClaseOrigen(this.getClass().getName());
+			auditoria.setMetodo("Carga masiva de archivos");
+			auditoria.setAccion("El usuario " + nombreUsuario + " realizo una carga masiva de registros");
+			auditoria.setNivel("INFO");
+			auditoriaService.registroAuditoria(auditoria);
+
 		} catch (ExceptionMessage e) {
 			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 			Auditoria auditoria = new Auditoria();
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
-			auditoria.setMetodo("Carga masiva de archivos");
-			auditoria.setAccion("sE PRODUGO UN ERROR " + e.getMessage());
+			auditoria.setMetodo("Error");
+			auditoria.setAccion("ERROR " + e.getMessage());
 			auditoria.setNivel("WARN");
 			auditoriaService.registroAuditoria(auditoria);
 		}
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Carga masiva de archivos");
-		auditoria.setAccion("El usuario " + nombreUsuario + " realizo una carga masiva de registros");
-		auditoria.setNivel("INFO");
-		auditoriaService.registroAuditoria(auditoria);
+
 	}
 
 	public String irANuevaCategoria() {

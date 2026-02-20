@@ -4,7 +4,7 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
-    <title>Reporte de Inventario</title>
+    <title>Reporte de Movimientos</title>
     <style>
         .ui-panelgrid .ui-grid-responsive .ui-grid-row {
             border: none !important;
@@ -34,10 +34,16 @@
             border-color: #217346 !important;
             color: white !important;
         }
+
+        .btn-pdf {
+            background-color: #D32F2F !important;
+            /* Rojo PDF */
+            border-color: #D32F2F !important;
+            color: white !important;
+        }
     </style>
     <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
 </h:head>
-
 <h:body>
     <h:form id="formReporte">
         <ui:include src="/pages/almacen/menu.xhtml" />
@@ -73,10 +79,11 @@
                         <p:commandButton value="Exportar Excel" icon="pi pi-file-excel" ajax="false"
                             styleClass="btn-excel">
                             <p:dataExporter type="xls" target="tblMovimientos"
+                             preProcessor="#{inventarioReporteBean.exportarReporteMovimientos}"
                                 fileName="#{reportesAlmacenBean.nombreArchivo_3}" pageOnly="false" />
                         </p:commandButton>
                         <p:commandButton value="Exportar Pdf" icon="pi pi-file-pdf" ajax="false" styleClass="btn-pdf">
-                            <p:dataExporter type="pdf" target="tblMovimientos"
+                            <p:dataExporter type="pdf" target="tblMovimientos"  preProcessor="#{inventarioReporteBean.exportarReporteMovimientos}"
                                 fileName="#{reportesAlmacenBean.nombreArchivo_3}" />
                         </p:commandButton>
                     </div>

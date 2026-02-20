@@ -199,6 +199,15 @@ public class ProductoBean implements Serializable {
 		} catch (ExceptionMessage e) {
 			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 			
+			Auditoria auditoria = new Auditoria();
+			auditoria.setFechaAuditoria(new Date());
+			auditoria.setIdUsuario(idUsuario);
+			auditoria.setClaseOrigen(this.getClass().getName());
+			auditoria.setMetodo("Error");
+			auditoria.setAccion("Error " + e.getMessage());
+			auditoria.setNivel("WARN");
+			auditoriaService.registroAuditoria(auditoria);
+			
 		}
 	}
 	

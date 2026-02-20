@@ -36,9 +36,8 @@
         .table-side {
             flex: 1;
         }
-
-       
     </style>
+    <h:title>Registrar Producto</h:title>
 </h:head>
 
 <h:body>
@@ -48,8 +47,7 @@
         <p:growl id="messages" showDetail="true" />
         <p:progressBar widgetVar="pbAjax" ajax="true" value="#{productosAlmacenBean.progreso}" labelTemplate="{value}%"
             styleClass="animated" interval="500">
-            <p:ajax event="complete" listener="#{productosAlmacenBean.onComplete}" update="messages"
-                 />
+            <p:ajax event="complete" listener="#{productosAlmacenBean.onComplete}" update="messages" />
         </p:progressBar>
 
         <div class="main-container">
@@ -172,7 +170,7 @@
             <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacionGuardar').hide();" />
         </p:dialog>
     </h:form>
-            <ui:include src="/pages/almacen/footer.xhtml" />
+    <ui:include src="/pages/almacen/footer.xhtml" />
 
 </h:body>
 

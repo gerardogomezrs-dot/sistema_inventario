@@ -7,9 +7,7 @@ import com.empresa.inventario.model.Auditoria;
 
 public class AuditoriaMapper {
 	
-	public AuditoriaMapper() {
-		// TODO Auto-generated constructor stub
-	}
+	public AuditoriaMapper() {}
 
 	public Auditoria mapRow(ResultSet rs) throws SQLException {
 		Auditoria auditoria = new Auditoria();

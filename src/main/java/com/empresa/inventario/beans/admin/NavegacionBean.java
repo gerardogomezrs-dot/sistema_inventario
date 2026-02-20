@@ -101,7 +101,7 @@ public class NavegacionBean implements Serializable {
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Perfil");
+		auditoria.setMetodo("Modulo Peril Usuario");
 		auditoria.setAccion("El usuario " + nombreUsuario + " entro a consultar su perfil");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
@@ -109,14 +109,38 @@ public class NavegacionBean implements Serializable {
 	}
 
 	public String irAProveedores() {
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo("Modulo proveedores");
+		auditoria.setAccion("El usuario " + nombreUsuario + " entro a gestión proveedores");
+		auditoria.setNivel("INFO");
+		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/proveedores/tablaProveedores?faces-redirect=true";
 	}
 
 	public String irAAuditoria() {
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo("Modulo Auditoria");
+		auditoria.setAccion("El usuario " + nombreUsuario + " entro a gestión auditoria");
+		auditoria.setNivel("INFO");
+		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/auditoria/tablaAuditoria?faces-redirect=true";
 	}
 
 	public String irADashboard() {
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo("Navega");
+		auditoria.setAccion("El usuario " + nombreUsuario + " navego a dashboard");
+		auditoria.setNivel("INFO");
+		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/dashboard.xhtml?faces-redirect=true";
 	}
 

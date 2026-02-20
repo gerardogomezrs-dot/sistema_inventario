@@ -57,7 +57,10 @@ public class UsuariosServiceImpl implements IUsuariosService, Serializable {
 	}
 
 	@Override
-	public void delete(int id) throws Exception {
+	public void delete(int id, int idUsuarioSesion) throws Exception {
+		if (id == idUsuarioSesion) {
+			throw new ExceptionMessage("No puedes eliminar tus datos");
+		}
 		try {
 			if (id == 0) {
 				throw new ExceptionMessage("Ingresa el id");
@@ -67,7 +70,6 @@ public class UsuariosServiceImpl implements IUsuariosService, Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	@Override
@@ -87,7 +89,6 @@ public class UsuariosServiceImpl implements IUsuariosService, Serializable {
 
 		dao = new UsuariosDAO();
 		dao.actualizar(usuario);
-
 	}
 
 	@Override
@@ -95,11 +96,10 @@ public class UsuariosServiceImpl implements IUsuariosService, Serializable {
 		Usuario usuario2 = new Usuario();
 		try {
 			dao = new UsuariosDAO();
-				usuario2 = 	 dao.getById(usuario);
+			usuario2 = dao.getById(usuario);
 		} catch (Exception e) {
 			e.printStackTrace();
-			}
+		}
 		return usuario2;
 	}
-
 }

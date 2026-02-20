@@ -96,7 +96,6 @@
         $(document).click(function () { forceFocus(); });
         //]]>
     </script>
-
     <title>Registrar Movimiento</title>
 </h:head>
 
@@ -182,7 +181,7 @@
                         <p:inputText value="#{movimientosBean.movimientos.origenDestino}" />
 
                         <h:outputLabel value="Usuario logueado:" />
-                        <p:inputText value="#{loginBean.usuario.nombre}" readonly="true" styleClass="readonly"/>
+                        <p:inputText value="#{loginBean.usuario.nombre}" readonly="true" styleClass="readonly" />
 
                         <h:outputLabel value="Observaciones:" />
                         <p:inputTextarea rows="3" value="#{movimientosBean.movimientos.observaciones}" />
@@ -232,7 +231,7 @@
                     </p:column>
 
                     <p:column headerText="Responsable">
-                        <h:outputText value="#{loginBean.usuario.nombre}" readonly="true" styleClass="readonly"/>
+                        <h:outputText value="#{loginBean.usuario.nombre}" readonly="true" styleClass="readonly" />
                     </p:column>
 
                 </p:dataTable>

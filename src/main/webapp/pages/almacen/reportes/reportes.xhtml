@@ -77,6 +77,21 @@
 
                     <p:commandButton value="Reabastecimiento" action="#{reportesAlmacenBean.irAReporteStockBajo}"
                         icon="pi pi-shopping-cart" styleClass="report-btn ui-button-warning" />
+
+        
+                    <p:commandButton value="Auditoría de Usuarios"
+                        action="#{reportesAlmacenBean.irAReporteAuditoriaUsuario}" icon="pi pi-user"
+                        styleClass="report-btn ui-button-warning" />
+
+                        <p:commandButton value="Rotacion de Inventario"
+                        action="#{reportesAlmacenBean.irARotacionInventario}" icon="pi pi-chart-bar"
+                        styleClass="report-btn ui-button-warning" />
+
+                         <p:commandButton value="Clasificación ABC"
+                        action="#{reportesAlmacenBean.irAClasificacionABC}" icon="pi pi-chart-pie"
+                        styleClass="report-btn ui-button-warning" />
+                        
+                        
                 </div>
                 <f:facet name="footer">
                     <div class="footer-container">

@@ -2,10 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
     xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-
 <h:head>
-    <title>Reporte de Inventario Valorizado</title>
-   <style>
+    <title>Reporte de Auditoría de Usuario</title>
+    <style>
         .ui-panelgrid .ui-grid-responsive .ui-grid-row {
             border: none !important;
         }
@@ -42,31 +41,27 @@
             color: white !important;
         }
     </style>
-
     <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
 </h:head>
-
 <h:body>
 
     <h:form id="formReporte">
 
-        <ui:include src="/pages/admin/menu.xhtml" />
+        <ui:include src="/pages/almacen/menu.xhtml" />
 
         <p:separator />
         <p:toolbar style="margin-bottom: 20px; border: none; background: transparent;">
             <f:facet name="left">
                 <p:commandButton value="Regresar" icon="pi pi-chevron-left"
-                    action="#{inventarioReporteBean.irAReportePrincipal}" immediate="true" style="margin-left:10px;" />
+                    action="#{reportesAlmacenBean.irAReportePrincipal}" immediate="true" style="margin-left:10px;" />
             </f:facet>
         </p:toolbar>
         <p:separator />
 
-        <p:panel header="Reporte de Inventario Valorizado">
+        <p:panel header="Reporte de Auditoría de Usuario">
 
-            <p:dataTable id="tblMovimientos" value="#{inventarioReporteBean.listaInventarioValorizado}" var="mov"
+            <p:dataTable id="tblMovimientos" value="#{reportesAlmacenBean.listaAuditoriaUsuario}" var="mov"
                 paginator="true" rows="20" emptyMessage="No se encontraron movimientos">
-
-
                 <f:facet name="header">
                     <div style="display: flex; justify-content: center; align-items: center; gap: 15px;">
                         <span style="font-weight: bold;"></span>
@@ -74,57 +69,39 @@
                         <p:commandButton value="Exportar Excel" icon="pi pi-file-excel" ajax="false"
                             styleClass="btn-excel">
                             <p:dataExporter type="xls" target="tblMovimientos"
-                                preProcessor="#{inventarioReporteBean.exportarReporteInventarioValorizado}"
-                                fileName="#{inventarioReporteBean.nombreArchivo_2}" pageOnly="false" />
+                                preProcessor="#{reportesAlmacenBean.exportarReporteAuditoriaUsuario}"
+                                fileName="#{reportesAlmacenBean.nombreArchivo_4}" pageOnly="false" />
                         </p:commandButton>
 
                         <p:commandButton value="Exportar Pdf" icon="pi pi-file-pdf" ajax="false" styleClass="btn-pdf">
                             <p:dataExporter type="pdf" target="tblMovimientos"
-                                preProcessor="#{inventarioReporteBean.exportarReporteInventarioValorizado}"
-                                fileName="#{inventarioReporteBean.nombreArchivo_2}" />
+                                preProcessor="#{reportesAlmacenBean.exportarReporteAuditoriaUsuario}"
+                                fileName="#{reportesAlmacenBean.nombreArchivo_4}" />
                         </p:commandButton>
                     </div>
                 </f:facet>
-                <p:column headerText="Codigo Barras">
-                    <h:outputText value="#{mov.codigoBarras}" />
+
+                <p:column headerText="Usuario Responsable">
+                    <h:outputText value="#{mov.usuarioResponsable}" />
                 </p:column>
-
-
-                <p:column headerText="Producto" filterBy="#{mov.nombreProducto}" filterMatchMode="contains">
+                <p:column headerText="Fecha y Hora">
+                    <h:outputText value="#{mov.fechaHora}" />
+                </p:column>
+                <p:column headerText="Nombre del producto">
                     <h:outputText value="#{mov.nombreProducto}" />
                 </p:column>
-
-                <p:column headerText="Categoria">
-                    <h:outputText value="#{mov.categoria}" />
+                <p:column headerText="Tipo de movimiento">
+                    <h:outputText value="#{mov.tipoMovimiento}" />
                 </p:column>
-
-                <p:column headerText="Ubicacion" style="text-align: right;">
-                    <h:outputText value="#{mov.ubicacion}" />
+                <p:column headerText="Cantidad">
+                    <h:outputText value="#{mov.cantidad}" />
                 </p:column>
-
-                <p:column headerText="Stock Actual" style="text-align: right;">
-                    <h:outputText value="#{mov.stockActual}" />
+                <p:column headerText="Observaciones">
+                    <h:outputText value="#{mov.observaciones}" />
                 </p:column>
-
-                <p:column headerText="Precio Unitario" style="text-align: right;">
-                    <h:outputText value="#{mov.precioUnitario}">
-                        <f:convertNumber type="currency" currencySymbol="$" />
-                    </h:outputText>
-                </p:column>
-
-                <p:column headerText="Precio Total" style="text-align: right;">
-                    <h:outputText value="#{mov.precioTotal}">
-                        <f:convertNumber type="currency" currencySymbol="$" />
-                    </h:outputText>
-                </p:column>
-
-
             </p:dataTable>
         </p:panel>
-        <ui:include src="/pages/admin/footer.xhtml" />
-
     </h:form>
-
 </h:body>
 
 </html>
