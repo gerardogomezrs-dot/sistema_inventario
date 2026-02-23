@@ -7,8 +7,7 @@ import lombok.Data;
 @Data
 public class Auditoria {
 
-	public  Auditoria() {
-	}
+	public  Auditoria() {}
 	
 	private int idAuditoria;
 	private Date fechaAuditoria;

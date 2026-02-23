@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+    <title>Gestión de Reportes | Inventario</title>
+    <style>
+        body {
+            background-color: #f4f7fb;
+            font-family: var(--font-family);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .report-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .ui-panel.custom-menu-panel .ui-panel-titlebar {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            font-size: 1.2rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .report-btn {
+            height: 100px !important;
+            font-size: 1.1rem !important;
+            transition: transform 0.2s, box-shadow 0.2s !important;
+            border-radius: 8px !important;
+        }
+
+        .report-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .report-btn .ui-button-icon-left {
+            font-size: 1.5rem !important;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+    <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
+    <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
+    <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
+</h:head>
+<h:body>
+    <div class="report-container">
+        <h:form id="menuForm">
+            <ui:include src="/pages/stock_manager/menu.xhtml" />
+            <p:growl id="messages" showDetail="true" />
+
+            <p:panel header="Panel de Control: Gestión de Reportes" styleClass="custom-menu-panel">
+
+                <div class="dashboard-grid">
+                    <p:commandButton value="Reporte Movimientos" action="#{reportesManagerBean.irAReporteMovimientos}"
+                        icon="pi pi-search" styleClass="report-btn ui-button-outlined" />
+
+                    <p:commandButton value="Inventario Valorizado"
+                        action="#{reportesManagerBean.irAReporteInventarioValorizado}" icon="pi pi-dollar"
+                        styleClass="report-btn ui-button-success" />
+
+                    <p:commandButton value="Reabastecimiento" action="#{reportesManagerBean.irAReporteStockBajo}"
+                        icon="pi pi-shopping-cart" styleClass="report-btn ui-button-warning" />
+
+        
+                    <p:commandButton value="Auditoría de Usuarios"
+                        action="#{reportesManagerBean.irAReporteAuditoriaUsuario}" icon="pi pi-user"
+                        styleClass="report-btn ui-button-warning" />
+
+                        <p:commandButton value="Rotacion de Inventario"
+                        action="#{reportesManagerBean.irARotacionInventario}" icon="pi pi-chart-bar"
+                        styleClass="report-btn ui-button-warning" />
+
+                         <p:commandButton value="Clasificación ABC"
+                        action="#{reportesManagerBean.irAReporteClasificacionABC}" icon="pi pi-list"
+                        styleClass="report-btn ui-button-info" />
+                        
+                </div>
+                <f:facet name="footer">
+                    <div class="footer-container">
+                        <small>Seleccione un módulo para generar el informe detallado.</small>
+                        <p:commandButton value="Regresar al Inicio" icon="pi pi-home"
+                            action="#{reportesManagerBean.irADashboard}" styleClass="ui-button-flat" immediate="true" />
+                    </div>
+                </f:facet>
+            </p:panel>
+        </h:form>
+    </div>
+    <ui:include src="/pages/stock_manager/footer.xhtml" />
+</h:body>
+
+</html>

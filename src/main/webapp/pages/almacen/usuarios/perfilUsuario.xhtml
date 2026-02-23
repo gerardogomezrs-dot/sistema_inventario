@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+    <title>Perfil de Usuario | Almacén</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+            margin: 0;
+        }
+
+        .profile-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-header h2 {
+            margin: 0;
+            color: #1e293b;
+        }
+
+        .profile-details {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 15px 20px;
+        }
+
+        .profile-details .label {
+            font-weight: bold;
+            color: #64748b;
+        }
+
+        .profile-details .value {
+            color: #334155;
+        }
+
+        .back-button {
+            display: block;
+            width: fit-content;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: #3b82f6;
+            color: white !important;
+            border-radius: 6px !important;
+            border-color: #3b82f6 !important;
+        }
+    </style>
+    <h:outputStylesheet library="primefaces" name="primeicons/primeicons    
+.css" />
+</h:head>
+<h:body>
+
+    <h:form id="formPerfil">
+
+        <ui:include src="/pages/almacen/menu.xhtml" />
+
+        <div class="profile-container">
+            <div class="profile-header">
+                <h2>Perfil de Usuario</h2>
+            </div>
+            <div class="profile-details">
+                <div class="label">Nombre:</div>
+                <div class="value">
+                    <h:outputText value="#{loginBean.usuario.nombre}" />
+                </div>
+
+                <div class="label">Usuario:</div>
+                <div class="value">
+                    <h:outputText value="#{loginBean.usuario.userName}" />
+                </div>
+                <div class="label">Rol:</div>
+                <div class="value">
+                    <h:outputText value="#{loginBean.usuario.rol}" />
+                </div>
+            </div>
+
+            <p:commandButton value="Regresar al Dashboard" 
+                             action="#{navegacionAlmacenBean.irADashboard()}" 
+                             styleClass="back-button" 
+                             ajax="false" />
+        </div>
+
+    </h:form>
+    <div style="margin-top: 50px;">
+        <ui:include src="/pages/almacen/footer.xhtml" />
+    </div>
+</h:body>
+</html>

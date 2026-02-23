@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <title>Reporte de Stock Bajo</title>
+   <style>
+        .ui-panelgrid .ui-grid-responsive .ui-grid-row {
+            border: none !important;
+        }
+
+        .label {
+            font-weight: bold;
+            width: 150px;
+        }
+
+        .value {
+            width: 300px;
+        }
+
+        .flex-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        /* Estilo extra para asegurar que el botón resalte */
+        .btn-excel {
+            background-color: #217346 !important;
+            /* Verde Excel */
+            border-color: #217346 !important;
+            color: white !important;
+        }
+
+        .btn-pdf {
+            background-color: #D32F2F !important;
+            /* Rojo PDF */
+            border-color: #D32F2F !important;
+            color: white !important;
+        }
+    </style>
+
+    <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
+</h:head>
+<h:body>
+    <h:form id="formReporte">
+        <ui:include src="/pages/stock_manager/menu.xhtml" />
+        <p:separator />
+        <p:toolbar style="margin-bottom: 20px; border: none; background: transparent;">
+            <f:facet name="left">
+                <p:commandButton value="Regresar" icon="pi pi-chevron-left"
+                    action="#{reportesManagerBean.irAReportePrincipal}" immediate="true" style="margin-left:10px;" />
+            </f:facet>
+        </p:toolbar>
+        <p:separator />
+        <p:panel header="Reporte de Stock Bajo">
+            <p:dataTable id="tblMovimientos" value="#{reportesManagerBean.listaStockBajo}" var="mov" paginator="true"
+                rows="20" emptyMessage="No se encontraron movimientos">
+                <f:facet name="header">
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+                        <span style="font-weight: bold;"></span>
+
+                        <p:commandButton value="Exportar Excel" icon="pi pi-file-excel" ajax="false"
+                            styleClass="btn-excel">
+                            <p:dataExporter type="xls" target="tblMovimientos"
+                             preProcessor="#{reportesManagerBean.exportarReporteStockBajo}"
+                                fileName="#{reportesManagerBean.nombreArchivo_1}" pageOnly="false" />
+                        </p:commandButton>
+                        <p:commandButton value="Exportar Pdf" icon="pi pi-file-pdf" ajax="false" styleClass="btn-pdf">
+                            <p:dataExporter type="pdf" target="tblMovimientos"
+                             preProcessor="#{reportesManagerBean.exportarReporteStockBajo}"
+                                fileName="#{reportesManagerBean.nombreArchivo_1}" />
+                        </p:commandButton>
+                    </div>
+                </f:facet>
+                <p:column headerText="Codigo Barras">
+                    <h:outputText value="#{mov.codigoBarras}" />
+                </p:column>
+                <p:column headerText="Producto" filterBy="#{mov.nombreProducto}" filterMatchMode="contains">
+                    <h:outputText value="#{mov.nombreProducto}" />
+                </p:column>
+                <p:column headerText="Categoria">
+                    <h:outputText value="#{mov.categoria}" />
+                </p:column>
+                <p:column headerText="Stock Actual" style="text-align: right;">
+                    <h:outputText value="#{mov.stockActual}" />
+                </p:column>
+
+                <p:column headerText="Stock Minimo" style="text-align: right;">
+                    <h:outputText value="#{mov.stockMinimo}" />
+                </p:column>
+
+                <p:column headerText="Estado Stock">
+                    <h:outputText value="CRÍTICO" style="color: red; font-weight: bold;"
+                        rendered="#{mov.stockActual le mov.stockMinimo / 2}" />
+                    <h:outputText value="BAJO" style="color: orange; font-weight: bold;"
+                        rendered="#{mov.stockActual gt mov.stockMinimo / 2}" />
+                </p:column>
+
+                <p:column headerText="Faltante Sugerido" style="text-align: right;">
+                    <h:outputText value="#{mov.faltanteSugerido}" />
+                </p:column>
+            </p:dataTable>
+        </p:panel>
+        <ui:include src="/pages/stock_manager/footer.xhtml" />
+    </h:form>
+</h:body>
+
+</html>

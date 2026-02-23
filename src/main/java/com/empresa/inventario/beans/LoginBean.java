@@ -57,6 +57,15 @@ public class LoginBean implements Serializable {
 
 					ruta = "/pages/admin/dashboard.xhtml?faces-redirect=true";
 				}
+				if (usuario.getRol().equals("stock_manager")) {
+					FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("sessionUsuario",
+							usuario);
+					FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+					añadirMensaje(FacesMessage.SEVERITY_INFO, "¡Bienvenido!",
+							"Hola " + usuario.getNombre() + ", has iniciado sesión correctamente.");
+					ruta = "/pages/stock_manager/dashboard.xhtml?faces-redirect=true";
+				}
+				
 				if (usuario.getRol().equals("almacen")) {
 					FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("sessionUsuario",
 							usuario);

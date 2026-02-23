@@ -1,4 +1,4 @@
-package com.empresa.inventario.beans.almacen;
+package com.empresa.inventario.beans.stockmanager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -26,16 +26,15 @@ import com.empresa.inventario.service.IProductoService;
 
 import lombok.Data;
 
-@Named("movimientosAlmacenBean")
+@Named("movimientosManagerBean")
 @javax.faces.view.ViewScoped
 @Data
-public class MovimientosAlmacenBean implements Serializable{/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
+public class MovimientosManagerBean implements Serializable {
+
 	private static final Logger logger = LoggerFactory.getLogger(MovimientosBean.class);
-	
+
+	private static final long serialVersionUID = 1L;
+
 	private boolean modoManual = false;
 
 	private List<Movimientos> list;
@@ -67,11 +66,10 @@ public class MovimientosAlmacenBean implements Serializable{/**
 	@Inject
 	private IAuditoriaService auditoriaService;
 
-	
-	MovimientosAlmacenBean(){
-		
+	public MovimientosManagerBean() {
+
 	}
-	
+
 	@PostConstruct
 	public void init() {
 		try {
@@ -96,15 +94,22 @@ public class MovimientosAlmacenBean implements Serializable{/**
 			logger.error("Error en init de MovimientosBean: " + e.getMessage());
 			e.printStackTrace();
 		}
-		
+
 	}
 	
-	public String irADashboard() {
-		return "/pages/almacen/dashboard.xhtml?faces-redirect=true";
-	}
+	public List<Movimientos> listaMovimientos() throws Exception {
+		try {
+			list = service.getAll();
+		} catch (ExceptionMessage e) {
+			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+		} catch (Exception e) {
 
-	public String irATablaMovimientos() {
-		return "/pages/almacen/movimientos/tablaMovimientos.xhtml?faces-redirect=true";
+		}
+		return list;
+	}
+	
+	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
 	
 	public String irANuevoMovimiento() {
@@ -116,7 +121,21 @@ public class MovimientosAlmacenBean implements Serializable{/**
 		auditoria.setAccion("El usuario " + nombreUsuario + " navego hacia nuevo movimiento");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
-		return "/pages/almacen/movimientos/movimientos.xhtml?faces-redirect=true";
+		return "/pages/stock_manager/movimientos/movimientos.xhtml?faces-redirect=true";
+	}
+
+	public void save() {
+		listaMovimientosGuardar.add(movimientos);
+		this.movimientos = new Movimientos();
+	}
+	
+	
+	public String irADashboard() {
+		return "/pages/stock_manager/dashboard.xhtml?faces-redirect=true";
+	}
+
+	public String irATablaMovimientos() {
+		return "/pages/stock_manager/movimientos/tablaMovimientos.xhtml?faces-redirect=true";
 	}
 	
 	public void toggleScanner() {
@@ -136,18 +155,6 @@ public class MovimientosAlmacenBean implements Serializable{/**
 	}
 	
 
-	
-	public List<Movimientos> listaMovimientos() throws Exception {
-		try {
-			list = service.getAll();
-		} catch (ExceptionMessage e) {
-			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
-		} catch (Exception e) {
-
-		}
-		return list;
-	}
-	
 	public void saveTable() throws Exception {
 		if (listaMovimientosGuardar != null && !listaMovimientosGuardar.isEmpty()) {
 			service.save(listaMovimientosGuardar);
@@ -165,14 +172,5 @@ public class MovimientosAlmacenBean implements Serializable{/**
 			listaMovimientosGuardar.clear();
 		}
 	}
-	
-	public void save() {
-		listaMovimientosGuardar.add(movimientos);
-		this.movimientos = new Movimientos();
-	}
-	
-	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
-	}
-	
+
 }

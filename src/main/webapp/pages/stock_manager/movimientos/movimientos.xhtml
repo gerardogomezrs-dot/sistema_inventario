@@ -104,7 +104,7 @@
 
     <h:form id="formMovimiento" enctype="multipart/form-data">
 
-        <ui:include src="/pages/almacen/menu.xhtml" />
+        <ui:include src="/pages/stock_manager/menu.xhtml" />
 
         <p:growl id="messages" showDetail="true" />
         <div class="main-container">
@@ -120,51 +120,51 @@
 
 
                         <h:outputLabel id="lblProducto"
-                            value="#{movimientosAlmacenBean.mostrarScanner ? 'Scanner (Código): *' : 'Producto: *'}"
+                            value="#{movimientosManagerBean.mostrarScanner ? 'Scanner (Código): *' : 'Producto: *'}"
                             style="font-weight: bold;" />
 
                         <h:panelGroup id="grupoProducto">
                             <div style="display: flex; gap: 5px; align-items: center;">
 
                                 <p:inputText id="scannerInput"
-                                    value="#{movimientosAlmacenBean.movimientos.codigoBarras}"
-                                    rendered="#{movimientosAlmacenBean.mostrarScanner}"
+                                    value="#{movimientosManagerBean.movimientos.codigoBarras}"
+                                    rendered="#{movimientosManagerBean.mostrarScanner}"
                                     placeholder="Escanee con la App..." style="width: 250px;" autocomplete="off"
                                     onkeydown="return manejarEntradaApp(event);">
-                                    <p:ajax event="change" listener="#{movimientosAlmacenBean.cargarInfoScanner()}"
+                                    <p:ajax event="change" listener="#{movimientosManagerBean.cargarInfoScanner()}"
                                         process="@this" update="panelInfoExtra" />
                                 </p:inputText>
 
-                                <p:selectOneMenu id="producto" value="#{movimientosAlmacenBean.movimientos.idProducto}"
-                                    rendered="#{!movimientosAlmacenBean.mostrarScanner}" style="width: 250px;">
+                                <p:selectOneMenu id="producto" value="#{movimientosManagerBean.movimientos.idProducto}"
+                                    rendered="#{!movimientosManagerBean.mostrarScanner}" style="width: 250px;">
                                     <f:selectItem itemLabel="Selecciona un producto" itemValue=""
                                         noSelectionOption="true" />
-                                    <f:selectItems value="#{movimientosAlmacenBean.listProductos}" var="cat"
+                                    <f:selectItems value="#{movimientosManagerBean.listProductos}" var="cat"
                                         itemLabel="#{cat.nombre}" itemValue="#{cat.idProducto}" />
                                 </p:selectOneMenu>
 
 
                                 <p:commandButton
-                                    icon="#{movimientosAlmacenBean.mostrarScanner ? 'pi pi-list' : 'pi pi-barcode'}"
-                                    actionListener="#{movimientosAlmacenBean.toggleScanner()}"
+                                    icon="#{movimientosManagerBean.mostrarScanner ? 'pi pi-list' : 'pi pi-barcode'}"
+                                    actionListener="#{movimientosManagerBean.toggleScanner()}"
                                     update="lblProducto grupoProducto panelInfoExtra" process="@this" immediate="true"
                                     title="Alternar entrada" />
                             </div>
                         </h:panelGroup>
 
-                        <p:outputLabel value="Información:" rendered="#{movimientosAlmacenBean.mostrarScanner}" />
+                        <p:outputLabel value="Información:" rendered="#{movimientosManagerBean.mostrarScanner}" />
 
                         <h:panelGroup id="panelInfoExtra">
 
-                            <p:inputText value="#{movimientosAlmacenBean.infoProductoExtra}" readonly="true"
-                                rendered="#{movimientosAlmacenBean.mostrarScanner}"
+                            <p:inputText value="#{movimientosManagerBean.infoProductoExtra}" readonly="true"
+                                rendered="#{movimientosManagerBean.mostrarScanner}"
                                 style="width: 250px; background:#f0f4f7; font-weight:bold; color:#0d6efd;"
                                 placeholder="Esperando lectura..." />
                         </h:panelGroup>
                         <p:spacer width="20" height="40" />
 
                         <p:outputLabel for="movimiento" value="Tipo de Movimiento: *" />
-                        <p:selectOneMenu id="movimiento" value="#{movimientosAlmacenBean.movimientos.tipoMovimiento}"
+                        <p:selectOneMenu id="movimiento" value="#{movimientosManagerBean.movimientos.tipoMovimiento}"
                             filter="true" filterMatchMode="contains">
                             <f:selectItem itemLabel="Seleccione una opción" itemValue="" noSelectionOption="true" />
                             <f:selectItem itemLabel="Entrada" itemValue="Entrada" />
@@ -173,42 +173,42 @@
                         </p:selectOneMenu>
 
                         <h:outputLabel value="Cantidad:" />
-                        <p:inputText value="#{movimientosAlmacenBean.movimientos.cantidad}" required="false" />
+                        <p:inputText value="#{movimientosManagerBean.movimientos.cantidad}" required="false" />
 
                         <h:outputLabel value="Fecha:" />
-                        <p:calendar value="#{movimientosAlmacenBean.movimientos.fechaHora}"
+                        <p:calendar value="#{movimientosManagerBean.movimientos.fechaHora}"
                             pattern="dd/MM/yyyy HH:mm:ss" timeZone="America/Mexico_City" showButtonPanel="true" />
 
                         <h:outputLabel value="Origen Destino:" />
-                        <p:inputText value="#{movimientosAlmacenBean.movimientos.origenDestino}" />
+                        <p:inputText value="#{movimientosManagerBean.movimientos.origenDestino}" />
 
                         <h:outputLabel value="Usuario logueado:" />
                         <p:inputText value="#{loginBean.usuario.nombre}" readonly="true" styleClass="readonly" />
 
                         <h:outputLabel value="Observaciones:" />
-                        <p:inputTextarea rows="3" value="#{movimientosAlmacenBean.movimientos.observaciones}" />
+                        <p:inputTextarea rows="3" value="#{movimientosManagerBean.movimientos.observaciones}" />
 
                     </h:panelGrid>
 
-                    <h:inputHidden value="#{movimientosAlmacenBean.movimientos.idUsuario}" />
+                    <h:inputHidden value="#{movimientosManagerBean.movimientos.idUsuario}" />
 
                     <p:separator />
 
                     <p:separator />
 
-                    <p:commandButton value="Guardar" icon="pi pi-save" action="#{movimientosAlmacenBean.save}"
+                    <p:commandButton value="Guardar" icon="pi pi-save" action="#{movimientosManagerBean.save}"
                         process="@form" update="formMovimiento"
                         oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
 
                     <p:commandButton value="Regresar" icon="pi pi-chevron-left"
-                        action="#{movimientosAlmacenBean.irATablaMovimientos}" immediate="true"
+                        action="#{movimientosManagerBean.irATablaMovimientos}" immediate="true"
                         style="margin-left: 10px;" />
 
                 </p:panel>
             </div>
 
             <div class="table-side">
-                <p:dataTable id="tablaRegistros" value="#{movimientosAlmacenBean.listaMovimientosGuardar}" var="mov"
+                <p:dataTable id="tablaRegistros" value="#{movimientosManagerBean.listaMovimientosGuardar}" var="mov"
                     rows="10" paginator="true" paginatorPosition="bottom" emptyMessage="No hay movimientos registrados">
 
                     <p:column headerText="Id Producto">
@@ -240,7 +240,7 @@
                 </p:dataTable>
                 <p:separator />
 
-                <p:commandButton value="Guardar Tabla" icon="pi pi-save" action="#{movimientosAlmacenBean.saveTable}"
+                <p:commandButton value="Guardar Tabla" icon="pi pi-save" action="#{movimientosManagerBean.saveTable}"
                     process="@form" update="tablaRegistros"
                     oncomplete="if (!args.validationFailed) PF('dlgConfirmacionGuardar').show();" />
             </div>
@@ -260,6 +260,8 @@
         </p:dialog>
 
     </h:form>
-    <ui:include src="/pages/almacen/footer.xhtml" />
+    <ui:include src="/pages/stock_manager/footer.xhtml" />
+
 </h:body>
+
 </html>

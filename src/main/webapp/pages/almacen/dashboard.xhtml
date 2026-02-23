@@ -1,99 +1,150 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
-    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
-    <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
-    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
-    <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
-    <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
-<title>Sistema de Inventario - Panel de Control</title>
+    <title>Dashboard | Almacén</title>
     <style>
-        /* Estilo para simular el p:tag en PrimeFaces 7 */
-        .badge-info {
-            background-color: #e3f2fd;
-            color: #2196f3;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: bold;
-            border: 1px solid #2196f3;
-            display: inline-block;
+        :root {
+            --primary-color: #3b82f6;
+            --dark-blue: #1e293b;
+            --bg-gray: #f8fafc;
+            --text-main: #334155;
         }
 
-        .menu-grid .ui-button {
-            width: 100%;
-            margin-bottom: 5px;
+        body {
+            background-color: var(--bg-gray);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            color: var(--text-main);
         }
 
-        .ui-panel {
-            margin-top: 10px;
+        /* Estilo para el Menubar */
+        .ui-menubar {
+            border-radius: 0 !important;
+            padding: 0.5rem 2rem !important;
+            background: white !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+            border: none !important;
+        }
+
+        .dashboard-container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        /* Panel Personalizado */
+        .custom-menu-panel {
+            border: none !important;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05) !important;
+            border-radius: 12px !important;
+            overflow: hidden;
+        }
+
+        .custom-menu-panel .ui-panel-titlebar {
+            background: var(--dark-blue) !important;
+            color: white !important;
+            padding: 20px !important;
+            text-align: center;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border: none !important;
+        }
+
+        /* Grid de Botones */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            padding: 40px 30px;
+            background: white;
+        }
+
+        /* Botones estilo Tarjeta */
+        .dashboard-btn {
+            background: white !important;
+            color: var(--dark-blue) !important;
+            border: 2px solid #e2e8f0 !important;
+            height: 160px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .dashboard-btn:hover {
+            border-color: var(--primary-color) !important;
+            transform: translateY(-8px);
+            box-shadow: 0 12px 20px rgba(59, 130, 246, 0.15) !important;
+        }
+
+        /* Iconos de los botones */
+        .dashboard-btn .ui-button-icon-left {
+            font-size: 2.5rem !important; /* Iconos más grandes */
+            position: static !important;
+            margin-bottom: 15px !important;
+            color: var(--primary-color) !important;
+        }
+
+        .dashboard-btn .ui-button-text {
+            padding: 0 !important;
+            font-weight: 600 !important;
+            font-size: 1.1rem !important;
+        }
+
+        /* Logout Button */
+        .btn-logout {
+            background-color: #ef4444 !important;
+            border: none !important;
+            font-weight: bold !important;
+            border-radius: 6px !important;
         }
     </style>
 </h:head>
-
 <h:body>
-    <h:form id="formPrincipal">
 
+    <h:form id="formPrincipal">
         <p:menubar>
             <p:menuitem value="Inicio" url="dashboard.xhtml" icon="pi pi-home" />
             <f:facet name="options">
-                <p:commandButton value="Cerrar Sesión" action="#{loginBean.logout}" icon="pi pi-power-off"
-                    style="background-color: #d9534f; color: white; border: none;" />
+                <p:commandButton value="Cerrar Sesión" action="#{loginBean.logout}" 
+                                 icon="pi pi-power-off" styleClass="btn-logout" />
             </f:facet>
         </p:menubar>
 
         <p:growl id="msgs" showDetail="true" />
 
-        <div class="ui-fluid">
-            <div class="ui-g">
-                <div class="ui-g-12 ui-md-4">
-                    <p:panel header="Datos de la Sesión">
-                        <h:panelGrid columns="2" cellpadding="10" style="width:100%">
-                            <h:outputText value="Nombre:" style="font-weight:bold" />
-                            <h:outputText value="#{loginBean.usuario.nombre}" />
+        <div class="dashboard-container">
+            <p:panel header="PANEL DE CONTROL ALMACÉN" styleClass="custom-menu-panel">
+                <div class="dashboard-grid">
+                    
+                    <p:commandButton value="Ver Perfil" 
+                                     action="#{navegacionAlmacenBean.irAPerfilUsuario()}" 
+                                     icon="pi pi-user"
+                                     styleClass="dashboard-btn" 
+                                     ajax="false" />
 
-                            <h:outputText value="Rol:" style="font-weight:bold" />
-                            <h:outputText value="#{loginBean.usuario.rol}" styleClass="badge-info" />
+                    <p:commandButton value="Gestionar Productos" 
+                                     action="#{navegacionAlmacenBean.irAGestionProductos}"
+                                     icon="pi pi-box" 
+                                     styleClass="dashboard-btn"
+                                     ajax="false" />
 
-                            <h:outputText value="Usuario:" style="font-weight:bold" />
-                            <h:outputText value="#{loginBean.usuario.userName}" />
-                        </h:panelGrid>
-                    </p:panel>
+                    <p:commandButton value="Movimientos"
+                                     action="#{navegacionAlmacenBean.irAGestionMovimientos}" 
+                                     icon="pi pi-sync" 
+                                     styleClass="dashboard-btn"
+                                     ajax="false" />
                 </div>
-                <div class="ui-g-12 ui-md-8">
-                    <p:panel header="Menú Principal">
-                        <h:panelGrid columns="2" cellpadding="10" styleClass="menu-grid" style="width:100%">
-                            <p:commandButton value="Ver Perfil" action="#{navegacionAlmacenBean.irAPerfil()}"
-                                icon="pi pi-user" ajax="false" />
-
-                            <p:commandButton value="Gestionar Categorias"
-                                action="#{navegacionAlmacenBean.irAGestionCategorias()}" icon="pi pi-tags"
-                                ajax="false" />
-
-                            <p:commandButton value="Gestionar Productos"
-                                action="#{navegacionAlmacenBean.irAGestionProductos}" icon="pi pi-briefcase"
-                                ajax="false" />
-
-                            <p:commandButton value="Gestionar Reportes"
-                                action="#{navegacionAlmacenBean.irAGestionReportes}" icon="pi pi-chart-bar"
-                                ajax="false" />
-
-                            <p:commandButton value="Gestionar Proveedores"
-                                action="#{navegacionAlmacenBean.irAGestionProveedores}" icon="fa fa-industry"
-                                ajax="false" styleClass="ui-button-raised" />
-
-                            <p:commandButton value="Gestionar Movimientos"
-                                action="#{navegacionAlmacenBean.irAGestionMovimientos}" icon="pi pi-search" />
-
-                        </h:panelGrid>
-                    </p:panel>
-                </div>
-            </div>
+            </p:panel>
         </div>
-        <ui:include src="/pages/almacen/footer.xhtml" />
     </h:form>
+    <div style="margin-top: 50px;">
+        <ui:include src="/pages/almacen/footer.xhtml" />
+    </div>
+
 </h:body>
 </html>

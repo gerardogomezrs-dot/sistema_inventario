@@ -1,0 +1,39 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <p:dialog id="dialogoEditar" header="Editar Proveedor" widgetVar="wdgEditar" modal="true" appendTo="@(body)"
+        resizable="false">
+        <h:form id="formEditar">
+            <h:panelGrid columns="2" cellpadding="5">
+
+                <p:outputLabel for="nombreEmpresa" value="Nombre Empresa:" />
+                <p:inputText id="nombreEmpresa" value="#{proveedorManagerBean.proveedor.nombreEmpresa}"
+                    required="true" />
+
+                <p:outputLabel value="Contacto Nombre:" />
+                <p:inputText value="#{proveedorManagerBean.proveedor.contactoEmpresa}" />
+
+                <p:outputLabel value="Teléfono:" />
+                <p:inputText value="#{proveedorManagerBean.proveedor.telefono}" />
+
+                <p:outputLabel value="Email:" />
+                <p:inputText value="#{proveedorManagerBean.proveedor.email}" />
+
+                <p:outputLabel value="Dirección:" />
+                <p:inputText value="#{proveedorManagerBean.proveedor.direccion}" />
+
+                <p:outputLabel value="Activo:" />
+                <p:selectBooleanCheckbox value="#{proveedorManagerBean.proveedor.activo}" />
+
+                <p:outputLabel for="fechaReg" value="Fecha Registro:" />
+                <p:datePicker id="fechaReg" value="#{proveedorManagerBean.proveedor.fechaRegistro}" pattern="dd/MM/yyyy"
+                    showIcon="true" monthNavigator="true" yearNavigator="true" showOnFocus="false" />
+
+                <p:commandButton value="Guardar" icon="pi pi-save" action="#{proveedorManagerBean.actualizarProveedor}"
+                    update=":form:tablaProveedor :form:msgs"
+                    oncomplete="if (!args.validationFailed) { PF('wdgEditar').hide(); }" />
+
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+</ui:composition>
