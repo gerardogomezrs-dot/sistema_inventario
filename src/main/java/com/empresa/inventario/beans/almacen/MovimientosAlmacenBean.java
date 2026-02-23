@@ -29,13 +29,14 @@ import lombok.Data;
 @Named("movimientosAlmacenBean")
 @javax.faces.view.ViewScoped
 @Data
-public class MovimientosAlmacenBean implements Serializable{/**
-	 * 
-	 */
+public class MovimientosAlmacenBean implements Serializable {
+	/**
+	* 
+	*/
 	private static final long serialVersionUID = 1L;
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(MovimientosBean.class);
-	
+
 	private boolean modoManual = false;
 
 	private List<Movimientos> list;
@@ -67,11 +68,10 @@ public class MovimientosAlmacenBean implements Serializable{/**
 	@Inject
 	private IAuditoriaService auditoriaService;
 
-	
-	MovimientosAlmacenBean(){
-		
+	MovimientosAlmacenBean() {
+
 	}
-	
+
 	@PostConstruct
 	public void init() {
 		try {
@@ -96,9 +96,9 @@ public class MovimientosAlmacenBean implements Serializable{/**
 			logger.error("Error en init de MovimientosBean: " + e.getMessage());
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	public String irADashboard() {
 		return "/pages/almacen/dashboard.xhtml?faces-redirect=true";
 	}
@@ -106,7 +106,7 @@ public class MovimientosAlmacenBean implements Serializable{/**
 	public String irATablaMovimientos() {
 		return "/pages/almacen/movimientos/tablaMovimientos.xhtml?faces-redirect=true";
 	}
-	
+
 	public String irANuevoMovimiento() {
 		Auditoria auditoria = new Auditoria();
 		auditoria.setFechaAuditoria(new Date());
@@ -118,7 +118,7 @@ public class MovimientosAlmacenBean implements Serializable{/**
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/almacen/movimientos/movimientos.xhtml?faces-redirect=true";
 	}
-	
+
 	public void toggleScanner() {
 		this.mostrarScanner = !this.mostrarScanner;
 		this.movimientos.setCodigoBarras(null);
@@ -134,9 +134,7 @@ public class MovimientosAlmacenBean implements Serializable{/**
 			this.infoProductoExtra = "Código no válido";
 		}
 	}
-	
 
-	
 	public List<Movimientos> listaMovimientos() throws Exception {
 		try {
 			list = service.getAll();
@@ -147,7 +145,7 @@ public class MovimientosAlmacenBean implements Serializable{/**
 		}
 		return list;
 	}
-	
+
 	public void saveTable() throws Exception {
 		if (listaMovimientosGuardar != null && !listaMovimientosGuardar.isEmpty()) {
 			service.save(listaMovimientosGuardar);
@@ -165,14 +163,14 @@ public class MovimientosAlmacenBean implements Serializable{/**
 			listaMovimientosGuardar.clear();
 		}
 	}
-	
+
 	public void save() {
 		listaMovimientosGuardar.add(movimientos);
 		this.movimientos = new Movimientos();
 	}
-	
+
 	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
-	
+
 }
