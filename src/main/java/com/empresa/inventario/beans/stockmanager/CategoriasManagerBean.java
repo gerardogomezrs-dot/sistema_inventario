@@ -20,6 +20,7 @@ import com.empresa.inventario.model.Categorias;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.service.ICategoriaService;
+import com.empresa.inventario.utils.Mensajes;
 
 import lombok.Data;
 
@@ -38,37 +39,37 @@ public class CategoriasManagerBean implements Serializable {
 
 	private List<Categorias> listaTablaCategorias = new ArrayList<Categorias>();
 
-	private UploadedFile uploadedFile;
+	private transient UploadedFile uploadedFile;
 
 	private List<Categorias> categoriasList;
 
 	private Integer progreso = 0;
 
-	@Inject
 	private ICategoriaService categoriaService;
 	
 	private int idUsuario;
 	
 	private String nombreUsuario;
 
-	@Inject
 	private IAuditoriaService auditoriaService;
 
-	public CategoriasManagerBean() {
-		categorias = new Categorias();
+	@Inject
+	public CategoriasManagerBean(ICategoriaService categoriaService, IAuditoriaService auditoriaService) {
+		this.auditoriaService = auditoriaService;
+		this.categoriaService = categoriaService;
+		
 	}
 
 	@PostConstruct
 	public void init() {
-		try {
+		
 			listCategorias();
 			Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 					.get("sessionUsuario");
 			idUsuario = user.getIdUsuario();
 			nombreUsuario = user.getNombre();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	
+			categorias = new Categorias();
 	}
 
 	public String irANuevaCategoria() {
@@ -76,8 +77,8 @@ public class CategoriasManagerBean implements Serializable {
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Navegación");
-		auditoria.setAccion("El usuario " + nombreUsuario + " navega a Nueva Categoria");
+		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navega a Nueva Categoria");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/stock_manager/categorias/categorias.xhtml?faces-redirect=true";
@@ -88,8 +89,8 @@ public class CategoriasManagerBean implements Serializable {
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Navegación");
-		auditoria.setAccion("El usuario " + nombreUsuario + " navego a dashboard");
+		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego a dashboard");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/stock_manager/dashboard.xhtml?faces-redirect=true";
@@ -100,8 +101,8 @@ public class CategoriasManagerBean implements Serializable {
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Navegación");
-		auditoria.setAccion("El usuario " + nombreUsuario + " navego tabla categoria");
+		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego tabla categoria");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/stock_manager/categorias/tablaCategorias.xhtml?faces-redirect=true";
@@ -116,7 +117,7 @@ public class CategoriasManagerBean implements Serializable {
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
 			auditoria.setMetodo("Añadir registro a tabla ");
-			auditoria.setAccion("El usuario " + nombreUsuario + " registro un elemento a la tabla");
+			auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " registro un elemento a la tabla");
 			auditoria.setNivel("INFO");
 			auditoriaService.registroAuditoria(auditoria);
 		} catch(Exception e) {
@@ -124,14 +125,14 @@ public class CategoriasManagerBean implements Serializable {
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
-			auditoria.setMetodo("Error");
-			auditoria.setAccion("Error " + e.getMessage());
-			auditoria.setNivel("WARN");
+			auditoria.setMetodo(String.valueOf(Mensajes.ERROR));
+			auditoria.setAccion(String.valueOf(Mensajes.ERROR) + e.getMessage());
+			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
 		}
 	}
 
-	public void guardar() throws Exception {
+	public void guardar() {
 		progreso = 0;
 		if (listaTablaCategorias != null && !listaTablaCategorias.isEmpty()) {
 			this.progreso = 0;
@@ -151,9 +152,9 @@ public class CategoriasManagerBean implements Serializable {
 					auditoria.setFechaAuditoria(new Date());
 					auditoria.setIdUsuario(idUsuario);
 					auditoria.setClaseOrigen(this.getClass().getName());
-					auditoria.setMetodo("Error");
-					auditoria.setAccion("Error " + e.getMessage());
-					auditoria.setNivel("WARN");
+					auditoria.setMetodo(String.valueOf(Mensajes.ERROR));
+					auditoria.setAccion(String.valueOf(Mensajes.ERROR) + e.getMessage());
+					auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 					auditoriaService.registroAuditoria(auditoria);
 				}
 			});
@@ -168,7 +169,7 @@ public class CategoriasManagerBean implements Serializable {
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
 		auditoria.setMetodo("Guardar");
-		auditoria.setAccion("El usuario " + nombreUsuario + " realizo un guardado");
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " realizo un guardado");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
 	}
@@ -178,11 +179,12 @@ public class CategoriasManagerBean implements Serializable {
 				"Registro guardado", "El registro fue guardado correctamente"));
 	}
 
-	public List<Categorias> listCategorias() throws Exception {
-		return list = categoriaService.getAllCategorias();
+	public List<Categorias> listCategorias() {
+		list = categoriaService.getAllCategorias();
+		return list;
 	}
 
-	public void actualizar() throws Exception {
+	public void actualizar() {
 		try {
 		if (categorias != null) {
 			categoriaService.update(categorias);
@@ -193,7 +195,7 @@ public class CategoriasManagerBean implements Serializable {
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
 			auditoria.setMetodo("Actualizar");
-			auditoria.setAccion("El usuario " + nombreUsuario + " realizo una actualización");
+			auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " realizo una actualización");
 			auditoria.setNivel("INFO");
 			auditoriaService.registroAuditoria(auditoria);
 		}
@@ -203,9 +205,9 @@ public class CategoriasManagerBean implements Serializable {
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
-			auditoria.setMetodo("Error");
-			auditoria.setAccion("ERROR " + e.getMessage());
-			auditoria.setNivel("WARN");
+			auditoria.setMetodo(String.valueOf(Mensajes.ERROR));
+			auditoria.setAccion(String.valueOf(Mensajes.ERROR) + e.getMessage());
+			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
 		}
 	}
@@ -222,7 +224,7 @@ public class CategoriasManagerBean implements Serializable {
 				auditoria.setIdUsuario(idUsuario);
 				auditoria.setClaseOrigen(this.getClass().getName());
 				auditoria.setMetodo("Eliminar");
-				auditoria.setAccion("El usuario " + nombreUsuario + " realizo una eliminación");
+				auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " realizo una eliminación");
 				auditoria.setNivel("INFO");
 				auditoriaService.registroAuditoria(auditoria);
 			} else {
@@ -239,9 +241,9 @@ public class CategoriasManagerBean implements Serializable {
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
-			auditoria.setMetodo("Error");
-			auditoria.setAccion("ERROR " + e.getMessage());
-			auditoria.setNivel("WARN");
+			auditoria.setMetodo(String.valueOf(Mensajes.ERROR));
+			auditoria.setAccion(String.valueOf(Mensajes.ERROR) + e.getMessage());
+			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
 		}
 
@@ -255,9 +257,9 @@ public class CategoriasManagerBean implements Serializable {
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
-			auditoria.setMetodo("Error");
-			auditoria.setAccion("ERROR " + e.getMessage());
-			auditoria.setNivel("WARN");
+			auditoria.setMetodo(String.valueOf(Mensajes.ERROR));
+			auditoria.setAccion(String.valueOf(Mensajes.ERROR) + e.getMessage());
+			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
 		}
 	}
@@ -278,9 +280,9 @@ public class CategoriasManagerBean implements Serializable {
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
-			auditoria.setMetodo("Error");
-			auditoria.setAccion("ERROR " + e.getMessage());
-			auditoria.setNivel("WARN");
+			auditoria.setMetodo(String.valueOf(Mensajes.ERROR));
+			auditoria.setAccion(String.valueOf(Mensajes.ERROR) + e.getMessage());
+			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -288,9 +290,9 @@ public class CategoriasManagerBean implements Serializable {
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
-			auditoria.setMetodo("Error");
-			auditoria.setAccion("ERROR " + e.getMessage());
-			auditoria.setNivel("WARN");
+			auditoria.setMetodo(String.valueOf(Mensajes.ERROR));
+			auditoria.setAccion(String.valueOf(Mensajes.ERROR) + e.getMessage());
+			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
 		}
 	}

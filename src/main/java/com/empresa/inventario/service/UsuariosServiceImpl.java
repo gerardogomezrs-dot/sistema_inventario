@@ -1,7 +1,6 @@
 package com.empresa.inventario.service;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +19,10 @@ public class UsuariosServiceImpl implements IUsuariosService, Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private UsuariosDAO dao;
+	private transient UsuariosDAO dao = new UsuariosDAO();
 
 	@Override
-	public void save(Usuario usuario) throws ExceptionMessage {
+	public void save(Usuario usuario) {
 
 		String nombreUsuario = "";
 
@@ -42,7 +41,7 @@ public class UsuariosServiceImpl implements IUsuariosService, Serializable {
 	}
 
 	@Override
-	public void update(Usuario usuario) throws Exception {
+	public void update(Usuario usuario) {
 		try {
 			if (usuario == null) {
 				throw new ExceptionMessage("Vacio");
@@ -50,14 +49,14 @@ public class UsuariosServiceImpl implements IUsuariosService, Serializable {
 				dao = new UsuariosDAO();
 				dao.actualizar(usuario);
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 
 	@Override
-	public void delete(int id, int idUsuarioSesion) throws Exception {
+	public void delete(int id, int idUsuarioSesion) {
 		if (id == idUsuarioSesion) {
 			throw new ExceptionMessage("No puedes eliminar tus datos");
 		}
@@ -73,26 +72,35 @@ public class UsuariosServiceImpl implements IUsuariosService, Serializable {
 	}
 
 	@Override
-	public List<Usuario> getAll() throws Exception {
+	public List<Usuario> getAll() {
 		List<Usuario> usuarios = new ArrayList<>();
-		dao = new UsuariosDAO();
-		usuarios = dao.getAll();
-		if (usuarios.size() == 0) {
-			throw new ExceptionMessage("lista vacia");
+		try {
+			dao = new UsuariosDAO();
+			usuarios = dao.getAll();
+			if (usuarios.size() == 0) {
+				throw new ExceptionMessage("lista vacia");
+			}
+		} catch (Exception e) {
+			e.getMessage();
 		}
 		return usuarios;
 
 	}
 
 	@Override
-	public void updateProfile(Usuario usuario) throws Exception {
+	public void updateProfile(Usuario usuario) {
 
-		dao = new UsuariosDAO();
-		dao.actualizar(usuario);
+		try {
+			dao = new UsuariosDAO();
+
+			dao.actualizar(usuario);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public Usuario getByIdUsuario(int usuario) throws Exception {
+	public Usuario getByIdUsuario(int usuario)  {
 		Usuario usuario2 = new Usuario();
 		try {
 			dao = new UsuariosDAO();

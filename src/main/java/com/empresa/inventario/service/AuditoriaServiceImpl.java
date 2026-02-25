@@ -12,23 +12,21 @@ import com.empresa.inventario.model.Auditoria;
 
 @Named("auditoriaService")
 @ApplicationScoped
-public class AuditoriaServiceImpl implements IAuditoriaService, Serializable{
+public class AuditoriaServiceImpl implements IAuditoriaService, Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	
-	private AuditoriaDao auditoriaDao;
+
+	private transient AuditoriaDao auditoriaDao = new AuditoriaDao();
 
 	@Override
-	public void registroAuditoria(Auditoria auditoria) {	
+	public void registroAuditoria(Auditoria auditoria) {
 		try {
 			auditoriaDao = new AuditoriaDao();
 			auditoriaDao.guardar(auditoria);
 		} catch (Exception e) {
-
 			e.printStackTrace();
 		}
 	}
@@ -44,5 +42,4 @@ public class AuditoriaServiceImpl implements IAuditoriaService, Serializable{
 		}
 		return auditorias;
 	}
-	
 }

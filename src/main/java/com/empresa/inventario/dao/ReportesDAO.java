@@ -18,14 +18,15 @@ import com.empresa.inventario.model.ReportesMovimiento;
 import com.empresa.inventario.utils.Conexion;
 
 public class ReportesDAO {
+	
+	private ReportesMapper mapper;
 
-	public List<ReportesMovimiento> getAllCategorias(LocalDateTime dateTimeInicio, LocalDateTime dateTimeFin)
-			throws Exception {
+	public List<ReportesMovimiento> getAllCategorias(LocalDateTime dateTimeInicio, LocalDateTime dateTimeFin) {
 
 		StringBuilder sql = new StringBuilder(
 				"SELECT " + "    m.id_movimiento as idMovimiento, " + "    m.fecha_hora as fechaHora, "
-						+ "    p.codigo_barras as codigoBarras, " + "    p.nombre AS nombreProducto, "
-						+ "    c.nombre AS categoria, " + "    m.tipo_movimiento as tipoMovimiento, "
+						+ "    p.codigo_barras as codigoB, " + "    p.nombre AS nombreProductos, "
+						+ "    c.nombre AS nombreCategoria, " + "    m.tipo_movimiento as tipoMovimiento, "
 						+ "    m.cantidad as cantidad, " + "    m.origen_destino as origenDestino, "
 						+ "    u.nombre AS responsable, " + "    m.observaciones as observaciones "
 						+ "FROM movimientos m " + "INNER JOIN productos p ON m.id_producto = p.id_producto "
@@ -51,18 +52,18 @@ public class ReportesDAO {
 
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
-					lista.add(ReportesMapper.row(rs));
+					mapper = new ReportesMapper();
+					lista.add(mapper.row(rs));
 				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw e;
 		}
 		return lista;
 	}
 
-	public List<ReporteInventarioValorizado> getInventarioValorizado() throws Exception {
-		String sql = "SELECT \r\n" + "    p.codigo_barras as codigoBarras,\r\n" + "    p.nombre as nombreProducto,\r\n"
+	public List<ReporteInventarioValorizado> getInventarioValorizado() {
+		String sql = "SELECT \r\n" + "    p.codigo_barras as codigoBarra,\r\n" + "    p.nombre as producto,\r\n"
 				+ "    c.nombre AS categoria,\r\n" + "    p.ubicacion as ubicacionProducto,\r\n"
 				+ "    p.stock_actual as stockActual,\r\n" + "    p.unidad as unidad,\r\n"
 				+ "    p.precio_unitario as precioUnitario,\r\n"
@@ -75,17 +76,17 @@ public class ReportesDAO {
 				ResultSet rs = ps.executeQuery()) {
 			while (rs.next()) {
 				ReporteInventarioValorizado p = new ReporteInventarioValorizado();
-				p = ReportesMapper.rowInventariosValorizado(rs);
+				mapper = new ReportesMapper();
+				p = mapper.rowInventariosValorizado(rs);
 				lista.add(p);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw e;
 		}
 		return lista;
 	}
 
-	public List<ReporteStockBajo> getStockBajo() throws Exception {
+	public List<ReporteStockBajo> getStockBajo() {
 		String sql = "SELECT \r\n" + "    p.codigo_barras as codigoBarras,\r\n" + "    p.nombre as nombreProducto,\r\n"
 				+ "    p.stock_actual as stockActual,\r\n" + "    p.stock_minimo as stockMinimo,\r\n"
 				+ "    (p.stock_minimo - p.stock_actual) AS faltanteSugerido,\r\n" + "    c.nombre AS categoria\r\n"
@@ -98,17 +99,18 @@ public class ReportesDAO {
 				ResultSet rs = ps.executeQuery()) {
 			while (rs.next()) {
 				ReporteStockBajo p = new ReporteStockBajo();
-				p = ReportesMapper.rowStockBajo(rs);
+				mapper = new ReportesMapper();
+				p = mapper.rowStockBajo(rs);
 				lista.add(p);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw e;
+
 		}
 		return lista;
 	}
 
-	public List<ReporteAuditoriaUsuario> getAuditoriaUsuario() throws Exception {
+	public List<ReporteAuditoriaUsuario> getAuditoriaUsuario() {
 		String sql = "SELECT \r\n" + "    u.user_name AS Operador,\r\n" + "    m.fecha_hora AS Fecha_Accion,\r\n"
 				+ "    p.nombre AS Producto,\r\n" + "    m.tipo_movimiento AS Operacion,\r\n"
 				+ "    m.cantidad AS Cantidad,\r\n" + "    m.observaciones AS Justificacion \r\n"
@@ -121,27 +123,22 @@ public class ReportesDAO {
 				ResultSet rs = ps.executeQuery()) {
 			while (rs.next()) {
 				ReporteAuditoriaUsuario p = new ReporteAuditoriaUsuario();
-				p = ReportesMapper.rowAuditoriaUsuario(rs);
+				mapper = new ReportesMapper();
+				p = mapper.rowAuditoriaUsuario(rs);
 				lista.add(p);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw e;
 		}
 		return lista;
 	}
-	
-	public List<ReporteRotacionInventario> getRotacionInventario() throws Exception {
-		String sql = "SELECT "
-				+ "    p.nombre, "
-				+ "    SUM(m.cantidad) AS total_unidades_salida, "
+
+	public List<ReporteRotacionInventario> getRotacionInventario() {
+		String sql = "SELECT " + "    p.nombre, " + "    SUM(m.cantidad) AS total_unidades_salida, "
 				+ "    p.stock_actual AS stock_disponible, "
-				+ "    ROUND(SUM(m.cantidad) / NULLIF(p.stock_actual, 0), 2) AS indice_rotacion "
-				+ "FROM productos p "
-				+ "JOIN movimientos m ON p.id_producto = m.id_producto "
-				+ "WHERE m.tipo_movimiento = 'SALIDA' "
-				+ "  AND m.fecha_hora >= DATE_SUB(NOW(), INTERVAL 3 MONTH) "
-				+ "GROUP BY p.id_producto "
+				+ "    ROUND(SUM(m.cantidad) / NULLIF(p.stock_actual, 0), 2) AS indice_rotacion " + "FROM productos p "
+				+ "JOIN movimientos m ON p.id_producto = m.id_producto " + "WHERE m.tipo_movimiento = 'SALIDA' "
+				+ "  AND m.fecha_hora >= DATE_SUB(NOW(), INTERVAL 3 MONTH) " + "GROUP BY p.id_producto "
 				+ "ORDER BY indice_rotacion DESC;";
 		List<ReporteRotacionInventario> lista = new ArrayList<ReporteRotacionInventario>();
 		try (Connection con = Conexion.getConexion();
@@ -149,54 +146,42 @@ public class ReportesDAO {
 				ResultSet rs = ps.executeQuery()) {
 			while (rs.next()) {
 				ReporteRotacionInventario p = new ReporteRotacionInventario();
-				p = ReportesMapper.rowRotacionInventario(rs);
+				mapper = new ReportesMapper();
+				p = mapper.rowRotacionInventario(rs);
 				lista.add(p);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw e;
 		}
 		return lista;
 	}
-	
-	public List<ReporteClasificacionABC> getClasificacionABC() throws Exception {
-		String sql = "WITH Valorizacion AS ( "
-				+ "    SELECT "
-				+ "        id_producto, "
-				+ "        nombre, "
-				+ "        (stock_actual * precio_unitario) AS valorStock "
-				+ "    FROM productos "
-				+ "), "
-				+ "Acumulados AS ( "
-				+ "    SELECT "
-				+ "        nombre, "
-				+ "        valorStock, "
-				+ "        SUM(valorStock) OVER (ORDER BY valorStock DESC) / SUM(valorStock) OVER () * 100 AS porcentaje_acumulado "
-				+ "    FROM Valorizacion "
-				+ ") "
-				+ "SELECT "
-				+ "    nombre, "
-				+ "    valorStock, "
-				+ "    CASE "
-				+ "        WHEN porcentaje_acumulado <= 80 THEN 'A (Alta Prioridad)' "
-				+ "        WHEN porcentaje_acumulado <= 95 THEN 'B (Media Prioridad)' "
-				+ "        ELSE 'C (Baja Prioridad)' "
-				+ "    END AS clasificacion_abc "
-				+ "FROM Acumulados ";
+
+	public List<ReporteClasificacionABC> getClasificacionABC() {
+		String sql = "WITH Valorizacion AS (\r\n" + "    SELECT \r\n" + "        id_producto, \r\n"
+				+ "        nombre AS nombreProducto, \r\n"
+				+ "        (stock_actual * precio_unitario) AS valorStock \r\n" + "    FROM productos\r\n" + "), \r\n"
+				+ "Acumulados AS (\r\n" + "    SELECT \r\n" + "        nombreProducto, \r\n"
+				+ "        valorStock, \r\n" + "        -- Cálculo del porcentaje acumulado sobre el total\r\n"
+				+ "        SUM(valorStock) OVER (ORDER BY valorStock DESC) / SUM(valorStock) OVER () * 100 AS porcentaje_acumulado\r\n"
+				+ "    FROM Valorizacion\r\n" + ") \r\n" + "SELECT \r\n" + "    nombreProducto, \r\n"
+				+ "    valorStock, \r\n" + "    CASE \r\n"
+				+ "        WHEN porcentaje_acumulado <= 80 THEN 'A (Alta Prioridad)' \r\n"
+				+ "        WHEN porcentaje_acumulado <= 95 THEN 'B (Media Prioridad)' \r\n"
+				+ "        ELSE 'C (Baja Prioridad)' \r\n" + "    END AS clasificacion_abc\r\n" + "FROM Acumulados\r\n"
+				+ "ORDER BY valorStock DESC";
 		List<ReporteClasificacionABC> lista = new ArrayList<ReporteClasificacionABC>();
 		try (Connection con = Conexion.getConexion();
 				PreparedStatement ps = con.prepareStatement(sql);
 				ResultSet rs = ps.executeQuery()) {
 			while (rs.next()) {
 				ReporteClasificacionABC p = new ReporteClasificacionABC();
-				p = ReportesMapper.rowClasificacionABC(rs);
+				mapper = new ReportesMapper();
+				p = mapper.rowClasificacionABC(rs);
 				lista.add(p);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw e;
 		}
 		return lista;
 	}
 }
-

@@ -13,9 +13,9 @@ import com.empresa.inventario.utils.Conexion;
 
 public class CategoriasDAO {
 
-	private CategoriaMapper mapper = new CategoriaMapper();
+	private CategoriaMapper mapper;
 
-	public void guardar(Categorias e) throws Exception {
+	public void guardar(Categorias e)  {
 		String sql = "INSERT INTO categorias (nombre, descripcion) VALUES (?, ?)";
 
 		try (Connection conexion = Conexion.getConexion(); PreparedStatement ps = conexion.prepareStatement(sql)) {
@@ -26,12 +26,12 @@ public class CategoriasDAO {
 			ps.executeUpdate();
 
 		} catch (SQLException ex) {
-			System.err.println("Error al insertar categoría: " + ex.getMessage());
-			throw ex;
+			ex.printStackTrace();
+		
 		}
 	}
 
-	public void actualizar(Categorias e) throws Exception {
+	public void actualizar(Categorias e)  {
 		String sql = "UPDATE categorias SET " + "nombre = ?, " + "descripcion = ? " + " WHERE id_categoria = ?";
 		try (Connection conexion = Conexion.getConexion(); PreparedStatement ps = conexion.prepareStatement(sql)) {
 			ps.setString(1, e.getNombre());
@@ -43,8 +43,8 @@ public class CategoriasDAO {
 		}
 	}
 
-	public List<Categorias> getAllCategorias() throws Exception {
-		String sql = "SELECT * FROM categorias";
+	public List<Categorias> getAllCategorias() {
+		String sql = "SELECT c.* FROM categorias c";
 		List<Categorias> lista = new ArrayList<>();
 
 		try (Connection con = Conexion.getConexion();
@@ -52,23 +52,26 @@ public class CategoriasDAO {
 				ResultSet rs = ps.executeQuery()) {
 			while (rs.next()) {
 				Categorias p = new Categorias();
+				mapper = new CategoriaMapper();
 				p = mapper.mapRow(rs);
 				lista.add(p);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw e;
+			
 		}
 		return lista;
 	}
 
-	public void eliminarCategoria(int idCategoria) throws Exception {
-		Connection connection = Conexion.getConexion();
+	public void eliminarCategoria(int idCategoria)  {
 		String sql = "DELETE FROM CATEGORIAS WHERE ID_CATEGORIA = ?";
-		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setInt(1, idCategoria);
-		statement.executeUpdate();
-		statement.close();
-		connection.close();
+		try (Connection connection = Conexion.getConexion();
+				PreparedStatement statement = connection.prepareStatement(sql);) {
+			statement.setInt(1, idCategoria);
+			statement.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
+
 }

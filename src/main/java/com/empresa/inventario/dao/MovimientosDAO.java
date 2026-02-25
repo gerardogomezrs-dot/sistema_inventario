@@ -13,9 +13,9 @@ import com.empresa.inventario.utils.Conexion;
 
 public class MovimientosDAO {
 	
-	private MovimientosMapper mapper = new MovimientosMapper();
+	private MovimientosMapper mapper;
 	
-	public List<Movimientos> getAll() throws Exception {
+	public List<Movimientos> getAll() {
 		
 		String sql = "SELECT m.*, u.id_usuario AS idUsuario, u.nombre AS nombreUsuario, p.id_producto as idProducto, "
 				+ "p.nombre as nombreProducto FROM MOVIMIENTOS m " +
@@ -28,31 +28,27 @@ public class MovimientosDAO {
 				PreparedStatement ps = con.prepareStatement(sql);
 				ResultSet rs = ps.executeQuery()) {
 
-			// Usamos while para iterar sobre cada fila del ResultSet
 			while (rs.next()) {
 				Movimientos p = new Movimientos();
+				mapper = new MovimientosMapper();
 				p = mapper.mapRow(rs);
-				// Agregamos el producto a la lista en cada iteración
 				lista.add(p);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw e;
 		}
 		return lista;
 	}
 
 	
-	public void guardar(Movimientos movimientos) throws Exception {
-
-		Connection conexion = Conexion.getConexion();
-
+	public void guardar(Movimientos movimientos)  {
 		String sql = "INSERT INTO movimientos (id_producto, "
 				+ " tipo_movimiento , cantidad, fecha_hora ,  origen_destino ,  id_usuario ,  observaciones ) "
 				+ " VALUES "+ 
 				"(?, ?, ?, ?, ?, ?, ?)";
 
-		PreparedStatement ps = conexion.prepareStatement(sql);
+		try(Connection conexion = Conexion.getConexion();
+		PreparedStatement ps = conexion.prepareStatement(sql);){
 
 		ps.setInt(1, movimientos.getIdProducto());
 		ps.setString(2, movimientos.getTipoMovimiento());
@@ -62,9 +58,11 @@ public class MovimientosDAO {
 		ps.setInt(6, movimientos.getIdUsuario());
 		ps.setString(7, movimientos.getObservaciones());
 		ps.executeUpdate();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 
-		ps.close();
-		conexion.close();
+		
 	}
 
 }

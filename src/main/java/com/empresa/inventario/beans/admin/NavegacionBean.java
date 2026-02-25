@@ -11,6 +11,7 @@ import javax.inject.Named;
 import com.empresa.inventario.model.Auditoria;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
+import com.empresa.inventario.utils.Mensajes;
 
 import lombok.Data;
 
@@ -25,8 +26,12 @@ public class NavegacionBean implements Serializable {
 
 	private String nombreUsuario;
 
-	@Inject
 	private IAuditoriaService auditoriaService;
+	
+	@Inject
+	public NavegacionBean(IAuditoriaService auditoriaService) {
+		this.auditoriaService = auditoriaService;
+	}
 
 	@PostConstruct
 	public void init() {
@@ -41,9 +46,9 @@ public class NavegacionBean implements Serializable {
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Modulo productos");
-		auditoria.setAccion("El usuario " + nombreUsuario + " entro al modulo de productos");
-		auditoria.setNivel("INFO");
+		auditoria.setMetodo(Mensajes.MODULO_PRODUCTOS.toString());
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " entro al modulo de productos");
+		auditoria.setNivel(Mensajes.INFO.toString());
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/productos/tablaProductos.xhtml?faces-redirect=true";
 	}
@@ -53,9 +58,9 @@ public class NavegacionBean implements Serializable {
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Modulo categorias");
-		auditoria.setAccion("El usuario " + nombreUsuario + " entro al modulo de categorias");
-		auditoria.setNivel("INFO");
+		auditoria.setMetodo(Mensajes.MODULO_CATEGORIAS.toString());
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " entro al modulo de categorias");
+		auditoria.setNivel(Mensajes.INFO.toString());
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/categorias/tablaCategorias?faces-redirect=true";
 	}
@@ -65,9 +70,9 @@ public class NavegacionBean implements Serializable {
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Modulo movimientos");
-		auditoria.setAccion("El usuario " + nombreUsuario + " entro al modulo de movimientos");
-		auditoria.setNivel("INFO");
+		auditoria.setMetodo(Mensajes.MODULO_MOVIMIENTOS.toString());
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " entro al modulo de movimientos");
+		auditoria.setNivel(Mensajes.INFO.toString());
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/movimientos/tablaMovimientos?faces-redirect=true";
 	}
@@ -77,9 +82,9 @@ public class NavegacionBean implements Serializable {
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Modulo Usuarios");
-		auditoria.setAccion("El usuario " + nombreUsuario + " entro al modulo de Usuarios");
-		auditoria.setNivel("INFO");
+		auditoria.setMetodo(Mensajes.MODULO_USUARIOS.toString());
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " entro al modulo de Usuarios");
+		auditoria.setNivel(Mensajes.INFO.toString());
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/usuarios/tablaUsuarios?faces-redirect=true";
 	}
@@ -89,9 +94,9 @@ public class NavegacionBean implements Serializable {
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Modulo Reportes");
-		auditoria.setAccion("El usuario " + nombreUsuario + " entro al modulo de Reportes");
-		auditoria.setNivel("INFO");
+		auditoria.setMetodo(Mensajes.MODULO_REPORTES.toString());
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " entro al modulo de Reportes");
+		auditoria.setNivel(Mensajes.INFO.toString());
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/reportes/reportes?faces-redirect=true";
 	}
@@ -101,9 +106,9 @@ public class NavegacionBean implements Serializable {
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Modulo Peril Usuario");
-		auditoria.setAccion("El usuario " + nombreUsuario + " entro a consultar su perfil");
-		auditoria.setNivel("INFO");
+		auditoria.setMetodo(Mensajes.PERFIL_USUARIO.toString());
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " entro a consultar su perfil");
+		auditoria.setNivel(Mensajes.INFO.toString());
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/usuarios/usuarioPerfil?faces-redirect=true";
 	}
@@ -113,9 +118,9 @@ public class NavegacionBean implements Serializable {
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Modulo proveedores");
-		auditoria.setAccion("El usuario " + nombreUsuario + " entro a gestión proveedores");
-		auditoria.setNivel("INFO");
+		auditoria.setMetodo(Mensajes.MODULO_PROVEEDORES.toString());
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " entro a gestión proveedores");
+		auditoria.setNivel(Mensajes.INFO.toString());
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/proveedores/tablaProveedores?faces-redirect=true";
 	}
@@ -125,9 +130,9 @@ public class NavegacionBean implements Serializable {
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Modulo Auditoria");
-		auditoria.setAccion("El usuario " + nombreUsuario + " entro a gestión auditoria");
-		auditoria.setNivel("INFO");
+		auditoria.setMetodo(Mensajes.GESTION_AUDITORIAS.toString());
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " entro a gestión auditoria");
+		auditoria.setNivel(Mensajes.INFO.toString());
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/auditoria/tablaAuditoria?faces-redirect=true";
 	}
@@ -137,9 +142,9 @@ public class NavegacionBean implements Serializable {
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Navega");
-		auditoria.setAccion("El usuario " + nombreUsuario + " navego a dashboard");
-		auditoria.setNivel("INFO");
+		auditoria.setMetodo(Mensajes.NAVEGACION.toString());
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego a dashboard");
+		auditoria.setNivel(Mensajes.INFO.toString());
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/dashboard.xhtml?faces-redirect=true";
 	}

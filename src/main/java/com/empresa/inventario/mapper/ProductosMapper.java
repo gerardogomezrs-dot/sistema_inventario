@@ -8,6 +8,11 @@ import com.empresa.inventario.model.Productos;
 
 public class ProductosMapper {
 	
+	public ProductosMapper() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	
 	public Productos mapRow(ResultSet rs) throws SQLException{
 		Productos productos = new Productos();
 		productos.setIdProducto(rs.getInt("id_producto"));

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+<html lang="es-MX" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
     xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
@@ -14,7 +14,7 @@
         /* Estilo para simular el p:tag en PrimeFaces 7 */
         .badge-info {
             background-color: #e3f2fd;
-            color: #2196f3;
+            color: #0d47a1; /* Azul más oscuro para mejor contraste */
             padding: 2px 8px;
             border-radius: 4px;
             font-size: 12px;
@@ -41,7 +41,7 @@
             <p:menuitem value="Inicio" url="dashboard.xhtml" icon="pi pi-home" />
             <f:facet name="options">
                 <p:commandButton value="Cerrar Sesión" action="#{loginBean.logout}" icon="pi pi-power-off"
-                    style="background-color: #d9534f; color: white; border: none;" />
+                    style="background-color: #c62828; color: white; border: none;" />
             </f:facet>
         </p:menubar>
 

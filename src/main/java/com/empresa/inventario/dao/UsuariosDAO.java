@@ -14,34 +14,34 @@ import com.empresa.inventario.utils.PasswordUtil;
 
 public class UsuariosDAO {
 
-	private UsuariosMapper mapper = new UsuariosMapper();
+	private UsuariosMapper mapper;
 
-	public Usuario login(String userName, String password) throws Exception {
+	public Usuario login(String userName)  {
+		
 
-		Usuario p = null;
-		String sql = "SELECT * FROM usuarios WHERE user_name = ? ";
+		Usuario p = new Usuario();
+		String sql = "SELECT id_usuario, nombre, rol, permisos, user_name, password, activo FROM usuarios WHERE user_name = ? ";
 
 		try (Connection con = Conexion.getConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setString(1, userName);
 
 			try (ResultSet rs = ps.executeQuery()) {
-
+				
 				if (rs.next()) {
-					p = mapper.mapRowLogin(rs);
+					mapper = new UsuariosMapper();
+					p = mapper.mapRow(rs);
 				}
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			throw e;
 		}
 		return p;
 	}
 
-	public Usuario getById(int idUsuario) throws Exception {
-		System.err.println("id Recibido " +idUsuario);
+	public Usuario getById(int idUsuario) {
 		Usuario p = new Usuario();
-		String sql = "SELECT * FROM usuarios WHERE id_usuario = ? ";
+		String sql = "SELECT id_usuario, nombre, rol, permisos, user_name, password, activo FROM usuarios  WHERE id_usuario = ? ";
 
 		try (Connection con = Conexion.getConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -50,17 +50,16 @@ public class UsuariosDAO {
 			try (ResultSet rs = ps.executeQuery()) {
 
 				if (rs.next()) {
-					p = mapper.mapRowPerfil(rs);
+					p = mapper.mapRow(rs);
 				}
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			throw e;
 		}
 		return p;
 	}
 
-	public String validarUserName(String userName) throws Exception {
+	public String validarUserName(String userName){
 
 		String userNameValidar = "";
 		String sql = "SELECT user_name FROM usuarios WHERE user_name = ? ";
@@ -77,13 +76,12 @@ public class UsuariosDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw e;
 		}
 		return userNameValidar;
 	}
 
-	public List<Usuario> getAll() throws Exception {
-		String sql = "SELECT * FROM usuarios";
+	public List<Usuario> getAll() {
+		String sql = "SELECT id_usuario, nombre, rol, permisos, user_name, password, activo FROM usuarios";
 		List<Usuario> lista = new ArrayList<>();
 
 		try (Connection con = Conexion.getConexion();
@@ -95,83 +93,81 @@ public class UsuariosDAO {
 				p = mapper.mapRow(rs);
 				lista.add(p);
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			throw e;
+
 		}
 		return lista;
 	}
 
-	public void guardar(Usuario usuario) throws Exception {
-
-		Connection conexion = Conexion.getConexion();
+	public void guardar(Usuario usuario) {
 
 		String sql = "INSERT INTO usuarios " + "(nombre, rol, permisos,user_name, password, activo) "
 				+ "VALUES (?, ?, ?, ?, ?, ?)";
+		try (Connection conexion = Conexion.getConexion(); PreparedStatement ps = conexion.prepareStatement(sql);) {
 
-		PreparedStatement ps = conexion.prepareStatement(sql);
+			ps.setString(1, usuario.getNombre());
+			ps.setString(2, usuario.getRol());
+			ps.setString(3, usuario.getPermisos());
+			ps.setString(4, usuario.getUserName());
+			ps.setString(5, PasswordUtil.encrypt(usuario.getPassword()));
+			ps.setBoolean(6, usuario.isActivo());
 
-		ps.setString(1, usuario.getNombre());
-		ps.setString(2, usuario.getRol());
-		ps.setString(3, usuario.getPermisos());
-		ps.setString(4, usuario.getUserName());
-		ps.setString(5, PasswordUtil.encrypt(usuario.getPassword()));
-		ps.setBoolean(6, usuario.isActivo());
+			ps.executeUpdate();
 
-		ps.executeUpdate();
-
-		ps.close();
-		conexion.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	public void actualizar(Usuario usuario) throws Exception {
-
-		Connection conexion = Conexion.getConexion();
+	public void actualizar(Usuario usuario) {
 
 		String sql = "UPDATE usuarios SET " + "nombre = ?, " + "rol = ?, " + "permisos = ?, " + "user_name = ?, "
 				+ "password = ?, " + "activo = ? " + "WHERE id_usuario = ?";
 
-		PreparedStatement ps = conexion.prepareStatement(sql);
+		try (Connection conexion = Conexion.getConexion(); PreparedStatement ps = conexion.prepareStatement(sql);) {
 
-		ps.setString(1, usuario.getNombre());
-		ps.setString(2, usuario.getRol());
-		ps.setString(3, usuario.getPermisos());
-		ps.setString(4, usuario.getUserName());
-		ps.setString(5, PasswordUtil.encrypt(usuario.getPassword()));
-		ps.setBoolean(6, usuario.isActivo());
-		ps.setInt(7, usuario.getIdUsuario());
-		ps.executeUpdate();
-		ps.close();
-		conexion.close();
+			ps.setString(1, usuario.getNombre());
+			ps.setString(2, usuario.getRol());
+			ps.setString(3, usuario.getPermisos());
+			ps.setString(4, usuario.getUserName());
+			ps.setString(5, PasswordUtil.encrypt(usuario.getPassword()));
+			ps.setBoolean(6, usuario.isActivo());
+			ps.setInt(7, usuario.getIdUsuario());
+			ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	public void eliminarUsuario(int idUsuario) throws Exception {
-		Connection connection = Conexion.getConexion();
+	public void eliminarUsuario(int idUsuario) {
+
 		String sql = "DELETE FROM USUARIOS WHERE ID_USUARIO = ?";
-		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setInt(1, idUsuario);
-		statement.executeUpdate();
-		statement.close();
-		connection.close();
+		try (Connection connection = Conexion.getConexion();
+				PreparedStatement statement = connection.prepareStatement(sql);) {
+			statement.setInt(1, idUsuario);
+			statement.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	public void actualizarPerfilUsuario(Usuario usuario) throws Exception {
-
-		Connection conexion = Conexion.getConexion();
+	public void actualizarPerfilUsuario(Usuario usuario) {
 
 		String sql = "UPDATE usuarios SET " + "nombre = ?,  user_name = ?, " + "password = ?, " + "activo = ? "
 				+ "WHERE id_usuario = ?";
 
-		PreparedStatement ps = conexion.prepareStatement(sql);
+		try (Connection conexion = Conexion.getConexion(); PreparedStatement ps = conexion.prepareStatement(sql);) {
 
-		ps.setString(1, usuario.getNombre());
-		ps.setString(4, usuario.getUserName());
-		ps.setString(5, PasswordUtil.encrypt(usuario.getPassword()));
-		ps.setBoolean(6, usuario.isActivo());
-		ps.setInt(7, usuario.getIdUsuario());
-		ps.executeUpdate();
-		ps.close();
-		conexion.close();
+			ps.setString(1, usuario.getNombre());
+			ps.setString(2, usuario.getUserName());
+			ps.setString(3, PasswordUtil.encrypt(usuario.getPassword()));
+			ps.setBoolean(4, usuario.isActivo());
+			ps.setInt(5, usuario.getIdUsuario());
+			ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

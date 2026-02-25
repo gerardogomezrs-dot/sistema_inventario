@@ -19,15 +19,15 @@ public class MovimientosServiceImpl implements IMovimientosService, Serializable
 	private static final long serialVersionUID = 1L;
 
 	
-	private MovimientosDAO dao = new MovimientosDAO();
+	private transient MovimientosDAO dao = new MovimientosDAO();
 
-	private ProductosDAO productosDAO = new ProductosDAO();
+	private transient ProductosDAO productosDAO = new ProductosDAO();
 
 
 	@Override
-	public List<Movimientos> save(List<Movimientos> movimientosL) throws Exception {
+	public List<Movimientos> save(List<Movimientos> movimientosL) {
 		List<Movimientos> list = new ArrayList<Movimientos>();
-		
+		try {
 		for(Movimientos movimientos: movimientosL) {
 		
 		if (movimientos == null) {
@@ -36,6 +36,7 @@ public class MovimientosServiceImpl implements IMovimientosService, Serializable
 
 		int totalStock = 0;
 		int unidad = movimientos.getCantidad();
+		
 		dao.guardar(movimientos);
 		if (movimientos.getTipoMovimiento().equals("Entrada")) {
 			int nuevoSock = productosDAO.getByIdProducto(movimientos.getIdProducto());
@@ -51,16 +52,20 @@ public class MovimientosServiceImpl implements IMovimientosService, Serializable
 			productosDAO.actualizarStock(movimientos.getIdProducto(), unidad);
 		}
 		}
+		}catch (Exception e) {
+		e.getMessage();
+		}
 		 return list;
 	}
 
 
 	@Override
-	public List<Movimientos> getAll() throws Exception {
+	public List<Movimientos> getAll() {
 		List<Movimientos> list = new ArrayList<Movimientos>();
 		List<Movimientos> movimientos = null;
-		list = dao.getAll();
+		
 		try {
+			list = dao.getAll();
 		if (list.size() != 0) {
 		 movimientos = new ArrayList<Movimientos>(list);
 		} else if(list.size() == 0) {

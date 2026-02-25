@@ -6,6 +6,10 @@ import java.sql.SQLException;
 import com.empresa.inventario.model.Proveedor;
 
 public class ProveedorMapper {
+	
+	public ProveedorMapper() {
+		// TODO Auto-generated constructor stub
+	}
 
 	
 	public Proveedor rowtoMap(ResultSet resultSet) throws SQLException {

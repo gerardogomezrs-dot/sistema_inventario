@@ -15,6 +15,7 @@ import com.empresa.inventario.model.Auditoria;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.service.IUsuariosService;
+import com.empresa.inventario.utils.Mensajes;
 
 import lombok.Data;
 
@@ -25,7 +26,6 @@ public class UsuariosBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@Inject
 	private IUsuariosService iUsuariosService;
 
 	private List<Usuario> list;
@@ -36,24 +36,22 @@ public class UsuariosBean implements Serializable {
 
 	private String nombreUsuario;
 
-	@Inject
 	private IAuditoriaService auditoriaService;
 
-	public UsuariosBean() {
-		usuario = new Usuario();
+	@Inject
+	public UsuariosBean(IAuditoriaService auditoriaService, IUsuariosService iUsuariosService) {
+		this.auditoriaService = auditoriaService;
+		this.iUsuariosService = iUsuariosService;
 	}
 
 	@PostConstruct
 	public void init() {
-		try {
-			listaUsuarios();
-			Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
-					.get("sessionUsuario");
-			idUsuario = user.getIdUsuario();
-			nombreUsuario = user.getNombre();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+
+		listaUsuarios();
+		Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+				.get("sessionUsuario");
+		idUsuario = user.getIdUsuario();
+
 	}
 
 	public String irANuevoUsuario() {
@@ -61,8 +59,8 @@ public class UsuariosBean implements Serializable {
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Navegación");
-		auditoria.setAccion("El usuario " + nombreUsuario + " navego nuevo usuario");
+		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego nuevo usuario");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/usuarios/usuarios.xhtml?faces-redirect=true";
@@ -73,8 +71,8 @@ public class UsuariosBean implements Serializable {
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Navegación");
-		auditoria.setAccion("El usuario " + nombreUsuario + " navego a tabla usuario");
+		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego a tabla usuario");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/usuarios/tablaUsuarios.xhtml?faces-redirect=true";
@@ -85,8 +83,8 @@ public class UsuariosBean implements Serializable {
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Navegación");
-		auditoria.setAccion("El usuario " + nombreUsuario + " navego a dashboard");
+		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego a dashboard");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/dashboard?faces-redirect=true";
@@ -100,7 +98,7 @@ public class UsuariosBean implements Serializable {
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
 			auditoria.setMetodo("Guardar");
-			auditoria.setAccion("El usuario " + nombreUsuario + " realizo un guardo un nuevo registro");
+			auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " realizo un guardo un nuevo registro");
 			auditoria.setNivel("INFO");
 			auditoriaService.registroAuditoria(auditoria);
 
@@ -114,9 +112,9 @@ public class UsuariosBean implements Serializable {
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
-			auditoria.setMetodo("Error");
-			auditoria.setAccion("Error: " + e.getMessage());
-			auditoria.setNivel("WARN");
+			auditoria.setMetodo(String.valueOf(Mensajes.ERROR));
+			auditoria.setAccion(String.valueOf(Mensajes.ERROR) + e.getMessage());
+			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
 			return;
 		} catch (Exception e) {
@@ -129,15 +127,15 @@ public class UsuariosBean implements Serializable {
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
-			auditoria.setMetodo("Error");
-			auditoria.setAccion("Error: " + e.getMessage());
-			auditoria.setNivel("WARN");
+			auditoria.setMetodo(String.valueOf(Mensajes.ERROR));
+			auditoria.setAccion(String.valueOf(Mensajes.ERROR) + e.getMessage());
+			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
 			return;
 		}
 	}
 
-	public void eliminar() throws Exception {
+	public void eliminar() {
 		try {
 			iUsuariosService.delete(usuario.getIdUsuario(), idUsuario);
 			list = iUsuariosService.getAll();
@@ -148,7 +146,7 @@ public class UsuariosBean implements Serializable {
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
 			auditoria.setMetodo("Eliminar");
-			auditoria.setAccion("El usuario " + nombreUsuario + " elimino un registro");
+			auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " elimino un registro");
 			auditoria.setNivel("INFO");
 			auditoriaService.registroAuditoria(auditoria);
 
@@ -158,9 +156,9 @@ public class UsuariosBean implements Serializable {
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
-			auditoria.setMetodo("Error");
-			auditoria.setAccion("Error: " + e.getMessage());
-			auditoria.setNivel("WARN");
+			auditoria.setMetodo(String.valueOf(Mensajes.ERROR));
+			auditoria.setAccion(String.valueOf(Mensajes.ERROR) + e.getMessage());
+			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -168,14 +166,14 @@ public class UsuariosBean implements Serializable {
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
-			auditoria.setMetodo("Error");
-			auditoria.setAccion("Error: " + e.getMessage());
-			auditoria.setNivel("WARN");
+			auditoria.setMetodo(String.valueOf(Mensajes.ERROR));
+			auditoria.setAccion(String.valueOf(Mensajes.ERROR) + e.getMessage());
+			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
 		}
 	}
 
-	public void actualizar() throws ExceptionMessage {
+	public void actualizar() {
 		try {
 			if (usuario == null) {
 				throw new ExceptionMessage("Vacio");
@@ -190,7 +188,7 @@ public class UsuariosBean implements Serializable {
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
 			auditoria.setMetodo("Eliminar");
-			auditoria.setAccion("El usuario " + nombreUsuario + " realizo una actualizacion");
+			auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " realizo una actualizacion");
 			auditoria.setNivel("INFO");
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (ExceptionMessage e) {
@@ -199,9 +197,9 @@ public class UsuariosBean implements Serializable {
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
-			auditoria.setMetodo("Error");
-			auditoria.setAccion("Error: " + e.getMessage());
-			auditoria.setNivel("WARN");
+			auditoria.setMetodo(String.valueOf(Mensajes.ERROR));
+			auditoria.setAccion(String.valueOf(Mensajes.ERROR) + e.getMessage());
+			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -217,7 +215,7 @@ public class UsuariosBean implements Serializable {
 
 	}
 
-	public void listaUsuarios() throws Exception {
+	public void listaUsuarios()  {
 		list = iUsuariosService.getAll();
 	}
 
@@ -232,7 +230,7 @@ public class UsuariosBean implements Serializable {
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
 			auditoria.setMetodo("Actualizacion Perfil");
-			auditoria.setAccion("El usuario " + nombreUsuario + " actualizo un registro");
+			auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " actualizo un registro");
 			auditoria.setNivel("INFO");
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
@@ -241,9 +239,9 @@ public class UsuariosBean implements Serializable {
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
-			auditoria.setMetodo("Error");
-			auditoria.setAccion("Error: " + e.getMessage());
-			auditoria.setNivel("WARN");
+			auditoria.setMetodo(String.valueOf(Mensajes.ERROR));
+			auditoria.setAccion(String.valueOf(Mensajes.ERROR) + e.getMessage());
+			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
 		}
 

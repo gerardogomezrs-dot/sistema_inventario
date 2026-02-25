@@ -6,6 +6,6 @@ import com.empresa.inventario.model.Movimientos;
 
 public interface IMovimientosService {
 
-	List<Movimientos> save(List<Movimientos> movimientos) throws Exception;
-	List<Movimientos> getAll() throws Exception;
+	List<Movimientos> save(List<Movimientos> movimientos);
+	List<Movimientos> getAll() ;
 }

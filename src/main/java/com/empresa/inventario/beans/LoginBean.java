@@ -31,11 +31,27 @@ public class LoginBean implements Serializable {
 
 	private String nombreUsuario;
 	
-	@Inject
+
+	private String mensajeBienvenida_1 = "¡Bienvenido!";
+
+	
+	private String mensajeBienvenida_2 = ", has iniciado sesión correctamente.";
+
+	private String mensajeBienvenida_3 = "Hola ";
+
+	
+	private String sessionUser = "sessionUsuario";
+	
 	private IAuditoriaService auditoriaService;
 
-	@Inject
 	private IAuthService authService;
+	
+	@Inject
+	public LoginBean(IAuthService authService, IAuditoriaService auditoriaService) {
+		this.authService = authService;
+		this.auditoriaService = auditoriaService;
+	}
+	
 	public String login() {
 		try {
 			usuario = new Usuario();
@@ -47,31 +63,31 @@ public class LoginBean implements Serializable {
 			} else {
 				String ruta = "";
 				if (usuario.getRol().equals("admin")) {
-					FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("sessionUsuario",
+					FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(sessionUser,
 							usuario);
 
 					FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
 
-					añadirMensaje(FacesMessage.SEVERITY_INFO, "¡Bienvenido!",
-							"Hola " + usuario.getNombre() + ", has iniciado sesión correctamente.");
+					añadirMensaje(FacesMessage.SEVERITY_INFO, mensajeBienvenida_1,
+							mensajeBienvenida_3 + usuario.getNombre() + mensajeBienvenida_2);
 
 					ruta = "/pages/admin/dashboard.xhtml?faces-redirect=true";
 				}
 				if (usuario.getRol().equals("stock_manager")) {
-					FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("sessionUsuario",
+					FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(sessionUser,
 							usuario);
 					FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-					añadirMensaje(FacesMessage.SEVERITY_INFO, "¡Bienvenido!",
-							"Hola " + usuario.getNombre() + ", has iniciado sesión correctamente.");
+					añadirMensaje(FacesMessage.SEVERITY_INFO, mensajeBienvenida_1,
+							mensajeBienvenida_3 + usuario.getNombre() + mensajeBienvenida_2);
 					ruta = "/pages/stock_manager/dashboard.xhtml?faces-redirect=true";
 				}
 				
 				if (usuario.getRol().equals("almacen")) {
-					FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("sessionUsuario",
+					FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(sessionUser,
 							usuario);
 					FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-					añadirMensaje(FacesMessage.SEVERITY_INFO, "¡Bienvenido!",
-							"Hola " + usuario.getNombre() + ", has iniciado sesión correctamente.");
+					añadirMensaje(FacesMessage.SEVERITY_INFO, mensajeBienvenida_1,
+							mensajeBienvenida_3 + usuario.getNombre() + mensajeBienvenida_2);
 					ruta = "/pages/almacen/dashboard.xhtml?faces-redirect=true";
 				}
 
@@ -105,26 +121,11 @@ public class LoginBean implements Serializable {
 	private void resetearSesion() {
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 	}
-
 	public String logout() {
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 		return "/login.xhtml?faces-redirect=true";
 	}
-	public String redireccionarInicio() {
-		usuario = new Usuario();
-		usuario = authService.login(userName, password);
-		String ruta = "";
-		if (usuario.getRol().equals("admin")) {
-			ruta = "/pages/admin/dashboard.xhtml?faces-redirect=true";
-		}
-		if (usuario.getRol().equals("almacen")) {
-			ruta = "/pages/almacen/dashboard.xhtml?faces-redirect=true";
-		}
-		if (usuario.getRol().equals("ventas")) {
-			ruta = "/pages/almacen/dashboard.xhtml?faces-redirect=true";
-		}
-		return ruta;
-	}
+	
 	
 	
 }

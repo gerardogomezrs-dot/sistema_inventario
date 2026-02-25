@@ -2,16 +2,10 @@ package com.empresa.inventario.model;
 
 import java.io.Serializable;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 public class Productos implements Serializable{
-	
-	public Productos(){
-	super();
-	}
 	 
 	/**
 	 * 

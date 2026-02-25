@@ -20,6 +20,7 @@ import com.empresa.inventario.model.Proveedor;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.service.IProveedorService;
+import com.empresa.inventario.utils.Mensajes;
 
 import lombok.Data;
 
@@ -34,23 +35,25 @@ public class ProveedorBean implements Serializable {
 
 	private List<Proveedor> list;
 
-	private UploadedFile uploadedFile;
+	private transient UploadedFile uploadedFile;
 
 	private Proveedor proveedor;
 
 	private Integer progreso = 0;
 
-	@Inject
 	private IProveedorService iProveedorService;
-	
+
 	private int idUsuario;
 
 	private String nombreUsuario;
-	
-	@Inject
+
 	private IAuditoriaService auditoriaService;
 
-	ProveedorBean() {
+	@Inject
+	ProveedorBean(IAuditoriaService auditoriaService, IProveedorService iProveedorService) {
+		this.auditoriaService = auditoriaService;
+		this.iProveedorService = iProveedorService;
+
 	}
 
 	@PostConstruct
@@ -68,8 +71,8 @@ public class ProveedorBean implements Serializable {
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Navegación");
-		auditoria.setAccion("El usuario " + nombreUsuario + " navego a dashboard");
+		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego a dashboard");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/dashboard.xhtml?faces-redirect=true";
@@ -80,8 +83,8 @@ public class ProveedorBean implements Serializable {
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Navegación");
-		auditoria.setAccion("El usuario " + nombreUsuario + " navego a nuevo proveedor");
+		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego a nuevo proveedor");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/proveedores/proveedores.xhtml?faces-redirect=true";
@@ -92,8 +95,8 @@ public class ProveedorBean implements Serializable {
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Navegación");
-		auditoria.setAccion("El usuario " + nombreUsuario + " navego a tabla proveedor");
+		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego a tabla proveedor");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/proveedores/tablaProveedores.xhtml?faces-redirect=true";
@@ -107,53 +110,50 @@ public class ProveedorBean implements Serializable {
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
 		auditoria.setMetodo("Guardar Registro Tabla");
-		auditoria.setAccion("El usuario " + nombreUsuario + " realizo un guardo un registro a la tabla");
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " realizo un guardo un registro a la tabla");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
 	}
 
 	public void guardarTablaProveedor() {
 		progreso = 0;
-		if(listaProveedorGuardar != null && !listaProveedorGuardar.isEmpty()) {
+		if (listaProveedorGuardar != null && !listaProveedorGuardar.isEmpty()) {
 			this.progreso = 0;
-		List<Proveedor> proveedors = new ArrayList<Proveedor>(listaProveedorGuardar);
-		if(proveedors.isEmpty()) {
-			return;
-		}
-		for(Proveedor proveedor: proveedors) {
-			System.err.println(proveedor.getNombreEmpresa());
-		}
-		CompletableFuture.runAsync(() ->{
-			try {
-				iProveedorService.save(proveedors, (valor) -> {
-					this.progreso = valor;
-				});
-			}catch (Exception e) {
-				e.printStackTrace();
-				Auditoria auditoria = new Auditoria();
-				auditoria.setFechaAuditoria(new Date());
-				auditoria.setIdUsuario(idUsuario);
-				auditoria.setClaseOrigen(this.getClass().getName());
-				auditoria.setMetodo("Error");
-				auditoria.setAccion("Error: " +e.getMessage());
-				auditoria.setNivel("WARN");
-				auditoriaService.registroAuditoria(auditoria);
+			List<Proveedor> proveedors = new ArrayList<Proveedor>(listaProveedorGuardar);
+			if (proveedors.isEmpty()) {
+				return;
 			}
-		});
-		
+			CompletableFuture.runAsync(() -> {
+				try {
+					iProveedorService.save(proveedors, (valor) -> {
+						this.progreso = valor;
+					});
+				} catch (Exception e) {
+					e.printStackTrace();
+					Auditoria auditoria = new Auditoria();
+					auditoria.setFechaAuditoria(new Date());
+					auditoria.setIdUsuario(idUsuario);
+					auditoria.setClaseOrigen(this.getClass().getName());
+					auditoria.setMetodo(String.valueOf(Mensajes.ERROR));
+					auditoria.setAccion(String.valueOf(Mensajes.ERROR) + e.getMessage());
+					auditoria.setNivel(String.valueOf(Mensajes.ERROR));
+					auditoriaService.registroAuditoria(auditoria);
+				}
+			});
+
 		}
 		Auditoria auditoria = new Auditoria();
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Guardar Registro Tabla");
-		auditoria.setAccion("El usuario " + nombreUsuario + " realizo guardado de registros");
+		auditoria.setMetodo("Guardar Registro");
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " realizo guardado de registros");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
 		listaProveedorGuardar.clear();
 		this.proveedor = new Proveedor();
 	}
-	
+
 	public void onComplete() {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 				"Registro guardado", "El registro fue guardado correctamente"));
@@ -174,19 +174,19 @@ public class ProveedorBean implements Serializable {
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
 			auditoria.setMetodo("Eliminar");
-			auditoria.setAccion("El usuario " + nombreUsuario + " realizo la eliminación de un registro");
+			auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " realizo la eliminación de un registro");
 			auditoria.setNivel("INFO");
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
 			e.printStackTrace();
-			
+
 			Auditoria auditoria = new Auditoria();
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
-			auditoria.setMetodo("Error");
-			auditoria.setAccion("Error: " +e.getMessage());
-			auditoria.setNivel("WARN");
+			auditoria.setMetodo(String.valueOf(Mensajes.ERROR));
+			auditoria.setAccion(String.valueOf(Mensajes.ERROR) + e.getMessage());
+			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
 		}
 	}
@@ -202,19 +202,19 @@ public class ProveedorBean implements Serializable {
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
 			auditoria.setMetodo("Guardar Registro Tabla");
-			auditoria.setAccion("El usuario " + nombreUsuario + " realizo la actualización de un registro");
+			auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " realizo la actualización de un registro");
 			auditoria.setNivel("INFO");
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
 			e.printStackTrace();
-			
+
 			Auditoria auditoria = new Auditoria();
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
-			auditoria.setMetodo("Error");
-			auditoria.setAccion("Error: " +e.getMessage());
-			auditoria.setNivel("WARN");
+			auditoria.setMetodo(String.valueOf(Mensajes.ERROR));
+			auditoria.setAccion(String.valueOf(Mensajes.ERROR) + e.getMessage());
+			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
 		}
 	}
@@ -235,7 +235,7 @@ public class ProveedorBean implements Serializable {
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
 			auditoria.setMetodo("Carga de masiva de registros");
-			auditoria.setAccion("El usuario " + nombreUsuario + " realizo la carga masiva de registros");
+			auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " realizo la carga masiva de registros");
 			auditoria.setNivel("INFO");
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (ExceptionMessage e) {
@@ -245,9 +245,9 @@ public class ProveedorBean implements Serializable {
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
-			auditoria.setMetodo("Error");
-			auditoria.setAccion("Error: " +e.getMessage());
-			auditoria.setNivel("WARN");
+			auditoria.setMetodo(String.valueOf(Mensajes.ERROR));
+			auditoria.setAccion(String.valueOf(Mensajes.ERROR) + e.getMessage());
+			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -255,9 +255,9 @@ public class ProveedorBean implements Serializable {
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
-			auditoria.setMetodo("Error");
-			auditoria.setAccion("Error: " +e.getMessage());
-			auditoria.setNivel("WARN");
+			auditoria.setMetodo(String.valueOf(Mensajes.ERROR));
+			auditoria.setAccion(String.valueOf(Mensajes.ERROR) + e.getMessage());
+			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
 		}
 	}

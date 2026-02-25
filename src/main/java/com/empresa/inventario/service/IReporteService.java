@@ -12,16 +12,16 @@ import com.empresa.inventario.model.ReportesMovimiento;
 
 public interface IReporteService {
 	
-	List<ReportesMovimiento> movimientos(Date Inicio, Date Fin) throws Exception;
+	List<ReportesMovimiento> movimientos(Date Inicio, Date Fin);
 	
-	List<ReporteInventarioValorizado> reporteInventarioValorizado() throws Exception;
+	List<ReporteInventarioValorizado> reporteInventarioValorizado();
 	
-	List<ReporteStockBajo> reporteStockBajo() throws Exception;
+	List<ReporteStockBajo> reporteStockBajo();
 	
-	List<ReporteAuditoriaUsuario> reporteAuditoriaUsuario() throws Exception;
+	List<ReporteAuditoriaUsuario> reporteAuditoriaUsuario();
 	
-	List<ReporteRotacionInventario> reporteRotacionInventario() throws Exception;
+	List<ReporteRotacionInventario> reporteRotacionInventario();
 	
-	List<ReporteClasificacionABC> reporteClasificacionABC() throws Exception;
+	List<ReporteClasificacionABC> reporteClasificacionABC();
 
 }

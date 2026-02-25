@@ -19,19 +19,19 @@ public class AuthService implements IAuthService, Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private UsuariosDAO dao = new UsuariosDAO();
+	private transient UsuariosDAO dao = new UsuariosDAO();
 	private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
 	
 
 	@Override
-	public Usuario login(String userName, String password) throws ExceptionMessage {
+	public Usuario login(String userName, String password) {
 		Usuario usuario = new Usuario();
 		if (userName == null || password == null) {
 			return null;
 		}
 		try {
-			usuario = dao.login(userName, password);
+			usuario = dao.login(userName);
 
 		} catch (Exception e) {
 			e.printStackTrace();

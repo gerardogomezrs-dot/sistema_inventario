@@ -2,7 +2,6 @@ package com.empresa.inventario.service;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -30,11 +29,11 @@ import com.opencsv.CSVReader;
 @ApplicationScoped
 public class ProductosServiceImp implements IProductoService {
 
-	private ProductosDAO productosDAO;
+	private transient ProductosDAO productosDAO = new ProductosDAO();
 	private Productos productos;
 
 	@Override
-	public void delete(int idProducto) throws Exception {
+	public void delete(int idProducto) {
 		try {
 			if (idProducto == 0) {
 				throw new ExceptionMessage("Sin Datos");
@@ -47,29 +46,32 @@ public class ProductosServiceImp implements IProductoService {
 	}
 
 	@Override
-	public List<Productos> create(List<Productos> productosLista, Consumer<Integer> progresoCallback) throws Exception {
+	public List<Productos> create(List<Productos> productosLista, Consumer<Integer> progresoCallback) {
 		if (productosLista == null || productosLista.isEmpty()) {
 			throw new ExceptionMessage("Lista vacia");
 		}
 
 		List<Productos> listaProducto = new ArrayList<Productos>();
 
-		for (Productos productos : productosLista) {
+		for (Productos p : productosLista) {
 			try {
-				productos.setCodigoBarras(CrearCodigoBarra.generarCodigoBarra(productos.getCodigoBarras()));
+				p.setCodigoBarras(CrearCodigoBarra.generarCodigoBarra(p.getCodigoBarras()));
 
-				listaProducto.add(productos);
+				listaProducto.add(p);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-
-		int total = listaProducto.size();
-		for (int i = 0; i < total; i++) {
-			ProductosDAO dao = new ProductosDAO();
-			dao.guardar(listaProducto.get(i));
-			int porcentaje = (int) (((double) (i + 1) / total) * 100);
-			progresoCallback.accept(porcentaje);
+		try {
+			int total = listaProducto.size();
+			for (int i = 0; i < total; i++) {
+				ProductosDAO dao = new ProductosDAO();
+				dao.guardar(listaProducto.get(i));
+				int porcentaje = (int) (((double) (i + 1) / total) * 100);
+				progresoCallback.accept(porcentaje);
+			}
+		} catch (Exception e) {
+			e.getMessage();
 		}
 
 		return productosLista;
@@ -77,27 +79,23 @@ public class ProductosServiceImp implements IProductoService {
 	}
 
 	@Override
-	public List<Productos> getAll() throws Exception {
+	public List<Productos> getAll() {
 		List<Productos> getProductos = new ArrayList<>();
 		productosDAO = new ProductosDAO();
-		getProductos = productosDAO.getAll();
 		try {
-			if (getProductos.size() != 0) {
-				getProductos = productosDAO.getAll();
-			}
+			getProductos = productosDAO.getAll();
+			
 			if (getProductos.size() == 0) {
 				throw new ExceptionMessage("Lista Vacia ");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return getProductos;
-
 	}
 
 	@Override
-	public void update(Productos productos) throws Exception {
+	public void update(Productos productos) {
 		try {
 			if (productos == null) {
 				throw new ExceptionMessage("Vacio");
@@ -105,39 +103,39 @@ public class ProductosServiceImp implements IProductoService {
 				ProductosDAO dao = new ProductosDAO();
 				dao.actualizar(productos);
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public List<Productos> cargaArchivos(UploadedFile uploadedFile) throws Exception {
-		List<Productos> productos = new ArrayList<Productos>();
+	public List<Productos> cargaArchivos(UploadedFile uploadedFile) {
+		List<Productos> p = new ArrayList<Productos>();
 		if (uploadedFile.getFileName() == null || uploadedFile.getFileName().trim().isEmpty()) {
-		    throw new ExceptionMessage("Inserta un archivo");
+			throw new ExceptionMessage("Inserta un archivo");
 		}
 		String fileName = "";
 		fileName = uploadedFile.getFileName().toLowerCase();
 
 		if (fileName.endsWith(".csv")) {
 			try {
-				productos = leerCVS(uploadedFile);
+				p = leerCVS(uploadedFile);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		if (fileName.endsWith("xlsx") || fileName.endsWith("lsx")) {
 			try {
-				productos = leerExcel(uploadedFile);
+				p = leerExcel(uploadedFile);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		if (!fileName.endsWith(".xlsx") && !fileName.endsWith(".lsx") && !fileName.endsWith(".csv")) {
 			throw new ExceptionMessage("Formato no soportado");
-		} else
-		
-		return productos;
+		}
+
+		return p;
 	}
 
 	private List<Productos> leerExcel(UploadedFile uploadedFile) throws EncryptedDocumentException, IOException {
@@ -188,7 +186,7 @@ public class ProductosServiceImp implements IProductoService {
 	}
 
 	private List<Productos> leerCVS(UploadedFile uploadedFile) {
-		List<Productos> productos = new ArrayList<Productos>();
+		List<Productos> list = new ArrayList<Productos>();
 		Productos p;
 		try (CSVReader csvReader = new CSVReader(new InputStreamReader(uploadedFile.getInputstream()))) {
 			String[] fila;
@@ -206,26 +204,30 @@ public class ProductosServiceImp implements IProductoService {
 					p.setStockMinimo(Integer.parseInt(fila[7]));
 					p.setUbicacion(fila[8]);
 					p.setActivo(Boolean.parseBoolean(fila[9]));
-					productos.add(p);
+					list.add(p);
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return productos;
+		return list;
 	}
 
 	@Override
-	public Productos getByCodigoBarras(String codigoBarras) throws Exception {
-		Productos productos = new Productos();
-		if (codigoBarras != null) {
-			productos = productosDAO.getByIdCodigoBarras(codigoBarras);
+	public Productos getByCodigoBarras(String codigoBarras) {
+		Productos p = new Productos();
+		try {
+			if (codigoBarras != null) {
+				p = productosDAO.getByIdCodigoBarras(codigoBarras);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		return productos;
+		return p;
 	}
 
 	@Override
-	public void bajaProducto(int idProducto) throws Exception {
+	public void bajaProducto(int idProducto) {
 		try {
 			productosDAO.bajaProducto(idProducto);
 		} catch (Exception e) {

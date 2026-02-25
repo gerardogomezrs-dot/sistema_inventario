@@ -9,10 +9,10 @@ import com.empresa.inventario.model.Categorias;
 
 public interface ICategoriaService {
 	
-	void save(List<Categorias> e, Consumer<Integer> progresoCallback) throws Exception;
-	void update(Categorias categorias) throws Exception;
-	List<Categorias> getAllCategorias() throws Exception;
-	void delete(int idCategoria)  throws Exception;
+	void save(List<Categorias> e, Consumer<Integer> progresoCallback);
+	void update(Categorias categorias);
+	List<Categorias> getAllCategorias();
+	void delete(int idCategoria);
 	List<Categorias> cargarArchivo(UploadedFile file);
 
 }

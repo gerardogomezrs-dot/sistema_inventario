@@ -13,6 +13,7 @@ import com.empresa.inventario.model.Auditoria;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.service.IUsuariosService;
+import com.empresa.inventario.utils.Mensajes;
 
 import lombok.Data;
 
@@ -25,31 +26,30 @@ public class PerfilUsuarioBean implements Serializable {
 
 	private Usuario usuario;
 
-	@Inject
 	private IUsuariosService iUsuariosService;
 
 	private int idUsuario;
 
 	private String nombreUsuario;
 
-	@Inject
 	private IAuditoriaService auditoriaService;
 	
-	public PerfilUsuarioBean() {
+	@Inject
+	public PerfilUsuarioBean(IUsuariosService iUsuariosService, IAuditoriaService auditoriaService) {
+		this.iUsuariosService = iUsuariosService;
+		this.auditoriaService = auditoriaService;
 	}
 
 	@PostConstruct
-	public void init() {
+	public void init()  {
 		Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.get("sessionUsuario");
-		try {
+		
 			int id = user.getIdUsuario();
 			usuario = iUsuariosService.getByIdUsuario(id);
 			idUsuario = user.getIdUsuario();
 			nombreUsuario = user.getNombre();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		
 
 	}
 
@@ -57,7 +57,7 @@ public class PerfilUsuarioBean implements Serializable {
 		return "/pages/admin/dashboard?faces-redirect=true";
 	}
 
-	public void actualizarPerfil() throws Exception {
+	public void actualizarPerfil()  {
 		if (usuario == null) {
 			throw new ExceptionMessage("Vacio");
 		}
@@ -69,7 +69,7 @@ public class PerfilUsuarioBean implements Serializable {
 		auditoria.setClaseOrigen(this.getClass().getName());
 		auditoria.setMetodo("Actualizar");
 		auditoria.setAccion("El usuario " + nombreUsuario + " realizo una actualización");
-		auditoria.setNivel("INFO");
+		auditoria.setNivel(String.valueOf(Mensajes.INFO));
 		auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -77,9 +77,9 @@ public class PerfilUsuarioBean implements Serializable {
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
-			auditoria.setMetodo("Error");
-			auditoria.setAccion("Error: " + e.getMessage());
-			auditoria.setNivel("WARN");
+			auditoria.setMetodo(String.valueOf(Mensajes.ERROR));
+			auditoria.setAccion(String.valueOf(Mensajes.ERROR)+ e.getMessage());
+			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
 		}
 	}

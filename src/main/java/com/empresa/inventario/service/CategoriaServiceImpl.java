@@ -24,16 +24,16 @@ import com.opencsv.CSVReader;
 @ApplicationScoped
 public class CategoriaServiceImpl implements ICategoriaService {
 
-	private CategoriasDAO dao = new CategoriasDAO();
+	private transient CategoriasDAO dao = new CategoriasDAO();
 
 	private Categorias cat;
 
 	@Override
-	public void save(List<Categorias> list, Consumer<Integer> progresoCallback) throws Exception {
+	public void save(List<Categorias> list, Consumer<Integer> progresoCallback)  {
 		if (list == null || list.isEmpty()) {
 			throw new ExceptionMessage("Lista vacia");
 		}
-
+		try {
 		int total = list.size();
 		int batchSize = 50; 
 		for (int i = 0; i < total; i++) {
@@ -43,10 +43,14 @@ public class CategoriaServiceImpl implements ICategoriaService {
 	            progresoCallback.accept(porcentaje);
 	        }
 		}
+		} catch (Exception e) {
+			e.getMessage();
+		}
+		
 	}
 
 	@Override
-	public void update(Categorias categorias) throws Exception {
+	public void update(Categorias categorias)  {
 			try {
 			dao.actualizar(categorias);
 			}catch (Exception e) {
@@ -55,10 +59,11 @@ public class CategoriaServiceImpl implements ICategoriaService {
 	}
 
 	@Override
-	public List<Categorias> getAllCategorias() throws Exception {
+	public List<Categorias> getAllCategorias() {
 		List<Categorias> categorias = new ArrayList<Categorias>();
-		categorias = dao.getAllCategorias();
+		
 		try {
+			categorias = dao.getAllCategorias();
 			if (categorias.size() == 0) {
 				 throw new ExceptionMessage("Lista Vacia");
 			}
@@ -69,7 +74,7 @@ public class CategoriaServiceImpl implements ICategoriaService {
 	}
 
 	@Override
-	public void delete(int idCategoria) throws Exception {
+	public void delete(int idCategoria){
 		try {
 			dao.eliminarCategoria(idCategoria);
 		} catch (Exception e) {

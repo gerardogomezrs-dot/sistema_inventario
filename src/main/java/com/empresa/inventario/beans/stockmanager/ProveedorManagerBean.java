@@ -20,6 +20,7 @@ import com.empresa.inventario.model.Proveedor;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.service.IProveedorService;
+import com.empresa.inventario.utils.Mensajes;
 
 import lombok.Data;
 
@@ -34,23 +35,24 @@ public class ProveedorManagerBean implements Serializable {
 
 	private List<Proveedor> list;
 
-	private UploadedFile uploadedFile;
+	private transient UploadedFile uploadedFile;
 
 	private Proveedor proveedor;
 
 	private Integer progreso = 0;
 
-	@Inject
 	private IProveedorService iProveedorService;
 
 	private int idUsuario;
 
 	private String nombreUsuario;
 
-	@Inject
 	private IAuditoriaService auditoriaService;
 
-	public ProveedorManagerBean() {
+	@Inject
+	public ProveedorManagerBean(IAuditoriaService auditoriaService, IProveedorService iProveedorService) {
+		this.auditoriaService = auditoriaService;
+		this.iProveedorService = iProveedorService;
 	}
 
 	@PostConstruct
@@ -68,8 +70,8 @@ public class ProveedorManagerBean implements Serializable {
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Navegación");
-		auditoria.setAccion("El usuario " + nombreUsuario + " navego a dashboard");
+		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego a dashboard");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/stock_manager/dashboard.xhtml?faces-redirect=true";
@@ -80,8 +82,8 @@ public class ProveedorManagerBean implements Serializable {
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Navegación");
-		auditoria.setAccion("El usuario " + nombreUsuario + " navego a nuevo proveedor");
+		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego a nuevo proveedor");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/stock_manager/proveedores/proveedores.xhtml?faces-redirect=true";
@@ -92,8 +94,8 @@ public class ProveedorManagerBean implements Serializable {
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Navegación");
-		auditoria.setAccion("El usuario " + nombreUsuario + " navego a tabla proveedor");
+		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego a tabla proveedor");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/stock_manager/proveedores/tablaProveedor.xhtml?faces-redirect=true";
@@ -118,7 +120,7 @@ public class ProveedorManagerBean implements Serializable {
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
 			auditoria.setMetodo("Actualizar");
-			auditoria.setAccion("El usuario " + nombreUsuario + " realizo una actualización");
+			auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " realizo una actualización");
 			auditoria.setNivel("INFO");
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
@@ -127,9 +129,9 @@ public class ProveedorManagerBean implements Serializable {
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
-			auditoria.setMetodo("Error");
-			auditoria.setAccion("Error: " +e.getMessage());
-			auditoria.setNivel("WARN");
+			auditoria.setMetodo(String.valueOf(Mensajes.ERROR));
+			auditoria.setAccion(String.valueOf(Mensajes.ERROR) + e.getMessage());
+			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
 		}
 	}
@@ -145,7 +147,7 @@ public class ProveedorManagerBean implements Serializable {
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
 			auditoria.setMetodo("Eliminar");
-			auditoria.setAccion("El usuario " + nombreUsuario + " realizo una eliminación");
+			auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " realizo una eliminación");
 			auditoria.setNivel("INFO");
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
@@ -155,9 +157,9 @@ public class ProveedorManagerBean implements Serializable {
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
-			auditoria.setMetodo("Error");
-			auditoria.setAccion("Error: " +e.getMessage());
-			auditoria.setNivel("WARN");
+			auditoria.setMetodo(String.valueOf(Mensajes.ERROR));
+			auditoria.setAccion(String.valueOf(Mensajes.ERROR) + e.getMessage());
+			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
 		}
 	}
@@ -170,7 +172,7 @@ public class ProveedorManagerBean implements Serializable {
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
 		auditoria.setMetodo("Guardar Registro Tabla");
-		auditoria.setAccion("El usuario " + nombreUsuario + " realizo un guardo un registro a la tabla");
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " realizo un guardo un registro a la tabla");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
 	}
@@ -194,9 +196,9 @@ public class ProveedorManagerBean implements Serializable {
 					auditoria.setFechaAuditoria(new Date());
 					auditoria.setIdUsuario(idUsuario);
 					auditoria.setClaseOrigen(this.getClass().getName());
-					auditoria.setMetodo("Error");
-					auditoria.setAccion("Error: " +e.getMessage());
-					auditoria.setNivel("WARN");
+					auditoria.setMetodo(String.valueOf(Mensajes.ERROR));
+					auditoria.setAccion(String.valueOf(Mensajes.ERROR) + e.getMessage());
+					auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 					auditoriaService.registroAuditoria(auditoria);
 				}
 			});
@@ -207,7 +209,7 @@ public class ProveedorManagerBean implements Serializable {
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
 		auditoria.setMetodo("Guardar Registro Tabla");
-		auditoria.setAccion("El usuario " + nombreUsuario + " realizo guardado de registros");
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " realizo guardado de registros");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
 		listaProveedorGuardar.clear();
@@ -232,14 +234,14 @@ public class ProveedorManagerBean implements Serializable {
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
 		} catch (ExceptionMessage e) {
 			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
-			
+
 			Auditoria auditoria = new Auditoria();
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
-			auditoria.setMetodo("Error");
-			auditoria.setAccion("Error: " +e.getMessage());
-			auditoria.setNivel("WARN");
+			auditoria.setMetodo(String.valueOf(Mensajes.ERROR));
+			auditoria.setAccion(String.valueOf(Mensajes.ERROR) + e.getMessage());
+			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
 
 		} catch (Exception e) {
@@ -248,9 +250,9 @@ public class ProveedorManagerBean implements Serializable {
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
-			auditoria.setMetodo("Error");
-			auditoria.setAccion("Error: " +e.getMessage());
-			auditoria.setNivel("WARN");
+			auditoria.setMetodo(String.valueOf(Mensajes.ERROR));
+			auditoria.setAccion(String.valueOf(Mensajes.ERROR) + e.getMessage());
+			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
 		}
 	}

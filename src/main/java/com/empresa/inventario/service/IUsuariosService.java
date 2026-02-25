@@ -2,21 +2,20 @@ package com.empresa.inventario.service;
 
 import java.util.List;
 
-import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Usuario;
 
 public interface IUsuariosService {
 
-	void save(Usuario usuario) throws ExceptionMessage;
+	void save(Usuario usuario);
 
-	void update(Usuario usuario) throws Exception;
+	void update(Usuario usuario) ;
 
-	void delete(int idUsuario, int idUsuarioSesion) throws Exception;
+	void delete(int idUsuario, int idUsuarioSesion) ;
 
-	List<Usuario> getAll() throws Exception;
+	List<Usuario> getAll() ;
 	
-	void updateProfile(Usuario usuario) throws Exception;
+	void updateProfile(Usuario usuario) ;
 
-	Usuario getByIdUsuario(int usuario) throws Exception;
+	Usuario getByIdUsuario(int usuario);
 
 }

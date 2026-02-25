@@ -23,6 +23,7 @@ import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.service.IMovimientosService;
 import com.empresa.inventario.service.IProductoService;
+import com.empresa.inventario.utils.Mensajes;
 
 import lombok.Data;
 
@@ -51,12 +52,6 @@ public class MovimientosAlmacenBean implements Serializable {
 
 	private String infoProductoExtra;
 
-	@Inject
-	private IMovimientosService service;
-
-	@Inject
-	private IProductoService iProductoService;
-
 	private List<Movimientos> listaMovimientosGuardar = new ArrayList<Movimientos>();
 
 	private int idUsuario;
@@ -65,37 +60,38 @@ public class MovimientosAlmacenBean implements Serializable {
 
 	private Usuario user;
 
-	@Inject
 	private IAuditoriaService auditoriaService;
 
-	MovimientosAlmacenBean() {
+	private IMovimientosService service;
 
+	private IProductoService iProductoService;
+
+	@Inject
+	MovimientosAlmacenBean(IAuditoriaService auditoriaService, IMovimientosService service,
+			IProductoService iProductoService) {
+		this.auditoriaService = auditoriaService;
+		this.service = service;
+		this.iProductoService = iProductoService;
 	}
 
 	@PostConstruct
 	public void init() {
-		try {
-			this.movimientos = new Movimientos();
-			listaMovimientos();
-			listProductos = iProductoService.getAll();
-			user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
-					.get("sessionUsuario");
 
-			if (user != null) {
-				this.movimientos.setIdUsuario(user.getIdUsuario());
-				logger.info("LOG: Usuario recuperado de sesión: " + user.getNombre());
+		this.movimientos = new Movimientos();
+		listaMovimientos();
+		listProductos = iProductoService.getAll();
+		user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("sessionUsuario");
 
-			} else {
-				logger.info("LOG: No hay ninguna sesión activa con 'sessionUsuario'");
-			}
+		if (user != null) {
+			this.movimientos.setIdUsuario(user.getIdUsuario());
+			logger.info("LOG: Usuario recuperado de sesión: " + user.getNombre());
 
-			idUsuario = user.getIdUsuario();
-			nombreUsuario = user.getNombre();
-
-		} catch (Exception e) {
-			logger.error("Error en init de MovimientosBean: " + e.getMessage());
-			e.printStackTrace();
+		} else {
+			logger.info("LOG: No hay ninguna sesión activa con 'sessionUsuario'");
 		}
+
+		idUsuario = user.getIdUsuario();
+		nombreUsuario = user.getNombre();
 
 	}
 
@@ -104,6 +100,14 @@ public class MovimientosAlmacenBean implements Serializable {
 	}
 
 	public String irATablaMovimientos() {
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego hacia tabla movimientos");
+		auditoria.setNivel(String.valueOf(Mensajes.INFO));
+		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/almacen/movimientos/tablaMovimientos.xhtml?faces-redirect=true";
 	}
 
@@ -113,7 +117,7 @@ public class MovimientosAlmacenBean implements Serializable {
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
 		auditoria.setMetodo("Nuevo movimiento");
-		auditoria.setAccion("El usuario " + nombreUsuario + " navego hacia nuevo movimiento");
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego hacia nuevo movimiento");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/almacen/movimientos/movimientos.xhtml?faces-redirect=true";
@@ -124,7 +128,7 @@ public class MovimientosAlmacenBean implements Serializable {
 		this.movimientos.setCodigoBarras(null);
 	}
 
-	public void cargarInfoScanner() throws Exception {
+	public void cargarInfoScanner(){
 		String codigo = this.movimientos.getCodigoBarras();
 		if (codigo != null && !codigo.isEmpty()) {
 			this.infoProductoExtra = "Cargado: " + codigo + " - Producto encontrado";
@@ -135,21 +139,20 @@ public class MovimientosAlmacenBean implements Serializable {
 		}
 	}
 
-	public List<Movimientos> listaMovimientos() throws Exception {
+	public List<Movimientos> listaMovimientos() {
 		try {
+			list = new ArrayList<Movimientos>();
 			list = service.getAll();
 		} catch (ExceptionMessage e) {
 			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 		} catch (Exception e) {
-
+			e.getMessage();
 		}
 		return list;
 	}
 
-	public void saveTable() throws Exception {
-		if (listaMovimientosGuardar != null && !listaMovimientosGuardar.isEmpty()) {
+	public void saveTable() {
 			service.save(listaMovimientosGuardar);
-
 			Auditoria auditoria = new Auditoria();
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
@@ -158,7 +161,7 @@ public class MovimientosAlmacenBean implements Serializable {
 			auditoria.setAccion("El usuario " + nombreUsuario + " guardo un registro");
 			auditoria.setNivel("INFO");
 			auditoriaService.registroAuditoria(auditoria);
-		}
+		
 		if (listaMovimientosGuardar != null) {
 			listaMovimientosGuardar.clear();
 		}
@@ -167,6 +170,14 @@ public class MovimientosAlmacenBean implements Serializable {
 	public void save() {
 		listaMovimientosGuardar.add(movimientos);
 		this.movimientos = new Movimientos();
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo("Guardar registro tabla");
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " guardo");
+		auditoria.setNivel("INFO");
+		auditoriaService.registroAuditoria(auditoria);
 	}
 
 	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {

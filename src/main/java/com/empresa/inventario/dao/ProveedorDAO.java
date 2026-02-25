@@ -15,8 +15,8 @@ public class ProveedorDAO {
 
 	private ProveedorMapper mapper = new ProveedorMapper();
 
-	public List<Proveedor> getAll() throws Exception {
-		String sql = "SELECT * from proveedor";
+	public List<Proveedor> getAll() {
+		String sql = "SELECT p.* from proveedor p";
 		List<Proveedor> lista = new ArrayList<>();
 		try (Connection con = Conexion.getConexion();
 				PreparedStatement ps = con.prepareStatement(sql);
@@ -28,12 +28,11 @@ public class ProveedorDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw e;
 		}
 		return lista;
 	}
 
-	public void guardar(Proveedor e) throws Exception {
+	public void guardar(Proveedor e) {
 		String sql = "INSERT INTO proveedor (nombre_empresa, "
 				+ "contacto_nombre, telefono, email, direccion, activo, fecha_registro) "
 				+ "VALUES(?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
@@ -46,13 +45,11 @@ public class ProveedorDAO {
 			ps.setBoolean(6, e.isActivo());
 			ps.executeUpdate();
 		} catch (SQLException ex) {
-			System.err.println("Error al insertar categoría: " + ex.getMessage());
-			throw ex;
+			ex.printStackTrace();
 		}
 	}
 
-	public void eliminarProveedor(int idProveedor) throws Exception {
-		System.out.println("Eliminado proveedor");
+	public void eliminarProveedor(int idProveedor) {
 		String sql = "DELETE FROM PROVEEDOR WHERE ID_PROVEEDOR = ?";
 		try (Connection connection = Conexion.getConexion();
 
@@ -64,7 +61,7 @@ public class ProveedorDAO {
 		}
 	}
 
-	public void update(Proveedor e) throws Exception {
+	public void update(Proveedor e) {
 		String sql = "UPDATE proveedor SET " + "nombre_empresa = ?, "
 				+ "contacto_nombre = ?, telefono = ?, email = ?, direccion = ?, activo = ? WHERE id_proveedor = ? ";
 		try (Connection conexion = Conexion.getConexion(); PreparedStatement ps = conexion.prepareStatement(sql)) {
@@ -78,7 +75,7 @@ public class ProveedorDAO {
 			ps.executeUpdate();
 		} catch (SQLException ex) {
 			ex.printStackTrace();
-			throw ex;
+		
 		}
 	}
 

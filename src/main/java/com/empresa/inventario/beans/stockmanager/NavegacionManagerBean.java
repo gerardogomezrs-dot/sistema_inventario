@@ -11,6 +11,7 @@ import javax.inject.Named;
 import com.empresa.inventario.model.Auditoria;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
+import com.empresa.inventario.utils.Mensajes;
 
 import lombok.Data;
 
@@ -25,8 +26,12 @@ public class NavegacionManagerBean implements Serializable {
 
 	private String nombreUsuario;
 
-	@Inject
 	private IAuditoriaService auditoriaService;
+	
+	@Inject
+	public NavegacionManagerBean(IAuditoriaService auditoriaService) {
+		this.auditoriaService = auditoriaService;
+	}
 
 	@PostConstruct
 	public void init() {
@@ -42,7 +47,7 @@ public class NavegacionManagerBean implements Serializable {
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
 		auditoria.setMetodo("Perfil Usuarios");
-		auditoria.setAccion("El usuario " + nombreUsuario + " entro a Perfil");
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " entro a Perfil");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/stock_manager/usuario/cuentaPerfilAlmacen.xhtml?faces-redirect=true";
@@ -54,7 +59,7 @@ public class NavegacionManagerBean implements Serializable {
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
 		auditoria.setMetodo("Modulo productos");
-		auditoria.setAccion("El usuario " + nombreUsuario + " entro a Gestion Categorias");
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " entro a Gestion Categorias");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/stock_manager/categorias/tablaCategorias.xhtml?faces-redirect=true";
@@ -66,7 +71,7 @@ public class NavegacionManagerBean implements Serializable {
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
 		auditoria.setMetodo("Modulo Productos");
-		auditoria.setAccion("El usuario " + nombreUsuario + " entro a Gestion Productos");
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " entro a Gestion Productos");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/stock_manager/productos/tablaProductos.xhtml?faces-redirect=true";
@@ -78,7 +83,7 @@ public class NavegacionManagerBean implements Serializable {
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
 		auditoria.setMetodo("Modulo Reportes");
-		auditoria.setAccion("El usuario " + nombreUsuario + " entro a Gestion Reportes");
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " entro a Gestion Reportes");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/stock_manager/reportes/reportes.xhtml?faces-redirect=true";
@@ -90,7 +95,7 @@ public class NavegacionManagerBean implements Serializable {
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
 		auditoria.setMetodo("Modulo Proveedores");
-		auditoria.setAccion("El usuario " + nombreUsuario + " entro a Gestion Proveedores");
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " entro a Gestion Proveedores");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/stock_manager/proveedores/tablaProveedores.xhtml?faces-redirect=true";
@@ -102,7 +107,7 @@ public class NavegacionManagerBean implements Serializable {
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
 		auditoria.setMetodo("Modulo Movimientos");
-		auditoria.setAccion("El usuario " + nombreUsuario + " entro a Gestion Movimientos");
+		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " entro a Gestion Movimientos");
 		auditoria.setNivel("INFO");
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/stock_manager/movimientos/tablaMovimientos.xhtml?faces-redirect=true";

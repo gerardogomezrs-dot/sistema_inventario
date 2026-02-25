@@ -12,28 +12,28 @@ import com.empresa.inventario.model.Auditoria;
 import com.empresa.inventario.utils.Conexion;
 
 public class AuditoriaDao {
-	
+
 	private AuditoriaMapper auditoriaMapper = new AuditoriaMapper();
-	
-	public List<Auditoria> getAllAuditoria() throws Exception {
-		String sql = "SELECT * FROM auditoria_sistema";
+
+	public List<Auditoria> getAllAuditoria() {
+		String sql = "SELECT a.* FROM auditoria_sistema a";
 		List<Auditoria> lista = new ArrayList<>();
 		try (Connection con = Conexion.getConexion();
 				PreparedStatement ps = con.prepareStatement(sql);
 				ResultSet rs = ps.executeQuery()) {
 			while (rs.next()) {
 				Auditoria p = new Auditoria();
+				auditoriaMapper = new AuditoriaMapper();
 				p = auditoriaMapper.mapRow(rs);
 				lista.add(p);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw e;
 		}
 		return lista;
 	}
-	
-	public void guardar(Auditoria e) throws Exception {
+
+	public void guardar(Auditoria e) {
 		String sql = "INSERT INTO inventarios.auditoria_sistema\r\n"
 				+ "(fecha_hora, id_usuario, clase_origen, metodo, accion, nivel)\r\n"
 				+ "VALUES(CURRENT_TIMESTAMP, ?, ?, ?, ?, ?);";
@@ -49,9 +49,7 @@ public class AuditoriaDao {
 			ps.executeUpdate();
 
 		} catch (SQLException ex) {
-			System.err.println("Error al insertar categoría: " + ex.getMessage());
-			throw ex;
+			ex.printStackTrace();
 		}
 	}
-
 }

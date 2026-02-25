@@ -25,36 +25,34 @@ public class PerfilUsuarioManagerBean implements Serializable {
 
 	private Usuario usuario;
 
-	@Inject
 	private IUsuariosService iUsuariosService;
 
 	private int idUsuario;
 
 	private String nombreUsuario;
 
-	@Inject
 	private IAuditoriaService auditoriaService;
 
-	public PerfilUsuarioManagerBean() {
-
+	@Inject
+	public PerfilUsuarioManagerBean(IUsuariosService iUsuariosService, IAuditoriaService auditoriaService) {
+		this.auditoriaService = auditoriaService;
+		this.iUsuariosService = iUsuariosService;
 	}
 
 	@PostConstruct
 	public void init() {
 		Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.get("sessionUsuario");
-		try {
+		
 			int id = user.getIdUsuario();
 			usuario = iUsuariosService.getByIdUsuario(id);
 
 			idUsuario = user.getIdUsuario();
 			nombreUsuario = user.getNombre();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		
 	}
 
-	public void actualizarPerfil() throws Exception {
+	public void actualizarPerfil() {
 		try {
 			if (usuario == null) {
 				throw new ExceptionMessage("Vacio");

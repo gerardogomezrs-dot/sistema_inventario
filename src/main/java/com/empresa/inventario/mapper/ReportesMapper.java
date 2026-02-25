@@ -11,70 +11,104 @@ import com.empresa.inventario.model.ReporteStockBajo;
 import com.empresa.inventario.model.ReportesMovimiento;
 
 public class ReportesMapper {
-	
-	public static ReportesMovimiento row(ResultSet resultSet) throws SQLException {
+
+	public ReportesMapper() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public  ReportesMovimiento row(ResultSet resultSet) {
 		ReportesMovimiento movimiento = new ReportesMovimiento();
-		movimiento.setIdMovimiento(resultSet.getInt("idMovimiento"));
-		movimiento.setFechaHora(resultSet.getDate("fechaHora"));
-		movimiento.setCodigoBarras(resultSet.getString("codigoBarras"));
-		movimiento.setNombreProducto(resultSet.getString("nombreProducto"));
-		movimiento.setCategoria(resultSet.getString("categoria"));
-		movimiento.setTipoMovimiento(resultSet.getString("tipoMovimiento"));
-		movimiento.setCantidad(Integer.toString(resultSet.getInt("cantidad")));
-		movimiento.setUsuarioResponsable(resultSet.getString("responsable"));
+
+		try {
+			movimiento.setIdMovimiento(resultSet.getInt("idMovimiento"));
+			movimiento.setFechaHora(resultSet.getDate("fechaHora"));
+			movimiento.setCodigoBarras(resultSet.getString("codigoB"));
+			movimiento.setNombreProducto(resultSet.getString("nombreProductos"));
+			movimiento.setCategoria(resultSet.getString("nombreCategoria"));
+			movimiento.setTipoMovimiento(resultSet.getString("tipoMovimiento"));
+			movimiento.setCantidad(Integer.toString(resultSet.getInt("cantidad")));
+			movimiento.setUsuarioResponsable(resultSet.getString("responsable"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return movimiento;
 	}
-	
-	public static ReporteInventarioValorizado rowInventariosValorizado(ResultSet resultSet) throws SQLException {
+
+	public  ReporteInventarioValorizado rowInventariosValorizado(ResultSet resultSet) {
 		ReporteInventarioValorizado movimiento = new ReporteInventarioValorizado();
-		movimiento.setCodigoBarras(resultSet.getString("codigoBarras"));
-		movimiento.setNombreProducto(resultSet.getString("nombreProducto"));
-		movimiento.setCategoria(resultSet.getString("categoria"));
-		movimiento.setUbicacion(resultSet.getString("ubicacionProducto"));
-		movimiento.setStockActual(resultSet.getString("stockActual"));
-		movimiento.setUnidad(resultSet.getString("unidad"));
-		movimiento.setPrecioUnitario(resultSet.getDouble("precioUnitario"));
-		movimiento.setPrecioTotal(resultSet.getInt("valorTotal"));
+
+		try {
+			movimiento.setCodigoBarras(resultSet.getString("codigoBarra"));
+			movimiento.setNombreProducto(resultSet.getString("producto"));
+			movimiento.setCategoria(resultSet.getString("categoria"));
+			movimiento.setUbicacion(resultSet.getString("ubicacionProducto"));
+			movimiento.setStockActual(resultSet.getString("stockActual"));
+			movimiento.setUnidad(resultSet.getString("unidad"));
+			movimiento.setPrecioUnitario(resultSet.getDouble("precioUnitario"));
+			movimiento.setPrecioTotal(resultSet.getInt("valorTotal"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return movimiento;
 	}
-	
-	public static ReporteStockBajo rowStockBajo(ResultSet resultSet) throws SQLException {
+
+	public  ReporteStockBajo rowStockBajo(ResultSet resultSet) {
 		ReporteStockBajo movimiento = new ReporteStockBajo();
-		movimiento.setCodigoBarras(resultSet.getString("codigoBarras"));
-		movimiento.setNombreProducto(resultSet.getString("nombreProducto"));
-		movimiento.setStockActual(resultSet.getString("stockActual"));
-		movimiento.setStockMinimo(Integer.toString(resultSet.getInt("stockMinimo")));
-		movimiento.setFaltanteSugerido(Integer.toString(resultSet.getInt("faltanteSugerido")));
-		movimiento.setCategoria(resultSet.getString("categoria"));
+		
+		try {
+			movimiento.setCodigoBarras(resultSet.getString("codigoBarras"));
+			movimiento.setNombreProducto(resultSet.getString("nombreProducto"));
+			movimiento.setStockActual(resultSet.getString("stockActual"));
+			movimiento.setStockMinimo(Integer.toString(resultSet.getInt("stockMinimo")));
+			movimiento.setFaltanteSugerido(Integer.toString(resultSet.getInt("faltanteSugerido")));
+			movimiento.setCategoria(resultSet.getString("categoria"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return movimiento;
 	}
-	
-	public static ReporteAuditoriaUsuario rowAuditoriaUsuario(ResultSet resultSet) throws SQLException {
+
+	public  ReporteAuditoriaUsuario rowAuditoriaUsuario(ResultSet resultSet) {
 		ReporteAuditoriaUsuario movimiento = new ReporteAuditoriaUsuario();
-		movimiento.setUsuarioResponsable(resultSet.getString("Operador"));
-		movimiento.setFechaHora(resultSet.getDate("Fecha_Accion"));
-		movimiento.setNombreProducto(resultSet.getString("Producto"));
-		movimiento.setTipoMovimiento(resultSet.getString("Operacion"));
-		movimiento.setCantidad(resultSet.getInt("cantidad"));
-		movimiento.setObservaciones(resultSet.getString("justificacion"));
+		
+		try {
+			movimiento.setUsuarioResponsable(resultSet.getString("Operador"));
+			movimiento.setFechaHora(resultSet.getDate("Fecha_Accion"));
+			movimiento.setNombreProducto(resultSet.getString("Producto"));
+			movimiento.setTipoMovimiento(resultSet.getString("Operacion"));
+			movimiento.setCantidad(resultSet.getInt("cantidad"));
+			movimiento.setObservaciones(resultSet.getString("justificacion"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 		return movimiento;
 	}
 
-	public static ReporteRotacionInventario rowRotacionInventario(ResultSet rs) throws SQLException {
+	public ReporteRotacionInventario rowRotacionInventario(ResultSet rs) {
 		ReporteRotacionInventario movimiento = new ReporteRotacionInventario();
-		movimiento.setNombreProducto(rs.getString("nombre"));
-		movimiento.setTotalUnidadesSalida(rs.getInt("total_unidades_salida"));
-		movimiento.setStockActual(rs.getInt("stock_disponible"));
-		movimiento.setIndiceRotacion(rs.getDouble("indice_rotacion"));	
+		
+		try {
+			movimiento.setNombreProducto(rs.getString("nombre"));
+			movimiento.setTotalUnidadesSalida(rs.getInt("total_unidades_salida"));
+			movimiento.setStockActual(rs.getInt("stock_disponible"));
+			movimiento.setIndiceRotacion(rs.getDouble("indice_rotacion"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return movimiento;
 	}
 
-	public static ReporteClasificacionABC rowClasificacionABC(ResultSet rs) throws SQLException {
+	public  ReporteClasificacionABC rowClasificacionABC(ResultSet rs) {
 		ReporteClasificacionABC abc = new ReporteClasificacionABC();
-		abc.setNombreProducto(rs.getString("nombre"));
-		abc.setValorStock(rs.getDouble("valorStock"));
-		abc.setClasificacionABC(rs.getString("clasificacion_abc"));
+		
+		try {
+			abc.setNombreProducto(rs.getString("nombreProducto"));
+			abc.setValorStock(rs.getDouble("valorStock"));
+			abc.setClasificacionABC(rs.getString("clasificacion_abc"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return abc;
 	}
 }

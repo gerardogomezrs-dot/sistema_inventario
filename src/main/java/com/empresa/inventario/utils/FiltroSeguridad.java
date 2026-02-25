@@ -12,7 +12,7 @@ public class FiltroSeguridad implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-
+		String paginaPermisos = "/error_permisos.xhtml";
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 		HttpSession session = req.getSession(false);
@@ -26,27 +26,21 @@ public class FiltroSeguridad implements Filter {
 		}
 
 		if (url.contains("/pages/admin/") && !user.getRol().equals("admin")) {
-			res.sendRedirect(req.getContextPath() + "/error_permisos.xhtml");
+			res.sendRedirect(req.getContextPath() + paginaPermisos);
 			return;
 		}
 		if (url.contains("/pages/stock_manager/") && !user.getRol().equals("stock_manager")) {
-			res.sendRedirect(req.getContextPath() + "/error_permisos.xhtml");
+			res.sendRedirect(req.getContextPath() + paginaPermisos);
 			return;
 		}
 
 		if (url.contains("/pages/almacen/") && !user.getRol().equals("almacen")) {
-			res.sendRedirect(req.getContextPath() + "/error_permisos.xhtml");
+			res.sendRedirect(req.getContextPath() + paginaPermisos);
 			return;
 		} else {
 			chain.doFilter(request, response);
 		}
 	}
 
-	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
-	}
 
-	@Override
-	public void destroy() {
-	}
 }

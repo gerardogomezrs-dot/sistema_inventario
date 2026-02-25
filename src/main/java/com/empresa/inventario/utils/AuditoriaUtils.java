@@ -5,7 +5,13 @@ import java.util.Date;
 import com.empresa.inventario.model.Auditoria;
 import com.empresa.inventario.service.IAuditoriaService;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AuditoriaUtils {
+	
+
 	
 	public static void registrar(IAuditoriaService service, int idUsuario, String nombreUsuario, String clase, String metodo) {
         Auditoria auditoria = new Auditoria();

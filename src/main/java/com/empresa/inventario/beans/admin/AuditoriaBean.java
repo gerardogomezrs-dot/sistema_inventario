@@ -1,7 +1,6 @@
 package com.empresa.inventario.beans.admin;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -18,31 +17,27 @@ import lombok.Data;
 @Data
 public class AuditoriaBean implements Serializable {
 
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
-	private List<Auditoria> filteredList;
-	private List<Auditoria> list;
+	private transient List<Auditoria> filteredList;
+	private transient List<Auditoria> list;
 
-	@Inject
 	private IAuditoriaService auditoriaService;
 
-	public AuditoriaBean() {
-
+	@Inject
+	public AuditoriaBean(IAuditoriaService auditoriaService) {
+		this.auditoriaService = auditoriaService;
 	}
 
 	@PostConstruct
 	public void init() {
-		try {
-			cargarListaAuditoria();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		cargarListaAuditoria();
 	}
 
 	public void cargarListaAuditoria() {
-		list = new ArrayList<Auditoria>();
-		if (list != null || !list.isEmpty()) {
-			list = auditoriaService.getAll();
-		}
+		list = auditoriaService.getAll();
 	}
 
 	public String irADashboard() {

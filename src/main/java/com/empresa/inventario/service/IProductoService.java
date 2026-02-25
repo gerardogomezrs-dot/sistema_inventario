@@ -9,17 +9,17 @@ import com.empresa.inventario.model.Productos;
 
 public interface IProductoService {
 
-	List<Productos> create(List<Productos> productos, Consumer<Integer> progresoCallback) throws Exception;
+	List<Productos> create(List<Productos> productos, Consumer<Integer> progresoCallback);
 
-	void delete(int idProducto) throws Exception;
+	void delete(int idProducto);
 	
-	void bajaProducto(int idProducto) throws Exception;
+	void bajaProducto(int idProducto);
 
-	void update(Productos productos) throws Exception;
+	void update(Productos productos) ;
 
-	List<Productos> getAll() throws Exception;
+	List<Productos> getAll();
 
-	List<Productos> cargaArchivos(UploadedFile uploadedFile) throws Exception;
+	List<Productos> cargaArchivos(UploadedFile uploadedFile) ;
 	
-	Productos getByCodigoBarras(String codigoBarras) throws Exception;
+	Productos getByCodigoBarras(String codigoBarras);
 	}

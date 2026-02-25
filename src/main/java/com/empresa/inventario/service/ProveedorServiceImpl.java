@@ -27,7 +27,7 @@ import com.opencsv.CSVReader;
 public class ProveedorServiceImpl implements Serializable, IProveedorService {
 
 	private static final long serialVersionUID = 1L;
-	private ProveedorDAO dao;
+	private transient ProveedorDAO dao = new ProveedorDAO();
 
 	@Override
 	public List<Proveedor> proveedors() {
