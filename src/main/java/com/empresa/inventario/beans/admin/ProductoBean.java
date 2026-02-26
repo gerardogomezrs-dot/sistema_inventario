@@ -35,7 +35,7 @@ public class ProductoBean implements Serializable {
 
 	private List<Categorias> listaCategorias;
 
-	private List<Productos> listaProductosGuardar = new ArrayList<Productos>();
+	private List<Productos> listaProductosGuardar = new ArrayList<>();
 
 	private List<Productos> list;
 
@@ -65,7 +65,7 @@ public class ProductoBean implements Serializable {
 
 	@PostConstruct
 	public void init() {
-		ListaProductos();
+		listaProductos();
 		listaCategorias = iCategoriaService.getAllCategorias();
 		Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.get("sessionUsuario");
@@ -91,7 +91,7 @@ public class ProductoBean implements Serializable {
 		this.progreso = 0;
 		List<Productos> listaProductos = listaProductosGuardar;
 
-		List<Productos> copiar = new ArrayList<Productos>(listaProductos);
+		List<Productos> copiar = new ArrayList<>(listaProductos);
 		if (copiar.isEmpty()) {
 			return;
 		}
@@ -125,7 +125,7 @@ public class ProductoBean implements Serializable {
 	public void guardarCambios() {
 		try {
 			iProductoService.update(producto);
-			ListaProductos();
+			listaProductos();
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Registro actualizado correctamente"));
 		} catch (Exception e) {
@@ -155,10 +155,10 @@ public class ProductoBean implements Serializable {
 			auditoria.setClaseOrigen(this.getClass().getName());
 			auditoria.setMetodo("Eliminar");
 			auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " realizo la eliminación de un registro");
-			auditoria.setNivel(String.valueOf(Mensajes.INFO));
+			auditoria.setNivel(Mensajes.INFO.toString());
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (ExceptionMessage e) {
-			añadirMensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", e.getMessage());
+			mensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", e.getMessage());
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.validationFailed();
 			context.renderResponse();
@@ -185,7 +185,7 @@ public class ProductoBean implements Serializable {
 
 	}
 
-	public void ListaProductos() {
+	public void listaProductos() {
 		this.list = iProductoService.getAll();
 	}
 
@@ -195,7 +195,7 @@ public class ProductoBean implements Serializable {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
 			}
-			listaProductosGuardar = new ArrayList<Productos>();
+			listaProductosGuardar = new ArrayList<>();
 			listaProductosGuardar = iProductoService.cargaArchivos(uploadedFile);
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
@@ -208,7 +208,7 @@ public class ProductoBean implements Serializable {
 			auditoria.setNivel(String.valueOf(Mensajes.INFO));
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (ExceptionMessage e) {
-			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 
 			Auditoria auditoria = new Auditoria();
 			auditoria.setFechaAuditoria(new Date());
@@ -218,7 +218,6 @@ public class ProductoBean implements Serializable {
 			auditoria.setAccion(String.valueOf(Mensajes.ERROR) + e.getMessage());
 			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
-
 		}
 	}
 
@@ -258,7 +257,7 @@ public class ProductoBean implements Serializable {
 		return "/pages/admin/productos/productos.xhtml?faces-redirect=true";
 	}
 
-	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
+	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
 

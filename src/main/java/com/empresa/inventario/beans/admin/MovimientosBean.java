@@ -49,7 +49,7 @@ public class MovimientosBean implements Serializable {
 
 	private IProductoService iProductoService;
 
-	private List<Movimientos> listaMovimientosGuardar = new ArrayList<Movimientos>();
+	private List<Movimientos> listaMovimientosGuardar = new ArrayList<>();
 
 	private int idUsuario;
 
@@ -63,7 +63,7 @@ public class MovimientosBean implements Serializable {
 	public MovimientosBean(IAuditoriaService auditoriaService, IProductoService iProductoService, IMovimientosService service) {
 		this.auditoriaService = auditoriaService;
 		this.iProductoService = iProductoService;
-		this.service = service;		;
+		this.service = service;
 	}
 
 	@PostConstruct
@@ -80,7 +80,7 @@ public class MovimientosBean implements Serializable {
 		try {
 			list = service.getAll();
 		} catch (ExceptionMessage e) {
-			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -172,7 +172,7 @@ public class MovimientosBean implements Serializable {
 		}
 	}
 
-	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
+	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
 }

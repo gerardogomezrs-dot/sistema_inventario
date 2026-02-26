@@ -26,74 +26,68 @@ public class LoginBean implements Serializable {
 	private String userName;
 	private String password;
 	private Usuario usuario;
-	
+
 	private int idUsuario;
 
 	private String nombreUsuario;
-	
 
-	private String mensajeBienvenida_1 = "¡Bienvenido!";
+	private String mensajeBienvenida1 = "¡Bienvenido!";
 
-	
-	private String mensajeBienvenida_2 = ", has iniciado sesión correctamente.";
+	private String mensajeBienvenida2 = ", has iniciado sesión correctamente.";
 
-	private String mensajeBienvenida_3 = "Hola ";
+	private String mensajeBienvenida3 = "Hola ";
 
-	
 	private String sessionUser = "sessionUsuario";
-	
+
 	private IAuditoriaService auditoriaService;
 
 	private IAuthService authService;
-	
+
 	@Inject
 	public LoginBean(IAuthService authService, IAuditoriaService auditoriaService) {
 		this.authService = authService;
 		this.auditoriaService = auditoriaService;
 	}
-	
+
 	public String login() {
 		try {
 			usuario = new Usuario();
 			usuario = authService.login(userName, password);
 			if (usuario == null) {
 				resetearSesion();
-				añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error de Inventario", "Usuario o password inválido");
+				mensaje(FacesMessage.SEVERITY_ERROR, "Error de Inventario", "Usuario o password inválido");
 				return null;
 			} else {
 				String ruta = "";
 				if (usuario.getRol().equals("admin")) {
-					FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(sessionUser,
-							usuario);
+					FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(sessionUser, usuario);
 
 					FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
 
-					añadirMensaje(FacesMessage.SEVERITY_INFO, mensajeBienvenida_1,
-							mensajeBienvenida_3 + usuario.getNombre() + mensajeBienvenida_2);
+					mensaje(FacesMessage.SEVERITY_INFO, mensajeBienvenida1,
+							mensajeBienvenida3 + usuario.getNombre() + mensajeBienvenida2);
 
 					ruta = "/pages/admin/dashboard.xhtml?faces-redirect=true";
 				}
 				if (usuario.getRol().equals("stock_manager")) {
-					FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(sessionUser,
-							usuario);
+					FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(sessionUser, usuario);
 					FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-					añadirMensaje(FacesMessage.SEVERITY_INFO, mensajeBienvenida_1,
-							mensajeBienvenida_3 + usuario.getNombre() + mensajeBienvenida_2);
+					mensaje(FacesMessage.SEVERITY_INFO, mensajeBienvenida1,
+							mensajeBienvenida3 + usuario.getNombre() + mensajeBienvenida2);
 					ruta = "/pages/stock_manager/dashboard.xhtml?faces-redirect=true";
 				}
-				
+
 				if (usuario.getRol().equals("almacen")) {
-					FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(sessionUser,
-							usuario);
+					FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(sessionUser, usuario);
 					FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-					añadirMensaje(FacesMessage.SEVERITY_INFO, mensajeBienvenida_1,
-							mensajeBienvenida_3 + usuario.getNombre() + mensajeBienvenida_2);
+					mensaje(FacesMessage.SEVERITY_INFO, mensajeBienvenida1,
+							mensajeBienvenida3 + usuario.getNombre() + mensajeBienvenida2);
 					ruta = "/pages/almacen/dashboard.xhtml?faces-redirect=true";
 				}
 
 				idUsuario = usuario.getIdUsuario();
 				nombreUsuario = usuario.getNombre();
-				
+
 				Auditoria auditoria = new Auditoria();
 				auditoria.setFechaAuditoria(new Date());
 				auditoria.setIdUsuario(idUsuario);
@@ -102,30 +96,31 @@ public class LoginBean implements Serializable {
 				auditoria.setAccion("El usuario " + nombreUsuario + " INICIO SESIÓN");
 				auditoria.setNivel("INFO");
 				auditoriaService.registroAuditoria(auditoria);
-				
+
 				return ruta;
 			}
 
 		} catch (ExceptionMessage e) {
-			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 			return null;
 		} catch (Exception e) {
-			añadirMensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", "Ocurrió un error en el servidor. ");
+			mensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", "Ocurrió un error en el servidor. ");
 			e.printStackTrace();
 			return null;
 		}
 	}
-	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
+
+	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
+
 	private void resetearSesion() {
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 	}
+
 	public String logout() {
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 		return "/login.xhtml?faces-redirect=true";
 	}
-	
-	
-	
+
 }

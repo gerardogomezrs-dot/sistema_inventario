@@ -31,7 +31,7 @@ public class ProveedorBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private List<Proveedor> listaProveedorGuardar = new ArrayList<Proveedor>();
+	private List<Proveedor> listaProveedorGuardar = new ArrayList<>();
 
 	private List<Proveedor> list;
 
@@ -119,7 +119,7 @@ public class ProveedorBean implements Serializable {
 		progreso = 0;
 		if (listaProveedorGuardar != null && !listaProveedorGuardar.isEmpty()) {
 			this.progreso = 0;
-			List<Proveedor> proveedors = new ArrayList<Proveedor>(listaProveedorGuardar);
+			List<Proveedor> proveedors = new ArrayList<>(listaProveedorGuardar);
 			if (proveedors.isEmpty()) {
 				return;
 			}
@@ -225,7 +225,7 @@ public class ProveedorBean implements Serializable {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
 			}
-			listaProveedorGuardar = new ArrayList<Proveedor>();
+			listaProveedorGuardar = new ArrayList<>();
 			listaProveedorGuardar = iProveedorService.uploadFiles(uploadedFile);
 
 			FacesContext.getCurrentInstance().addMessage(null,

@@ -116,7 +116,6 @@ public class UsuariosBean implements Serializable {
 			auditoria.setAccion(String.valueOf(Mensajes.ERROR) + e.getMessage());
 			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
-			return;
 		} catch (Exception e) {
 			añadirMensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", "Consulte al administrador.");
 			FacesContext context = FacesContext.getCurrentInstance();
@@ -127,14 +126,13 @@ public class UsuariosBean implements Serializable {
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
 			auditoria.setClaseOrigen(this.getClass().getName());
-			auditoria.setMetodo(String.valueOf(Mensajes.ERROR));
-			auditoria.setAccion(String.valueOf(Mensajes.ERROR) + e.getMessage());
-			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
+			auditoria.setMetodo(Mensajes.ERROR.toString());
+			auditoria.setAccion(Mensajes.ERROR + e.getMessage());
+			auditoria.setNivel(Mensajes.ERROR.toString());
 			auditoriaService.registroAuditoria(auditoria);
-			return;
 		}
 	}
-
+	
 	public void eliminar() {
 		try {
 			iUsuariosService.delete(usuario.getIdUsuario(), idUsuario);

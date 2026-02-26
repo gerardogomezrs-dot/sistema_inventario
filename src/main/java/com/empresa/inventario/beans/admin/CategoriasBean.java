@@ -33,7 +33,7 @@ public class CategoriasBean implements Serializable {
 	private transient List<Categorias> filteredList;
 	private transient List<Categorias> list;
 	private  Categorias categorias;
-	private transient List<Categorias> listaTablaCategorias = new ArrayList<Categorias>();
+	private transient List<Categorias> listaTablaCategorias;
 
 	private transient UploadedFile uploadedFile;
 
@@ -90,12 +90,10 @@ public class CategoriasBean implements Serializable {
 		if (listaTablaCategorias != null && !listaTablaCategorias.isEmpty()) {
 			this.progreso = 0;
 			List<Categorias> copiaParaGuardar = new ArrayList<>(this.listaTablaCategorias);
-			if (copiaParaGuardar.isEmpty()) {
-				return;
-			}
+			
 			CompletableFuture.runAsync(() -> {
 				try {
-					categoriaService.save(copiaParaGuardar, valor -> {
+					categoriaService.save(copiaParaGuardar, (valor) -> {
 						this.progreso = valor;
 					});
 
@@ -180,7 +178,7 @@ public class CategoriasBean implements Serializable {
 			auditoria.setNivel(String.valueOf(Mensajes.INFO));
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
-			añadirMensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", "Consulte al administrador.");
+			mensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", "Consulte al administrador.");
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.validationFailed();
 			context.renderResponse();
@@ -193,7 +191,6 @@ public class CategoriasBean implements Serializable {
 			auditoria.setAccion(String.valueOf(Mensajes.ERROR) + e.getMessage());
 			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
-			return;
 		}
 	}
 
@@ -203,7 +200,7 @@ public class CategoriasBean implements Serializable {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
 			}
-			listaTablaCategorias = new ArrayList<Categorias>();
+			listaTablaCategorias = new ArrayList<>();
 			listaTablaCategorias = categoriaService.cargarArchivo(uploadedFile);
 
 			FacesContext.getCurrentInstance().addMessage(null,
@@ -219,7 +216,7 @@ public class CategoriasBean implements Serializable {
 			auditoriaService.registroAuditoria(auditoria);
 
 		} catch (ExceptionMessage e) {
-			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 			Auditoria auditoria = new Auditoria();
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
@@ -238,7 +235,7 @@ public class CategoriasBean implements Serializable {
 		auditoria.setClaseOrigen(this.getClass().getName());
 		auditoria.setMetodo("Navegación");
 		auditoria.setAccion(user + nombreUsuario + " navega a Nueva Categoria");
-		auditoria.setNivel(String.valueOf(Mensajes.INFO));
+		auditoria.setNivel(Mensajes.INFO.toString());
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/categorias/categorias.xhtml?faces-redirect=true";
 	}
@@ -248,9 +245,9 @@ public class CategoriasBean implements Serializable {
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
+		auditoria.setMetodo(Mensajes.NAVEGACION.toString());
 		auditoria.setAccion(user + nombreUsuario + " navego tabla categoria");
-		auditoria.setNivel(String.valueOf(Mensajes.INFO));
+		auditoria.setNivel(Mensajes.INFO.toString());
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/categorias/tablaCategorias.xhtml?faces-redirect=true";
 	}
@@ -260,14 +257,13 @@ public class CategoriasBean implements Serializable {
 		auditoria.setFechaAuditoria(new Date());
 		auditoria.setIdUsuario(idUsuario);
 		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
+		auditoria.setMetodo(Mensajes.NAVEGACION.toString());
 		auditoria.setAccion(user + nombreUsuario + " navego a dashboard");
-		auditoria.setNivel(String.valueOf(Mensajes.INFO));
+		auditoria.setNivel(Mensajes.INFO.toString());
 		auditoriaService.registroAuditoria(auditoria);
 		return "/pages/admin/dashboard.xhtml?faces-redirect=true";
 	}
-
-	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
+	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
 }
