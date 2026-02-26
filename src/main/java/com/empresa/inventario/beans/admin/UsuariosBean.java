@@ -104,7 +104,7 @@ public class UsuariosBean implements Serializable {
 
 		} catch (ExceptionMessage e) {
 
-			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage());
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage());
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.validationFailed();
 			context.renderResponse();
@@ -117,11 +117,11 @@ public class UsuariosBean implements Serializable {
 			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
-			añadirMensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", "Consulte al administrador.");
+			mensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", "Consulte al administrador.");
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.validationFailed();
 			context.renderResponse();
-			e.printStackTrace();
+			e.getMessage();
 			Auditoria auditoria = new Auditoria();
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
@@ -149,7 +149,7 @@ public class UsuariosBean implements Serializable {
 			auditoriaService.registroAuditoria(auditoria);
 
 		} catch (ExceptionMessage e) {
-			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 			Auditoria auditoria = new Auditoria();
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
@@ -159,7 +159,7 @@ public class UsuariosBean implements Serializable {
 			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 			Auditoria auditoria = new Auditoria();
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
@@ -190,7 +190,7 @@ public class UsuariosBean implements Serializable {
 			auditoria.setNivel("INFO");
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (ExceptionMessage e) {
-			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 			Auditoria auditoria = new Auditoria();
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
@@ -200,7 +200,7 @@ public class UsuariosBean implements Serializable {
 			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 			Auditoria auditoria = new Auditoria();
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
@@ -245,7 +245,7 @@ public class UsuariosBean implements Serializable {
 
 	}
 
-	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
+	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
 }

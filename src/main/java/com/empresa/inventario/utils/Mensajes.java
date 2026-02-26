@@ -4,6 +4,7 @@ public enum Mensajes {
 
 	ERROR("ERROR"),
 	INFO("INFO"),
+	WARN("WARN"),
 	NAVEGACION("Navegacion"),
 	USUARIO("El usuario: "),
 	MODULO_PRODUCTOS("Modulo Productos"),
@@ -14,7 +15,14 @@ public enum Mensajes {
 	MODULO_CATEGORIAS("Modulo Categorias"),
 	EXPORTAR_REPORTE("Exportar Reporte"),
 	GESTION_AUDITORIAS("Gestion Auditoria"),
-	PERFIL_USUARIO("Perfil Usuario");
+	PERFIL_USUARIO("Perfil Usuario"),
+	GUARDAR("Guardar"),
+	ELIMINAR("Eliminar"),
+	ACTUALIZAR("Actualizar"),
+	CONSULTA("Consulta"),
+	GUARDAR_REGISTRO_TABLA("Guardar Registro en Tabla"),
+	CARGA_MASIVA_REGISTROS("Carga Masiva de Registros"),
+	NUEVO_REGISTRO("Nuevo registro");
 
 	
 	private String texto = "";

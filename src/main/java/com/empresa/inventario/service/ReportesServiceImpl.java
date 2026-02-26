@@ -27,35 +27,35 @@ public class ReportesServiceImpl implements IReporteService, Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private transient ReportesDAO dao = new ReportesDAO();
+	private ReportesDAO dao = new ReportesDAO();
 
 	@Override
-	public List<ReportesMovimiento> movimientos(Date Inicio, Date Fin) {
-		List<ReportesMovimiento> movimientos = new ArrayList<ReportesMovimiento>();
-		LocalDateTime localDateTimeInicio = Inicio.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-		LocalDateTime localDateTimeFin = Fin.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+	public List<ReportesMovimiento> movimientos(Date inicio, Date fin) {
+		List<ReportesMovimiento> movimientos = new ArrayList<>();
+		LocalDateTime localDateTimeInicio = inicio.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+		LocalDateTime localDateTimeFin = fin.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 		try {
 			movimientos = dao.getAllCategorias(localDateTimeInicio, localDateTimeFin);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return movimientos;
 	}
 
 	@Override
 	public List<ReporteInventarioValorizado> reporteInventarioValorizado()  {
-		List<ReporteInventarioValorizado> reportesMovimientos = new ArrayList<ReporteInventarioValorizado>();
+		List<ReporteInventarioValorizado> reportesMovimientos = new ArrayList<>();
 		try {
 		reportesMovimientos = dao.getInventarioValorizado();
 		}catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return reportesMovimientos;
 	}
 
 	@Override
 	public List<ReporteStockBajo> reporteStockBajo()  {
-		List<ReporteStockBajo> list = new ArrayList<ReporteStockBajo>();
+		List<ReporteStockBajo> list = new ArrayList<>();
 		try {
 		list = dao.getStockBajo();
 		}catch (Exception e) {
@@ -66,18 +66,18 @@ public class ReportesServiceImpl implements IReporteService, Serializable {
 
 	@Override
 	public List<ReporteAuditoriaUsuario> reporteAuditoriaUsuario() {
-		List<ReporteAuditoriaUsuario> list = new ArrayList<ReporteAuditoriaUsuario>();
+		List<ReporteAuditoriaUsuario> list = new ArrayList<>();
 		try {
 		list = dao.getAuditoriaUsuario();
 		}catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return list;
 	}
 
 	@Override
 	public List<ReporteRotacionInventario> reporteRotacionInventario() {
-		List<ReporteRotacionInventario> list = new ArrayList<ReporteRotacionInventario>();
+		List<ReporteRotacionInventario> list = new ArrayList<>();
 		try {
 		list = dao.getRotacionInventario();
 		}catch (Exception e) {
@@ -88,7 +88,7 @@ public class ReportesServiceImpl implements IReporteService, Serializable {
 
 	@Override
 	public List<ReporteClasificacionABC> reporteClasificacionABC() {
-		List<ReporteClasificacionABC> clasificacionABCs = new ArrayList<ReporteClasificacionABC>();
+		List<ReporteClasificacionABC> clasificacionABCs = new ArrayList<>();
 		try {
 		clasificacionABCs = dao.getClasificacionABC();
 		}catch (Exception e) {

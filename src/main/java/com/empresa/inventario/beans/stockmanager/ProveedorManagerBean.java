@@ -31,7 +31,7 @@ public class ProveedorManagerBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private List<Proveedor> listaProveedorGuardar = new ArrayList<Proveedor>();
+	private List<Proveedor> listaProveedorGuardar = new ArrayList<>();
 
 	private List<Proveedor> list;
 
@@ -105,7 +105,7 @@ public class ProveedorManagerBean implements Serializable {
 		try {
 			list = iProveedorService.proveedors();
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 	}
 
@@ -124,7 +124,7 @@ public class ProveedorManagerBean implements Serializable {
 			auditoria.setNivel("INFO");
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 			Auditoria auditoria = new Auditoria();
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
@@ -151,8 +151,8 @@ public class ProveedorManagerBean implements Serializable {
 			auditoria.setNivel("INFO");
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
-			e.printStackTrace();
-			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+			e.getMessage();
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 			Auditoria auditoria = new Auditoria();
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
@@ -181,17 +181,15 @@ public class ProveedorManagerBean implements Serializable {
 		progreso = 0;
 		if (listaProveedorGuardar != null && !listaProveedorGuardar.isEmpty()) {
 			this.progreso = 0;
-			List<Proveedor> proveedors = new ArrayList<Proveedor>(listaProveedorGuardar);
-			if (proveedors.isEmpty()) {
+			List<Proveedor> copiaParaGuardar = new ArrayList<>(listaProveedorGuardar);
+			if (copiaParaGuardar.isEmpty()) {
 				return;
 			}
 			CompletableFuture.runAsync(() -> {
 				try {
-					iProveedorService.save(proveedors, (valor) -> {
-						this.progreso = valor;
-					});
+					iProveedorService.save(copiaParaGuardar, valor -> this.progreso = valor);
 				} catch (Exception e) {
-					e.printStackTrace();
+					e.getMessage();
 					Auditoria auditoria = new Auditoria();
 					auditoria.setFechaAuditoria(new Date());
 					auditoria.setIdUsuario(idUsuario);
@@ -227,13 +225,13 @@ public class ProveedorManagerBean implements Serializable {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
 			}
-			listaProveedorGuardar = new ArrayList<Proveedor>();
+			listaProveedorGuardar = new ArrayList<>();
 			listaProveedorGuardar = iProveedorService.uploadFiles(uploadedFile);
 
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
 		} catch (ExceptionMessage e) {
-			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 
 			Auditoria auditoria = new Auditoria();
 			auditoria.setFechaAuditoria(new Date());
@@ -245,7 +243,7 @@ public class ProveedorManagerBean implements Serializable {
 			auditoriaService.registroAuditoria(auditoria);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 			Auditoria auditoria = new Auditoria();
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
@@ -257,7 +255,7 @@ public class ProveedorManagerBean implements Serializable {
 		}
 	}
 
-	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
+	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
 }

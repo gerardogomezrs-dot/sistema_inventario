@@ -36,8 +36,6 @@ public class MovimientosAlmacenBean implements Serializable {
 	*/
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger logger = LoggerFactory.getLogger(MovimientosBean.class);
-
 	private boolean modoManual = false;
 
 	private List<Movimientos> list;
@@ -52,7 +50,7 @@ public class MovimientosAlmacenBean implements Serializable {
 
 	private String infoProductoExtra;
 
-	private List<Movimientos> listaMovimientosGuardar = new ArrayList<Movimientos>();
+	private List<Movimientos> listaMovimientosGuardar = new ArrayList<>();
 
 	private int idUsuario;
 
@@ -81,14 +79,6 @@ public class MovimientosAlmacenBean implements Serializable {
 		listaMovimientos();
 		listProductos = iProductoService.getAll();
 		user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("sessionUsuario");
-
-		if (user != null) {
-			this.movimientos.setIdUsuario(user.getIdUsuario());
-			logger.info("LOG: Usuario recuperado de sesión: " + user.getNombre());
-
-		} else {
-			logger.info("LOG: No hay ninguna sesión activa con 'sessionUsuario'");
-		}
 
 		idUsuario = user.getIdUsuario();
 		nombreUsuario = user.getNombre();
@@ -128,7 +118,7 @@ public class MovimientosAlmacenBean implements Serializable {
 		this.movimientos.setCodigoBarras(null);
 	}
 
-	public void cargarInfoScanner(){
+	public void cargarInfoScanner() {
 		String codigo = this.movimientos.getCodigoBarras();
 		if (codigo != null && !codigo.isEmpty()) {
 			this.infoProductoExtra = "Cargado: " + codigo + " - Producto encontrado";
@@ -141,10 +131,10 @@ public class MovimientosAlmacenBean implements Serializable {
 
 	public List<Movimientos> listaMovimientos() {
 		try {
-			list = new ArrayList<Movimientos>();
+			list = new ArrayList<>();
 			list = service.getAll();
 		} catch (ExceptionMessage e) {
-			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 		} catch (Exception e) {
 			e.getMessage();
 		}
@@ -152,16 +142,16 @@ public class MovimientosAlmacenBean implements Serializable {
 	}
 
 	public void saveTable() {
-			service.save(listaMovimientosGuardar);
-			Auditoria auditoria = new Auditoria();
-			auditoria.setFechaAuditoria(new Date());
-			auditoria.setIdUsuario(idUsuario);
-			auditoria.setClaseOrigen(this.getClass().getName());
-			auditoria.setMetodo("Guardar");
-			auditoria.setAccion("El usuario " + nombreUsuario + " guardo un registro");
-			auditoria.setNivel("INFO");
-			auditoriaService.registroAuditoria(auditoria);
-		
+		service.save(listaMovimientosGuardar);
+		Auditoria auditoria = new Auditoria();
+		auditoria.setFechaAuditoria(new Date());
+		auditoria.setIdUsuario(idUsuario);
+		auditoria.setClaseOrigen(this.getClass().getName());
+		auditoria.setMetodo("Guardar");
+		auditoria.setAccion("El usuario " + nombreUsuario + " guardo un registro");
+		auditoria.setNivel("INFO");
+		auditoriaService.registroAuditoria(auditoria);
+
 		if (listaMovimientosGuardar != null) {
 			listaMovimientosGuardar.clear();
 		}
@@ -180,7 +170,7 @@ public class MovimientosAlmacenBean implements Serializable {
 		auditoriaService.registroAuditoria(auditoria);
 	}
 
-	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
+	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
 

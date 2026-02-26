@@ -25,7 +25,7 @@ public class Conexion {
 				properties.load(input);
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			ex.getMessage();
 		}
 	}
 

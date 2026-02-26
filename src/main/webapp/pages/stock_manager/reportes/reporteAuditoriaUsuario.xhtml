@@ -70,13 +70,13 @@
                             styleClass="btn-excel">
                             <p:dataExporter type="xls" target="tblMovimientos"
                                 preProcessor="#{reportesManagerBean.exportarReporteAuditoriaUsuario}"
-                                fileName="#{reportesManagerBean.nombreArchivo_4}" pageOnly="false" />
+                                fileName="#{reportesManagerBean.reporteAuditoriaUsuario}" pageOnly="false" />
                         </p:commandButton>
 
                         <p:commandButton value="Exportar Pdf" icon="pi pi-file-pdf" ajax="false" styleClass="btn-pdf">
                             <p:dataExporter type="pdf" target="tblMovimientos"
                                 preProcessor="#{reportesManagerBean.exportarReporteAuditoriaUsuario}"
-                                fileName="#{reportesManagerBean.nombreArchivo_4}" />
+                                fileName="#{reportesManagerBean.reporteAuditoriaUsuario}" />
                         </p:commandButton>
                     </div>
                 </f:facet>

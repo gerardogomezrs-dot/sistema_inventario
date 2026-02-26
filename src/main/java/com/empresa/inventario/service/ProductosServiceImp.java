@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
@@ -29,8 +29,7 @@ import com.opencsv.CSVReader;
 @ApplicationScoped
 public class ProductosServiceImp implements IProductoService {
 
-	private transient ProductosDAO productosDAO = new ProductosDAO();
-	private Productos productos;
+	private  ProductosDAO productosDAO = new ProductosDAO();
 
 	@Override
 	public void delete(int idProducto) {
@@ -46,12 +45,12 @@ public class ProductosServiceImp implements IProductoService {
 	}
 
 	@Override
-	public List<Productos> create(List<Productos> productosLista, Consumer<Integer> progresoCallback) {
+	public List<Productos> create(List<Productos> productosLista, IntConsumer progresoCallback) {
 		if (productosLista == null || productosLista.isEmpty()) {
 			throw new ExceptionMessage("Lista vacia");
 		}
 
-		List<Productos> listaProducto = new ArrayList<Productos>();
+		List<Productos> listaProducto = new ArrayList<>();
 
 		for (Productos p : productosLista) {
 			try {
@@ -59,7 +58,7 @@ public class ProductosServiceImp implements IProductoService {
 
 				listaProducto.add(p);
 			} catch (Exception e) {
-				e.printStackTrace();
+				e.getMessage();
 			}
 		}
 		try {
@@ -85,11 +84,11 @@ public class ProductosServiceImp implements IProductoService {
 		try {
 			getProductos = productosDAO.getAll();
 			
-			if (getProductos.size() == 0) {
+			if (getProductos.isEmpty()) {
 				throw new ExceptionMessage("Lista Vacia ");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return getProductos;
 	}
@@ -104,13 +103,13 @@ public class ProductosServiceImp implements IProductoService {
 				dao.actualizar(productos);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 	}
 
 	@Override
 	public List<Productos> cargaArchivos(UploadedFile uploadedFile) {
-		List<Productos> p = new ArrayList<Productos>();
+		List<Productos> p = new ArrayList<>();
 		if (uploadedFile.getFileName() == null || uploadedFile.getFileName().trim().isEmpty()) {
 			throw new ExceptionMessage("Inserta un archivo");
 		}
@@ -121,14 +120,14 @@ public class ProductosServiceImp implements IProductoService {
 			try {
 				p = leerCVS(uploadedFile);
 			} catch (Exception e) {
-				e.printStackTrace();
+				e.getMessage();
 			}
 		}
 		if (fileName.endsWith("xlsx") || fileName.endsWith("lsx")) {
 			try {
 				p = leerExcel(uploadedFile);
 			} catch (Exception e) {
-				e.printStackTrace();
+				e.getMessage();
 			}
 		}
 		if (!fileName.endsWith(".xlsx") && !fileName.endsWith(".lsx") && !fileName.endsWith(".csv")) {
@@ -139,7 +138,8 @@ public class ProductosServiceImp implements IProductoService {
 	}
 
 	private List<Productos> leerExcel(UploadedFile uploadedFile) throws EncryptedDocumentException, IOException {
-		List<Productos> productosList = new ArrayList<Productos>();
+		List<Productos> productosList = new ArrayList<>();
+		Productos productos;
 		Workbook workbook = WorkbookFactory.create(uploadedFile.getInputstream());
 		Sheet sheet = workbook.getSheetAt(0); // Primera hoja
 		for (Row row : sheet) {
@@ -186,7 +186,7 @@ public class ProductosServiceImp implements IProductoService {
 	}
 
 	private List<Productos> leerCVS(UploadedFile uploadedFile) {
-		List<Productos> list = new ArrayList<Productos>();
+		List<Productos> list = new ArrayList<>();
 		Productos p;
 		try (CSVReader csvReader = new CSVReader(new InputStreamReader(uploadedFile.getInputstream()))) {
 			String[] fila;
@@ -208,7 +208,7 @@ public class ProductosServiceImp implements IProductoService {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return list;
 	}
@@ -221,7 +221,7 @@ public class ProductosServiceImp implements IProductoService {
 				p = productosDAO.getByIdCodigoBarras(codigoBarras);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return p;
 	}
@@ -231,7 +231,7 @@ public class ProductosServiceImp implements IProductoService {
 		try {
 			productosDAO.bajaProducto(idProducto);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 	}
 

@@ -68,7 +68,7 @@ public class PerfilUsuarioManagerBean implements Serializable {
 			auditoria.setNivel("INFO");
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 			Auditoria auditoria = new Auditoria();
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);

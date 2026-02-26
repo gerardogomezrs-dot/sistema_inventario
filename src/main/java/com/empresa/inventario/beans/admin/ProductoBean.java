@@ -97,11 +97,9 @@ public class ProductoBean implements Serializable {
 		}
 		CompletableFuture.runAsync(() -> {
 			try {
-				iProductoService.create(copiar, (valor) -> {
-					this.progreso = valor;
-				});
+				iProductoService.create(copiar, valor -> this.progreso = valor);
 			} catch (Exception e) {
-				e.printStackTrace();
+				e.getMessage();
 			}
 		});
 
@@ -129,7 +127,7 @@ public class ProductoBean implements Serializable {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Registro actualizado correctamente"));
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 
 		Auditoria auditoria = new Auditoria();
@@ -162,7 +160,7 @@ public class ProductoBean implements Serializable {
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.validationFailed();
 			context.renderResponse();
-			e.printStackTrace();
+			e.getMessage();
 			Auditoria auditoria = new Auditoria();
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
@@ -172,7 +170,7 @@ public class ProductoBean implements Serializable {
 			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 			Auditoria auditoria = new Auditoria();
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);

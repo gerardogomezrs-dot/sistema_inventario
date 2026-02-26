@@ -82,7 +82,7 @@ public class MovimientosBean implements Serializable {
 		} catch (ExceptionMessage e) {
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return list;
 	}

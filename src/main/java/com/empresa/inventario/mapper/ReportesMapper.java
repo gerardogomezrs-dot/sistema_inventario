@@ -12,11 +12,7 @@ import com.empresa.inventario.model.ReportesMovimiento;
 
 public class ReportesMapper {
 
-	public ReportesMapper() {
-		// TODO Auto-generated constructor stub
-	}
-
-	public  ReportesMovimiento row(ResultSet resultSet) {
+	public ReportesMovimiento row(ResultSet resultSet) {
 		ReportesMovimiento movimiento = new ReportesMovimiento();
 
 		try {
@@ -29,12 +25,12 @@ public class ReportesMapper {
 			movimiento.setCantidad(Integer.toString(resultSet.getInt("cantidad")));
 			movimiento.setUsuarioResponsable(resultSet.getString("responsable"));
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return movimiento;
 	}
 
-	public  ReporteInventarioValorizado rowInventariosValorizado(ResultSet resultSet) {
+	public ReporteInventarioValorizado rowInventariosValorizado(ResultSet resultSet) {
 		ReporteInventarioValorizado movimiento = new ReporteInventarioValorizado();
 
 		try {
@@ -47,14 +43,14 @@ public class ReportesMapper {
 			movimiento.setPrecioUnitario(resultSet.getDouble("precioUnitario"));
 			movimiento.setPrecioTotal(resultSet.getInt("valorTotal"));
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return movimiento;
 	}
 
-	public  ReporteStockBajo rowStockBajo(ResultSet resultSet) {
+	public ReporteStockBajo rowStockBajo(ResultSet resultSet) {
 		ReporteStockBajo movimiento = new ReporteStockBajo();
-		
+
 		try {
 			movimiento.setCodigoBarras(resultSet.getString("codigoBarras"));
 			movimiento.setNombreProducto(resultSet.getString("nombreProducto"));
@@ -63,14 +59,14 @@ public class ReportesMapper {
 			movimiento.setFaltanteSugerido(Integer.toString(resultSet.getInt("faltanteSugerido")));
 			movimiento.setCategoria(resultSet.getString("categoria"));
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return movimiento;
 	}
 
-	public  ReporteAuditoriaUsuario rowAuditoriaUsuario(ResultSet resultSet) {
+	public ReporteAuditoriaUsuario rowAuditoriaUsuario(ResultSet resultSet) {
 		ReporteAuditoriaUsuario movimiento = new ReporteAuditoriaUsuario();
-		
+
 		try {
 			movimiento.setUsuarioResponsable(resultSet.getString("Operador"));
 			movimiento.setFechaHora(resultSet.getDate("Fecha_Accion"));
@@ -79,7 +75,7 @@ public class ReportesMapper {
 			movimiento.setCantidad(resultSet.getInt("cantidad"));
 			movimiento.setObservaciones(resultSet.getString("justificacion"));
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 
 		return movimiento;
@@ -87,27 +83,27 @@ public class ReportesMapper {
 
 	public ReporteRotacionInventario rowRotacionInventario(ResultSet rs) {
 		ReporteRotacionInventario movimiento = new ReporteRotacionInventario();
-		
+
 		try {
 			movimiento.setNombreProducto(rs.getString("nombre"));
 			movimiento.setTotalUnidadesSalida(rs.getInt("total_unidades_salida"));
 			movimiento.setStockActual(rs.getInt("stock_disponible"));
 			movimiento.setIndiceRotacion(rs.getDouble("indice_rotacion"));
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return movimiento;
 	}
 
-	public  ReporteClasificacionABC rowClasificacionABC(ResultSet rs) {
+	public ReporteClasificacionABC rowClasificacionABC(ResultSet rs) {
 		ReporteClasificacionABC abc = new ReporteClasificacionABC();
-		
+
 		try {
 			abc.setNombreProducto(rs.getString("nombreProducto"));
 			abc.setValorStock(rs.getDouble("valorStock"));
 			abc.setClasificacionABC(rs.getString("clasificacion_abc"));
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return abc;
 	}

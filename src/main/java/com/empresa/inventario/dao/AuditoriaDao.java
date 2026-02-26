@@ -1,5 +1,6 @@
 package com.empresa.inventario.dao;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,9 +12,13 @@ import com.empresa.inventario.mapper.AuditoriaMapper;
 import com.empresa.inventario.model.Auditoria;
 import com.empresa.inventario.utils.Conexion;
 
-public class AuditoriaDao {
+public class AuditoriaDao implements Serializable{
 
-	private AuditoriaMapper auditoriaMapper = new AuditoriaMapper();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private transient AuditoriaMapper auditoriaMapper = new AuditoriaMapper();
 
 	public List<Auditoria> getAllAuditoria() {
 		String sql = "SELECT a.* FROM auditoria_sistema a";
@@ -23,12 +28,11 @@ public class AuditoriaDao {
 				ResultSet rs = ps.executeQuery()) {
 			while (rs.next()) {
 				Auditoria p = new Auditoria();
-				auditoriaMapper = new AuditoriaMapper();
 				p = auditoriaMapper.mapRow(rs);
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return lista;
 	}
@@ -49,7 +53,7 @@ public class AuditoriaDao {
 			ps.executeUpdate();
 
 		} catch (SQLException ex) {
-			ex.printStackTrace();
+			ex.getMessage();
 		}
 	}
 }

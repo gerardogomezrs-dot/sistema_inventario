@@ -19,10 +19,9 @@ public class AuthService implements IAuthService, Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private transient UsuariosDAO dao = new UsuariosDAO();
+	private  UsuariosDAO dao = new UsuariosDAO();
 	private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
-	
 
 	@Override
 	public Usuario login(String userName, String password) {
@@ -34,7 +33,7 @@ public class AuthService implements IAuthService, Serializable {
 			usuario = dao.login(userName);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 
 		if (usuario == null) {
@@ -47,7 +46,7 @@ public class AuthService implements IAuthService, Serializable {
 		try {
 			passwordDecoficado = usuario.getPassword();
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		if (password.equals(passwordDecoficado)) {
 			logger.info("Bienvenido");

@@ -7,10 +7,7 @@ import com.empresa.inventario.model.Movimientos;
 import com.empresa.inventario.model.Productos;
 import com.empresa.inventario.model.Usuario;
 
-
 public class MovimientosMapper {
-	
-	
 
 	public Movimientos mapRow(ResultSet rs) throws SQLException {
 		Movimientos p = new Movimientos();

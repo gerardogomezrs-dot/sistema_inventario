@@ -45,7 +45,7 @@ public class MovimientosManagerBean implements Serializable {
 
 	private String infoProductoExtra;
 
-	private List<Movimientos> listaMovimientosGuardar = new ArrayList<Movimientos>();
+	private List<Movimientos> listaMovimientosGuardar = new ArrayList<>();
 
 	private int idUsuario;
 
@@ -85,14 +85,14 @@ public class MovimientosManagerBean implements Serializable {
 		try {
 			list = service.getAll();
 		} catch (ExceptionMessage e) {
-			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return list;
 	}
 
-	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
+	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
 

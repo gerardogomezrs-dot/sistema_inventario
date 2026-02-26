@@ -1,5 +1,6 @@
 package com.empresa.inventario.dao;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,9 +12,13 @@ import com.empresa.inventario.mapper.ProveedorMapper;
 import com.empresa.inventario.model.Proveedor;
 import com.empresa.inventario.utils.Conexion;
 
-public class ProveedorDAO {
+public class ProveedorDAO implements Serializable{
 
-	private ProveedorMapper mapper = new ProveedorMapper();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private transient ProveedorMapper mapper = new ProveedorMapper();
 
 	public List<Proveedor> getAll() {
 		String sql = "SELECT p.* from proveedor p";
@@ -27,7 +32,7 @@ public class ProveedorDAO {
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+				e.getMessage();
 		}
 		return lista;
 	}
@@ -45,7 +50,7 @@ public class ProveedorDAO {
 			ps.setBoolean(6, e.isActivo());
 			ps.executeUpdate();
 		} catch (SQLException ex) {
-			ex.printStackTrace();
+			ex.getMessage();
 		}
 	}
 
@@ -57,7 +62,7 @@ public class ProveedorDAO {
 			statement.setInt(1, idProveedor);
 			statement.executeUpdate();
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 	}
 
@@ -74,7 +79,7 @@ public class ProveedorDAO {
 			ps.setInt(7, e.getIdProveedor());
 			ps.executeUpdate();
 		} catch (SQLException ex) {
-			ex.printStackTrace();
+			ex.getMessage();
 		
 		}
 	}

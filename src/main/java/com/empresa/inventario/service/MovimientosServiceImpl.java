@@ -18,61 +18,55 @@ public class MovimientosServiceImpl implements IMovimientosService, Serializable
 
 	private static final long serialVersionUID = 1L;
 
-	
-	private transient MovimientosDAO dao = new MovimientosDAO();
+	private  MovimientosDAO dao = new MovimientosDAO();
 
-	private transient ProductosDAO productosDAO = new ProductosDAO();
-
+	private  ProductosDAO productosDAO = new ProductosDAO();
 
 	@Override
 	public List<Movimientos> save(List<Movimientos> movimientosL) {
-		List<Movimientos> list = new ArrayList<Movimientos>();
+		List<Movimientos> list = new ArrayList<>();
 		try {
-		for(Movimientos movimientos: movimientosL) {
-		
-		if (movimientos == null) {
-			throw new ExceptionMessage("Vacio");
-		}
+			for (Movimientos movimientos : movimientosL) {
 
-		int totalStock = 0;
-		int unidad = movimientos.getCantidad();
-		
-		dao.guardar(movimientos);
-		if (movimientos.getTipoMovimiento().equals("Entrada")) {
-			int nuevoSock = productosDAO.getByIdProducto(movimientos.getIdProducto());
-			totalStock = nuevoSock + movimientos.getCantidad();
-			productosDAO.actualizarStock(movimientos.getIdProducto(), totalStock);
+				if (movimientos == null) {
+					throw new ExceptionMessage("Vacio");
+				}
+
+				int totalStock = 0;
+				int unidad = movimientos.getCantidad();
+
+				dao.guardar(movimientos);
+				if (movimientos.getTipoMovimiento().equals("Entrada")) {
+					int nuevoSock = productosDAO.getByIdProducto(movimientos.getIdProducto());
+					totalStock = nuevoSock + movimientos.getCantidad();
+					productosDAO.actualizarStock(movimientos.getIdProducto(), totalStock);
+				}
+				if (movimientos.getTipoMovimiento().equals("Salida")) {
+					int nuevoSock = productosDAO.getByIdProducto(movimientos.getIdProducto());
+					totalStock = nuevoSock - movimientos.getCantidad();
+					productosDAO.actualizarStock(movimientos.getIdProducto(), totalStock);
+				}
+				if (movimientos.getTipoMovimiento().equals("Ajuste")) {
+					productosDAO.actualizarStock(movimientos.getIdProducto(), unidad);
+				}
+			}
+		} catch (Exception e) {
+			e.getMessage();
 		}
-		if (movimientos.getTipoMovimiento().equals("Salida")) {
-			int nuevoSock = productosDAO.getByIdProducto(movimientos.getIdProducto());
-			totalStock = nuevoSock - movimientos.getCantidad();
-			productosDAO.actualizarStock(movimientos.getIdProducto(), totalStock);
-		}
-		if (movimientos.getTipoMovimiento().equals("Ajuste")) {
-			productosDAO.actualizarStock(movimientos.getIdProducto(), unidad);
-		}
-		}
-		}catch (Exception e) {
-		e.getMessage();
-		}
-		 return list;
+		return list;
 	}
-
 
 	@Override
 	public List<Movimientos> getAll() {
-		List<Movimientos> list = new ArrayList<Movimientos>();
+		List<Movimientos> list = new ArrayList<>();
 		List<Movimientos> movimientos = null;
-		
 		try {
 			list = dao.getAll();
-		if (list.size() != 0) {
-		 movimientos = new ArrayList<Movimientos>(list);
-		} else if(list.size() == 0) {
-			throw new ExceptionMessage("Lista Vacia");
-		}
-		}catch (Exception e) {
-			e.printStackTrace();
+
+			movimientos = new ArrayList<>(list);
+
+		} catch (Exception e) {
+			e.getMessage();
 		}
 		return movimientos;
 	}

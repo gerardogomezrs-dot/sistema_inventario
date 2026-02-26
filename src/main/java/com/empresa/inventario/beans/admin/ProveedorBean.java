@@ -119,17 +119,15 @@ public class ProveedorBean implements Serializable {
 		progreso = 0;
 		if (listaProveedorGuardar != null && !listaProveedorGuardar.isEmpty()) {
 			this.progreso = 0;
-			List<Proveedor> proveedors = new ArrayList<>(listaProveedorGuardar);
-			if (proveedors.isEmpty()) {
+			List<Proveedor> copiaParaGuardar = new ArrayList<>(listaProveedorGuardar);
+			if (copiaParaGuardar.isEmpty()) {
 				return;
 			}
 			CompletableFuture.runAsync(() -> {
 				try {
-					iProveedorService.save(proveedors, (valor) -> {
-						this.progreso = valor;
-					});
+					iProveedorService.save(copiaParaGuardar, valor -> this.progreso = valor);
 				} catch (Exception e) {
-					e.printStackTrace();
+					e.getMessage();
 					Auditoria auditoria = new Auditoria();
 					auditoria.setFechaAuditoria(new Date());
 					auditoria.setIdUsuario(idUsuario);
@@ -178,7 +176,7 @@ public class ProveedorBean implements Serializable {
 			auditoria.setNivel("INFO");
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 
 			Auditoria auditoria = new Auditoria();
 			auditoria.setFechaAuditoria(new Date());
@@ -206,7 +204,7 @@ public class ProveedorBean implements Serializable {
 			auditoria.setNivel("INFO");
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 
 			Auditoria auditoria = new Auditoria();
 			auditoria.setFechaAuditoria(new Date());
@@ -239,7 +237,7 @@ public class ProveedorBean implements Serializable {
 			auditoria.setNivel("INFO");
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (ExceptionMessage e) {
-			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 
 			Auditoria auditoria = new Auditoria();
 			auditoria.setFechaAuditoria(new Date());
@@ -250,7 +248,7 @@ public class ProveedorBean implements Serializable {
 			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 			Auditoria auditoria = new Auditoria();
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
@@ -262,7 +260,7 @@ public class ProveedorBean implements Serializable {
 		}
 	}
 
-	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
+	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
 

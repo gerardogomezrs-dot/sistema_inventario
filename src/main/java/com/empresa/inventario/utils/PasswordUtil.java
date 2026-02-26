@@ -43,7 +43,7 @@ public class PasswordUtil {
 			// Concatenamos IV + CipherText para poder recuperarlo al descifrar
 			cipherTextWithIv = ByteBuffer.allocate(iv.length + cipherText.length).put(iv).put(cipherText).array();
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.getMessage();
 		}
 		return Base64.getEncoder().encodeToString(cipherTextWithIv);
 	}
@@ -67,7 +67,7 @@ public class PasswordUtil {
 
 			plainText = cipher.doFinal(cipherText);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return new String(plainText, StandardCharsets.UTF_8);
 	}

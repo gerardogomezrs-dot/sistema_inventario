@@ -19,7 +19,7 @@ public class UsuariosMapper {
 			p.setPassword(PasswordUtil.decrypt(rs.getString("password")));
 			p.setActivo(rs.getBoolean("activo"));
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return p;
 	}
@@ -29,7 +29,7 @@ public class UsuariosMapper {
 		try {
 			userName = rs.getNString("user_name");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return userName;
 	}

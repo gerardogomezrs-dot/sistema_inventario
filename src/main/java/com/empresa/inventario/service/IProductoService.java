@@ -1,7 +1,7 @@
 package com.empresa.inventario.service;
 
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 
 import org.primefaces.model.UploadedFile;
 
@@ -9,7 +9,7 @@ import com.empresa.inventario.model.Productos;
 
 public interface IProductoService {
 
-	List<Productos> create(List<Productos> productos, Consumer<Integer> progresoCallback);
+	List<Productos> create(List<Productos> productos, IntConsumer progresoCallback);
 
 	void delete(int idProducto);
 	

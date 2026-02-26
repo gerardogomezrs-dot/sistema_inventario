@@ -19,7 +19,7 @@ public class AuditoriaServiceImpl implements IAuditoriaService, Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private transient AuditoriaDao auditoriaDao = new AuditoriaDao();
+	private  AuditoriaDao auditoriaDao;
 
 	@Override
 	public void registroAuditoria(Auditoria auditoria) {
@@ -27,18 +27,18 @@ public class AuditoriaServiceImpl implements IAuditoriaService, Serializable {
 			auditoriaDao = new AuditoriaDao();
 			auditoriaDao.guardar(auditoria);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 	}
 
 	@Override
 	public List<Auditoria> getAll() {
-		List<Auditoria> auditorias = new ArrayList<Auditoria>();
+		List<Auditoria> auditorias = new ArrayList<>();
 		try {
 			auditoriaDao = new AuditoriaDao();
 			auditorias = auditoriaDao.getAllAuditoria();
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return auditorias;
 	}

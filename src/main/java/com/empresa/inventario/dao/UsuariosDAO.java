@@ -1,5 +1,6 @@
 package com.empresa.inventario.dao;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,9 +13,13 @@ import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.utils.Conexion;
 import com.empresa.inventario.utils.PasswordUtil;
 
-public class UsuariosDAO {
+public class UsuariosDAO  implements Serializable{
 
-	private UsuariosMapper mapper;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private transient UsuariosMapper mapper = new UsuariosMapper();
 
 	public Usuario login(String userName)  {
 		
@@ -29,12 +34,11 @@ public class UsuariosDAO {
 			try (ResultSet rs = ps.executeQuery()) {
 				
 				if (rs.next()) {
-					mapper = new UsuariosMapper();
 					p = mapper.mapRow(rs);
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return p;
 	}
@@ -54,7 +58,7 @@ public class UsuariosDAO {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return p;
 	}
@@ -75,7 +79,7 @@ public class UsuariosDAO {
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return userNameValidar;
 	}
@@ -94,7 +98,7 @@ public class UsuariosDAO {
 				lista.add(p);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 
 		}
 		return lista;
@@ -116,7 +120,7 @@ public class UsuariosDAO {
 			ps.executeUpdate();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 	}
 
@@ -136,7 +140,7 @@ public class UsuariosDAO {
 			ps.setInt(7, usuario.getIdUsuario());
 			ps.executeUpdate();
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 	}
 
@@ -148,7 +152,7 @@ public class UsuariosDAO {
 			statement.setInt(1, idUsuario);
 			statement.executeUpdate();
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 	}
 
@@ -166,7 +170,7 @@ public class UsuariosDAO {
 			ps.setInt(5, usuario.getIdUsuario());
 			ps.executeUpdate();
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 	}
 

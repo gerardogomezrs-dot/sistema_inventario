@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
@@ -27,22 +27,22 @@ import com.opencsv.CSVReader;
 public class ProveedorServiceImpl implements Serializable, IProveedorService {
 
 	private static final long serialVersionUID = 1L;
-	private transient ProveedorDAO dao = new ProveedorDAO();
+	private ProveedorDAO dao = new ProveedorDAO();
 
 	@Override
 	public List<Proveedor> proveedors() {
-		List<Proveedor> proveedors = new ArrayList<Proveedor>();
+		List<Proveedor> proveedors = new ArrayList<>();
 		dao = new ProveedorDAO();
 		try {
 			proveedors = dao.getAll();
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return proveedors;
 	}
 
 	@Override
-	public void save(List<Proveedor> proveedor, Consumer<Integer> progresoCallback) {
+	public void save(List<Proveedor> proveedor, IntConsumer progresoCallback) {
 		try {
 			if (proveedor == null || proveedor.isEmpty()) {
 				throw new ExceptionMessage("Lista vacia");
@@ -57,7 +57,7 @@ public class ProveedorServiceImpl implements Serializable, IProveedorService {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 	}
 	
@@ -68,7 +68,7 @@ public class ProveedorServiceImpl implements Serializable, IProveedorService {
 		try {
 			dao.eliminarProveedor(idProveedor);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 	}
 
@@ -77,13 +77,13 @@ public class ProveedorServiceImpl implements Serializable, IProveedorService {
 		try {
 			dao.update(proveedor);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 	}
 
 	@Override
 	public List<Proveedor> uploadFiles(UploadedFile file) {
-		List<Proveedor> proveedors = new ArrayList<Proveedor>();
+		List<Proveedor> proveedors = new ArrayList<>();
 		if (file.getFileName() == null || file.getFileName().trim().isEmpty()) {
 		    throw new ExceptionMessage("Inserta un archivo");
 		}
@@ -98,14 +98,14 @@ public class ProveedorServiceImpl implements Serializable, IProveedorService {
 			try {
 				proveedors = leerCSV(file);
 			} catch (Exception e) {
-				e.printStackTrace();
+				e.getMessage();
 			}
 		}
 		if (fileName.endsWith(".xlsx") || fileName.endsWith(".lsx")) {
 			try {
 				proveedors = leerExcel(file);
 			} catch (Exception e) {
-				e.printStackTrace();
+				e.getMessage();
 			}
 		}
 		if (!fileName.endsWith(".xlsx") && !fileName.endsWith(".lsx") && !fileName.endsWith(".csv")) {
@@ -115,7 +115,7 @@ public class ProveedorServiceImpl implements Serializable, IProveedorService {
 	}
 
 	private List<Proveedor> leerExcel(UploadedFile file) throws IOException {
-		List<Proveedor> proveedor = new ArrayList<Proveedor>();
+		List<Proveedor> proveedor = new ArrayList<>();
 		Proveedor proveedores;
 		Workbook workbook = WorkbookFactory.create(file.getInputstream());
 		Sheet sheet = workbook.getSheetAt(0);
@@ -150,7 +150,7 @@ public class ProveedorServiceImpl implements Serializable, IProveedorService {
 	}
 
 	private List<Proveedor> leerCSV(UploadedFile file) {
-		List<Proveedor> proveedor = new ArrayList<Proveedor>();
+		List<Proveedor> proveedor = new ArrayList<>();
 		Proveedor prov;
 		try (CSVReader csvReader = new CSVReader(new InputStreamReader(file.getInputstream()))) {
 			csvReader.readNext();
@@ -168,7 +168,7 @@ public class ProveedorServiceImpl implements Serializable, IProveedorService {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return proveedor;
 	}

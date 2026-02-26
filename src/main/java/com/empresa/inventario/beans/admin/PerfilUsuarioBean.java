@@ -1,15 +1,14 @@
 package com.empresa.inventario.beans.admin;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.empresa.inventario.beans.BaseBean;
 import com.empresa.inventario.exceptions.ExceptionMessage;
-import com.empresa.inventario.model.Auditoria;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.service.IUsuariosService;
@@ -27,6 +26,8 @@ public class PerfilUsuarioBean implements Serializable {
 	private Usuario usuario;
 
 	private IUsuariosService iUsuariosService;
+	
+	private BaseBean navegacionBean;
 
 	private int idUsuario;
 
@@ -63,24 +64,14 @@ public class PerfilUsuarioBean implements Serializable {
 		}
 		try {
 		iUsuariosService.updateProfile(usuario);
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Actualizar");
-		auditoria.setAccion("El usuario " + nombreUsuario + " realizo una actualización");
-		auditoria.setNivel(String.valueOf(Mensajes.INFO));
-		auditoriaService.registroAuditoria(auditoria);
+		navegacionBean.registrarAuditoria(auditoriaService, "Actualizar", 
+                "El usuario " + nombreUsuario + " realizó una actualización", 
+                Mensajes.INFO.toString());
 		} catch (Exception e) {
-			e.printStackTrace();
-			Auditoria auditoria = new Auditoria();
-			auditoria.setFechaAuditoria(new Date());
-			auditoria.setIdUsuario(idUsuario);
-			auditoria.setClaseOrigen(this.getClass().getName());
-			auditoria.setMetodo(String.valueOf(Mensajes.ERROR));
-			auditoria.setAccion(String.valueOf(Mensajes.ERROR)+ e.getMessage());
-			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
-			auditoriaService.registroAuditoria(auditoria);
+			e.getMessage();
+			navegacionBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, 
+	                Mensajes.ERROR + ": " + e.getMessage(), 
+	                Mensajes.ERROR.toString());
 		}
 	}
 }

@@ -6,12 +6,7 @@ import java.sql.SQLException;
 import com.empresa.inventario.model.Proveedor;
 
 public class ProveedorMapper {
-	
-	public ProveedorMapper() {
-		// TODO Auto-generated constructor stub
-	}
 
-	
 	public Proveedor rowtoMap(ResultSet resultSet) throws SQLException {
 		Proveedor proveedor = new Proveedor();
 		proveedor.setIdProveedor(resultSet.getInt("id_proveedor"));
@@ -24,5 +19,5 @@ public class ProveedorMapper {
 		proveedor.setFechaRegistro(resultSet.getDate("fecha_registro"));
 		return proveedor;
 	}
-	
+
 }

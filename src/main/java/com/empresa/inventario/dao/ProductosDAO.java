@@ -1,5 +1,6 @@
 package com.empresa.inventario.dao;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,9 +12,13 @@ import com.empresa.inventario.mapper.ProductosMapper;
 import com.empresa.inventario.model.Productos;
 import com.empresa.inventario.utils.Conexion;
 
-public class ProductosDAO {
+public class ProductosDAO implements Serializable{
 
-	private ProductosMapper mapper;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private transient ProductosMapper mapper = new ProductosMapper();
 
 	public List<Productos> getAll() {
 		String sql = "SELECT p.*, c.id_categoria as idCategoria, c.nombre as "
@@ -26,12 +31,11 @@ public class ProductosDAO {
 
 			while (rs.next()) {
 				Productos p = new Productos();
-				mapper = new ProductosMapper();
 				p = mapper.mapRow(rs);
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return lista;
 	}
@@ -61,7 +65,7 @@ public class ProductosDAO {
 			ps.close();
 			conexion.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 	}
 
@@ -87,7 +91,7 @@ public class ProductosDAO {
 
 			ps.executeUpdate();
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 
 	}
@@ -101,7 +105,7 @@ public class ProductosDAO {
 			ps.setInt(2, idProducto);
 			ps.executeUpdate();
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 
 	}
@@ -115,7 +119,7 @@ public class ProductosDAO {
 			statement.setInt(1, idProducto);
 			statement.executeUpdate();
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 
 	}
@@ -131,7 +135,7 @@ public class ProductosDAO {
 				p = rs.getInt("stock_actual");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return p;
 	}
@@ -147,7 +151,7 @@ public class ProductosDAO {
 
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return p;
 	}
@@ -161,7 +165,7 @@ public class ProductosDAO {
 			statement.setInt(1, idProducto);
 			statement.executeUpdate();
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 
 	}

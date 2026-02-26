@@ -7,13 +7,8 @@ import com.empresa.inventario.model.Categorias;
 import com.empresa.inventario.model.Productos;
 
 public class ProductosMapper {
-	
-	public ProductosMapper() {
-		// TODO Auto-generated constructor stub
-	}
-	
-	
-	public Productos mapRow(ResultSet rs) throws SQLException{
+
+	public Productos mapRow(ResultSet rs) throws SQLException {
 		Productos productos = new Productos();
 		productos.setIdProducto(rs.getInt("id_producto"));
 		productos.setCodigoBarras(rs.getString("codigo_barras"));
@@ -32,8 +27,8 @@ public class ProductosMapper {
 		productos.setCategorias(categorias);
 		return productos;
 	}
-	
-	public Productos mapRowBy(ResultSet rs) throws SQLException{
+
+	public Productos mapRowBy(ResultSet rs) throws SQLException {
 		Productos p = new Productos();
 		p.setIdProducto(rs.getInt("id_producto"));
 		p.setCodigoBarras(rs.getString("codigo_barras"));

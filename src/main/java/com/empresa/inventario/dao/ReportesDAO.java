@@ -1,5 +1,6 @@
 package com.empresa.inventario.dao;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,9 +18,13 @@ import com.empresa.inventario.model.ReporteStockBajo;
 import com.empresa.inventario.model.ReportesMovimiento;
 import com.empresa.inventario.utils.Conexion;
 
-public class ReportesDAO {
+public class ReportesDAO  implements Serializable{
 	
-	private ReportesMapper mapper;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private transient ReportesMapper mapper = new ReportesMapper();
 
 	public List<ReportesMovimiento> getAllCategorias(LocalDateTime dateTimeInicio, LocalDateTime dateTimeFin) {
 
@@ -52,12 +57,11 @@ public class ReportesDAO {
 
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
-					mapper = new ReportesMapper();
 					lista.add(mapper.row(rs));
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return lista;
 	}
@@ -70,18 +74,17 @@ public class ReportesDAO {
 				+ "    (p.stock_actual * p.precio_unitario) AS valorTotal\r\n" + "FROM productos p\r\n"
 				+ "JOIN categorias c ON p.id_categoria = c.id_categoria\r\n" + "WHERE p.activo = 1\r\n"
 				+ "ORDER BY valorTotal DESC;";
-		List<ReporteInventarioValorizado> lista = new ArrayList<ReporteInventarioValorizado>();
+		List<ReporteInventarioValorizado> lista = new ArrayList<>();
 		try (Connection con = Conexion.getConexion();
 				PreparedStatement ps = con.prepareStatement(sql);
 				ResultSet rs = ps.executeQuery()) {
 			while (rs.next()) {
 				ReporteInventarioValorizado p = new ReporteInventarioValorizado();
-				mapper = new ReportesMapper();
 				p = mapper.rowInventariosValorizado(rs);
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return lista;
 	}
@@ -92,19 +95,18 @@ public class ReportesDAO {
 				+ "    (p.stock_minimo - p.stock_actual) AS faltanteSugerido,\r\n" + "    c.nombre AS categoria\r\n"
 				+ "FROM productos p\r\n" + "INNER JOIN categorias c ON p.id_categoria = c.id_categoria\r\n"
 				+ "WHERE p.stock_actual <= p.stock_minimo \r\n" + "AND p.activo = 1";
-		List<ReporteStockBajo> lista = new ArrayList<ReporteStockBajo>();
+		List<ReporteStockBajo> lista = new ArrayList<>();
 
 		try (Connection con = Conexion.getConexion();
 				PreparedStatement ps = con.prepareStatement(sql);
 				ResultSet rs = ps.executeQuery()) {
 			while (rs.next()) {
 				ReporteStockBajo p = new ReporteStockBajo();
-				mapper = new ReportesMapper();
 				p = mapper.rowStockBajo(rs);
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 
 		}
 		return lista;
@@ -117,18 +119,17 @@ public class ReportesDAO {
 				+ "FROM movimientos m \r\n" + "JOIN usuarios u ON m.id_usuario = u.id_usuario \r\n"
 				+ "JOIN productos p ON m.id_producto = p.id_producto \r\n" + "WHERE m.tipo_movimiento = 'AJUSTE' \r\n"
 				+ "ORDER BY m.fecha_hora DESC";
-		List<ReporteAuditoriaUsuario> lista = new ArrayList<ReporteAuditoriaUsuario>();
+		List<ReporteAuditoriaUsuario> lista = new ArrayList<>();
 		try (Connection con = Conexion.getConexion();
 				PreparedStatement ps = con.prepareStatement(sql);
 				ResultSet rs = ps.executeQuery()) {
 			while (rs.next()) {
 				ReporteAuditoriaUsuario p = new ReporteAuditoriaUsuario();
-				mapper = new ReportesMapper();
 				p = mapper.rowAuditoriaUsuario(rs);
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return lista;
 	}
@@ -140,18 +141,17 @@ public class ReportesDAO {
 				+ "JOIN movimientos m ON p.id_producto = m.id_producto " + "WHERE m.tipo_movimiento = 'SALIDA' "
 				+ "  AND m.fecha_hora >= DATE_SUB(NOW(), INTERVAL 3 MONTH) " + "GROUP BY p.id_producto "
 				+ "ORDER BY indice_rotacion DESC;";
-		List<ReporteRotacionInventario> lista = new ArrayList<ReporteRotacionInventario>();
+		List<ReporteRotacionInventario> lista = new ArrayList<>();
 		try (Connection con = Conexion.getConexion();
 				PreparedStatement ps = con.prepareStatement(sql);
 				ResultSet rs = ps.executeQuery()) {
 			while (rs.next()) {
 				ReporteRotacionInventario p = new ReporteRotacionInventario();
-				mapper = new ReportesMapper();
 				p = mapper.rowRotacionInventario(rs);
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return lista;
 	}
@@ -169,18 +169,17 @@ public class ReportesDAO {
 				+ "        WHEN porcentaje_acumulado <= 95 THEN 'B (Media Prioridad)' \r\n"
 				+ "        ELSE 'C (Baja Prioridad)' \r\n" + "    END AS clasificacion_abc\r\n" + "FROM Acumulados\r\n"
 				+ "ORDER BY valorStock DESC";
-		List<ReporteClasificacionABC> lista = new ArrayList<ReporteClasificacionABC>();
+		List<ReporteClasificacionABC> lista = new ArrayList<>();
 		try (Connection con = Conexion.getConexion();
 				PreparedStatement ps = con.prepareStatement(sql);
 				ResultSet rs = ps.executeQuery()) {
 			while (rs.next()) {
 				ReporteClasificacionABC p = new ReporteClasificacionABC();
-				mapper = new ReportesMapper();
 				p = mapper.rowClasificacionABC(rs);
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return lista;
 	}

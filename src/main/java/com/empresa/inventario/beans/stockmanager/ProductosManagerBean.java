@@ -33,26 +33,25 @@ public class ProductosManagerBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private List<Categorias> listaCategorias;
-	private List<Productos> listaProductosGuardar = new ArrayList<Productos>();
+	private List<Productos> listaProductosGuardar = new ArrayList<>();
 	private List<Productos> listaProductosList;
 	private transient UploadedFile uploadedFile;
 	private Productos producto;
 	private Integer progreso = 0;
-
-	
 
 	private int idUsuario;
 
 	private String nombreUsuario;
 
 	private IAuditoriaService auditoriaService;
-	
+
 	private IProductoService iProductoService;
 
 	private ICategoriaService iCategoriaService;
 
 	@Inject
-	public ProductosManagerBean(IAuditoriaService auditoriaService, IProductoService iProductoService, ICategoriaService iCategoriaService) {
+	public ProductosManagerBean(IAuditoriaService auditoriaService, IProductoService iProductoService,
+			ICategoriaService iCategoriaService) {
 		this.auditoriaService = auditoriaService;
 		this.iProductoService = iProductoService;
 		this.iCategoriaService = iCategoriaService;
@@ -60,16 +59,16 @@ public class ProductosManagerBean implements Serializable {
 
 	@PostConstruct
 	public void init() {
-			ListaProductos();
-			listaCategorias = iCategoriaService.getAllCategorias();
-			Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
-					.get("sessionUsuario");
-			idUsuario = user.getIdUsuario();
-			nombreUsuario = user.getNombre();
-			producto = new Productos();
+		listaProductos();
+		listaCategorias = iCategoriaService.getAllCategorias();
+		Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+				.get("sessionUsuario");
+		idUsuario = user.getIdUsuario();
+		nombreUsuario = user.getNombre();
+		producto = new Productos();
 	}
 
-	public void ListaProductos() {
+	public void listaProductos() {
 		this.listaProductosList = iProductoService.getAll();
 	}
 
@@ -126,17 +125,15 @@ public class ProductosManagerBean implements Serializable {
 		this.progreso = 0;
 		List<Productos> listaProductos = listaProductosGuardar;
 
-		List<Productos> copiar = new ArrayList<Productos>(listaProductos);
+		List<Productos> copiar = new ArrayList<>(listaProductos);
 		if (copiar.isEmpty()) {
 			return;
 		}
 		CompletableFuture.runAsync(() -> {
 			try {
-				iProductoService.create(copiar, (valor) -> {
-					this.progreso = valor;
-				});
+				iProductoService.create(copiar, valor -> this.progreso = valor);
 			} catch (Exception e) {
-				e.printStackTrace();
+				e.getMessage();
 				Auditoria auditoria = new Auditoria();
 				auditoria.setFechaAuditoria(new Date());
 				auditoria.setIdUsuario(idUsuario);
@@ -170,7 +167,7 @@ public class ProductosManagerBean implements Serializable {
 	public void actualizar() {
 		try {
 			iProductoService.update(producto);
-			ListaProductos();
+			listaProductos();
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Registro actualizado correctamente"));
 			Auditoria auditoria = new Auditoria();
@@ -182,7 +179,7 @@ public class ProductosManagerBean implements Serializable {
 			auditoria.setNivel("INFO");
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 			Auditoria auditoria = new Auditoria();
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
@@ -209,11 +206,11 @@ public class ProductosManagerBean implements Serializable {
 			auditoria.setNivel("INFO");
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (ExceptionMessage e) {
-			añadirMensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", e.getMessage());
+			mensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", e.getMessage());
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.validationFailed();
 			context.renderResponse();
-			e.printStackTrace();
+			e.getMessage();
 			Auditoria auditoria = new Auditoria();
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
@@ -223,7 +220,7 @@ public class ProductosManagerBean implements Serializable {
 			auditoria.setNivel(String.valueOf(Mensajes.ERROR));
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 			Auditoria auditoria = new Auditoria();
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
@@ -235,13 +232,13 @@ public class ProductosManagerBean implements Serializable {
 		}
 	}
 
-	public void cargaArchivos(){
+	public void cargaArchivos() {
 		try {
 			if (uploadedFile == null || uploadedFile.getContents() == null) {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
 			}
-			listaProductosGuardar = new ArrayList<Productos>();
+			listaProductosGuardar = new ArrayList<>();
 			listaProductosGuardar = iProductoService.cargaArchivos(uploadedFile);
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
@@ -254,7 +251,7 @@ public class ProductosManagerBean implements Serializable {
 			auditoria.setNivel("INFO");
 			auditoriaService.registroAuditoria(auditoria);
 		} catch (ExceptionMessage e) {
-			añadirMensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 			Auditoria auditoria = new Auditoria();
 			auditoria.setFechaAuditoria(new Date());
 			auditoria.setIdUsuario(idUsuario);
@@ -266,7 +263,7 @@ public class ProductosManagerBean implements Serializable {
 		}
 	}
 
-	private void añadirMensaje(FacesMessage.Severity severity, String summary, String detail) {
+	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
 

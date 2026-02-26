@@ -105,7 +105,7 @@ public class LoginBean implements Serializable {
 			return null;
 		} catch (Exception e) {
 			mensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", "Ocurrió un error en el servidor. ");
-			e.printStackTrace();
+			e.getMessage();
 			return null;
 		}
 	}

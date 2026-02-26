@@ -12,7 +12,7 @@ import com.empresa.inventario.model.ReportesMovimiento;
 
 public interface IReporteService {
 	
-	List<ReportesMovimiento> movimientos(Date Inicio, Date Fin);
+	List<ReportesMovimiento> movimientos(Date inicio, Date fin);
 	
 	List<ReporteInventarioValorizado> reporteInventarioValorizado();
 	

@@ -3,7 +3,7 @@ package com.empresa.inventario.service;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
@@ -24,57 +24,57 @@ import com.opencsv.CSVReader;
 @ApplicationScoped
 public class CategoriaServiceImpl implements ICategoriaService {
 
-	private transient CategoriasDAO dao = new CategoriasDAO();
+	private  CategoriasDAO dao = new CategoriasDAO();
 
 	private Categorias cat;
 
 	@Override
-	public void save(List<Categorias> list, Consumer<Integer> progresoCallback)  {
+	public void save(List<Categorias> list, IntConsumer progresoCallback) {
 		if (list == null || list.isEmpty()) {
 			throw new ExceptionMessage("Lista vacia");
 		}
 		try {
-		int total = list.size();
-		int batchSize = 50; 
-		for (int i = 0; i < total; i++) {
-			dao.guardar(list.get(i));
-	        if (i % batchSize == 0 || i == total - 1) {
-	            int porcentaje = (int) (((double) (i + 1) / total) * 100);
-	            progresoCallback.accept(porcentaje);
-	        }
-		}
+			int total = list.size();
+			int batchSize = 50;
+			for (int i = 0; i < total; i++) {
+				dao.guardar(list.get(i));
+				if (i % batchSize == 0 || i == total - 1) {
+					int porcentaje = (int) (((double) (i + 1) / total) * 100);
+					progresoCallback.accept(porcentaje);
+				}
+			}
 		} catch (Exception e) {
 			e.getMessage();
 		}
-		
+
 	}
 
 	@Override
-	public void update(Categorias categorias)  {
-			try {
+	public void update(Categorias categorias) {
+		try {
 			dao.actualizar(categorias);
-			}catch (Exception e) {
-				e.printStackTrace();
-			}
+		} catch (Exception e) {
+			e.getMessage();
+		}
 	}
 
 	@Override
 	public List<Categorias> getAllCategorias() {
-		List<Categorias> categorias = new ArrayList<Categorias>();
-		
+		List<Categorias> categorias = new ArrayList<>();
+
 		try {
 			categorias = dao.getAllCategorias();
-			if (categorias.size() == 0) {
-				 throw new ExceptionMessage("Lista Vacia");
+			if (categorias.isEmpty()) {
+				throw new ExceptionMessage("Lista Vacia");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return categorias;
 	}
 
 	@Override
-	public void delete(int idCategoria){
+	public void delete(int idCategoria) {
 		try {
 			dao.eliminarCategoria(idCategoria);
 		} catch (Exception e) {
@@ -84,9 +84,9 @@ public class CategoriaServiceImpl implements ICategoriaService {
 
 	@Override
 	public List<Categorias> cargarArchivo(UploadedFile file) {
-		List<Categorias> categorias = new ArrayList<Categorias>();
+		List<Categorias> categorias = new ArrayList<>();
 		if (file.getFileName() == null || file.getFileName().trim().isEmpty()) {
-		    throw new ExceptionMessage("Inserta un archivo");
+			throw new ExceptionMessage("Inserta un archivo");
 		}
 		String fileName = "";
 		fileName = file.getFileName().toLowerCase();
@@ -94,26 +94,26 @@ public class CategoriaServiceImpl implements ICategoriaService {
 			try {
 				categorias = leerCSV(file);
 			} catch (Exception e) {
-				e.printStackTrace();
+				e.getMessage();
 			}
 		}
 		if (fileName.endsWith(".xlsx") || fileName.endsWith(".lsx")) {
 			try {
 				categorias = leerExcel(file);
 			} catch (Exception e) {
-				e.printStackTrace();
+				e.getMessage();
 			}
 		}
 
 		if (!fileName.endsWith(".xlsx") && !fileName.endsWith(".lsx") && !fileName.endsWith(".csv")) {
 			throw new ExceptionMessage("Formato no soportado");
 		}
-		
+
 		return categorias;
 	}
 
 	private List<Categorias> leerExcel(UploadedFile file) throws Exception {
-		List<Categorias> categorias = new ArrayList<Categorias>();
+		List<Categorias> categorias = new ArrayList<>();
 		Workbook workbook = WorkbookFactory.create(file.getInputstream());
 		Sheet sheet = workbook.getSheetAt(0);
 		for (Row row : sheet) {
@@ -123,7 +123,7 @@ public class CategoriaServiceImpl implements ICategoriaService {
 			Cell cellDescripcion = row.getCell(1);
 
 			String nombreCategoria = cellNombre.getStringCellValue();
-			String descripcionCategoria = cellDescripcion.getStringCellValue().toString();
+			String descripcionCategoria = cellDescripcion.getStringCellValue();
 			cat = new Categorias();
 			cat.setNombre(nombreCategoria);
 			cat.setDescripcion(descripcionCategoria);
@@ -134,7 +134,7 @@ public class CategoriaServiceImpl implements ICategoriaService {
 	}
 
 	private List<Categorias> leerCSV(UploadedFile file) throws Exception {
-		List<Categorias> categorias = new ArrayList<Categorias>();
+		List<Categorias> categorias = new ArrayList<>();
 		try (CSVReader csvReader = new CSVReader(new InputStreamReader(file.getInputstream()))) {
 			csvReader.readNext();
 			String[] fila;
@@ -147,7 +147,7 @@ public class CategoriaServiceImpl implements ICategoriaService {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return categorias;
 	}

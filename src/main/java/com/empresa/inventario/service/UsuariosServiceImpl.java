@@ -19,7 +19,7 @@ public class UsuariosServiceImpl implements IUsuariosService, Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private transient UsuariosDAO dao = new UsuariosDAO();
+	private  UsuariosDAO dao = new UsuariosDAO();
 
 	@Override
 	public void save(Usuario usuario) {
@@ -31,7 +31,7 @@ public class UsuariosServiceImpl implements IUsuariosService, Serializable {
 			nombreUsuario = dao.validarUserName(usuario.getUserName());
 			dao.guardar(usuario);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 
 		if (nombreUsuario.equals(usuario.getUserName())) {
@@ -50,7 +50,7 @@ public class UsuariosServiceImpl implements IUsuariosService, Serializable {
 				dao.actualizar(usuario);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 
 	}
@@ -67,7 +67,7 @@ public class UsuariosServiceImpl implements IUsuariosService, Serializable {
 				dao.eliminarUsuario(id);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 	}
 
@@ -77,7 +77,7 @@ public class UsuariosServiceImpl implements IUsuariosService, Serializable {
 		try {
 			dao = new UsuariosDAO();
 			usuarios = dao.getAll();
-			if (usuarios.size() == 0) {
+			if (usuarios.isEmpty()) {
 				throw new ExceptionMessage("lista vacia");
 			}
 		} catch (Exception e) {
@@ -95,7 +95,7 @@ public class UsuariosServiceImpl implements IUsuariosService, Serializable {
 
 			dao.actualizar(usuario);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 	}
 
@@ -106,7 +106,7 @@ public class UsuariosServiceImpl implements IUsuariosService, Serializable {
 			dao = new UsuariosDAO();
 			usuario2 = dao.getById(usuario);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return usuario2;
 	}

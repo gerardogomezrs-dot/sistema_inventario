@@ -1,9 +1,11 @@
 package com.empresa.inventario.dao;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,9 +13,13 @@ import com.empresa.inventario.mapper.MovimientosMapper;
 import com.empresa.inventario.model.Movimientos;
 import com.empresa.inventario.utils.Conexion;
 
-public class MovimientosDAO {
+public class MovimientosDAO implements Serializable{
 	
-	private MovimientosMapper mapper;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private transient MovimientosMapper mapper = new MovimientosMapper();
 	
 	public List<Movimientos> getAll() {
 		
@@ -30,12 +36,11 @@ public class MovimientosDAO {
 
 			while (rs.next()) {
 				Movimientos p = new Movimientos();
-				mapper = new MovimientosMapper();
 				p = mapper.mapRow(rs);
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return lista;
 	}
@@ -53,13 +58,13 @@ public class MovimientosDAO {
 		ps.setInt(1, movimientos.getIdProducto());
 		ps.setString(2, movimientos.getTipoMovimiento());
 		ps.setInt(3, movimientos.getCantidad());
-		ps.setTimestamp(4, new java.sql.Timestamp(movimientos.getFechaHora().getTime()));
+		ps.setTimestamp(4, new Timestamp(movimientos.getFechaHora().getTime()));
 		ps.setString(5, movimientos.getOrigenDestino());
 		ps.setInt(6, movimientos.getIdUsuario());
 		ps.setString(7, movimientos.getObservaciones());
 		ps.executeUpdate();
 		}catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 
 		

@@ -51,17 +51,17 @@ public class ReportesBean implements Serializable {
 
 	private transient List<ReporteClasificacionABC> clasificacionABCs;
 
-	private String nombreArchivo_1;
+	private String reporteReabastecimiento;
 
-	private String nombreArchivo_2;
+	private String reporteInventarioValorizado;
 
-	private String nombreArchivo_3;
+	private String reporteMovimientos;
 
-	private String nombreArchivo_4;
+	private String reporteAuditoriaUsuario;
 
-	private String nombreArchivo_5;
+	private String reporteRotacionInventario;
 
-	private String nombreArchivo_6;
+	private String reporteClasificacionABC;
 
 	private int idUsuario;
 
@@ -96,12 +96,12 @@ public class ReportesBean implements Serializable {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
 		String fechaHoy = sdf.format(new Date());
-		nombreArchivo_1 = "Reporte Reabastecimiento " + fechaHoy;
-		nombreArchivo_2 = "Reporte Inventario Valorizado " + fechaHoy;
-		nombreArchivo_3 = "Reporte Movimientos " + fechaHoy;
-		nombreArchivo_4 = "Reporte Auditoria Usuario " + fechaHoy;
-		nombreArchivo_5 = "Reporte Rotacion Inventario " + fechaHoy;
-		nombreArchivo_6 = "Reporte Clasificacion ABC " + fechaHoy;
+		reporteReabastecimiento = "Reporte Reabastecimiento " + fechaHoy;
+		reporteInventarioValorizado = "Reporte InventarioValorizado " + fechaHoy;
+		reporteMovimientos = "Reporte Movimientos " + fechaHoy;
+		reporteAuditoriaUsuario = "Reporte Auditoria Usuario " + fechaHoy;
+		reporteRotacionInventario = "Reporte Rotacion Inventario " + fechaHoy;
+		reporteClasificacionABC = "Reporte Clasificacion ABC " + fechaHoy;
 	}
 
 	@SuppressWarnings("unused")

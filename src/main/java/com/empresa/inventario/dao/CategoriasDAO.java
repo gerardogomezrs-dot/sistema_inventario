@@ -1,5 +1,6 @@
 package com.empresa.inventario.dao;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,11 +12,15 @@ import com.empresa.inventario.mapper.CategoriaMapper;
 import com.empresa.inventario.model.Categorias;
 import com.empresa.inventario.utils.Conexion;
 
-public class CategoriasDAO {
+public class CategoriasDAO implements Serializable {
 
-	private CategoriaMapper mapper;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private transient CategoriaMapper mapper = new CategoriaMapper();
 
-	public void guardar(Categorias e)  {
+	public void guardar(Categorias e) {
 		String sql = "INSERT INTO categorias (nombre, descripcion) VALUES (?, ?)";
 
 		try (Connection conexion = Conexion.getConexion(); PreparedStatement ps = conexion.prepareStatement(sql)) {
@@ -26,12 +31,12 @@ public class CategoriasDAO {
 			ps.executeUpdate();
 
 		} catch (SQLException ex) {
-			ex.printStackTrace();
-		
+			ex.getMessage();
+
 		}
 	}
 
-	public void actualizar(Categorias e)  {
+	public void actualizar(Categorias e) {
 		String sql = "UPDATE categorias SET " + "nombre = ?, " + "descripcion = ? " + " WHERE id_categoria = ?";
 		try (Connection conexion = Conexion.getConexion(); PreparedStatement ps = conexion.prepareStatement(sql)) {
 			ps.setString(1, e.getNombre());
@@ -39,7 +44,7 @@ public class CategoriasDAO {
 			ps.setInt(3, e.getIdCategoria());
 			ps.executeUpdate();
 		} catch (SQLException ex) {
-			ex.printStackTrace();
+			ex.getMessage();
 		}
 	}
 
@@ -52,25 +57,23 @@ public class CategoriasDAO {
 				ResultSet rs = ps.executeQuery()) {
 			while (rs.next()) {
 				Categorias p = new Categorias();
-				mapper = new CategoriaMapper();
 				p = mapper.mapRow(rs);
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
-			
+			e.getMessage();
 		}
 		return lista;
 	}
 
-	public void eliminarCategoria(int idCategoria)  {
+	public void eliminarCategoria(int idCategoria) {
 		String sql = "DELETE FROM CATEGORIAS WHERE ID_CATEGORIA = ?";
 		try (Connection connection = Conexion.getConexion();
 				PreparedStatement statement = connection.prepareStatement(sql);) {
 			statement.setInt(1, idCategoria);
 			statement.executeUpdate();
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 	}
 
