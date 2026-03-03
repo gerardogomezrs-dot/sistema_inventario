@@ -3,7 +3,6 @@ package com.empresa.inventario.service;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.IntConsumer;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
@@ -24,25 +23,21 @@ import com.opencsv.CSVReader;
 @ApplicationScoped
 public class CategoriaServiceImpl implements ICategoriaService {
 
-	private  CategoriasDAO dao = new CategoriasDAO();
+	private CategoriasDAO dao = new CategoriasDAO();
 
 	private Categorias cat;
 
 	@Override
-	public void save(List<Categorias> list, IntConsumer progresoCallback) {
+	public void save(List<Categorias> list) {
 		if (list == null || list.isEmpty()) {
 			throw new ExceptionMessage("Lista vacia");
 		}
 		try {
-			int total = list.size();
-			int batchSize = 50;
-			for (int i = 0; i < total; i++) {
-				dao.guardar(list.get(i));
-				if (i % batchSize == 0 || i == total - 1) {
-					int porcentaje = (int) (((double) (i + 1) / total) * 100);
-					progresoCallback.accept(porcentaje);
-				}
+
+			for (Categorias categorias : list) {
+				dao.guardar(categorias);
 			}
+
 		} catch (Exception e) {
 			e.getMessage();
 		}

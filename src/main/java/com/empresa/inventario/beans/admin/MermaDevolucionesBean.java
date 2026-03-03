@@ -9,56 +9,58 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.empresa.inventario.beans.BaseAuditoriaBean;
-import com.empresa.inventario.exceptions.ExceptionMessage;
-import com.empresa.inventario.model.Auditoria;
+import com.empresa.inventario.model.MermasDevoluciones;
+import com.empresa.inventario.model.Productos;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.utils.Mensajes;
 
 import lombok.Data;
 
-@Named("auditoriaBean")
+@Named("mermasDevolucionesBean")
 @javax.faces.view.ViewScoped
 @Data
-public class AuditoriaBean implements Serializable {
+public class MermaDevolucionesBean implements Serializable {
 	/**
-	 * 
-	 */
+	* 
+	*/
 	private static final long serialVersionUID = 1L;
-
-	private transient List<Auditoria> filteredList;
-	private transient List<Auditoria> list;
+	
+	private MermasDevoluciones mermasDevoluciones;
+	
+	private IAuditoriaService auditoriaService;
+	
 	private int idUsuario;
 
 	private String nombreUsuario;
-
-	private IAuditoriaService auditoriaService;
+	
+	private List<Productos> listaProductos;
 
 	@Inject
-	public AuditoriaBean(IAuditoriaService auditoriaService) {
+	public MermaDevolucionesBean(IAuditoriaService auditoriaService) {
 		this.auditoriaService = auditoriaService;
+	}
+
+	public MermaDevolucionesBean() {
+
 	}
 
 	@PostConstruct
 	public void init() {
-		cargarListaAuditoria();
+		
 		Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.get("sessionUsuario");
 		idUsuario = user.getIdUsuario();
 		nombreUsuario = user.getNombre();
 	}
-
-	public void cargarListaAuditoria() {
-		list = auditoriaService.getAll();
-		if (list.isEmpty()) {
-			throw new ExceptionMessage("Lista Vacia");
-		}
-	}
-
-	public String irADashboard() {
+	
+	public String irARegistrarMermaDevolucion() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 		baseBean.registrarNavegacion(auditoriaService, Mensajes.NAVEGACION, "navego a dashboard", idUsuario,
 				nombreUsuario);
-		return "/pages/admin/dashboard.xhtml?faces-redirect=true";
-	}
+		return "/pages/admin/mermasDevoluciones/mermasDevoluciones.xhtml?faces-redirect=true";
+
+
+}
+
 }

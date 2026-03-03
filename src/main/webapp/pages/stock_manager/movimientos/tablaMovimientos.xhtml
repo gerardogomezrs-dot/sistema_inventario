@@ -6,14 +6,12 @@
 <h:head>
     <title>Gestión de Movimientos</title>
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
-    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
-    <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
-    <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
+    
     <style>
         /* Estilo para simular el p:tag en PrimeFaces 7 */
         .badge-info {
-           background-color: #e3f2fd;
-    color: #1565c0; /* Azul más profundo y legible */
+            background-color: #e3f2fd;
+            color: #1565c0; 
             padding: 2px 8px;
             border-radius: 4px;
             font-size: 12px;
@@ -41,10 +39,10 @@
         <p:separator />
         <p:toolbar style="margin-bottom: 20px; border: none; background: transparent;">
             <f:facet name="left">
-        <p:commandButton value="Nuevo Movimiento" icon="pi pi-save" action="#{movimientosAlmacenBean.irANuevoMovimiento}" />
+        <p:commandButton value="Nuevo Movimiento" icon="pi pi-save" action="#{movimientosManagerBean.irANuevoMovimiento}" />
             </f:facet>
             <f:facet name="right">
-        <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{movimientosAlmacenBean.irADashboard}"
+        <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{movimientosManagerBean.irADashboard}"
             immediate="true" style="margin-left:10px;" />
             </f:facet>
         </p:toolbar>

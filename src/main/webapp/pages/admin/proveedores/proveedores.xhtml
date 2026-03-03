@@ -8,6 +8,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
     <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
+    <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
 
     <style type="text/css">
         /* Reset de bordes para PanelGrid */
@@ -52,12 +53,6 @@
         <ui:include src="/pages/admin/menu.xhtml" />
 
         <p:growl id="msgs" showDetail="true" skipDetailIfEqualsSummary="true" />
-
-        <p:progressBar widgetVar="pbAjax" ajax="true" value="#{proveedorBean.progreso}" labelTemplate="{value}%"
-            styleClass="animated" interval="500">
-            <p:ajax event="complete" listener="#{proveedorBean.onComplete}" update="msgs"
-                />
-        </p:progressBar>
 
         <div class="main-container">
             <div class="form-side">

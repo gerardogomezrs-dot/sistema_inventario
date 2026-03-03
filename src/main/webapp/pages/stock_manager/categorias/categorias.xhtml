@@ -6,6 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+    <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
 
     <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
     <f:facet name="first">
@@ -53,11 +54,6 @@
     <h:form id="formCategoria" enctype="multipart/form-data">
         <ui:include src="/pages/stock_manager/menu.xhtml" />
         <p:growl id="msgs" showDetail="true" />
-        <p:progressBar widgetVar="pbAjax" ajax="true" value="#{categoriasAlmacenBean.progreso}" labelTemplate="{value}%"
-            styleClass="animated" interval="500">
-
-            <p:ajax event="complete" listener="#{categoriasManagerBean.onComplete}" update="msgs" />
-        </p:progressBar>
         <div class="flex-container">
             <p:panel header="Registro de Categorias" style="width: 600px; margin: 0 auto;">
                 <h:panelGrid columns="2" columnClasses="label,value">
@@ -97,7 +93,7 @@
                     </p:column>
                 </p:dataTable>
                 <p:separator />
-                <p:commandButton value="Guardar" icon="pi pi-save" action="#{categoriasAlmacenBean.guardar}"
+                <p:commandButton value="Guardar" icon="pi pi-save" action="#{categoriasManagerBean.guardar}"
                     process="@form" update="tablaDatos, msgs" widgetVar="btnGuardar"
                     onclick="PF('pbAjax').start(); PF('btnGuardar').disable();"
                     oncomplete="if (args.validationFailed) { PF('pbAjax').cancel(); PF('btnGuardar').enable(); } else { PF('dlgConfirmacionGuardar').show(); }" />

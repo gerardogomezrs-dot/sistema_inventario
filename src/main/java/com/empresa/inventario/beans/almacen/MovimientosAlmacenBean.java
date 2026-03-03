@@ -2,7 +2,6 @@ package com.empresa.inventario.beans.almacen;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -11,18 +10,15 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.empresa.inventario.beans.admin.MovimientosBean;
+import com.empresa.inventario.beans.BaseAuditoriaBean;
 import com.empresa.inventario.exceptions.ExceptionMessage;
-import com.empresa.inventario.model.Auditoria;
 import com.empresa.inventario.model.Movimientos;
 import com.empresa.inventario.model.Productos;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.service.IMovimientosService;
 import com.empresa.inventario.service.IProductoService;
+import com.empresa.inventario.service.IUsuariosService;
 import com.empresa.inventario.utils.Mensajes;
 
 import lombok.Data;
@@ -63,53 +59,52 @@ public class MovimientosAlmacenBean implements Serializable {
 	private IMovimientosService service;
 
 	private IProductoService iProductoService;
+	
+	private IUsuariosService iUsuariosService;
 
 	@Inject
 	MovimientosAlmacenBean(IAuditoriaService auditoriaService, IMovimientosService service,
-			IProductoService iProductoService) {
+			IProductoService iProductoService, IUsuariosService iUsuariosService) {
 		this.auditoriaService = auditoriaService;
 		this.service = service;
 		this.iProductoService = iProductoService;
+		this.iUsuariosService = iUsuariosService;
+		;
 	}
 
 	@PostConstruct
 	public void init() {
 
 		this.movimientos = new Movimientos();
-		listaMovimientos();
+		
 		listProductos = iProductoService.getAll();
 		user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("sessionUsuario");
 
 		idUsuario = user.getIdUsuario();
 		nombreUsuario = user.getNombre();
+		movimientos.setIdUsuario(idUsuario);
+		listaMovimientos(idUsuario);
+		
 
 	}
 
 	public String irADashboard() {
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		baseBean.registrarNavegacion(auditoriaService, "Dashbard", "entro a dashboard", idUsuario, nombreUsuario);
 		return "/pages/almacen/dashboard.xhtml?faces-redirect=true";
 	}
 
 	public String irATablaMovimientos() {
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
-		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego hacia tabla movimientos");
-		auditoria.setNivel(String.valueOf(Mensajes.INFO));
-		auditoriaService.registroAuditoria(auditoria);
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		baseBean.registrarNavegacion(auditoriaService, "Tabla Movimientos", "entro a tabla movimientos", idUsuario,
+				nombreUsuario);
 		return "/pages/almacen/movimientos/tablaMovimientos.xhtml?faces-redirect=true";
 	}
 
 	public String irANuevoMovimiento() {
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Nuevo movimiento");
-		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego hacia nuevo movimiento");
-		auditoria.setNivel("INFO");
-		auditoriaService.registroAuditoria(auditoria);
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		baseBean.registrarNavegacion(auditoriaService, "Nuevo Movimiento", "entro a nuevo movimiento", idUsuario,
+				nombreUsuario);
 		return "/pages/almacen/movimientos/movimientos.xhtml?faces-redirect=true";
 	}
 
@@ -129,45 +124,62 @@ public class MovimientosAlmacenBean implements Serializable {
 		}
 	}
 
-	public List<Movimientos> listaMovimientos() {
+	public List<Movimientos> listaMovimientos(int idUsuario) {
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 		try {
 			list = new ArrayList<>();
-			list = service.getAll();
+			Usuario usuario = iUsuariosService.getByIdUsuario(idUsuario);
+			if(usuario ==null) {
+				System.err.println("Vacio");
+			}
+			System.err.println("iD " + usuario.getIdUsuario());
+			list = service.getbyIdUsuarioMovimientos(usuario.getIdUsuario());
+			
 		} catch (ExceptionMessage e) {
+			e.printStackTrace();
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
+					Mensajes.ERROR.toString(), idUsuario);
 		} catch (Exception e) {
-			e.getMessage();
+			e.printStackTrace();
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
+					Mensajes.ERROR.toString(), idUsuario);
 		}
 		return list;
 	}
 
 	public void saveTable() {
-		service.save(listaMovimientosGuardar);
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Guardar");
-		auditoria.setAccion("El usuario " + nombreUsuario + " guardo un registro");
-		auditoria.setNivel("INFO");
-		auditoriaService.registroAuditoria(auditoria);
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 
-		if (listaMovimientosGuardar != null) {
-			listaMovimientosGuardar.clear();
+		try {
+			service.save(listaMovimientosGuardar);
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.GUARDAR,
+					Mensajes.USUARIO + nombreUsuario + "realizo el guardado de un registro", Mensajes.INFO.toString(),
+					idUsuario);
+
+			if (listaMovimientosGuardar != null) {
+				listaMovimientosGuardar.clear();
+			}
+		} catch (Exception e) {
+			e.getMessage();
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
+					Mensajes.ERROR.toString(), idUsuario);
 		}
 	}
 
 	public void save() {
-		listaMovimientosGuardar.add(movimientos);
-		this.movimientos = new Movimientos();
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo("Guardar registro tabla");
-		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " guardo");
-		auditoria.setNivel("INFO");
-		auditoriaService.registroAuditoria(auditoria);
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		try {
+			listaMovimientosGuardar.add(movimientos);
+			this.movimientos = new Movimientos();
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.GUARDAR_REGISTRO_TABLA,
+					Mensajes.USUARIO + nombreUsuario + " registro un elemento a la tabla", Mensajes.INFO.toString(),
+					idUsuario);
+		} catch (Exception e) {
+			e.getMessage();
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
+					Mensajes.ERROR.toString(), idUsuario);
+		}
 	}
 
 	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {

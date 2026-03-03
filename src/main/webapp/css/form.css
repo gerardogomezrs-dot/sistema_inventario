@@ -1,0 +1,92 @@
+/* ===== VARIABLES PARA MODO OSCURO ===== */
+:root {
+    --bg-dark: #1e1e1e;
+    --panel-bg: #252525;
+    --input-bg: #333333;
+    --input-border: #444444;
+    --text-primary: #e0e0e0;
+    --accent-blue: #3498db;
+    --accent-red: #e74c3c;
+    --radius: 8px;
+}
+
+/* ===== PANEL PRINCIPAL ===== */
+.form-panel {
+    background-color: var(--panel-bg) !important;
+    border: 1px solid #333 !important;
+    border-radius: var(--radius) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Corregir el recuadro blanco de "Cargar desde archivo" */
+.upload-section {
+    background-color: #2d2d2d !important; /* Gris oscuro en lugar de blanco */
+    border: 1px dashed #555 !important;
+    border-radius: var(--radius);
+    padding: 15px;
+    margin-top: 15px;
+    color: var(--text-primary) !important;
+}
+
+/* ===== FORMULARIO (Labels e Inputs) ===== */
+.form-input {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.form-input label {
+    font-weight: 600;
+    color: #bbb;
+    min-width: 100px; /* Alinea los inputs verticalmente */
+}
+
+.form-input .ui-inputfield {
+    background-color: var(--input-bg) !important;
+    color: white !important;
+    border: 1px solid var(--input-border) !important;
+    padding: 8px !important;
+    width: 100%;
+}
+
+.form-input .ui-inputfield:focus {
+    border-color: var(--accent-blue) !important;
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.4) !important;
+}
+
+/* ===== BOTONES ===== */
+.ui-button {
+    transition: all 0.2s ease !important;
+    text-transform: uppercase;
+    font-size: 12px !important;
+}
+
+/* Botón de Guardar / Procesar */
+.btn-primary .ui-button {
+    background: var(--accent-blue) !important;
+    border: none !important;
+}
+
+/* Botón de Cerrar Sesión (Rojo como el tuyo) */
+.btn-danger .ui-button {
+    background: var(--accent-red) !important;
+    border: none !important;
+}
+
+.ui-button:hover {
+    filter: brightness(120%);
+    transform: translateY(-1px);
+}
+
+/* ===== TABLAS (Lado derecho) ===== */
+.ui-datatable thead th {
+    background: #1a1a1a !important;
+    color: var(--accent-blue) !important;
+    border-bottom: 2px solid #333 !important;
+}
+
+.ui-datatable tbody td {
+    background-color: var(--panel-bg) !important;
+    color: #ccc !important;
+    border: 1px solid #333 !important;
+}

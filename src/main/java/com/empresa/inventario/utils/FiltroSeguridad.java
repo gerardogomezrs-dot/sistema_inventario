@@ -22,18 +22,26 @@ public class FiltroSeguridad implements Filter {
 
 		if (user == null) {
 			res.sendRedirect(req.getContextPath() + "/login.xhtml");
+			return;
+
 		}
 
 		if (url.contains("/pages/admin/") && (user == null || !user.getRol().equals("admin"))) {
 			res.sendRedirect(req.getContextPath() + paginaPermisos);
+			return;
+
 			
 		}
 		if (url.contains("/pages/stock_manager/") && (user == null || !user.getRol().equals("stock_manager"))) {
 			res.sendRedirect(req.getContextPath() + paginaPermisos);
+			return;
+
 		}
 
 		if (url.contains("/pages/almacen/") && (user == null || !user.getRol().equals("almacen"))) {
 			res.sendRedirect(req.getContextPath() + paginaPermisos);
+			return;
+
 		} else {
 			chain.doFilter(request, response);
 		}

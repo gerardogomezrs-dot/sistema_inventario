@@ -1,6 +1,5 @@
 package com.empresa.inventario.dao;
 
-import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,13 +12,12 @@ import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.utils.Conexion;
 import com.empresa.inventario.utils.PasswordUtil;
 
-public class UsuariosDAO  implements Serializable{
+public class UsuariosDAO  {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
-	private transient UsuariosMapper mapper = new UsuariosMapper();
+	private  UsuariosMapper mapper = new UsuariosMapper();
 
 	public Usuario login(String userName)  {
 		

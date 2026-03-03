@@ -1,23 +1,19 @@
 package com.empresa.inventario.beans.almacen;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.empresa.inventario.model.Auditoria;
+import com.empresa.inventario.beans.BaseAuditoriaBean;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.utils.Mensajes;
 
-import lombok.Data;
-
 @Named("navegacionAlmacenBean")
 @javax.faces.view.ViewScoped
-@Data
 public class NavegacionAlmacenBean implements Serializable {
 	/**
 	* 
@@ -37,59 +33,35 @@ public class NavegacionAlmacenBean implements Serializable {
 
 	@PostConstruct
 	public void init() {
-
 		Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.get("sessionUsuario");
 		idUsuario = user.getIdUsuario();
 		nombreUsuario = user.getNombre();
-
 	}
 
 	public String irAPerfilUsuario() {
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
-		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego Perfil Usuario");
-		auditoria.setNivel("INFO");
-		auditoriaService.registroAuditoria(auditoria);
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		baseBean.registrarNavegacion(auditoriaService, Mensajes.PERFIL_USUARIO, "entro a consultar su perfil", idUsuario, nombreUsuario);
 		return "/pages/almacen/usuarios/perfilUsuario.xhtml?faces-redirect=true";
 	}
 
 	public String irAGestionProductos() {
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
-		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego a Gestion Productos  ");
-		auditoria.setNivel("INFO");
-		auditoriaService.registroAuditoria(auditoria);
-		return "/pages/almacen/categorias/tablaCategorias.xhtml?faces-redirect=true";
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		baseBean.registrarNavegacion(auditoriaService, Mensajes.MODULO_PRODUCTOS, "entro al modulo de productos",
+				idUsuario, nombreUsuario);
+		return "/pages/almacen/productos/tablaProductos.xhtml?faces-redirect=true";
 	}
 
 	public String irAGestionMovimientos() {
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
-		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego Gestión Movimientos");
-		auditoria.setNivel("INFO");
-		auditoriaService.registroAuditoria(auditoria);
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		baseBean.registrarNavegacion(auditoriaService, Mensajes.MODULO_MOVIMIENTOS, "entro al modulo de movimientos", idUsuario, nombreUsuario);
 		return "/pages/almacen/movimientos/tablaMovimientos.xhtml?faces-redirect=true";
 	}
 
 	public String irADashboard() {
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
-		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego a Dashboard");
-		auditoria.setNivel("INFO");
-		auditoriaService.registroAuditoria(auditoria);
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		baseBean.registrarNavegacion(auditoriaService, Mensajes.NAVEGACION, "navego a dashboard", idUsuario,
+				nombreUsuario);
 		return "/pages/almacen/dashboard.xhtml?faces-redirect=true";
 	}
 

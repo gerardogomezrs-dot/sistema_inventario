@@ -7,6 +7,8 @@
 <h:head>
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
     <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
+    <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
+
     <title>Gestión de Proveedores</title>
     <style type="text/css">
         body {
@@ -29,7 +31,6 @@
         }
     </style>
 </h:head>
-
 <h:body>
     <h:form id="form">
         <ui:include src="/pages/admin/menu.xhtml" />
@@ -102,10 +103,7 @@
                 icon="pi pi-check" />
         </p:confirmDialog>
     </h:form>
-
     <ui:include src="/pages/admin/proveedores/actualizarProveedores.xhtml" />
     <ui:include src="/pages/admin/footer.xhtml" />
-
 </h:body>
-
 </html>

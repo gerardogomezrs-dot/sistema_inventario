@@ -1,14 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE  html>
+<!DOCTYPE html>
 <html lang="es-MX" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
     xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-
 <h:head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Sistema de Inventario - Registros de Mermas y Devoluciones</title>
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
-    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
-        <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
+    <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
+    <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
 
     <style type="text/css">
         .ui-panelgrid .ui-grid-responsive .ui-grid-row {
@@ -40,68 +38,50 @@
         }
     </style>
 
-
-    <title>Registrar Producto</title>
 </h:head>
-
 <h:body>
 
-    <h:form id="formProducto" enctype="multipart/form-data">
+    <h:form id="formMermasDevoluciones" enctype="multipart/form-data">
         <ui:include src="/pages/admin/menu.xhtml" />
         <p:growl id="msgs" showDetail="true" />
         <div class="main-container">
             <div class="form-side">
-                <p:panel header="Registro de Producto" style="width: 600px; margin: 0 auto;">
+                <p:panel header="Registro de Mermas y Devoluciones" style="width: 600px; margin: 0 auto;">
                     <h:panelGrid columns="2" columnClasses="label,value">
-                        <h:outputLabel value="Codigo de Barras:" />
-                        <p:inputText id="barcodeManual" value="#{productoBean.producto.codigoBarras}"
-                            required="false" placeholder="Ingrese código manualmente..." style="width: 100%;">
-                            <p:ajax event="blur" process="@this" />
-                        </p:inputText>
 
-                        <h:outputLabel value="Nombre:" />
-                        <p:inputText value="#{productoBean.producto.nombre}" required="false" />
 
-                        <h:outputLabel value="Descripción:" />
-                        <p:inputTextarea value="#{productoBean.producto.descripcion}" rows="3" />
+                        <h:outputLabel value="Producto:" />
+                        <h:selectOneMenu value="#{mermasDevolucionesBean.mermasDevoluciones.idProducto}"
+                            style="width: 100%;">
+                            <f:selectItem itemLabel="Seleccione un producto" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{mermasDevolucionesBean.listaProductos}" var="prod"
+                                itemLabel="#{prod.nombre}" itemValue="#{prod.idProducto}" />
+                        </h:selectOneMenu>
 
-                        <p:outputLabel for="categoria" value="Categoría:" />
-                        <p:selectOneMenu id="categoria" value="#{productoBean.producto.idCategoria}"
-                            style="width: 200px;">
-                            <f:selectItem itemLabel="Seleccione una categoría" itemValue="" noSelectionOption="true" />
-                            <f:selectItems value="#{productoBean.listaCategorias}" var="cat"
-                                itemLabel="#{cat.nombre}" itemValue="#{cat.idCategoria}" />
-                        </p:selectOneMenu>
+                        <h:outputLabel value="Cantidad:" />
+                        <p:inputTextarea value="#{mermasDevolucionesBean.mermasDevoluciones.cantidad}" rows="3" />
 
-                        <h:outputLabel value="Unidad:" />
-                        <p:inputText value="#{productoBean.producto.unidad}" />
+                        <p:outputLabel value="Motivo:" />
+                        <p:inputTextarea value="#{mermasDevolucionesBean.mermasDevoluciones.motivo}" rows="3" />
 
-                        <h:outputLabel value="Precio Unitario:" />
-                        <p:inputText value="#{productoBean.producto.precioUnitario}" />
+                        <h:outputLabel value="Fecha:" />
+                        <p:inputText value="#{mermasDevolucionesBean.mermasDevoluciones.fecha}" />
 
-                        <h:outputLabel value="Stock Actual:" />
-                        <p:inputText value="#{productoBean.producto.stockActual}" />
+                        <h:outputLabel value="Costo Perdido:" />
+                        <p:inputText value="#{mermasDevolucionesBean.mermasDevoluciones.costoPerdido}" />
 
-                        <h:outputLabel value="Stock Mínimo:" />
-                        <p:inputText value="#{productoBean.producto.stockMinimo}" />
 
-                        <h:outputLabel value="Ubicación:" />
-                        <p:inputText value="#{productoBean.producto.ubicacion}" />
-
-                        <h:outputLabel value="Activo:" />
-                        <p:selectBooleanCheckbox value="#{productoBean.producto.activo}" />
 
                     </h:panelGrid>
 
                     <p:separator />
 
                     <p:commandButton value="Guardar" icon="pi pi-save" action="#{productoBean.guardarTabla}"
-                        process="@form" update="formProducto"
+                        process="@form" update="formMermasDevoluciones"
                         oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
 
                     <p:commandButton value="Regresar" icon="pi pi-chevron-left"
-                        action="#{productoBean.irATablaProductos}" immediate="true"
-                        style="margin-left: 10px;" />
+                        action="#{productoBean.irATablaProductos}" immediate="true" style="margin-left: 10px;" />
 
                     <div class="upload-section" style="margin-top: 20px;">
                         <h:outputLabel value="Cargar desde archivo (CSV, Excel):"
@@ -109,9 +89,8 @@
                         <p:fileUpload value="#{productoBean.uploadedFile}" mode="simple" skinSimple="true"
                             label="Seleccionar Archivo" chooseIcon="pi pi-upload" />
 
-                        <p:commandButton value="Procesar Archivo" action="#{productoBean.cargaArchivos}"
-                            ajax="false" styleClass="ui-button-help" style="margin-top: 5px;"
-                            icon="pi pi-file-import" />
+                        <p:commandButton value="Procesar Archivo" action="#{productoBean.cargaArchivos}" ajax="false"
+                            styleClass="ui-button-help" style="margin-top: 5px;" icon="pi pi-file-import" />
                     </div>
                 </p:panel>
             </div>
@@ -151,14 +130,10 @@
 
                 <p:separator />
 
-           <p:commandButton value="Guardar" 
-                 icon="pi pi-save" 
-                 action="#{productoBean.guardarProductoTabla}" 
-                 process="@form"
-                 update="tablaRegistros, msgs" 
-                 widgetVar="btnGuardar"
-                 onclick="PF('pbAjax').start(); PF('btnGuardar').disable();"
-                 oncomplete="if (args.validationFailed) { PF('pbAjax').cancel(); PF('btnGuardar').enable(); } else { PF('dlgConfirmacionGuardar').show(); }" />
+                <p:commandButton value="Guardar" icon="pi pi-save" action="#{productoBean.guardarProductoTabla}"
+                    process="@form" update="tablaRegistros, msgs" widgetVar="btnGuardar"
+                    onclick="PF('pbAjax').start(); PF('btnGuardar').disable();"
+                    oncomplete="if (args.validationFailed) { PF('pbAjax').cancel(); PF('btnGuardar').enable(); } else { PF('dlgConfirmacionGuardar').show(); }" />
             </div>
 
         </div>
@@ -174,7 +149,7 @@
             <br /><br />
             <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacionGuardar').hide();" />
         </p:dialog>
-        		<ui:include src="/pages/admin/footer.xhtml" />
+        <ui:include src="/pages/admin/footer.xhtml" />
     </h:form>
 
 </h:body>

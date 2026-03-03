@@ -1,6 +1,5 @@
 package com.empresa.inventario.dao;
 
-import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,13 +11,12 @@ import com.empresa.inventario.mapper.ProductosMapper;
 import com.empresa.inventario.model.Productos;
 import com.empresa.inventario.utils.Conexion;
 
-public class ProductosDAO implements Serializable{
+public class ProductosDAO {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
-	private transient ProductosMapper mapper = new ProductosMapper();
+	private  ProductosMapper mapper = new ProductosMapper();
 
 	public List<Productos> getAll() {
 		String sql = "SELECT p.*, c.id_categoria as idCategoria, c.nombre as "
@@ -65,7 +63,7 @@ public class ProductosDAO implements Serializable{
 			ps.close();
 			conexion.close();
 		} catch (SQLException e) {
-			e.getMessage();
+			e.printStackTrace();
 		}
 	}
 

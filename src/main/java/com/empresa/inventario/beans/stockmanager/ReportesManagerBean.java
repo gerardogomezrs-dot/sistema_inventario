@@ -11,7 +11,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.empresa.inventario.model.Auditoria;
+import com.empresa.inventario.beans.BaseAuditoriaBean;
 import com.empresa.inventario.model.ReporteAuditoriaUsuario;
 import com.empresa.inventario.model.ReporteClasificacionABC;
 import com.empresa.inventario.model.ReporteInventarioValorizado;
@@ -30,35 +30,37 @@ import lombok.Data;
 @Data
 public class ReportesManagerBean implements Serializable {
 
+	private static final String UNUSED = "unused";
+
 	private static final long serialVersionUID = 1L;
 
 	private Date fechaInicio;
 
 	private Date fechaFin;
 
-	private transient List<ReportesMovimiento> listaReporteMovimientos;
+	private  List<ReportesMovimiento> listaReporteMovimientos;
 
-	private transient List<ReporteInventarioValorizado> listaInventarioValorizado;
+	private  List<ReporteInventarioValorizado> listaInventarioValorizado;
 
-	private transient List<ReporteStockBajo> listaStockBajo;
+	private  List<ReporteStockBajo> listaStockBajo;
 
-	private transient List<ReporteAuditoriaUsuario> listaAuditoriaUsuario;
+	private  List<ReporteAuditoriaUsuario> listaAuditoriaUsuario;
 
-	private transient List<ReporteRotacionInventario> listaIndiceInventario;
+	private  List<ReporteRotacionInventario> listaIndiceInventario;
 
-	private transient List<ReporteClasificacionABC> clasificacionABCs;
+	private  List<ReporteClasificacionABC> clasificacionABCs;
 
-	private String reporteReabastecimiento;
+	private String reporteReabastecimiento = null;
 
-	private String reporteInventarioValorizado;
+	private String reporteInventarioValorizado = null;
 
-	private String reporteMovimientos;
+	private String reporteMovimientos = null;
 
-	private String reporteAuditoriaUsuario;
+	private String reporteAuditoriaUsuario = null;
 
-	private String reporteRotacionInventario;
+	private String reporteRotacionInventario = null;
 
-	private String reporteClasificacionABC;
+	private String reporteClasificacionABC = null;
 
 	private int idUsuario;
 
@@ -86,7 +88,6 @@ public class ReportesManagerBean implements Serializable {
 		buscarAuditoriaUsuario();
 		buscarIndiceRotacion();
 		buscarClasificacion();
-
 		Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.get("sessionUsuario");
 		idUsuario = user.getIdUsuario();
@@ -102,211 +103,143 @@ public class ReportesManagerBean implements Serializable {
 		reporteClasificacionABC = "Reporte Clasificacion ABC " + fechaHoy;
 	}
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings(UNUSED)
 	public void exportarReporteMovimientos(Object document) {
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo(String.valueOf(Mensajes.EXPORTAR_REPORTE));
-		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " realizo la exportación del reporte de movimientos");
-		auditoria.setNivel("INFO");
-		auditoriaService.registroAuditoria(auditoria);
+		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
+		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
+				Mensajes.USUARIO + nombreUsuario + " realizo la exportacion del Reporte de Movimientos",
+				Mensajes.INFO.toString(), idUsuario);
 	}
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings(UNUSED)
 	public void exportarReporteInventarioValorizado(Object document) {
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo(String.valueOf(Mensajes.EXPORTAR_REPORTE));
-		auditoria.setAccion(
-				Mensajes.USUARIO + nombreUsuario + " realizo la exportación del reporte de Inventario Valorizado");
-		auditoria.setNivel("INFO");
-		auditoriaService.registroAuditoria(auditoria);
+		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
+		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
+				Mensajes.USUARIO + nombreUsuario + " realizo la exportacion del Reporte de Inventario Valorizado",
+				Mensajes.INFO.toString(), idUsuario);
 	}
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings(UNUSED)
 	public void exportarReporteStockBajo(Object document) {
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo(String.valueOf(Mensajes.EXPORTAR_REPORTE));
-		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " realizo la exportación del reporte de reabastecimiento");
-		auditoria.setNivel("INFO");
-		auditoriaService.registroAuditoria(auditoria);
+		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
+		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
+				Mensajes.USUARIO + nombreUsuario + " realizo la exportacion del Reporte de Stock Bajo",
+				Mensajes.INFO.toString(), idUsuario);
 	}
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings(UNUSED)
 	public void exportarReporteAuditoriaUsuario(Object document) {
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo(String.valueOf(Mensajes.EXPORTAR_REPORTE));
-		auditoria.setAccion(
-				Mensajes.USUARIO + nombreUsuario + " realizo la exportación del reporte de auditoria usuario");
-		auditoria.setNivel("INFO");
-		auditoriaService.registroAuditoria(auditoria);
+		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
+		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
+				Mensajes.USUARIO + nombreUsuario + " realizo la exportacion del Reporte Auditoria Usuario",
+				Mensajes.INFO.toString(), idUsuario);
 	}
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings(UNUSED)
 	public void exportarReporteRotacionInventario(Object document) {
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo(String.valueOf(Mensajes.EXPORTAR_REPORTE));
-		auditoria.setAccion(
-				Mensajes.USUARIO + nombreUsuario + " realizo la exportación del reporte de rotacion inventario");
-		auditoria.setNivel("INFO");
-		auditoriaService.registroAuditoria(auditoria);
+		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
+		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
+				Mensajes.USUARIO + nombreUsuario + " realizo la exportacion del Reporte Rotacion Inventario",
+				Mensajes.INFO.toString(), idUsuario);
 	}
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings(UNUSED)
 	public void exportarReporteClasificacionABC(Object document) {
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo(String.valueOf(Mensajes.EXPORTAR_REPORTE));
-		auditoria.setAccion(
-				Mensajes.USUARIO + nombreUsuario + " realizo la exportación del reporte de Clasificacion ABC");
-		auditoria.setNivel("INFO");
-		auditoriaService.registroAuditoria(auditoria);
+		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
+		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
+				Mensajes.USUARIO + nombreUsuario + " realizo la exportacion del Reporte Clasificacion ABC",
+				Mensajes.INFO.toString(), idUsuario);
 	}
 
-	public void buscarStockBajo()  {
+	public void buscarStockBajo() {
 		listaStockBajo = iReporteService.reporteStockBajo();
+		
 	}
 
 	public void buscarInventarioValorizado() {
 		listaInventarioValorizado = iReporteService.reporteInventarioValorizado();
+		
 	}
 
 	public void buscar() {
 		listaReporteMovimientos = iReporteService.movimientos(fechaInicio, fechaFin);
+		
 	}
 
-	public void buscarAuditoriaUsuario()  {
+	public void buscarAuditoriaUsuario() {
 		listaAuditoriaUsuario = iReporteService.reporteAuditoriaUsuario();
+		
 	}
 
 	public void buscarIndiceRotacion() {
 		listaIndiceInventario = iReporteService.reporteRotacionInventario();
+		
 	}
 
 	public void buscarClasificacion() {
 		clasificacionABCs = iReporteService.reporteClasificacionABC();
+		
 	}
 
 	public String irAReporteMovimientos() {
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
-		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego a Reporte Movimientos");
-		auditoria.setNivel("INFO");
-		auditoriaService.registroAuditoria(auditoria);
+		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
+		auditoriaBean.registrarNavegacion(auditoriaService, "Reporte Movimientos", "entro a Reporte Movimientos",
+				idUsuario, nombreUsuario);
 		return "/pages/stock_manager/reportes/reporteMovimientos.xhtml?faces-redirect=true";
 	}
 
 	public String irAReporteInventarioValorizado() {
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
-		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego a Reporte Inventario Valorizado");
-		auditoria.setNivel("INFO");
-		auditoriaService.registroAuditoria(auditoria);
+		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
+		auditoriaBean.registrarNavegacion(auditoriaService, "Reporte Inventario Valorizado",
+				"entro a Reporte Inventario Valorizado", idUsuario, nombreUsuario);
 		return "/pages/stock_manager/reportes/reporteInventarioValorizado.xhtml?faces-redirect=true";
 	}
 
 	public String irAReporteStockBajo() {
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
-		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego a Reporte Stock Bajo");
-		auditoria.setNivel("INFO");
-		auditoriaService.registroAuditoria(auditoria);
+		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
+		auditoriaBean.registrarNavegacion(auditoriaService, "Reporte Stock Bajo", "entro a Reporte Stock Bajo",
+				idUsuario, nombreUsuario);
 		return "/pages/stock_manager/reportes/reporteStockBajo.xhtml?faces-redirect=true";
 	}
 
 	public String irAReporteAuditoriaUsuario() {
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
-		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego reporte Auditoria Usuario");
-		auditoria.setNivel("INFO");
-		auditoriaService.registroAuditoria(auditoria);
+		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
+		auditoriaBean.registrarNavegacion(auditoriaService, "Reporte Auditoria Usuario",
+				"entro a Reporte Auditoria Usuario", idUsuario, nombreUsuario);
 		return "/pages/stock_manager/reportes/reporteAuditoriaUsuario.xhtml?faces-redirect=true";
 	}
 
 	public String irAReportePrincipal() {
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
-		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego a Reporte Principal" + "");
-		auditoria.setNivel("INFO");
-		auditoriaService.registroAuditoria(auditoria);
+		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
+		auditoriaBean.registrarNavegacion(auditoriaService, "Reporte Menu", "entro a Reporte Menu", idUsuario,
+				nombreUsuario);
 		return "/pages/stock_manager/reportes/reportes.xhtml?faces-redirect=true";
 	}
 
 	public String irADashboard() {
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
-		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego a Dashboard");
-		auditoria.setNivel("INFO");
-		auditoriaService.registroAuditoria(auditoria);
+		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
+		auditoriaBean.registrarNavegacion(auditoriaService, "Dasboard", "entro a dashboard", idUsuario, nombreUsuario);
 		return "/pages/stock_manager/dashboard.xhtml?faces-redirect=true";
 	}
 
 	public String irAAuditoriaUsuarioReporte() {
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
-		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego a reporte Auditoria Usuario");
-		auditoria.setNivel("INFO");
-		auditoriaService.registroAuditoria(auditoria);
+		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
+		auditoriaBean.registrarNavegacion(auditoriaService, "Reporte Auditoria Usuario",
+				"entro a Reporte Auditoria Usuario", idUsuario, nombreUsuario);
 		return "/pages/stock_manager/repotes/reporteAuditoriaUsuario.xhtml?faces-redirect=true";
 	}
 
 	public String irARotacionInventario() {
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
-		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego a reporte Rotación Inventario");
-		auditoria.setNivel("INFO");
-		auditoriaService.registroAuditoria(auditoria);
+		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
+		auditoriaBean.registrarNavegacion(auditoriaService, "Reporte Rotacion Inventario",
+				"entro a Reporte Rotacion Inventario", idUsuario, nombreUsuario);
 		return "/pages/stock_manager/reportes/reporteRotacionInventario.xhtml?faces-redirect=true";
 	}
 
 	public String irAReporteClasificacionABC() {
-		Auditoria auditoria = new Auditoria();
-		auditoria.setFechaAuditoria(new Date());
-		auditoria.setIdUsuario(idUsuario);
-		auditoria.setClaseOrigen(this.getClass().getName());
-		auditoria.setMetodo(String.valueOf(Mensajes.NAVEGACION));
-		auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " navego a reporte Rotación Inventario");
-		auditoria.setNivel("INFO");
-		auditoriaService.registroAuditoria(auditoria);
+		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
+		auditoriaBean.registrarNavegacion(auditoriaService, "Reporte Clasificacion ABC",
+				"entro a Reporte Clasificacion ABC", idUsuario, nombreUsuario);
 		return "/pages/stock_manager/reportes/reporteClasificacionABC.xhtml?faces-redirect=true";
 	}
 }

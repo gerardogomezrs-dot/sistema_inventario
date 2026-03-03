@@ -1,14 +1,13 @@
 package com.empresa.inventario.beans.admin;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.empresa.inventario.model.Auditoria;
+import com.empresa.inventario.beans.BaseAuditoriaBean;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.utils.Mensajes;
@@ -27,7 +26,7 @@ public class NavegacionBean implements Serializable {
 	private String nombreUsuario;
 
 	private IAuditoriaService auditoriaService;
-	
+
 	@Inject
 	public NavegacionBean(IAuditoriaService auditoriaService) {
 		this.auditoriaService = auditoriaService;
@@ -40,64 +39,76 @@ public class NavegacionBean implements Serializable {
 		idUsuario = user.getIdUsuario();
 		nombreUsuario = user.getNombre();
 	}
-	
-	/**
-     * Método centralizado para registrar auditoría
-     */
-    private void registrarNavegacion(Object modulo, String accion) {
-        Auditoria auditoria = new Auditoria();
-        auditoria.setFechaAuditoria(new Date());
-        auditoria.setIdUsuario(idUsuario);
-        auditoria.setClaseOrigen(this.getClass().getName());
-        auditoria.setMetodo(modulo.toString());
-        auditoria.setAccion(Mensajes.USUARIO + nombreUsuario + " " + accion);
-        auditoria.setNivel(Mensajes.INFO.toString());
-        auditoriaService.registroAuditoria(auditoria);
-    }
 
 	public String irAProductos() {
-		registrarNavegacion(Mensajes.MODULO_PRODUCTOS, "entro al modulo de productos");
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		baseBean.registrarNavegacion(auditoriaService, Mensajes.MODULO_PRODUCTOS, "entro al modulo de productos",
+				idUsuario, nombreUsuario);
 		return "/pages/admin/productos/tablaProductos.xhtml?faces-redirect=true";
 	}
 
 	public String irACategorias() {
-		registrarNavegacion(Mensajes.MODULO_CATEGORIAS, "entro al modulo de categorias");
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		baseBean.registrarNavegacion(auditoriaService, Mensajes.MODULO_CATEGORIAS, "entro al modulo de categorias",
+				idUsuario, nombreUsuario);
 		return "/pages/admin/categorias/tablaCategorias?faces-redirect=true";
 	}
 
 	public String irAMovimientos() {
-		registrarNavegacion(Mensajes.MODULO_MOVIMIENTOS, "entro al modulo de movimientos");
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		baseBean.registrarNavegacion(auditoriaService, Mensajes.MODULO_MOVIMIENTOS, "entro al modulo de movimientos",
+				idUsuario, nombreUsuario);
 		return "/pages/admin/movimientos/tablaMovimientos?faces-redirect=true";
 	}
 
 	public String irAUsuarios() {
-		registrarNavegacion(Mensajes.MODULO_USUARIOS, "entro al modulo de Usuarios");
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		baseBean.registrarNavegacion(auditoriaService, Mensajes.MODULO_USUARIOS, "entro al modulo de Usuarios",
+				idUsuario, nombreUsuario);
 		return "/pages/admin/usuarios/tablaUsuarios?faces-redirect=true";
 	}
 
 	public String irAReportes() {
-		registrarNavegacion(Mensajes.MODULO_REPORTES, "entro al modulo de Reportes");
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		baseBean.registrarNavegacion(auditoriaService, Mensajes.MODULO_REPORTES, "entro al modulo de Reportes",
+				idUsuario, nombreUsuario);
 		return "/pages/admin/reportes/reportes?faces-redirect=true";
 	}
 
 	public String irAPerfilUsuario() {
-		registrarNavegacion(Mensajes.PERFIL_USUARIO, "entro a consultar su perfil");
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		baseBean.registrarNavegacion(auditoriaService, Mensajes.PERFIL_USUARIO, "entro a consultar su perfil",
+				idUsuario, nombreUsuario);
 		return "/pages/admin/usuarios/usuarioPerfil?faces-redirect=true";
 	}
 
 	public String irAProveedores() {
-		registrarNavegacion(Mensajes.MODULO_PROVEEDORES, "entro a gestión proveedores");
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		baseBean.registrarNavegacion(auditoriaService, Mensajes.MODULO_PROVEEDORES, "entro a gestión proveedores",
+				idUsuario, nombreUsuario);
 		return "/pages/admin/proveedores/tablaProveedores?faces-redirect=true";
 	}
 
 	public String irAAuditoria() {
-		registrarNavegacion(Mensajes.GESTION_AUDITORIAS, "entro a gestión auditoria");
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		baseBean.registrarNavegacion(auditoriaService, Mensajes.GESTION_AUDITORIAS, "entro a gestión auditoria",
+				idUsuario, nombreUsuario);
 		return "/pages/admin/auditoria/tablaAuditoria?faces-redirect=true";
 	}
 
 	public String irADashboard() {
-		registrarNavegacion(Mensajes.NAVEGACION, "navego a dashboard");
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		baseBean.registrarNavegacion(auditoriaService, Mensajes.NAVEGACION, "navego a dashboard", idUsuario,
+				nombreUsuario);
 		return "/pages/admin/dashboard.xhtml?faces-redirect=true";
+	}
+	
+	
+	public String irAMermasDevoluciones() {
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		baseBean.registrarNavegacion(auditoriaService, Mensajes.NAVEGACION, "navego a tabla Mermas Devoluciones", idUsuario,
+				nombreUsuario);
+		return "/pages/admin/mermasDevoluciones/tablaMermasDevoluciones.xhtml?faces-redirect=true";
 	}
 
 }

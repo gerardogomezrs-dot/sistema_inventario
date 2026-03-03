@@ -1,7 +1,6 @@
 package com.empresa.inventario.beans;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
@@ -10,10 +9,10 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.empresa.inventario.exceptions.ExceptionMessage;
-import com.empresa.inventario.model.Auditoria;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.service.IAuthService;
+import com.empresa.inventario.utils.Mensajes;
 
 import lombok.Data;
 
@@ -42,6 +41,8 @@ public class LoginBean implements Serializable {
 	private IAuditoriaService auditoriaService;
 
 	private IAuthService authService;
+
+	private BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
 
 	@Inject
 	public LoginBean(IAuthService authService, IAuditoriaService auditoriaService) {
@@ -87,25 +88,21 @@ public class LoginBean implements Serializable {
 
 				idUsuario = usuario.getIdUsuario();
 				nombreUsuario = usuario.getNombre();
-
-				Auditoria auditoria = new Auditoria();
-				auditoria.setFechaAuditoria(new Date());
-				auditoria.setIdUsuario(idUsuario);
-				auditoria.setClaseOrigen(this.getClass().getName());
-				auditoria.setMetodo("Inicio de sesión");
-				auditoria.setAccion("El usuario " + nombreUsuario + " INICIO SESIÓN");
-				auditoria.setNivel("INFO");
-				auditoriaService.registroAuditoria(auditoria);
-
+				auditoriaBean = new BaseAuditoriaBean();
+				auditoriaBean.registrarAuditoria(auditoriaService, "INICIO DE SESION",
+						Mensajes.USUARIO + nombreUsuario + "INICIO SESION ", Mensajes.INFO.toString(), idUsuario);
 				return ruta;
 			}
-
 		} catch (ExceptionMessage e) {
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+			auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
+					Mensajes.ERROR.toString(), idUsuario);
 			return null;
 		} catch (Exception e) {
 			mensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", "Ocurrió un error en el servidor. ");
 			e.getMessage();
+			auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
+					Mensajes.ERROR.toString(), idUsuario);
 			return null;
 		}
 	}

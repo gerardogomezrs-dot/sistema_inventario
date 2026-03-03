@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html lang="es-MX" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+    <title>Tabla de Productos</title>
+    <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
+</h:head>
+<h:body>
+    <h:form id="form">
+        <ui:include src="/pages/almacen/menu.xhtml" />
+        <p:growl id="msgs" showDetail="true" />
+        <p:separator />
+        <p:toolbar style="margin-bottom: 20px; border: none; background: transparent;">
+            <f:facet name="left">
+                <p:commandButton value="Regresar" icon="pi pi-chevron-left"
+                    action="#{productosAlmacenBean.menuPrincipal}" immediate="true" style="margin-left:10px;" />
+            </f:facet>
+        </p:toolbar>
+        <p:separator />
+        <p:dataTable value="#{productosAlmacenBean.productosList}" var="producto" paginator="true" rows="10"
+            filteredValue="#{productosAlmacenBean.filteredProductosList}" emptyMessage="No se encontraron productos"
+            style="margin-top:20px;">
+            <p:column headerText="ID">
+                <h:outputText value="#{producto.idProducto}" />
+            </p:column>
+
+            <p:column headerText="Nombre" filterBy="#{producto.nombre}" filterMatchMode="contains">
+                <h:outputText value="#{producto.nombre}" />
+            </p:column>
+
+            <p:column headerText="Código de Barras">
+                <p:barcode value="#{producto.codigoBarras}" type="code128" format="svg" width="150" height="60" />
+            </p:column>
+
+            <p:column headerText="Descripción">
+                <h:outputText value="#{producto.descripcion}" />
+            </p:column>
+
+            <p:column headerText="Categoría">
+                <h:outputText value="#{producto.categorias.nombre}" />
+            </p:column>
+            <p:column headerText="Unidad">
+                <h:outputText value="#{producto.unidad}" />
+            </p:column>
+            <p:column headerText="Precio Unitario">
+                <h:outputText value="#{producto.precioUnitario}" />
+            </p:column>
+            <p:column headerText="Stock Actual">
+                <h:outputText value="#{producto.stockActual}" />
+            </p:column>
+            <p:column headerText="Stock Mínimo">
+                <h:outputText value="#{producto.stockMinimo}" />
+            </p:column>
+            <p:column headerText="Ubicación">
+                <h:outputText value="#{producto.ubicacion}" />
+            </p:column>
+        </p:dataTable>
+        <ui:include src="/pages/almacen/footer.xhtml" />
+    </h:form>
+</h:body>
+
+</html>

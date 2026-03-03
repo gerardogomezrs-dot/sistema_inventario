@@ -1,18 +1,18 @@
 package com.empresa.inventario.beans.stockmanager;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.empresa.inventario.beans.BaseAuditoriaBean;
 import com.empresa.inventario.exceptions.ExceptionMessage;
-import com.empresa.inventario.model.Auditoria;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.service.IUsuariosService;
+import com.empresa.inventario.utils.Mensajes;
 
 import lombok.Data;
 
@@ -43,44 +43,37 @@ public class PerfilUsuarioManagerBean implements Serializable {
 	public void init() {
 		Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.get("sessionUsuario");
-		
-			int id = user.getIdUsuario();
-			usuario = iUsuariosService.getByIdUsuario(id);
 
-			idUsuario = user.getIdUsuario();
-			nombreUsuario = user.getNombre();
-		
+		int id = user.getIdUsuario();
+		usuario = iUsuariosService.getByIdUsuario(id);
+
+		idUsuario = user.getIdUsuario();
+		nombreUsuario = user.getNombre();
+
 	}
 
 	public void actualizarPerfil() {
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+
 		try {
 			if (usuario == null) {
 				throw new ExceptionMessage("Vacio");
 			}
 			iUsuariosService.updateProfile(usuario);
-			iUsuariosService.updateProfile(usuario);
-			Auditoria auditoria = new Auditoria();
-			auditoria.setFechaAuditoria(new Date());
-			auditoria.setIdUsuario(idUsuario);
-			auditoria.setClaseOrigen(this.getClass().getName());
-			auditoria.setMetodo("Actualizar");
-			auditoria.setAccion("El usuario " + nombreUsuario + " realizo una actualización");
-			auditoria.setNivel("INFO");
-			auditoriaService.registroAuditoria(auditoria);
+			
+			baseBean.registrarAuditoria(auditoriaService, "Actualizar",
+					"El usuario " + nombreUsuario + " realizó una actualización", Mensajes.INFO.toString(), idUsuario);
 		} catch (Exception e) {
 			e.getMessage();
-			Auditoria auditoria = new Auditoria();
-			auditoria.setFechaAuditoria(new Date());
-			auditoria.setIdUsuario(idUsuario);
-			auditoria.setClaseOrigen(this.getClass().getName());
-			auditoria.setMetodo("Error");
-			auditoria.setAccion("Error: " + e.getMessage());
-			auditoria.setNivel("WARN");
-			auditoriaService.registroAuditoria(auditoria);
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
+					Mensajes.ERROR.toString(), idUsuario);
 		}
 	}
 
 	public String irAIndex() {
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+
+		baseBean.registrarNavegacion(auditoriaService, "Dashboard", "entro a Dashboard", idUsuario, nombreUsuario);
 		return "/pages/stock_manager/dashboard?faces-redirect=true";
 	}
 }

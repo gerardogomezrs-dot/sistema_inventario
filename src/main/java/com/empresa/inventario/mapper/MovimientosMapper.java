@@ -20,11 +20,11 @@ public class MovimientosMapper {
 		p.setIdUsuario(rs.getInt("id_usuario"));
 		p.setObservaciones(rs.getString("observaciones"));
 		Usuario usuario = new Usuario();
-		usuario.setIdUsuario(rs.getInt("idUsuario"));
+		usuario.setIdUsuario(rs.getInt("id_usuario"));
 		usuario.setNombre(rs.getString("nombreUsuario"));
 		p.setUsuario(usuario);
 		Productos productos = new Productos();
-		productos.setIdProducto(rs.getInt("idProducto"));
+		productos.setIdProducto(rs.getInt("id_producto"));
 		productos.setNombre(rs.getString("nombreProducto"));
 		p.setProductos(productos);
 		return p;

@@ -9,12 +9,10 @@
     <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
     <title>Gestión de Productos</title>
 </h:head>
-
 <h:body>
     <!-- FORM PRINCIPAL -->
     <h:form id="form">
         <ui:include src="/pages/stock_manager/menu.xhtml" />
-
         <p:growl id="msgs" showDetail="true" />
         <p:separator />
         <p:toolbar style="margin-bottom: 20px; border: none; background: transparent;">
@@ -34,45 +32,34 @@
             <p:column headerText="ID">
                 <h:outputText value="#{prod.idProducto}" />
             </p:column>
-
             <p:column headerText="Nombre">
                 <h:outputText value="#{prod.nombre}" />
             </p:column>
-
             <p:column headerText="Codigo de Barras">
                 <p:barcode value="#{prod.codigoBarras}" type="code128" format="svg" width="150" height="60" />
             </p:column>
-
             <p:column headerText="Descripción">
                 <h:outputText value="#{prod.descripcion}" />
             </p:column>
-
             <p:column headerText="Categoría">
                 <h:outputText value="#{prod.categorias.nombre}" />
             </p:column>
-
             <p:column headerText="Unidad">
                 <h:outputText value="#{prod.unidad}" />
             </p:column>
-
             <p:column headerText="Precio Unitario">
                 <h:outputText value="#{prod.precioUnitario}" />
             </p:column>
-
             <p:column headerText="Stock Actual">
                 <h:outputText value="#{prod.stockActual}" />
             </p:column>
-
             <p:column headerText="Stock Minimo">
                 <h:outputText value="#{prod.stockMinimo}" />
             </p:column>
-
             <p:column headerText="Ubicación">
                 <h:outputText value="#{prod.ubicacion}" />
             </p:column>
-
             <p:column headerText="Acciones">
-
                 <!-- EDITAR -->
                 <p:commandButton icon="pi pi-pencil" process="@this" update=":dialogoEditar"
                     oncomplete="PF('wdgEditar').show()">
@@ -91,20 +78,14 @@
             </p:column>
         </p:dataTable>
         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
-
             <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat"
                 icon="pi pi-times" />
             <p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes p-button-danger"
                 icon="pi pi-check" />
         </p:confirmDialog>
     </h:form>
-
     <!-- DIALOGO EDITAR -->
     <ui:include src="/pages/stock_manager/productos/actualizarProductos.xhtml" />
-
     <ui:include src="/pages/stock_manager/footer.xhtml" />
-
-
 </h:body>
-
 </html>

@@ -8,6 +8,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
     <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
+    <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
     <style type="text/css">
         .ui-panelgrid .ui-grid-responsive .ui-grid-row {
             border: none !important;
@@ -46,11 +47,6 @@
         <ui:include src="/pages/stock_manager/menu.xhtml" />
 
         <p:growl id="messages" showDetail="true" />
-        <p:progressBar widgetVar="pbAjax" ajax="true" value="#{productosManagerBean.progreso}" labelTemplate="{value}%"
-            styleClass="animated" interval="500">
-            <p:ajax event="complete" listener="#{productosManagerBean.onComplete}" update="messages" />
-        </p:progressBar>
-
         <div class="main-container">
 
             <div class="form-side">

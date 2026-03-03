@@ -5,7 +5,6 @@ import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.IntConsumer;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
@@ -42,26 +41,21 @@ public class ProveedorServiceImpl implements Serializable, IProveedorService {
 	}
 
 	@Override
-	public void save(List<Proveedor> proveedor, IntConsumer progresoCallback) {
+	public void save(List<Proveedor> proveedor) {
 		try {
 			if (proveedor == null || proveedor.isEmpty()) {
 				throw new ExceptionMessage("Lista vacia");
 			}
-			int total = proveedor.size();
-			int batchSize = 50; 
-			for(int i = 0; i<total; i++) {
-				dao.guardar(proveedor.get(i));
-				if (i % batchSize == 0 || i == total - 1) {
-		            int porcentaje = (int) (((double) (i + 1) / total) * 100);
-		            progresoCallback.accept(porcentaje);
-				}
+
+			for (Proveedor i : proveedor) {
+				dao.guardar(i);
+
 			}
+
 		} catch (Exception e) {
 			e.getMessage();
 		}
 	}
-	
-	
 
 	@Override
 	public void delete(int idProveedor) {
@@ -85,15 +79,15 @@ public class ProveedorServiceImpl implements Serializable, IProveedorService {
 	public List<Proveedor> uploadFiles(UploadedFile file) {
 		List<Proveedor> proveedors = new ArrayList<>();
 		if (file.getFileName() == null || file.getFileName().trim().isEmpty()) {
-		    throw new ExceptionMessage("Inserta un archivo");
+			throw new ExceptionMessage("Inserta un archivo");
 		}
 		String fileName = "";
-		
-			if (file.getFileName() == null || file.getFileName().trim().isEmpty()) {
-			    throw new ExceptionMessage("Inserta un archivo");
-			}
+
+		if (file.getFileName() == null || file.getFileName().trim().isEmpty()) {
+			throw new ExceptionMessage("Inserta un archivo");
+		}
 		fileName = file.getFileName().toLowerCase();
-		
+
 		if (fileName.endsWith(".csv")) {
 			try {
 				proveedors = leerCSV(file);

@@ -3,7 +3,6 @@ package com.empresa.inventario.beans.admin;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -13,7 +12,7 @@ import javax.inject.Named;
 
 import org.primefaces.model.UploadedFile;
 
-import com.empresa.inventario.beans.BaseBean;
+import com.empresa.inventario.beans.BaseAuditoriaBean;
 import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Categorias;
 import com.empresa.inventario.model.Usuario;
@@ -28,19 +27,20 @@ import lombok.Data;
 @Data
 public class CategoriasBean implements Serializable {
 
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
-	private transient List<Categorias> filteredList;
-	private transient List<Categorias> list;
+	private List<Categorias> filteredList;
+	private List<Categorias> list;
 	private Categorias categorias;
-	private transient List<Categorias> listaTablaCategorias = new ArrayList<>();
+	private List<Categorias> listaTablaCategorias = new ArrayList<>();
 
-	private transient UploadedFile uploadedFile;
+	private UploadedFile uploadedFile;
 
-	private transient List<Categorias> categoriasList;
+	private List<Categorias> categoriasList;
 
 	private Integer progreso = 0;
-
-	private BaseBean baseBean;
 
 	private ICategoriaService categoriaService;
 
@@ -68,39 +68,43 @@ public class CategoriasBean implements Serializable {
 	}
 
 	public void listaTabla() {
-		if (this.categorias != null) {
-			listaTablaCategorias.add(this.categorias);
-			this.categorias = new Categorias();
-		}
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		try {
+			if (this.categorias != null) {
+				listaTablaCategorias.add(this.categorias);
+				this.categorias = new Categorias();
+			}
 
-		baseBean.registrarAuditoria(auditoriaService, Mensajes.GUARDAR_REGISTRO_TABLA,
-				Mensajes.USUARIO + nombreUsuario + " registro un elemento a la tabla", Mensajes.INFO.toString());
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.GUARDAR_REGISTRO_TABLA,
+					Mensajes.USUARIO + nombreUsuario + " registro un elemento a la tabla", Mensajes.INFO.toString(),
+					idUsuario);
+		} catch (Exception e) {
+			e.printStackTrace();
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
+					Mensajes.ERROR.toString(), idUsuario);
+		}
 	}
 
 	public void guardar() {
-		progreso = 0;
-		listaTablaCategorias = new ArrayList<>();
-		this.progreso = 0;
-		List<Categorias> copiaParaGuardar = new ArrayList<>(this.listaTablaCategorias);
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 
-		CompletableFuture.runAsync(() -> {
-			try {
-				categoriaService.save(copiaParaGuardar, valor -> this.progreso = valor);
-				baseBean.registrarAuditoria(auditoriaService, Mensajes.GUARDAR,
-						Mensajes.USUARIO + nombreUsuario + "realizo el guardado de un registro",
-						Mensajes.INFO.toString());
+		try {
+			categoriaService.save(listaTablaCategorias);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+					"Registro guardado", "El registro fue guardado correctamente"));
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.GUARDAR,
+					Mensajes.USUARIO + nombreUsuario + "realizo el guardado de un registro", Mensajes.INFO.toString(),
+					idUsuario);
 
-			} catch (Exception e) {
-				e.getMessage();
-				baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
-						Mensajes.ERROR.toString());
-			}
-		});
-
-		if (listaTablaCategorias.isEmpty()) {
-			listaTablaCategorias.clear();
-			this.categorias = new Categorias();
+		} catch (Exception e) {
+			e.printStackTrace();
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
+					Mensajes.ERROR.toString(), idUsuario);
 		}
+
+		listaTablaCategorias.clear();
+		this.categorias = new Categorias();
+
 	}
 
 	public void onComplete() {
@@ -109,17 +113,20 @@ public class CategoriasBean implements Serializable {
 	}
 
 	public void actualizar() {
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+
 		try {
 			categoriaService.update(categorias);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 					"Registro actualizado", "El registro fue actualizado correctamente"));
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ACTUALIZAR.getTexto(),
-					Mensajes.USUARIO + nombreUsuario + " realizo una actualizacion", Mensajes.INFO.toString());
+					Mensajes.USUARIO + nombreUsuario + " realizo una actualizacion", Mensajes.INFO.toString(),
+					idUsuario);
 
 		} catch (Exception e) {
-			e.getMessage();
+			e.printStackTrace();
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
-					Mensajes.ERROR.toString());
+					Mensajes.ERROR.toString(), idUsuario);
 		}
 	}
 
@@ -129,6 +136,8 @@ public class CategoriasBean implements Serializable {
 	}
 
 	public void eliminarCategoria() {
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+
 		try {
 			if (categorias != null) {
 				categoriaService.delete(categorias.getIdCategoria());
@@ -136,7 +145,8 @@ public class CategoriasBean implements Serializable {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 						"Registro eliminado", "El registro fue eliminado correctamente"));
 				baseBean.registrarAuditoria(auditoriaService, Mensajes.ELIMINAR.getTexto(),
-						Mensajes.USUARIO + nombreUsuario + " realizo una eliminacion", Mensajes.INFO.toString());
+						Mensajes.USUARIO + nombreUsuario + " realizo una eliminacion", Mensajes.INFO.toString(),
+						idUsuario);
 			}
 
 		} catch (Exception e) {
@@ -144,48 +154,58 @@ public class CategoriasBean implements Serializable {
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.validationFailed();
 			context.renderResponse();
-			e.getMessage();
+			e.printStackTrace();
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
-					Mensajes.ERROR.toString());
+					Mensajes.ERROR.toString(), idUsuario);
 		}
 	}
 
 	public void cargarArchivo() {
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		List<Categorias> categorias = new ArrayList<>();
 		try {
 			if (uploadedFile == null || uploadedFile.getContents() == null) {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
 			}
 			listaTablaCategorias = new ArrayList<>();
-			listaTablaCategorias = categoriaService.cargarArchivo(uploadedFile);
-
+			categorias = categoriaService.cargarArchivo(uploadedFile);
+			System.err.println("Lista Categoria Archivo } " + categorias.size());
+			this.listaTablaCategorias = new ArrayList<>(categorias);
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
 
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.CARGA_MASIVA_REGISTROS.getTexto(),
 					Mensajes.USUARIO + nombreUsuario + " realizo una carga masiva de registros",
-					Mensajes.INFO.toString());
+					Mensajes.INFO.toString(), idUsuario);
 
 		} catch (ExceptionMessage e) {
-			e.getMessage();
+			e.printStackTrace();
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
-					Mensajes.ERROR.toString());
+					Mensajes.ERROR.toString(), idUsuario);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
 	public String irANuevaCategoria() {
-		baseBean.registrarNavegacion(auditoriaService, Mensajes.NUEVO_REGISTRO, "entro a nueva Categoria");
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		baseBean.registrarNavegacion(auditoriaService, Mensajes.NUEVO_REGISTRO, "entro a nueva Categoria", idUsuario,
+				nombreUsuario);
 		return "/pages/admin/categorias/categorias.xhtml?faces-redirect=true";
 	}
 
 	public String irATablaCategoria() {
-		baseBean.registrarNavegacion(auditoriaService, "Tabla Categoria", "entro a tabla Categoria");
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		baseBean.registrarNavegacion(auditoriaService, "Tabla Categoria", "entro a tabla Categoria", idUsuario,
+				nombreUsuario);
 		return "/pages/admin/categorias/tablaCategorias.xhtml?faces-redirect=true";
 	}
 
 	public String irADashboard() {
-		baseBean.registrarNavegacion(auditoriaService, "Dashboard", "entro a Dashboard");
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		baseBean.registrarNavegacion(auditoriaService, "Dashboard", "entro a Dashboard", idUsuario, nombreUsuario);
 		return "/pages/admin/dashboard.xhtml?faces-redirect=true";
 	}
 

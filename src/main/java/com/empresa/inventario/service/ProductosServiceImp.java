@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.IntConsumer;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
@@ -29,7 +28,7 @@ import com.opencsv.CSVReader;
 @ApplicationScoped
 public class ProductosServiceImp implements IProductoService {
 
-	private  ProductosDAO productosDAO = new ProductosDAO();
+	private ProductosDAO productosDAO = new ProductosDAO();
 
 	@Override
 	public void delete(int idProducto) {
@@ -45,7 +44,9 @@ public class ProductosServiceImp implements IProductoService {
 	}
 
 	@Override
-	public List<Productos> create(List<Productos> productosLista, IntConsumer progresoCallback) {
+	public List<Productos> create(List<Productos> productosLista) {
+		ProductosDAO dao = new ProductosDAO();
+
 		if (productosLista == null || productosLista.isEmpty()) {
 			throw new ExceptionMessage("Lista vacia");
 		}
@@ -62,19 +63,15 @@ public class ProductosServiceImp implements IProductoService {
 			}
 		}
 		try {
-			int total = listaProducto.size();
-			for (int i = 0; i < total; i++) {
-				ProductosDAO dao = new ProductosDAO();
-				dao.guardar(listaProducto.get(i));
-				int porcentaje = (int) (((double) (i + 1) / total) * 100);
-				progresoCallback.accept(porcentaje);
+			for (Productos i : listaProducto) {
+				dao.guardar(i);
 			}
+
 		} catch (Exception e) {
-			e.getMessage();
+			e.printStackTrace();
 		}
 
 		return productosLista;
-
 	}
 
 	@Override
@@ -83,7 +80,7 @@ public class ProductosServiceImp implements IProductoService {
 		productosDAO = new ProductosDAO();
 		try {
 			getProductos = productosDAO.getAll();
-			
+
 			if (getProductos.isEmpty()) {
 				throw new ExceptionMessage("Lista Vacia ");
 			}
@@ -164,9 +161,9 @@ public class ProductosServiceImp implements IProductoService {
 			productos.setDescripcion(dataFormatter.formatCellValue(cellDescripcion));
 			productos.setCodigoBarras(dataFormatter.formatCellValue(cellCodigoBarras));
 			String idCategoria = dataFormatter.formatCellValue(cellIdCategoria);
-			int stock = NumberUtils.toInt(idCategoria, 0);
+			int categoria = NumberUtils.toInt(idCategoria, 0);
 
-			productos.setIdCategoria(stock);
+			productos.setIdCategoria(categoria);
 			productos.setUnidad(dataFormatter.formatCellValue(cellUnidad));
 			String precioUnitario = dataFormatter.formatCellValue(cellPrecioUnitario);
 			double precioU = NumberUtils.toDouble(precioUnitario, 0.0);
@@ -179,7 +176,6 @@ public class ProductosServiceImp implements IProductoService {
 			productos.setStockMinimo(stockMin);
 			productos.setUbicacion(dataFormatter.formatCellValue(cellUbicacion));
 			productos.setActivo(Boolean.parseBoolean(dataFormatter.formatCellValue(cellActivo)));
-
 			productosList.add(productos);
 		}
 		return productosList;

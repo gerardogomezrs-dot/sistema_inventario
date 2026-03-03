@@ -7,8 +7,6 @@
 <h:head>
     <title>Sistema de Inventario - Panel de Control</title>
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
-    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
-    <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
     <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
 
     <style>
@@ -32,6 +30,39 @@
         .ui-panel {
             margin-top: 10px;
         }
+
+        /* ===== DASHBOARD TARJETAS ===== */
+
+.menu-grid {
+    width: 100%;
+}
+
+.menu-grid .ui-button {
+    height: 120px;
+    border-radius: 12px !important;
+    font-size: 16px !important;
+    font-weight: bold;
+    background: linear-gradient(135deg, #2c3e50, #34495e) !important;
+    border: none !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+}
+
+.menu-grid .ui-button .ui-button-icon-left {
+    font-size: 28px !important;
+    margin-bottom: 10px;
+}
+
+.menu-grid .ui-button:hover {
+    transform: translateY(-5px);
+    background: linear-gradient(135deg, #3498db, #2980b9) !important;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.5);
+}
+
+.menu-grid td {
+    padding: 10px;
+}
     </style>
 </h:head>
 <h:body>
@@ -60,8 +91,8 @@
                             <h:outputText value="Usuario:" style="font-weight:bold" />
                             <h:outputText value="#{loginBean.usuario.userName}" />
 
-                            <p:commandButton value="Ver Perfil" icon="pi pi-user"
-                                action="#{navBean.irAPerfilUsuario}" immediate="true" style="margin-left: 10px;" />
+                            <p:commandButton value="Ver Perfil" icon="pi pi-user" action="#{navBean.irAPerfilUsuario}"
+                                immediate="true" style="margin-left: 10px;" />
                         </h:panelGrid>
                     </p:panel>
                 </div>
@@ -85,14 +116,14 @@
                             <p:commandButton value="Gestionar Reportes" action="#{navBean.irAReportes()}"
                                 icon="pi pi-chart-bar" styleClass="ui-button-info" ajax="false" />
 
-                            <p:commandButton value="Gestionar Proveedores"
-                                action="#{navBean.irAProveedores}" icon="fa fa-industry" ajax="false"
-                                styleClass="ui-button-raised" />
+                            <p:commandButton value="Gestionar Proveedores" action="#{navBean.irAProveedores}"
+                                icon="fa fa-industry" ajax="false" styleClass="ui-button-raised" />
 
-                                <p:commandButton value="Gestionar Auditoría"
-                                action="#{navBean.irAAuditoria}" icon="pi pi-search-plus" ajax="false"
-                                styleClass="ui-button-raised" />
+                            <p:commandButton value="Gestionar Auditoría" action="#{navBean.irAAuditoria}"
+                                icon="pi pi-eye" ajax="false" styleClass="ui-button-raised" />
 
+                                 <p:commandButton value="Gestionar Mermas y Devoluciones" action="#{navBean.irAMermasDevoluciones}"
+                                icon="pi pi-exclamation-triangle" ajax="false" styleClass="ui-button-raised" />
                         </h:panelGrid>
                     </p:panel>
                 </div>

@@ -6,6 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+    <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
 
     <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
     <f:facet name="first">
@@ -54,11 +55,7 @@
 
         <ui:include src="/pages/admin/menu.xhtml" />
         <p:growl id="msgs" showDetail="true" />
-        <p:progressBar widgetVar="pbAjax" ajax="true" value="#{categoriasBean.progreso}" labelTemplate="{value}%"
-            styleClass="animated" interval="500">
 
-            <p:ajax event="complete" listener="#{categoriasBean.onComplete}" update="msgs" />
-        </p:progressBar>
 
         <div class="flex-container">
             <p:panel header="Registro de Categorias" style="width: 600px; margin: 0 auto;">

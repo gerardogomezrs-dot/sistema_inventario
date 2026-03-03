@@ -1,7 +1,6 @@
 package com.empresa.inventario.service;
 
 import java.util.List;
-import java.util.function.IntConsumer;
 
 import org.primefaces.model.UploadedFile;
 
@@ -9,7 +8,7 @@ import com.empresa.inventario.model.Categorias;
 
 public interface ICategoriaService {
 	
-	void save(List<Categorias> e,IntConsumer progresoCallback);
+	void save(List<Categorias> e);
 	void update(Categorias categorias);
 	List<Categorias> getAllCategorias();
 	void delete(int idCategoria);

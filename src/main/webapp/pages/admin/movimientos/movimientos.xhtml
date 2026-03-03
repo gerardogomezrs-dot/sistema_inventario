@@ -8,6 +8,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
     <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
+        <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
+
     <style type="text/css">
         .ui-panelgrid .ui-grid-responsive .ui-grid-row {
             border: none !important;
@@ -102,10 +104,6 @@
             <div class="form-side">
                 <p:panel header="Registro de Movimientos" style="width: 600px; margin: 0 auto;">
 
-                    <p:messages id="msgs" closable="true">
-                        <p:autoUpdate />
-                    </p:messages>
-
                     <h:panelGrid columns="2" cellpadding="5" columnClasses="label,value">
 
 
@@ -191,6 +189,18 @@
 
                     <p:commandButton value="Regresar" icon="pi pi-chevron-left"
                         action="#{movimientosBean.irATablaMovimientos}" immediate="true" style="margin-left: 10px;" />
+
+
+                        <div class="upload-section" style="margin-top: 20px;">
+                        <h:outputLabel value="Cargar desde archivo (CSV, Excel):"
+                            style="display:block; margin-bottom:5px; font-weight:bold;" />
+                        <p:fileUpload value="#{movimientosBean.uploadedFile}" mode="simple" skinSimple="true"
+                            label="Seleccionar Archivo" chooseIcon="pi pi-upload" />
+
+                        <p:commandButton value="Procesar Archivo" action="#{movimientosBean.cargarArchivo}"
+                            ajax="false" styleClass="ui-button-help" style="margin-top: 5px;"
+                            icon="pi pi-file-import" />
+                    </div>
 
                 </p:panel>
             </div>

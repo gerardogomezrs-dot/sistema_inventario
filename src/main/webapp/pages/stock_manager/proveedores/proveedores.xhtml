@@ -50,15 +50,7 @@
 <h:body>
     <h:form id="formProveedor" enctype="multipart/form-data">
         <ui:include src="/pages/stock_manager/menu.xhtml" />
-
         <p:growl id="msgs" showDetail="true" skipDetailIfEqualsSummary="true" />
-
-        <p:progressBar widgetVar="pbAjax" ajax="true" value="#{proveedorManagerBean.progreso}" labelTemplate="{value}%"
-            styleClass="animated" interval="500">
-            <p:ajax event="complete" listener="#{proveedorManagerBean.onComplete}" update="msgs"
-                />
-        </p:progressBar>
-
         <div class="main-container">
             <div class="form-side">
                 <p:panel header="Registro de Proveedor" styleClass="ui-fluid">
@@ -91,8 +83,8 @@
                             style="width: auto; margin-right: 10px;" />
 
                         <p:commandButton value="Regresar" icon="pi pi-chevron-left"
-                            action="#{proveedorManagerBean.irATablaProvedor}" immediate="true" styleClass="ui-button-secondary"
-                            style="width: auto;" />
+                            action="#{proveedorManagerBean.irATablaProvedor}" immediate="true"
+                            styleClass="ui-button-secondary" style="width: auto;" />
                     </div>
                     <div class="upload-section">
                         <p:outputLabel value="Cargar desde archivo (CSV, Excel):" styleClass="bold-label"
@@ -101,8 +93,9 @@
                         <p:fileUpload value="#{proveedorManagerBean.uploadedFile}" mode="simple" skinSimple="true"
                             label="Seleccionar Archivo" chooseIcon="pi pi-upload" />
 
-                        <p:commandButton value="Procesar Archivo" action="#{proveedorManagerBean.cargaArchivos}" ajax="false"
-                            styleClass="ui-button-help" style="margin-top: 10px;" icon="pi pi-file-import" />
+                        <p:commandButton value="Procesar Archivo" action="#{proveedorManagerBean.cargaArchivos}"
+                            ajax="false" styleClass="ui-button-help" style="margin-top: 10px;"
+                            icon="pi pi-file-import" />
                     </div>
                 </p:panel>
             </div>
