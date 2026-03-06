@@ -46,10 +46,11 @@
             <p:separator />
 
             <h:form>
-                <p:commandButton value="Volver al Inicio" 
-                                 icon="pi pi-home"
-                                 action="#{loginBean.redireccionarInicio()}"
-                                 styleClass="ui-button-raised ui-button-secondary" />
+         <p:commandButton value="Volver al Inicio" 
+                 action="#{redirrecionarBean.irAlDashboard()}"
+                 styleClass="ui-button-raised ui-button-secondary" 
+                 icon="pi pi-home"
+                 immediate="true" />
             </h:form>
         </div>
     </h:body>

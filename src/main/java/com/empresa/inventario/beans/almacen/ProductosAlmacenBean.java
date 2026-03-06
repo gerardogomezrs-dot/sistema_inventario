@@ -12,6 +12,7 @@ import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Productos;
 import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.service.IProductoService;
+import com.empresa.inventario.utils.Mensajes;
 
 import lombok.Data;
 
@@ -24,9 +25,9 @@ public class ProductosAlmacenBean implements Serializable {
 	*/
 	private static final long serialVersionUID = 1L;
 
-	private IProductoService iProductoService;
+	private transient IProductoService iProductoService;
 
-	private List<Productos> productosList;
+	private transient List<Productos> productosList;
 	
 	private transient List<Productos> filteredProductosList;
 	
@@ -34,7 +35,7 @@ public class ProductosAlmacenBean implements Serializable {
 
 	private String nombreUsuario;
 
-	private IAuditoriaService auditoriaService;
+	private transient IAuditoriaService auditoriaService;
 
 	@Inject
 	public ProductosAlmacenBean(IProductoService iProductoService, IAuditoriaService auditoriaService) {
@@ -48,7 +49,7 @@ public class ProductosAlmacenBean implements Serializable {
 	}
 
 	public void cargaListaProductos() {
-
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 		try {
 			productosList = iProductoService.getAll();
 			if (productosList.isEmpty()) {
@@ -56,6 +57,8 @@ public class ProductosAlmacenBean implements Serializable {
 			}
 		} catch (Exception e) {
 			e.getMessage();
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
+					Mensajes.ERROR.toString(), idUsuario);
 		}
 	}
 	

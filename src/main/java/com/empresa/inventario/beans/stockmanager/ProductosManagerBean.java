@@ -31,15 +31,15 @@ public class ProductosManagerBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private List<Categorias> listaCategorias;
+	private transient List<Categorias> listaCategorias;
 
-	private List<Productos> listaProductosGuardar = new ArrayList<>();
+	private transient List<Productos> listaProductosGuardar = new ArrayList<>();
 
-	private List<Productos> listaProductosList;
+	private transient List<Productos> listaProductosList;
 
 	private transient UploadedFile uploadedFile;
 
-	private Productos producto;
+	private transient Productos producto;
 
 	private Integer progreso = 0;
 
@@ -52,8 +52,6 @@ public class ProductosManagerBean implements Serializable {
 	private IProductoService iProductoService;
 
 	private ICategoriaService iCategoriaService;
-
-
 
 	@Inject
 	public ProductosManagerBean(IAuditoriaService auditoriaService, IProductoService iProductoService,
@@ -129,7 +127,7 @@ public class ProductosManagerBean implements Serializable {
 					Mensajes.USUARIO + nombreUsuario + "realizo el guardado de un registro", Mensajes.INFO.toString(),
 					idUsuario);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -207,6 +205,7 @@ public class ProductosManagerBean implements Serializable {
 					Mensajes.INFO.toString(), idUsuario);
 		} catch (ExceptionMessage e) {
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+			e.getMessage();
 
 			auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);

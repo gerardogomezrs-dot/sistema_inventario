@@ -29,23 +29,23 @@ public class ProveedorBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private List<Proveedor> listaProveedorGuardar = new ArrayList<>();
+	private transient List<Proveedor> listaProveedorGuardar = new ArrayList<>();
 
-	private List<Proveedor> list;
+	private transient List<Proveedor> list;
 
 	private transient UploadedFile uploadedFile;
 
-	private Proveedor proveedor;
+	private transient Proveedor proveedor;
 
 	private Integer progreso = 0;
 
-	private IProveedorService iProveedorService;
+	private transient IProveedorService iProveedorService;
 
 	private int idUsuario;
 
 	private String nombreUsuario;
 
-	private IAuditoriaService auditoriaService;
+	private transient IAuditoriaService auditoriaService;
 
 	@Inject
 	ProveedorBean(IAuditoriaService auditoriaService, IProveedorService iProveedorService) {
@@ -108,24 +108,23 @@ public class ProveedorBean implements Serializable {
 	public void guardarTablaProveedor() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 
-		if (listaProveedorGuardar != null && !listaProveedorGuardar.isEmpty()) {
-			try {
-				iProveedorService.save(listaProveedorGuardar);
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-						"Registro guardado", "El registro fue guardado correctamente"));
-				baseBean.registrarAuditoria(auditoriaService, Mensajes.GUARDAR,
-						Mensajes.USUARIO + nombreUsuario + "realizo el guardado de un registro",
-						Mensajes.INFO.toString(), idUsuario);
-			} catch (Exception e) {
-				e.getMessage();
-				baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
-						Mensajes.ERROR.toString(), idUsuario);
-			}
-
+		try {
+			iProveedorService.save(listaProveedorGuardar);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+					"Registro guardado", "El registro fue guardado correctamente"));
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.GUARDAR,
+					Mensajes.USUARIO + nombreUsuario + "realizo el guardado de un registro", Mensajes.INFO.toString(),
+					idUsuario);
+		} catch (Exception e) {
+			e.getMessage();
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
+					Mensajes.ERROR.toString(), idUsuario);
 		}
-		
-		this.listaProveedorGuardar.clear();
-		this.proveedor = null;
+
+		if (listaProveedorGuardar.isEmpty()) {
+			this.listaProveedorGuardar.clear();
+			this.proveedor = new Proveedor();
+		}
 	}
 
 	public void onComplete() {
@@ -134,7 +133,14 @@ public class ProveedorBean implements Serializable {
 	}
 
 	public void cargarListaProveedores() {
-		list = iProveedorService.proveedors();
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		try {
+			list = iProveedorService.proveedors();
+		} catch (Exception e) {
+			e.getMessage();
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
+					Mensajes.ERROR.toString(), idUsuario);
+		}
 	}
 
 	public void eliminarProveedor() {

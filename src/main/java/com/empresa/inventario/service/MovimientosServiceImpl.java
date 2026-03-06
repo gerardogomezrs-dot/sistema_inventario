@@ -1,7 +1,6 @@
 package com.empresa.inventario.service;
 
 import java.io.InputStreamReader;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -27,13 +26,9 @@ import com.opencsv.CSVReader;
 
 @Named("movimientoService")
 @ApplicationScoped
-public class MovimientosServiceImpl implements IMovimientosService, Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class MovimientosServiceImpl implements IMovimientosService {
 
 	private MovimientosDAO dao;
-
-	private ProductosDAO productosDAO;
 
 	@Override
 	public List<Movimientos> save(List<Movimientos> movimientosL) {
@@ -43,14 +38,13 @@ public class MovimientosServiceImpl implements IMovimientosService, Serializable
 				throw new ExceptionMessage("Vacio");
 			}
 			for (Movimientos movimientos : movimientosL) {
-				System.err.println("movimientos id" + movimientos.getIdUsuario());
 
 				int totalStock = 0;
 				int unidad = movimientos.getCantidad();
 
 				dao = new MovimientosDAO();
 				dao.guardar(movimientos);
-				productosDAO = new ProductosDAO();
+				ProductosDAO productosDAO = new ProductosDAO();
 				if (movimientos.getTipoMovimiento().equals("Entrada")) {
 					int nuevoSock = productosDAO.getByIdProducto(movimientos.getIdProducto());
 					totalStock = nuevoSock + movimientos.getCantidad();
@@ -66,7 +60,7 @@ public class MovimientosServiceImpl implements IMovimientosService, Serializable
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return list;
 	}
@@ -81,7 +75,7 @@ public class MovimientosServiceImpl implements IMovimientosService, Serializable
 			movimientos = new ArrayList<>(list);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return movimientos;
 	}
@@ -94,7 +88,7 @@ public class MovimientosServiceImpl implements IMovimientosService, Serializable
 			dao = new MovimientosDAO();
 			movimientos = dao.getByUsuario(idUsuario);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return movimientos;
 	}
@@ -112,20 +106,19 @@ public class MovimientosServiceImpl implements IMovimientosService, Serializable
 			try {
 				p = leerCVS(uploadedFile);
 			} catch (Exception e) {
-				e.printStackTrace();
+				e.getMessage();
 			}
 		}
 		if (fileName.endsWith("xlsx") || fileName.endsWith("lsx")) {
 			try {
 				p = leerExcel(uploadedFile);
 			} catch (Exception e) {
-				e.printStackTrace();
+				e.getMessage();
 			}
 		}
 		if (!fileName.endsWith(".xlsx") && !fileName.endsWith(".lsx") && !fileName.endsWith(".csv")) {
 			throw new ExceptionMessage("Formato no soportado");
 		}
-
 		return p;
 	}
 
@@ -167,11 +160,10 @@ public class MovimientosServiceImpl implements IMovimientosService, Serializable
 				movimientos.setOrigenDestino(origenDestino);
 				movimientos.setIdUsuario(idUsuario);
 				movimientos.setObservaciones(observaciones);
-
 				list.add(movimientos);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return list;
 	}
@@ -191,17 +183,16 @@ public class MovimientosServiceImpl implements IMovimientosService, Serializable
 					p.setTipoMovimiento(fila[1]);
 					p.setCantidad(Integer.valueOf(fila[2]));
 					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-					LocalDateTime fecha = LocalDateTime.parse(fila[3].toString(), formatter);
+					LocalDateTime fecha = LocalDateTime.parse(fila[3], formatter);
 					p.setFechaHora(java.sql.Timestamp.valueOf(fecha));
 					p.setOrigenDestino(fila[4]);
 					p.setIdUsuario(Integer.valueOf(fila[5]));
 					p.setObservaciones(fila[6]);
-
 					list.add(p);
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return list;
 	}

@@ -29,23 +29,23 @@ public class ProveedorManagerBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private List<Proveedor> listaProveedorGuardar = new ArrayList<>();
+	private transient List<Proveedor> listaProveedorGuardar = new ArrayList<>();
 
-	private List<Proveedor> list;
+	private transient List<Proveedor> list;
 
 	private transient UploadedFile uploadedFile;
 
-	private Proveedor proveedor;
+	private transient Proveedor proveedor;
 
 	private Integer progreso = 0;
 
-	private IProveedorService iProveedorService;
+	private transient IProveedorService iProveedorService;
 
 	private int idUsuario;
 
 	private String nombreUsuario;
 
-	private IAuditoriaService auditoriaService;
+	private transient IAuditoriaService auditoriaService;
 
 	@Inject
 	public ProveedorManagerBean(IAuditoriaService auditoriaService, IProveedorService iProveedorService) {
@@ -191,7 +191,7 @@ public class ProveedorManagerBean implements Serializable {
 					Mensajes.INFO.toString(), idUsuario);
 		} catch (ExceptionMessage e) {
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
-
+			e.getMessage();
 			auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 

@@ -1,4 +1,4 @@
-package com.empresa.inventario.beans.admin;
+package com.empresa.inventario.beans.stockmanager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -21,15 +21,16 @@ import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.service.IMermasDevolucionesService;
 import com.empresa.inventario.service.IProductoService;
 import com.empresa.inventario.utils.Mensajes;
+
 import lombok.Data;
 
-@Named("mermasDevolucionesBean")
+@Named("mermasDevolucionesManagerBean")
 @javax.faces.view.ViewScoped
 @Data
-public class MermaDevolucionesBean implements Serializable {
+public class MermasDevolucionesManagerBean implements Serializable{
 	/**
-	* 
-	*/
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
 
 	private transient MermasDevoluciones mermasDevoluciones;
@@ -59,13 +60,13 @@ public class MermaDevolucionesBean implements Serializable {
 	private boolean tieneDevolucion;
 
 	@Inject
-	public MermaDevolucionesBean(IAuditoriaService auditoriaService, IProductoService iProductoService,
+	public MermasDevolucionesManagerBean(IAuditoriaService auditoriaService, IProductoService iProductoService,
 			IMermasDevolucionesService devolucionesService) {
 		this.auditoriaService = auditoriaService;
 		this.iProductoService = iProductoService;
 		this.devolucionesService = devolucionesService;
 	}
-
+	
 	@PostConstruct
 	public void init() {
 		Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
@@ -78,26 +79,26 @@ public class MermaDevolucionesBean implements Serializable {
 		mermasDevoluciones = new MermasDevoluciones();
 		this.tieneDevolucion = true;
 	}
-
+	
 	public String irARegistrarMermaDevolucion() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 		baseBean.registrarNavegacion(auditoriaService, Mensajes.NAVEGACION, "navego a registro merma devolucion",
 				idUsuario, nombreUsuario);
-		return "/pages/admin/mermasDevoluciones/mermasDevoluciones.xhtml?faces-redirect=true";
+		return "/pages/stock_manager/mermasDevoluciones/mermasDevoluciones.xhtml?faces-redirect=true";
 	}
 
 	public String irADashboard() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 		baseBean.registrarNavegacion(auditoriaService, Mensajes.NAVEGACION, "navego a dashboard", idUsuario,
 				nombreUsuario);
-		return "/pages/admin/dashboard.xhtml?faces-redirect=true";
+		return "/pages/stock_manager/dashboard.xhtml?faces-redirect=true";
 	}
 
 	public String irATablaMermasDevoluciones() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 		baseBean.registrarNavegacion(auditoriaService, Mensajes.NAVEGACION, "navego a dashboard", idUsuario,
 				nombreUsuario);
-		return "/pages/admin/mermasDevoluciones/tablaMermasDevoluciones.xhtml?faces-redirect=true";
+		return "/pages/stock_manager/mermasDevoluciones/tablaMermasDevoluciones.xhtml?faces-redirect=true";
 	}
 
 	public void listaProductos() {
@@ -159,4 +160,5 @@ public class MermaDevolucionesBean implements Serializable {
 					Mensajes.ERROR.toString(), idUsuario);
 		}
 	}
+
 }

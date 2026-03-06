@@ -1,6 +1,5 @@
 package com.empresa.inventario.service;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,19 +12,12 @@ import com.empresa.inventario.model.Usuario;
 
 @Named("usuarioService")
 @ApplicationScoped
-public class UsuariosServiceImpl implements IUsuariosService, Serializable {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class UsuariosServiceImpl implements IUsuariosService {
 
 	@Override
 	public void save(Usuario usuario) {
 		  UsuariosDAO dao = new UsuariosDAO();
-
 		String nombreUsuario = "";
-
 		try {
 			dao = new UsuariosDAO();
 			nombreUsuario = dao.validarUserName(usuario.getUserName());
@@ -33,7 +25,6 @@ public class UsuariosServiceImpl implements IUsuariosService, Serializable {
 		} catch (Exception e) {
 			e.getMessage();
 		}
-
 		if (nombreUsuario.equals(usuario.getUserName())) {
 			throw new ExceptionMessage("Este usuario ya existe, intenta con otro");
 		}

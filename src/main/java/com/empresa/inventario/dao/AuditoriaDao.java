@@ -49,9 +49,7 @@ public class AuditoriaDao implements Serializable{
 			ps.setString(3, e.getMetodo());
 			ps.setString(4, e.getAccion());
 			ps.setString(5, e.getNivel());
-
 			ps.executeUpdate();
-
 		} catch (SQLException ex) {
 			ex.getMessage();
 		}

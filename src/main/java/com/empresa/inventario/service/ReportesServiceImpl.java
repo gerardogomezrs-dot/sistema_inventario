@@ -1,6 +1,5 @@
 package com.empresa.inventario.service;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -14,18 +13,14 @@ import com.empresa.inventario.dao.ReportesDAO;
 import com.empresa.inventario.model.ReporteAuditoriaUsuario;
 import com.empresa.inventario.model.ReporteClasificacionABC;
 import com.empresa.inventario.model.ReporteInventarioValorizado;
+import com.empresa.inventario.model.ReporteMermasDevolucion;
 import com.empresa.inventario.model.ReporteRotacionInventario;
 import com.empresa.inventario.model.ReporteStockBajo;
 import com.empresa.inventario.model.ReportesMovimiento;
 
 @Named("reportesService")
 @ApplicationScoped
-public class ReportesServiceImpl implements IReporteService, Serializable {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class ReportesServiceImpl implements IReporteService {
 
 	private ReportesDAO dao = new ReportesDAO();
 
@@ -95,5 +90,16 @@ public class ReportesServiceImpl implements IReporteService, Serializable {
 			e.getMessage();
 		}
 		return clasificacionABCs;
+	}
+
+	@Override
+	public List<ReporteMermasDevolucion> mermasDevolucions() {
+		List<ReporteMermasDevolucion> mermasDevolucions = new ArrayList<>();
+		try {
+			mermasDevolucions = dao.getReporteMermasDevoluciones();
+		}catch (Exception e) {
+			e.getMessage();
+		}
+		return mermasDevolucions;
 	}
 }

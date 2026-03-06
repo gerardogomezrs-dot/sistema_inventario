@@ -35,7 +35,7 @@ public class MovimientosDAO {
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return lista;
 	}
@@ -45,8 +45,6 @@ public class MovimientosDAO {
 				+ " tipo_movimiento , cantidad, fecha_hora ,  origen_destino ,  id_usuario ,  observaciones ) "
 				+ " VALUES " + "(?, ?, ?, ?, ?, ?, ?)";
 		
-		System.err.println("sql " + sql);
-
 		try (Connection conexion = Conexion.getConexion(); PreparedStatement ps = conexion.prepareStatement(sql);) {
 
 			ps.setInt(1, movimientos.getIdProducto());
@@ -58,7 +56,7 @@ public class MovimientosDAO {
 			ps.setString(7, movimientos.getObservaciones());
 			ps.executeUpdate();
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 
 	}
@@ -87,8 +85,7 @@ public class MovimientosDAO {
 	            }
 	        }
 	    } catch (SQLException e) {
-	        // 4. Mejor manejo de errores: usa un Logger o lanza una excepción personalizada
-	        System.err.println("Error al obtener movimientos del usuario " + idUsuario + ": " + e.getMessage());
+	    	e.getMessage();
 	    }
 	    return lista;
 	}

@@ -41,7 +41,7 @@
 </h:head>
 <h:body>
     <h:form id="formMermasDevoluciones" enctype="multipart/form-data">
-        <ui:include src="/pages/admin/menu.xhtml" />
+        <ui:include src="/pages/stock_manager/menu.xhtml" />
         <p:growl id="msgs" showDetail="true" />
         <div class="main-container">
             <div class="form-side">
@@ -50,18 +50,18 @@
 
 
                         <h:outputLabel value="Producto:" />
-                        <h:selectOneMenu value="#{mermasDevolucionesBean.mermasDevoluciones.idProducto}"
+                        <h:selectOneMenu value="#{mermasDevolucionesManagerBean.mermasDevoluciones.idProducto}"
                             style="width: 100%;">
                             <f:selectItem itemLabel="Seleccione un producto" itemValue="" noSelectionOption="true" />
-                            <f:selectItems value="#{mermasDevolucionesBean.listaProductos}" var="prod"
+                            <f:selectItems value="#{mermasDevolucionesManagerBean.listaProductos}" var="prod"
                                 itemLabel="#{prod.nombre}" itemValue="#{prod.idProducto}" />
                         </h:selectOneMenu>
                         <h:outputLabel value="Cantidad:" />
-                        <p:inputText value="#{mermasDevolucionesBean.mermasDevoluciones.cantidad}" rows="3" />
+                        <p:inputText value="#{mermasDevolucionesManagerBean.mermasDevoluciones.cantidad}" rows="3" />
                         <p:outputLabel value="Motivo:" />
-                        <p:inputTextarea value="#{mermasDevolucionesBean.mermasDevoluciones.motivo}" rows="3" />
+                        <p:inputTextarea value="#{mermasDevolucionesManagerBean.mermasDevoluciones.motivo}" rows="3" />
                         <p:outputLabel value="Tipo:" />
-                        <h:selectOneMenu value="#{mermasDevolucionesBean.mermasDevoluciones.tipo}" style="width: 100%;">
+                        <h:selectOneMenu value="#{mermasDevolucionesManagerBean.mermasDevoluciones.tipo}" style="width: 100%;">
                             <f:selectItem itemLabel="Seleccione un tipo" itemValue="" noSelectionOption="true" />
                             <f:selectItem itemLabel="Merma" itemValue="Merma" />
                             <f:selectItem itemLabel="Devolución" itemValue="Devolucion" />
@@ -71,21 +71,21 @@
                     <p:separator />
 
                     <p:commandButton value="Guardar" icon="pi pi-save"
-                        action="#{mermasDevolucionesBean.guardarRegistroTabla}" process="@form"
+                        action="#{mermasDevolucionesManagerBean.guardarRegistroTabla}" process="@form"
                         update="formMermasDevoluciones"
                         oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
 
                     <p:commandButton value="Regresar" icon="pi pi-chevron-left"
-                        action="#{mermasDevolucionesBean.irATablaMermasDevoluciones}" immediate="true"
+                        action="#{mermasDevolucionesManagerBean.irATablaMermasDevoluciones}" immediate="true"
                         style="margin-left: 10px;" />
 
                     <div class="upload-section" style="margin-top: 20px;">
                         <h:outputLabel value="Cargar desde archivo (CSV, Excel):"
                             style="display:block; margin-bottom:5px; font-weight:bold;" />
-                        <p:fileUpload value="#{mermasDevolucionesBean.uploadedFile}" mode="simple" skinSimple="true"
+                        <p:fileUpload value="#{mermasDevolucionesManagerBean.uploadedFile}" mode="simple" skinSimple="true"
                             label="Seleccionar Archivo" chooseIcon="pi pi-upload" />
 
-                        <p:commandButton value="Procesar Archivo" action="#{mermasDevolucionesBean.cargaArchivos}"
+                        <p:commandButton value="Procesar Archivo" action="#{mermasDevolucionesManagerBean.cargaArchivos}"
                             ajax="false" styleClass="ui-button-help" style="margin-top: 5px;"
                             icon="pi pi-file-import" />
                     </div>
@@ -93,7 +93,7 @@
             </div>
 
             <div class="table-side">
-                <p:dataTable id="tablaRegistros" value="#{mermasDevolucionesBean.devoluciones}" var="prod"
+                <p:dataTable id="tablaRegistros" value="#{mermasDevolucionesManagerBean.devoluciones}" var="prod"
                     emptyMessage="No hay  registrados en esta sesión." scrollable="true" scrollHeight="500">
 
                     <f:facet name="header">Mermas y Devoluciones Guardadas</f:facet>
@@ -113,7 +113,7 @@
 
                 <p:separator />
 
-                <p:commandButton value="Guardar" icon="pi pi-save" action="#{mermasDevolucionesBean.guardarRegistros}"
+                <p:commandButton value="Guardar" icon="pi pi-save" action="#{mermasDevolucionesManagerBean.guardarRegistros}"
                     process="@form" update="tablaRegistros, msgs" widgetVar="btnGuardar"
                     onclick="PF('pbAjax').start(); PF('btnGuardar').disable();"
                     oncomplete="if (args.validationFailed) { PF('pbAjax').cancel(); PF('btnGuardar').enable(); } else { PF('dlgConfirmacionGuardar').show(); }" />
@@ -132,9 +132,7 @@
             <br /><br />
             <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacionGuardar').hide();" />
         </p:dialog>
-        <ui:include src="/pages/admin/footer.xhtml" />
+        <ui:include src="/pages/stock_manager/footer.xhtml" />
     </h:form>
-
 </h:body>
-
 </html>

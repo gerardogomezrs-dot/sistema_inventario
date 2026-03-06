@@ -32,15 +32,24 @@ public class ProductosMapper {
 		Productos p = new Productos();
 		p.setIdProducto(rs.getInt("id_producto"));
 		p.setCodigoBarras(rs.getString("codigo_barras"));
-		p.setNombre(rs.getString("nombre"));
+		p.setNombre(rs.getString("nombreProducto"));
 		p.setDescripcion(rs.getString("descripcion"));
 		p.setIdCategoria(rs.getInt("id_categoria"));
 		p.setUnidad(rs.getString("unidad"));
 		p.setPrecioUnitario(rs.getDouble("precio_unitario"));
-		p.setStockActual(rs.getInt("stock_actual"));
-		p.setStockMinimo(rs.getInt("stock_minimo"));
+		p.setStockActual(rs.getInt("stockActual"));
+		p.setStockMinimo(rs.getInt("stockMinimo"));
 		p.setUbicacion(rs.getString("ubicacion"));
 		p.setActivo(rs.getBoolean("activo"));
 		return p;
+	}
+	
+	public Productos mapRowStockBajo(ResultSet rs) throws SQLException {
+		Productos productos = new Productos();
+		productos.setIdProducto(rs.getInt("id_producto"));
+		productos.setNombre(rs.getString("nombre"));
+		productos.setStockActual(rs.getInt("stock_actual"));
+		productos.setStockMinimo(rs.getInt("stock_minimo"));
+		return productos;
 	}
 }

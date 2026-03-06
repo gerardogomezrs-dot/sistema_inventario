@@ -31,27 +31,27 @@ public class ProductoBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private List<Categorias> listaCategorias;
+	private transient List<Categorias> listaCategorias;
 
-	private List<Productos> listaProductosGuardar = new ArrayList<>();
+	private transient List<Productos> listaProductosGuardar = new ArrayList<>();
 
-	private List<Productos> list;
+	private transient List<Productos> list;
 
-	private UploadedFile uploadedFile;
+	private transient UploadedFile uploadedFile;
 
-	private Productos producto;
+	private transient Productos producto;
 
 	private Integer progreso = 0;
 
-	private IProductoService iProductoService;
+	private transient IProductoService iProductoService;
 
-	private ICategoriaService iCategoriaService;
+	private transient ICategoriaService iCategoriaService;
 
 	private int idUsuario;
 
 	private String nombreUsuario;
 
-	private IAuditoriaService auditoriaService;
+	private transient IAuditoriaService auditoriaService;
 
 	@Inject
 	public ProductoBean(IProductoService iProductoService, ICategoriaService iCategoriaService,
@@ -177,6 +177,7 @@ public class ProductoBean implements Serializable {
 					Mensajes.INFO.toString(), idUsuario);
 		} catch (ExceptionMessage e) {
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+			e.getMessage();
 
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);

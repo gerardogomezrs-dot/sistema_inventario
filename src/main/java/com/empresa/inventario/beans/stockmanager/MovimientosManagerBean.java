@@ -10,6 +10,8 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.primefaces.model.UploadedFile;
+
 import com.empresa.inventario.beans.BaseAuditoriaBean;
 import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Movimientos;
@@ -26,36 +28,38 @@ import lombok.Data;
 @javax.faces.view.ViewScoped
 @Data
 public class MovimientosManagerBean implements Serializable {
-
+	
 	private static final long serialVersionUID = 1L;
-
+	
+	private transient UploadedFile uploadedFile;
+	
 	private boolean modoManual = false;
 
-	private List<Movimientos> list;
+	private transient List<Movimientos> list;
 
-	private List<Movimientos> filteredList;
+	private transient List<Movimientos> filteredList;
 
-	private Movimientos movimientos;
+	private transient Movimientos movimientos;
 
-	private List<Productos> listProductos;
+	private transient List<Productos> listProductos;
 
 	private Boolean mostrarScanner = false;
 
 	private String infoProductoExtra;
 
-	private List<Movimientos> listaMovimientosGuardar = new ArrayList<>();
+	private  transient List<Movimientos> listaMovimientosGuardar = new ArrayList<>();
 
 	private int idUsuario;
 
 	private String nombreUsuario;
 
-	private Usuario user;
+	private transient Usuario user;
 
-	private IAuditoriaService auditoriaService;
+	private transient IAuditoriaService auditoriaService;
 
-	private IMovimientosService service;
+	private transient IMovimientosService service;
 
-	private IProductoService iProductoService;
+	private transient IProductoService iProductoService;
 
 	@Inject
 	public MovimientosManagerBean(IAuditoriaService auditoriaService, IMovimientosService service,
@@ -63,7 +67,6 @@ public class MovimientosManagerBean implements Serializable {
 		this.auditoriaService = auditoriaService;
 		this.service = service;
 		this.iProductoService = iProductoService;
-
 	}
 
 	@PostConstruct
@@ -82,7 +85,6 @@ public class MovimientosManagerBean implements Serializable {
 
 	public List<Movimientos> listaMovimientos() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-
 		try {
 			list = service.getAll();
 		} catch (ExceptionMessage e) {
@@ -95,9 +97,6 @@ public class MovimientosManagerBean implements Serializable {
 		return list;
 	}
 
-	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
-	}
 
 	public String irANuevoMovimiento() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
@@ -132,7 +131,7 @@ public class MovimientosManagerBean implements Serializable {
 					Mensajes.USUARIO + nombreUsuario + " registro un elemento a la tabla", Mensajes.INFO.toString(),
 					idUsuario);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -143,7 +142,7 @@ public class MovimientosManagerBean implements Serializable {
 		this.movimientos.setCodigoBarras(null);
 	}
 
-	public void cargarInfoScanner() throws Exception {
+	public void cargarInfoScanner()  {
 		String codigo = this.movimientos.getCodigoBarras();
 		if (codigo != null && !codigo.isEmpty()) {
 			this.infoProductoExtra = "Cargado: " + codigo + " - Producto encontrado";
@@ -167,11 +166,44 @@ public class MovimientosManagerBean implements Serializable {
 			if (listaMovimientosGuardar != null) {
 				listaMovimientosGuardar.clear();
 			}
-
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
+	}
+	
+	public void cargarArchivo() {
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		List<Movimientos> liMovimientos = new ArrayList<>();
+		try {
+			if (uploadedFile == null || uploadedFile.getContents() == null) {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
+			}
+			listaMovimientosGuardar = new ArrayList<>();
+			liMovimientos = service.cargaMasiva(uploadedFile);
+			this.listaMovimientosGuardar = new ArrayList<>(liMovimientos);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
+
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.CARGA_MASIVA_REGISTROS.getTexto(),
+					Mensajes.USUARIO + nombreUsuario + " realizo una carga masiva de registros",
+					Mensajes.INFO.toString(), idUsuario);
+
+		} catch (ExceptionMessage e) {
+			e.getMessage();
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
+					Mensajes.ERROR.toString(), idUsuario);
+		} catch (Exception e) {
+			e.getMessage();
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
+					Mensajes.ERROR.toString(), idUsuario);
+		}
+	}
+	
+	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
 }

@@ -13,6 +13,7 @@ public enum Mensajes {
 	MODULO_REPORTES("MOdulo Reportes"),
 	MODULO_MOVIMIENTOS("Modulo movimientos"),
 	MODULO_CATEGORIAS("Modulo Categorias"),
+	MODULO_MERMAS_DEVOLUCIONES("Modulo Mermas Devoluciones"),
 	EXPORTAR_REPORTE("Exportar Reporte"),
 	GESTION_AUDITORIAS("Gestion Auditoria"),
 	PERFIL_USUARIO("Perfil Usuario"),

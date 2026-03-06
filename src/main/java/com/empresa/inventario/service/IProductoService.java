@@ -21,4 +21,6 @@ public interface IProductoService {
 	List<Productos> cargaArchivos(UploadedFile uploadedFile) ;
 	
 	Productos getByCodigoBarras(String codigoBarras);
+	
+	List<Productos> getStockBajo();
 	}

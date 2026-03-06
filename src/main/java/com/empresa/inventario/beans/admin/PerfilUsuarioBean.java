@@ -23,15 +23,15 @@ public class PerfilUsuarioBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private Usuario usuario;
+	private transient Usuario usuario;
 
-	private IUsuariosService iUsuariosService;
+	private transient IUsuariosService iUsuariosService;
 
 	private int idUsuario;
 
 	private String nombreUsuario;
 
-	private IAuditoriaService auditoriaService;
+	private transient IAuditoriaService auditoriaService;
 
 	@Inject
 	public PerfilUsuarioBean(IUsuariosService iUsuariosService, IAuditoriaService auditoriaService) {

@@ -14,11 +14,9 @@ public class BaseAuditoriaBean implements Serializable {/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
 	private int idUsuario;
     private String nombreUsuario;
-    
- 
+   
     // Método universal de auditoría
     public void registrarAuditoria(IAuditoriaService service, Object metodo, String accion, String nivel, int idUsuario) {
         Auditoria auditoria = new Auditoria();
@@ -41,6 +39,5 @@ public class BaseAuditoriaBean implements Serializable {/**
         auditoria.setNivel(Mensajes.INFO.toString());
         service.registroAuditoria(auditoria);
     }
-
 }
 

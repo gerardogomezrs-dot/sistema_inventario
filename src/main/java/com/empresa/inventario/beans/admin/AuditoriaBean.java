@@ -27,7 +27,9 @@ public class AuditoriaBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private transient List<Auditoria> filteredList;
+
 	private transient List<Auditoria> list;
+
 	private int idUsuario;
 
 	private String nombreUsuario;
@@ -49,10 +51,18 @@ public class AuditoriaBean implements Serializable {
 	}
 
 	public void cargarListaAuditoria() {
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+
+		try {
 		list = auditoriaService.getAll();
 		if (list.isEmpty()) {
 			throw new ExceptionMessage("Lista Vacia");
 		}
+		} catch (Exception e) {
+			e.getMessage();
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
+					Mensajes.ERROR.toString(), idUsuario);
+		}	
 	}
 
 	public String irADashboard() {

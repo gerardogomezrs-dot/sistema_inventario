@@ -1,16 +1,16 @@
 package com.empresa.inventario.service;
 
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -59,7 +59,7 @@ public class ProductosServiceImp implements IProductoService {
 
 				listaProducto.add(p);
 			} catch (Exception e) {
-				e.getMessage();
+				e.printStackTrace();
 			}
 		}
 		try {
@@ -70,7 +70,6 @@ public class ProductosServiceImp implements IProductoService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return productosLista;
 	}
 
@@ -124,7 +123,7 @@ public class ProductosServiceImp implements IProductoService {
 			try {
 				p = leerExcel(uploadedFile);
 			} catch (Exception e) {
-				e.getMessage();
+				e.printStackTrace();
 			}
 		}
 		if (!fileName.endsWith(".xlsx") && !fileName.endsWith(".lsx") && !fileName.endsWith(".csv")) {
@@ -134,17 +133,18 @@ public class ProductosServiceImp implements IProductoService {
 		return p;
 	}
 
-	private List<Productos> leerExcel(UploadedFile uploadedFile) throws EncryptedDocumentException, IOException {
+	private List<Productos> leerExcel(UploadedFile uploadedFile)  {
 		List<Productos> productosList = new ArrayList<>();
 		Productos productos;
+		try {
 		Workbook workbook = WorkbookFactory.create(uploadedFile.getInputstream());
-		Sheet sheet = workbook.getSheetAt(0); // Primera hoja
+		Sheet sheet = workbook.getSheetAt(0); 
 		for (Row row : sheet) {
 			if (row.getRowNum() == 0)
 				continue;
 			Cell cellNombre = row.getCell(0);
-			Cell cellDescripcion = row.getCell(1);
-			Cell cellCodigoBarras = row.getCell(2);
+			Cell cellDescripcion = row.getCell(2);
+			Cell cellCodigoBarras = row.getCell(1);
 			Cell cellIdCategoria = row.getCell(3);
 			Cell cellUnidad = row.getCell(4);
 			Cell cellPrecioUnitario = row.getCell(5);
@@ -156,10 +156,19 @@ public class ProductosServiceImp implements IProductoService {
 			productos = new Productos();
 
 			DataFormatter dataFormatter = new DataFormatter();
+			
+			long valorLong = 0;
 
+			if (cellCodigoBarras != null) {
+			    if (cellCodigoBarras.getCellType() == CellType.NUMERIC) {
+			        valorLong = (long) cellCodigoBarras.getNumericCellValue();
+			    } else if (cellCodigoBarras.getCellType() == CellType.STRING) {
+			        valorLong = Long.parseLong(cellCodigoBarras.getStringCellValue());
+			    }
+			}
 			productos.setNombre(dataFormatter.formatCellValue(cellNombre));
 			productos.setDescripcion(dataFormatter.formatCellValue(cellDescripcion));
-			productos.setCodigoBarras(dataFormatter.formatCellValue(cellCodigoBarras));
+			productos.setCodigoBarras(String.valueOf(valorLong));
 			String idCategoria = dataFormatter.formatCellValue(cellIdCategoria);
 			int categoria = NumberUtils.toInt(idCategoria, 0);
 
@@ -177,6 +186,9 @@ public class ProductosServiceImp implements IProductoService {
 			productos.setUbicacion(dataFormatter.formatCellValue(cellUbicacion));
 			productos.setActivo(Boolean.parseBoolean(dataFormatter.formatCellValue(cellActivo)));
 			productosList.add(productos);
+		}
+		}catch (Exception e) {
+			e.printStackTrace();
 		}
 		return productosList;
 	}
@@ -204,7 +216,7 @@ public class ProductosServiceImp implements IProductoService {
 				}
 			}
 		} catch (Exception e) {
-			e.getMessage();
+			e.printStackTrace();
 		}
 		return list;
 	}
@@ -230,5 +242,23 @@ public class ProductosServiceImp implements IProductoService {
 			e.getMessage();
 		}
 	}
+
+	@Override
+	public List<Productos> getStockBajo() {
+		List<Productos> productos = new ArrayList<>();
+		try {
+			productos = productosDAO.getStockBajo();
+			return productos.stream()
+		            .filter(p -> p.getStockActual() <= p.getStockMinimo())
+		            .collect(Collectors.toList());
+		} catch (Exception e) {
+			e.getMessage();
+		}
+		return productos;
+	}
+	
+	public int contarCriticos() {
+        return getStockBajo().size();
+    }
 
 }

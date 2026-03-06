@@ -15,6 +15,7 @@ import com.empresa.inventario.beans.BaseAuditoriaBean;
 import com.empresa.inventario.model.ReporteAuditoriaUsuario;
 import com.empresa.inventario.model.ReporteClasificacionABC;
 import com.empresa.inventario.model.ReporteInventarioValorizado;
+import com.empresa.inventario.model.ReporteMermasDevolucion;
 import com.empresa.inventario.model.ReporteRotacionInventario;
 import com.empresa.inventario.model.ReporteStockBajo;
 import com.empresa.inventario.model.ReportesMovimiento;
@@ -22,6 +23,7 @@ import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.service.IReporteService;
 import com.empresa.inventario.utils.Mensajes;
+import com.empresa.inventario.utils.ReportesUtils;
 
 import lombok.Data;
 
@@ -30,25 +32,25 @@ import lombok.Data;
 @Data
 public class ReportesManagerBean implements Serializable {
 
-	private static final String UNUSED = "unused";
-
 	private static final long serialVersionUID = 1L;
 
 	private Date fechaInicio;
 
 	private Date fechaFin;
 
-	private  List<ReportesMovimiento> listaReporteMovimientos;
+	private transient List<ReportesMovimiento> listaReporteMovimientos;
 
-	private  List<ReporteInventarioValorizado> listaInventarioValorizado;
+	private transient List<ReporteInventarioValorizado> listaInventarioValorizado;
 
-	private  List<ReporteStockBajo> listaStockBajo;
+	private transient List<ReporteStockBajo> listaStockBajo;
 
-	private  List<ReporteAuditoriaUsuario> listaAuditoriaUsuario;
+	private transient List<ReporteAuditoriaUsuario> listaAuditoriaUsuario;
 
-	private  List<ReporteRotacionInventario> listaIndiceInventario;
+	private transient List<ReporteRotacionInventario> listaIndiceInventario;
 
-	private  List<ReporteClasificacionABC> clasificacionABCs;
+	private transient List<ReporteClasificacionABC> clasificacionABCs;
+	
+	private transient List<ReporteMermasDevolucion> mermasDevolucions;
 
 	private String reporteReabastecimiento = null;
 
@@ -61,14 +63,16 @@ public class ReportesManagerBean implements Serializable {
 	private String reporteRotacionInventario = null;
 
 	private String reporteClasificacionABC = null;
+	
+	private String reporteMermasDevoluciones = null ;
 
 	private int idUsuario;
 
 	private String nombreUsuario;
 
-	private IAuditoriaService auditoriaService;
+	private transient IAuditoriaService auditoriaService;
 
-	private IReporteService iReporteService;
+	private transient IReporteService iReporteService;
 
 	@Inject
 	public ReportesManagerBean(IAuditoriaService auditoriaService, IReporteService iReporteService) {
@@ -101,85 +105,161 @@ public class ReportesManagerBean implements Serializable {
 		reporteAuditoriaUsuario = "Reporte Auditoria Usuario " + fechaHoy;
 		reporteRotacionInventario = "Reporte Rotacion Inventario " + fechaHoy;
 		reporteClasificacionABC = "Reporte Clasificacion ABC " + fechaHoy;
+		reporteMermasDevoluciones = "Reporte Mermas Devoluciones " + fechaHoy;
+
 	}
 
-	@SuppressWarnings(UNUSED)
-	public void exportarReporteMovimientos(Object document) {
-		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
-		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
-				Mensajes.USUARIO + nombreUsuario + " realizo la exportacion del Reporte de Movimientos",
-				Mensajes.INFO.toString(), idUsuario);
-	}
-
-	@SuppressWarnings(UNUSED)
-	public void exportarReporteInventarioValorizado(Object document) {
-		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
-		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
-				Mensajes.USUARIO + nombreUsuario + " realizo la exportacion del Reporte de Inventario Valorizado",
-				Mensajes.INFO.toString(), idUsuario);
-	}
-
-	@SuppressWarnings(UNUSED)
-	public void exportarReporteStockBajo(Object document) {
+	public void exportarReporteStockBajoExcel(Object document) {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
 		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
 				Mensajes.USUARIO + nombreUsuario + " realizo la exportacion del Reporte de Stock Bajo",
 				Mensajes.INFO.toString(), idUsuario);
+		ReportesUtils.exportarReporteExcel(document);
+	}
+	
+	public void exportarReporteStockBajoPdf(Object document) {
+		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
+		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
+				Mensajes.USUARIO + nombreUsuario + " realizo la exportacion del Reporte de Stock Bajo",
+				Mensajes.INFO.toString(), idUsuario);
+		ReportesUtils.postProcessPDF(document, reporteReabastecimiento);
 	}
 
-	@SuppressWarnings(UNUSED)
-	public void exportarReporteAuditoriaUsuario(Object document) {
+	
+	public void exportarReporteInventarioValorizadoExcel(Object document) {
+		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
+		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
+				Mensajes.USUARIO + nombreUsuario + " realizo la exportacion del Reporte de Inventario Valorizado",
+				Mensajes.INFO.toString(), idUsuario);
+		ReportesUtils.exportarReporteExcel(document);
+
+	}
+	
+	public void exportarReporteInventarioValorizadoPdf(Object document) {
+		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
+		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
+				Mensajes.USUARIO + nombreUsuario + " realizo la exportacion del Reporte de Inventario Valorizado",
+				Mensajes.INFO.toString(), idUsuario);
+		ReportesUtils.postProcessPDF(document, reporteInventarioValorizado);
+
+	}
+
+	
+	public void exportarReporteMovimientosExcel(Object document) {
+		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
+		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
+				Mensajes.USUARIO + nombreUsuario + " realizo la exportacion del Reporte de Movimientos",
+				Mensajes.INFO.toString(), idUsuario);
+		ReportesUtils.exportarReporteExcel(document);
+	}
+	
+	public void exportarReporteMovimientosPdf(Object document) {
+		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
+		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
+				Mensajes.USUARIO + nombreUsuario + " realizo la exportacion del Reporte de Movimientos",
+				Mensajes.INFO.toString(), idUsuario);
+		ReportesUtils.postProcessPDF(document, reporteMovimientos);
+	}
+
+	public void exportarReporteAuditoriaUsuarioExcel(Object document) {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
 		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
 				Mensajes.USUARIO + nombreUsuario + " realizo la exportacion del Reporte Auditoria Usuario",
 				Mensajes.INFO.toString(), idUsuario);
+		ReportesUtils.exportarReporteExcel(document);
+	}
+	
+	public void exportarReporteAuditoriaUsuarioPdf(Object document) {
+		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
+		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
+				Mensajes.USUARIO + nombreUsuario + " realizo la exportacion del Reporte Auditoria Usuario",
+				Mensajes.INFO.toString(), idUsuario);
+		ReportesUtils.postProcessPDF(document, reporteAuditoriaUsuario);
 	}
 
-	@SuppressWarnings(UNUSED)
-	public void exportarReporteRotacionInventario(Object document) {
+	public void exportarRotacionInventarioExcel(Object document) {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
 		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
 				Mensajes.USUARIO + nombreUsuario + " realizo la exportacion del Reporte Rotacion Inventario",
 				Mensajes.INFO.toString(), idUsuario);
+		ReportesUtils.exportarReporteExcel(document);
+	}
+	
+	public void exportarRotacionInventarioPdf(Object document) {
+		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
+		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
+				Mensajes.USUARIO + nombreUsuario + " realizo la exportacion del Reporte Rotacion Inventario",
+				Mensajes.INFO.toString(), idUsuario);
+		ReportesUtils.postProcessPDF(document, reporteRotacionInventario);
 	}
 
-	@SuppressWarnings(UNUSED)
-	public void exportarReporteClasificacionABC(Object document) {
+	public void exportarClasificacionABCExcel(Object document) {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
 		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
 				Mensajes.USUARIO + nombreUsuario + " realizo la exportacion del Reporte Clasificacion ABC",
 				Mensajes.INFO.toString(), idUsuario);
+		ReportesUtils.exportarReporteExcel(document);
+	}
+	
+	public void exportarClasificacionABCPdf(Object document) {
+		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
+		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
+				Mensajes.USUARIO + nombreUsuario + " realizo la exportacion del Reporte Clasificacion ABC",
+				Mensajes.INFO.toString(), idUsuario);
+		ReportesUtils.postProcessPDF(document, reporteClasificacionABC);
+	}
+
+	public void exportarMermasDevolucionesExcel(Object document) {
+		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
+		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
+				Mensajes.USUARIO + nombreUsuario + " realizo la exportacion del Reporte Mermas Devoluciones",
+				Mensajes.INFO.toString(), idUsuario);
+		ReportesUtils.exportarReporteExcel(document);
+	}
+	
+	public void exportarMermasDevolucionesPdf(Object document) {
+		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
+		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
+				Mensajes.USUARIO + nombreUsuario + " realizo la exportacion del Reporte Mermas Devoluciones",
+				Mensajes.INFO.toString(), idUsuario);
+		ReportesUtils.postProcessPDF(document, reporteMermasDevoluciones);
 	}
 
 	public void buscarStockBajo() {
 		listaStockBajo = iReporteService.reporteStockBajo();
-		
+
 	}
 
 	public void buscarInventarioValorizado() {
 		listaInventarioValorizado = iReporteService.reporteInventarioValorizado();
-		
+
 	}
 
 	public void buscar() {
 		listaReporteMovimientos = iReporteService.movimientos(fechaInicio, fechaFin);
-		
+
 	}
 
 	public void buscarAuditoriaUsuario() {
 		listaAuditoriaUsuario = iReporteService.reporteAuditoriaUsuario();
-		
+
 	}
 
 	public void buscarIndiceRotacion() {
 		listaIndiceInventario = iReporteService.reporteRotacionInventario();
-		
+
 	}
 
 	public void buscarClasificacion() {
 		clasificacionABCs = iReporteService.reporteClasificacionABC();
-		
+
 	}
+	
+
+	public void buscarMermasDevoluciones() {
+		mermasDevolucions = iReporteService.mermasDevolucions();
+	}
+
 
 	public String irAReporteMovimientos() {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();

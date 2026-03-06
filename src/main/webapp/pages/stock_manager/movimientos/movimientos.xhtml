@@ -92,28 +92,16 @@
 </h:head>
 
 <h:body>
-
     <h:form id="formMovimiento" enctype="multipart/form-data">
-
         <ui:include src="/pages/stock_manager/menu.xhtml" />
-
         <p:growl id="messages" showDetail="true" />
         <div class="main-container">
-
             <div class="form-side">
                 <p:panel header="Registro de Movimientos" style="width: 600px; margin: 0 auto;">
-
-                    <p:messages id="msgs" closable="true">
-                        <p:autoUpdate />
-                    </p:messages>
-
                     <h:panelGrid columns="2" cellpadding="5" columnClasses="label,value">
-
-
                         <h:outputLabel id="lblProducto"
                             value="#{movimientosManagerBean.mostrarScanner ? 'Scanner (Código): *' : 'Producto: *'}"
                             style="font-weight: bold;" />
-
                         <h:panelGroup id="grupoProducto">
                             <div style="display: flex; gap: 5px; align-items: center;">
 
@@ -194,6 +182,16 @@
                     <p:commandButton value="Regresar" icon="pi pi-chevron-left"
                         action="#{movimientosManagerBean.irATablaMovimientos}" immediate="true"
                         style="margin-left: 10px;" />
+
+                    <div class="upload-section" style="margin-top: 20px;">
+                        <h:outputLabel value="Cargar desde archivo (CSV, Excel):"
+                            style="display:block; margin-bottom:5px; font-weight:bold;" />
+                        <p:fileUpload value="#{movimientosManagerBean.uploadedFile}" mode="simple" skinSimple="true"
+                            label="Seleccionar Archivo" chooseIcon="pi pi-upload" />
+
+                        <p:commandButton value="Procesar Archivo" action="#{movimientosManagerBean.cargarArchivo}" ajax="false"
+                            styleClass="ui-button-help" style="margin-top: 5px;" icon="pi pi-file-import" />
+                    </div>
 
                 </p:panel>
             </div>

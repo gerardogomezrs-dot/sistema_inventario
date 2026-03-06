@@ -13,6 +13,7 @@ import com.empresa.inventario.mapper.ReportesMapper;
 import com.empresa.inventario.model.ReporteAuditoriaUsuario;
 import com.empresa.inventario.model.ReporteClasificacionABC;
 import com.empresa.inventario.model.ReporteInventarioValorizado;
+import com.empresa.inventario.model.ReporteMermasDevolucion;
 import com.empresa.inventario.model.ReporteRotacionInventario;
 import com.empresa.inventario.model.ReporteStockBajo;
 import com.empresa.inventario.model.ReportesMovimiento;
@@ -32,7 +33,7 @@ public class ReportesDAO  implements Serializable{
 				"SELECT " + "    m.id_movimiento as idMovimiento, " + "    m.fecha_hora as fechaHora, "
 						+ "    p.codigo_barras as codigoB, " + "    p.nombre AS nombreProductos, "
 						+ "    c.nombre AS nombreCategoria, " + "    m.tipo_movimiento as tipoMovimiento, "
-						+ "    m.cantidad as cantidad, " + "    m.origen_destino as origenDestino, "
+						+ "    m.cantidad as cantidadProducto, " + "    m.origen_destino as origenDestino, "
 						+ "    u.nombre AS responsable, " + "    m.observaciones as observaciones "
 						+ "FROM movimientos m " + "INNER JOIN productos p ON m.id_producto = p.id_producto "
 						+ "INNER JOIN categorias c ON p.id_categoria = c.id_categoria "
@@ -106,7 +107,7 @@ public class ReportesDAO  implements Serializable{
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.getMessage();
+			e.printStackTrace();
 
 		}
 		return lista;
@@ -176,6 +177,34 @@ public class ReportesDAO  implements Serializable{
 			while (rs.next()) {
 				ReporteClasificacionABC p = new ReporteClasificacionABC();
 				p = mapper.rowClasificacionABC(rs);
+				lista.add(p);
+			}
+		} catch (SQLException e) {
+			e.getMessage();
+		}
+		return lista;
+	}
+	
+	public List<ReporteMermasDevolucion> getReporteMermasDevoluciones() {
+		String sql = "SELECT \r\n"
+				+ "    m.fecha, \r\n"
+				+ "    p.nombre, \r\n"
+				+ "    m.tipo, -- Merma o Devolución\r\n"
+				+ "    u.nombre AS responsable, \r\n"
+				+ "    u.rol, \r\n"
+				+ "    m.cantidad,\r\n"
+				+ "    (m.cantidad * p.precio_unitario) AS total_perdida\r\n"
+				+ "FROM mermas_perdidas m\r\n"
+				+ "JOIN usuarios u ON m.id_usuario = u.id_usuario\r\n"
+				+ "JOIN productos p ON m.id_producto = p.id_producto\r\n"
+				+ "WHERE u.activo = 1; -- Filtro usando tu campo 'activo'";
+		List<ReporteMermasDevolucion> lista = new ArrayList<>();
+		try (Connection con = Conexion.getConexion();
+				PreparedStatement ps = con.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
+			while (rs.next()) {
+				ReporteMermasDevolucion p = new ReporteMermasDevolucion();
+				p = mapper.rowMermasDevolucion(rs);
 				lista.add(p);
 			}
 		} catch (SQLException e) {

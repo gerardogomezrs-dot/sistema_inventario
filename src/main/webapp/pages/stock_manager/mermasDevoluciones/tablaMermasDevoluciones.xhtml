@@ -68,24 +68,24 @@
 </h:head>
 <h:body>
     <h:form>
-        <ui:include src="/pages/admin/menu.xhtml" />
+        <ui:include src="/pages/stock_manager/menu.xhtml" />
         <p:growl id="msgs" showDetail="true" />
         <p:separator />
         <p:toolbar style="margin-bottom: 20px; border: none; background: transparent;">
             <f:facet name="left">
                 <p:commandButton value="Nuevo Registro" icon="pi pi-save"
-                    action="#{mermasDevolucionesBean.irARegistrarMermaDevolucion}" />
+                    action="#{mermasDevolucionesManagerBean.irARegistrarMermaDevolucion}" />
             </f:facet>
             <f:facet name="right">
                 <p:commandButton value="Regresar" icon="pi pi-chevron-left"
-                    action="#{mermasDevolucionesBean.irADashboard}" immediate="true" style="margin-left:10px;" />
+                    action="#{mermasDevolucionesManagerBean.irADashboard}" immediate="true" style="margin-left:10px;" />
 
             </f:facet>
         </p:toolbar>
         <p:separator />
         <h:panelGroup id="tablaMermasDevoluciones" layout="block">
             <p:panel header="Mermas y Devoluciones Registradas" style="margin-top: 10px;">
-                <p:dataTable id="tablaRegistros" value="#{mermasDevolucionesBean.listaMermasDevoluciones}" var="prod"
+                <p:dataTable id="tablaRegistros" value="#{mermasDevolucionesManagerBean.listaMermasDevoluciones}" var="prod"
                     emptyMessage="No hay  registrados en esta sesión." scrollable="true" scrollHeight="500">
 
                     <f:facet name="header">Mermas y Devoluciones Guardadas</f:facet>
@@ -116,7 +116,7 @@
                 </p:dataTable>
             </p:panel>
         </h:panelGroup>
-        <ui:include src="/pages/admin/footer.xhtml" />
+        <ui:include src="/pages/stock_manager/footer.xhtml" />
     </h:form>
 </h:body>
 

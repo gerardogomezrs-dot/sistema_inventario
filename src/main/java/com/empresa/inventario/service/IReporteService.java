@@ -6,6 +6,7 @@ import java.util.List;
 import com.empresa.inventario.model.ReporteAuditoriaUsuario;
 import com.empresa.inventario.model.ReporteClasificacionABC;
 import com.empresa.inventario.model.ReporteInventarioValorizado;
+import com.empresa.inventario.model.ReporteMermasDevolucion;
 import com.empresa.inventario.model.ReporteRotacionInventario;
 import com.empresa.inventario.model.ReporteStockBajo;
 import com.empresa.inventario.model.ReportesMovimiento;
@@ -23,5 +24,6 @@ public interface IReporteService {
 	List<ReporteRotacionInventario> reporteRotacionInventario();
 	
 	List<ReporteClasificacionABC> reporteClasificacionABC();
-
+	
+	List<ReporteMermasDevolucion> mermasDevolucions();
 }

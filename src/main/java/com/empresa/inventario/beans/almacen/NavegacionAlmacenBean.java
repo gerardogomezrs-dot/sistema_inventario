@@ -24,7 +24,7 @@ public class NavegacionAlmacenBean implements Serializable {
 
 	private String nombreUsuario;
 
-	private IAuditoriaService auditoriaService;
+	private transient IAuditoriaService auditoriaService;
 
 	@Inject
 	public NavegacionAlmacenBean(IAuditoriaService auditoriaService) {

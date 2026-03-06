@@ -12,15 +12,11 @@ import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.utils.Conexion;
 import com.empresa.inventario.utils.PasswordUtil;
 
-public class UsuariosDAO  {
+public class UsuariosDAO {
 
-	/**
-	 * 
-	 */
-	private  UsuariosMapper mapper = new UsuariosMapper();
+	private UsuariosMapper mapper = new UsuariosMapper();
 
-	public Usuario login(String userName)  {
-		
+	public Usuario login(String userName) {
 
 		Usuario p = new Usuario();
 		String sql = "SELECT id_usuario, nombre, rol, permisos, user_name, password, activo FROM usuarios WHERE user_name = ? ";
@@ -30,7 +26,7 @@ public class UsuariosDAO  {
 			ps.setString(1, userName);
 
 			try (ResultSet rs = ps.executeQuery()) {
-				
+
 				if (rs.next()) {
 					p = mapper.mapRow(rs);
 				}
@@ -61,7 +57,7 @@ public class UsuariosDAO  {
 		return p;
 	}
 
-	public String validarUserName(String userName){
+	public String validarUserName(String userName) {
 
 		String userNameValidar = "";
 		String sql = "SELECT user_name FROM usuarios WHERE user_name = ? ";

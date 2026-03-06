@@ -13,18 +13,19 @@ import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.service.IAuthService;
 import com.empresa.inventario.utils.Mensajes;
-
 import lombok.Data;
 
 @Named("loginBean")
 @SessionScoped
 @Data
 public class LoginBean implements Serializable {
-
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
 	private String userName;
 	private String password;
-	private Usuario usuario;
+	private transient Usuario usuario;
 
 	private int idUsuario;
 

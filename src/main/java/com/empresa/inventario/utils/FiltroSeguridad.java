@@ -26,26 +26,23 @@ public class FiltroSeguridad implements Filter {
 
 		}
 
-		if (url.contains("/pages/admin/") && (user == null || !user.getRol().equals("admin"))) {
-			res.sendRedirect(req.getContextPath() + paginaPermisos);
-			return;
-
-			
-		}
-		if (url.contains("/pages/stock_manager/") && (user == null || !user.getRol().equals("stock_manager"))) {
+		if (url.contains("/pages/admin/") && !user.getRol().equals("admin")) {
 			res.sendRedirect(req.getContextPath() + paginaPermisos);
 			return;
 
 		}
-
-		if (url.contains("/pages/almacen/") && (user == null || !user.getRol().equals("almacen"))) {
+		if (url.contains("/pages/stock_manager/") && !user.getRol().equals("stock_manager")) {
 			res.sendRedirect(req.getContextPath() + paginaPermisos);
 			return;
-
-		} else {
-			chain.doFilter(request, response);
 		}
+
+		if (url.contains("/pages/almacen/") && !user.getRol().equals("almacen")) {
+			res.sendRedirect(req.getContextPath() + paginaPermisos);
+			return;
+		}
+
+		chain.doFilter(request, response);
+
 	}
-
 
 }

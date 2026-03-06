@@ -1,7 +1,5 @@
 package com.empresa.inventario.service;
 
-import java.io.Serializable;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 
@@ -14,11 +12,8 @@ import com.empresa.inventario.model.Usuario;
 
 @Named("authService")
 @ApplicationScoped
-public class AuthService implements IAuthService, Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class AuthService implements IAuthService {
+	
 	private  UsuariosDAO dao = new UsuariosDAO();
 	private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 

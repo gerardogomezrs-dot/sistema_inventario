@@ -1,6 +1,5 @@
 package com.empresa.inventario.service;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,14 +11,10 @@ import com.empresa.inventario.model.Auditoria;
 
 @Named("auditoriaService")
 @ApplicationScoped
-public class AuditoriaServiceImpl implements IAuditoriaService, Serializable {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
+public class AuditoriaServiceImpl implements IAuditoriaService {
+	
 	private  AuditoriaDao auditoriaDao;
+	
 
 	@Override
 	public void registroAuditoria(Auditoria auditoria) {

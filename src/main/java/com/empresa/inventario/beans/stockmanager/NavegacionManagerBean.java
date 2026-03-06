@@ -81,5 +81,12 @@ public class NavegacionManagerBean implements Serializable {
 				idUsuario, nombreUsuario);
 		return "/pages/stock_manager/movimientos/tablaMovimientos.xhtml?faces-redirect=true";
 	}
+	
+	public String irAGestionMermasDevoluciones() {
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		baseBean.registrarNavegacion(auditoriaService, Mensajes.MODULO_MERMAS_DEVOLUCIONES, "entro al modulo de Mermas Devoluciones",
+				idUsuario, nombreUsuario);
+		return "/pages/stock_manager/mermasDevoluciones/tablaMermasDevoluciones.xhtml?faces-redirect=true";
+	}
 
 }

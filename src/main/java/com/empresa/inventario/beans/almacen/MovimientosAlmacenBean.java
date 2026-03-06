@@ -10,6 +10,8 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.primefaces.model.UploadedFile;
+
 import com.empresa.inventario.beans.BaseAuditoriaBean;
 import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Movimientos;
@@ -32,35 +34,37 @@ public class MovimientosAlmacenBean implements Serializable {
 	*/
 	private static final long serialVersionUID = 1L;
 
+	private transient UploadedFile uploadedFile;
+
 	private boolean modoManual = false;
 
-	private List<Movimientos> list;
+	private transient List<Movimientos> list;
 
-	private List<Movimientos> filteredList;
+	private transient List<Movimientos> filteredList;
 
-	private Movimientos movimientos;
+	private transient Movimientos movimientos;
 
-	private List<Productos> listProductos;
+	private transient List<Productos> listProductos;
 
 	private Boolean mostrarScanner = false;
 
 	private String infoProductoExtra;
 
-	private List<Movimientos> listaMovimientosGuardar = new ArrayList<>();
+	private transient List<Movimientos> listaMovimientosGuardar = new ArrayList<>();
 
 	private int idUsuario;
 
 	private String nombreUsuario;
 
-	private Usuario user;
+	private transient Usuario user;
 
-	private IAuditoriaService auditoriaService;
+	private transient IAuditoriaService auditoriaService;
 
-	private IMovimientosService service;
+	private transient IMovimientosService service;
 
-	private IProductoService iProductoService;
-	
-	private IUsuariosService iUsuariosService;
+	private transient IProductoService iProductoService;
+
+	private transient IUsuariosService iUsuariosService;
 
 	@Inject
 	MovimientosAlmacenBean(IAuditoriaService auditoriaService, IMovimientosService service,
@@ -69,14 +73,14 @@ public class MovimientosAlmacenBean implements Serializable {
 		this.service = service;
 		this.iProductoService = iProductoService;
 		this.iUsuariosService = iUsuariosService;
-		;
+		
 	}
 
 	@PostConstruct
 	public void init() {
 
 		this.movimientos = new Movimientos();
-		
+
 		listProductos = iProductoService.getAll();
 		user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("sessionUsuario");
 
@@ -84,8 +88,6 @@ public class MovimientosAlmacenBean implements Serializable {
 		nombreUsuario = user.getNombre();
 		movimientos.setIdUsuario(idUsuario);
 		listaMovimientos(idUsuario);
-		
-
 	}
 
 	public String irADashboard() {
@@ -129,19 +131,18 @@ public class MovimientosAlmacenBean implements Serializable {
 		try {
 			list = new ArrayList<>();
 			Usuario usuario = iUsuariosService.getByIdUsuario(idUsuario);
-			if(usuario ==null) {
-				System.err.println("Vacio");
+			if (usuario == null) {
+				throw new ExceptionMessage("Vacio");
+
 			}
-			System.err.println("iD " + usuario.getIdUsuario());
 			list = service.getbyIdUsuarioMovimientos(usuario.getIdUsuario());
-			
 		} catch (ExceptionMessage e) {
-			e.printStackTrace();
+			e.getMessage();
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -150,7 +151,6 @@ public class MovimientosAlmacenBean implements Serializable {
 
 	public void saveTable() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-
 		try {
 			service.save(listaMovimientosGuardar);
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.GUARDAR,
@@ -175,6 +175,36 @@ public class MovimientosAlmacenBean implements Serializable {
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.GUARDAR_REGISTRO_TABLA,
 					Mensajes.USUARIO + nombreUsuario + " registro un elemento a la tabla", Mensajes.INFO.toString(),
 					idUsuario);
+		} catch (Exception e) {
+			e.getMessage();
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
+					Mensajes.ERROR.toString(), idUsuario);
+		}
+	}
+
+	public void cargarArchivo() {
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		List<Movimientos> liMovimientos = new ArrayList<>();
+		try {
+			if (uploadedFile == null || uploadedFile.getContents() == null) {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
+			}
+			listaMovimientosGuardar = new ArrayList<>();
+			liMovimientos = service.cargaMasiva(uploadedFile);
+			this.listaMovimientosGuardar = new ArrayList<>(liMovimientos);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
+
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.CARGA_MASIVA_REGISTROS.getTexto(),
+					Mensajes.USUARIO + nombreUsuario + " realizo una carga masiva de registros",
+					Mensajes.INFO.toString(), idUsuario);
+
+		} catch (ExceptionMessage e) {
+			e.getMessage();
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
+					Mensajes.ERROR.toString(), idUsuario);
 		} catch (Exception e) {
 			e.getMessage();
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),

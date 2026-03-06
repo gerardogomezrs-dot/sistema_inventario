@@ -2,7 +2,6 @@ package com.empresa.inventario.service;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,9 +22,8 @@ import com.opencsv.CSVReader;
 
 @Named("proveedorService")
 @ApplicationScoped
-public class ProveedorServiceImpl implements Serializable, IProveedorService {
+public class ProveedorServiceImpl implements IProveedorService {
 
-	private static final long serialVersionUID = 1L;
 	private ProveedorDAO dao = new ProveedorDAO();
 
 	@Override

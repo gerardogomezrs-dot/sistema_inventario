@@ -31,14 +31,18 @@ public class CategoriasBean implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private List<Categorias> filteredList;
-	private List<Categorias> list;
-	private Categorias categorias;
-	private List<Categorias> listaTablaCategorias = new ArrayList<>();
+	
+	private transient List<Categorias> filteredList = new ArrayList<>();
+	
+	private transient List<Categorias> list = new ArrayList<>();
+	
+	private transient Categorias categorias;
+	
+	private transient List<Categorias> listaTablaCategorias = new ArrayList<>();
 
-	private UploadedFile uploadedFile;
+	private transient UploadedFile uploadedFile;
 
-	private List<Categorias> categoriasList;
+	private transient List<Categorias> categoriasList;
 
 	private Integer progreso = 0;
 
@@ -79,7 +83,7 @@ public class CategoriasBean implements Serializable {
 					Mensajes.USUARIO + nombreUsuario + " registro un elemento a la tabla", Mensajes.INFO.toString(),
 					idUsuario);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -97,7 +101,7 @@ public class CategoriasBean implements Serializable {
 					idUsuario);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -124,7 +128,7 @@ public class CategoriasBean implements Serializable {
 					idUsuario);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -154,7 +158,7 @@ public class CategoriasBean implements Serializable {
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.validationFailed();
 			context.renderResponse();
-			e.printStackTrace();
+			e.getMessage();
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -162,16 +166,15 @@ public class CategoriasBean implements Serializable {
 
 	public void cargarArchivo() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-		List<Categorias> categorias = new ArrayList<>();
+		List<Categorias> categoriasLista = new ArrayList<>();
 		try {
 			if (uploadedFile == null || uploadedFile.getContents() == null) {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
 			}
 			listaTablaCategorias = new ArrayList<>();
-			categorias = categoriaService.cargarArchivo(uploadedFile);
-			System.err.println("Lista Categoria Archivo } " + categorias.size());
-			this.listaTablaCategorias = new ArrayList<>(categorias);
+			categoriasLista = categoriaService.cargarArchivo(uploadedFile);
+			this.listaTablaCategorias = new ArrayList<>(categoriasLista);
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
 
@@ -180,12 +183,14 @@ public class CategoriasBean implements Serializable {
 					Mensajes.INFO.toString(), idUsuario);
 
 		} catch (ExceptionMessage e) {
-			e.printStackTrace();
+			e.getMessage();
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
+					Mensajes.ERROR.toString(), idUsuario);
 		}
 	}
 

@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import com.empresa.inventario.model.ReporteAuditoriaUsuario;
 import com.empresa.inventario.model.ReporteClasificacionABC;
 import com.empresa.inventario.model.ReporteInventarioValorizado;
+import com.empresa.inventario.model.ReporteMermasDevolucion;
 import com.empresa.inventario.model.ReporteRotacionInventario;
 import com.empresa.inventario.model.ReporteStockBajo;
 import com.empresa.inventario.model.ReportesMovimiento;
@@ -22,7 +23,7 @@ public class ReportesMapper {
 			movimiento.setNombreProducto(resultSet.getString("nombreProductos"));
 			movimiento.setCategoria(resultSet.getString("nombreCategoria"));
 			movimiento.setTipoMovimiento(resultSet.getString("tipoMovimiento"));
-			movimiento.setCantidad(Integer.toString(resultSet.getInt("cantidad")));
+			movimiento.setCantidad(Integer.toString(resultSet.getInt("cantidadProducto")));
 			movimiento.setUsuarioResponsable(resultSet.getString("responsable"));
 		} catch (SQLException e) {
 			e.getMessage();
@@ -102,6 +103,23 @@ public class ReportesMapper {
 			abc.setNombreProducto(rs.getString("nombreProducto"));
 			abc.setValorStock(rs.getDouble("valorStock"));
 			abc.setClasificacionABC(rs.getString("clasificacion_abc"));
+		} catch (SQLException e) {
+			e.getMessage();
+		}
+		return abc;
+	}
+	
+	public ReporteMermasDevolucion rowMermasDevolucion(ResultSet rs) {
+		ReporteMermasDevolucion abc = new ReporteMermasDevolucion();
+
+		try {
+			abc.setFecha(rs.getDate("fecha"));
+			abc.setNombreProducto(rs.getString("nombre"));
+			abc.setTipo(rs.getString("tipo"));
+			abc.setResponsable(rs.getString("responsable"));
+			abc.setRol(rs.getString("rol"));
+			abc.setCantidad(rs.getInt("cantidad"));
+			abc.setTotalPerdido(rs.getInt("total_perdida"));
 		} catch (SQLException e) {
 			e.getMessage();
 		}

@@ -26,9 +26,9 @@ public class UsuariosBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private IUsuariosService iUsuariosService;
 
-	private List<Usuario> list;
+	private transient List<Usuario> list;
 
-	private Usuario usuario;
+	private transient Usuario usuario;
 
 	private int idUsuario;
 
@@ -55,10 +55,8 @@ public class UsuariosBean implements Serializable {
 
 	public String irANuevoUsuario() {
 		 BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-
 		baseBean.registrarNavegacion(auditoriaService, Mensajes.NUEVO_REGISTRO, "entro a nuevo usuario", idUsuario,
 				nombreUsuario);
-
 		return "/pages/admin/usuarios/usuarios.xhtml?faces-redirect=true";
 	}
 
@@ -89,7 +87,7 @@ public class UsuariosBean implements Serializable {
 					idUsuario);
 
 		} catch (ExceptionMessage e) {
-
+			e.getMessage();
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage());
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.validationFailed();
@@ -109,7 +107,6 @@ public class UsuariosBean implements Serializable {
 
 	public void eliminar() {
 		 BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-
 		try {
 			iUsuariosService.delete(usuario.getIdUsuario(), idUsuario);
 			list = iUsuariosService.getAll();

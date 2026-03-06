@@ -10,7 +10,7 @@
     <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
 
     <style>
-        /* Estilo para simular el p:tag en PrimeFaces 7 */
+        /* ===== ESTILOS ORIGINALES ===== */
         .badge-info {
             background-color: #e3f2fd;
             color: #1565c0;
@@ -23,51 +23,72 @@
         }
 
         .menu-grid .ui-button {
+            height: 120px;
+            border-radius: 12px !important;
+            font-size: 16px !important;
+            font-weight: bold;
+            background: linear-gradient(135deg, #2c3e50, #34495e) !important;
+            border: none !important;
+            color: white !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
             width: 100%;
             margin-bottom: 5px;
         }
 
-        .ui-panel {
-            margin-top: 10px;
+        .menu-grid .ui-button .ui-button-icon-left {
+            font-size: 28px !important;
+            margin-bottom: 10px;
         }
 
-        /* ===== DASHBOARD TARJETAS ===== */
+        .menu-grid .ui-button:hover {
+            transform: translateY(-5px);
+            background: linear-gradient(135deg, #3498db, #2980b9) !important;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.5);
+        }
 
-.menu-grid {
-    width: 100%;
-}
+        .menu-grid td {
+            padding: 10px;
+        }
 
-.menu-grid .ui-button {
-    height: 120px;
-    border-radius: 12px !important;
-    font-size: 16px !important;
-    font-weight: bold;
-    background: linear-gradient(135deg, #2c3e50, #34495e) !important;
-    border: none !important;
-    color: white !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    transition: all 0.3s ease;
-}
+        /* ===== NUEVOS ESTILOS DE ALERTA ===== */
+        .alerta-stock {
+            background-color: #2c3e50;
+            border-left: 6px solid #e74c3c;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            color: white;
+        }
 
-.menu-grid .ui-button .ui-button-icon-left {
-    font-size: 28px !important;
-    margin-bottom: 10px;
-}
+        .alerta-icono {
+            font-size: 2.5rem;
+            color: #e74c3c;
+            margin-right: 20px;
+        }
 
-.menu-grid .ui-button:hover {
-    transform: translateY(-5px);
-    background: linear-gradient(135deg, #3498db, #2980b9) !important;
-    box-shadow: 0 8px 18px rgba(0,0,0,0.5);
-}
+        .alerta-titulo {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ff7675;
+        }
 
-.menu-grid td {
-    padding: 10px;
-}
+        .alerta-texto {
+            margin: 5px 0 0;
+            color: #dfe6e9;
+        }
     </style>
 </h:head>
+
 <h:body>
     <h:form id="formPrincipal">
-        <p:growl id="messages" showDetail="true" />
+        <p:growl id="messages" showDetail="true" life="5000">
+            <p:autoUpdate />
+        </p:growl>
 
         <p:menubar>
             <p:menuitem value="Inicio" url="dashboard.xhtml" icon="pi pi-home" />
@@ -76,11 +97,12 @@
                     style="background-color: #c63934; color: white; border: none;" />
             </f:facet>
         </p:menubar>
-        <div class="ui-fluid">
+
+        <div class="ui-fluid" style="margin-top: 20px;">
             <div class="ui-g">
+
                 <div class="ui-g-12 ui-md-4">
                     <p:panel header="Bienvenido">
-
                         <h:panelGrid columns="2" cellpadding="10">
                             <h:outputText value="Nombre:" style="font-weight:bold" />
                             <h:outputText value="#{loginBean.usuario.nombre}" />
@@ -92,45 +114,90 @@
                             <h:outputText value="#{loginBean.usuario.userName}" />
 
                             <p:commandButton value="Ver Perfil" icon="pi pi-user" action="#{navBean.irAPerfilUsuario}"
-                                immediate="true" style="margin-left: 10px;" />
+                                immediate="true" style="margin-top: 10px;" />
                         </h:panelGrid>
                     </p:panel>
                 </div>
 
                 <div class="ui-g-12 ui-md-8">
+
+                    <h:panelGroup id="contenedorPadreAlertas">
+
+                        <h:panelGroup id="seccionAlertas"
+                            rendered="#{notificacionBean.mostrarAlerta and notificacionBean.cantidadCriticos > 0}">
+                            <div class="alerta-stock" style="position: relative;">
+
+                                <p:commandLink action="#{notificacionBean.ocultarAlerta()}"
+                                    update="contenedorPadreAlertas" process="@this"
+                                    style="position: absolute; top: 10px; right: 15px; color: #bdc3c7; z-index: 10;">
+                                    <i class="pi pi-times" style="font-size: 1.2rem;"></i>
+                                </p:commandLink>
+
+                                <i class="pi pi-exclamation-triangle alerta-icono"></i>
+
+                                <div style="flex-grow: 1;">
+                                    <h3 class="alerta-titulo">Atención: Stock Crítico</h3>
+                                    <p class="alerta-texto">
+                                        Se han detectado <b>#{notificacionBean.cantidadCriticos}</b> productos bajo el
+                                        mínimo.
+                                    </p>
+                                </div>
+
+                                <p:commandButton value="Revisar" icon="pi pi-eye"
+                                    oncomplete="PF('dlgStockCritico').show()" update="tablaDetalleCritico"
+                                    process="@this"
+                                    style="background-color: #e74c3c; border: none; width: auto; font-weight: bold; margin-right: 25px;" />
+                            </div>
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
                     <p:panel header="Menú Principal de Gestión">
                         <h:panelGrid columns="2" cellpadding="10" styleClass="menu-grid" style="width:100%">
-
                             <p:commandButton value="Gestionar Productos" action="#{navBean.irAProductos()}"
                                 icon="pi pi-briefcase" />
-
                             <p:commandButton value="Gestionar Usuarios" action="#{navBean.irAUsuarios()}"
                                 icon="pi pi-users" />
-
                             <p:commandButton value="Gestionar Categorías" action="#{navBean.irACategorias()}"
                                 icon="pi pi-tags" />
-
                             <p:commandButton value="Gestionar Movimientos" action="#{navBean.irAMovimientos()}"
                                 icon="pi pi-search" />
-
                             <p:commandButton value="Gestionar Reportes" action="#{navBean.irAReportes()}"
-                                icon="pi pi-chart-bar" styleClass="ui-button-info" ajax="false" />
-
-                            <p:commandButton value="Gestionar Proveedores" action="#{navBean.irAProveedores}"
-                                icon="fa fa-industry" ajax="false" styleClass="ui-button-raised" />
-
-                            <p:commandButton value="Gestionar Auditoría" action="#{navBean.irAAuditoria}"
-                                icon="pi pi-eye" ajax="false" styleClass="ui-button-raised" />
-
-                                 <p:commandButton value="Gestionar Mermas y Devoluciones" action="#{navBean.irAMermasDevoluciones}"
-                                icon="pi pi-exclamation-triangle" ajax="false" styleClass="ui-button-raised" />
+                                icon="pi pi-chart-bar" styleClass="ui-button-info" />
+                           <p:commandButton value="Gestionar Proveedores"
+                                action="#{navegacionManagerBean.irAGestionProveedores}" icon="fa fa-industry"
+                                ajax="false" styleClass="ui-button-raised" />
+                            <p:commandButton value="Gestionar Auditoría" action="#{navBean.irAAuditoria()}"
+                                icon="pi pi-eye" />
+                            <p:commandButton value="Gestionar Mermas y Devoluciones"
+                                action="#{navBean.irAMermasDevoluciones()}" icon="pi pi-exclamation-triangle"
+                                styleClass="ui-button-warning" />
                         </h:panelGrid>
                     </p:panel>
                 </div>
             </div>
         </div>
+
+        <p:dialog header="Productos en Estado Crítico" widgetVar="dlgStockCritico" modal="true" showEffect="fade"
+            hideEffect="fade" width="600" responsive="true">
+            <p:dataTable id="tablaDetalleCritico" value="#{notificacionBean.listaProductosCriticos}" var="p"
+                size="small" emptyMessage="No hay productos críticos registrados." scrollable="true" scrollHeight="500">
+                <p:column headerText="Producto">
+                    <h:outputText value="#{p.nombre}" />
+                </p:column>
+                <p:column headerText="Stock Actual" style="text-align: center;">
+                    <h:outputText value="#{p.stockActual}" style="color:#e74c3c; font-weight:bold;" />
+                </p:column>
+                <p:column headerText="Mínimo Requerido" style="text-align: center;">
+                    <h:outputText value="#{p.stockMinimo}" />
+                </p:column>
+            </p:dataTable>
+            <f:facet name="footer">
+                <p:commandButton value="Cerrar" type="button" onclick="PF('dlgStockCritico').hide()"
+                    styleClass="ui-button-secondary" />
+            </f:facet>
+        </p:dialog>
         <ui:include src="/pages/admin/footer.xhtml" />
     </h:form>
 </h:body>
-
 </html>

@@ -31,17 +31,17 @@ public class MovimientosBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private UploadedFile uploadedFile;
+	private transient UploadedFile uploadedFile;
 
 	private boolean modoManual = false;
 
-	private List<Movimientos> list;
+	private transient List<Movimientos> list;
 
-	private List<Movimientos> filteredList;
+	private transient List<Movimientos> filteredList;
 
-	private Movimientos movimientos;
+	private transient Movimientos movimientos;
 
-	private List<Productos> listProductos;
+	private transient List<Productos> listProductos;
 
 	private Boolean mostrarScanner = false;
 
@@ -51,15 +51,15 @@ public class MovimientosBean implements Serializable {
 
 	private IProductoService iProductoService;
 
-	private List<Movimientos> listaMovimientosGuardar = new ArrayList<>();
+	private transient List<Movimientos> listaMovimientosGuardar = new ArrayList<>();
 
 	private int idUsuario;
 
 	private String nombreUsuario;
 
-	private Usuario user;
+	private transient Usuario user;
 
-	private IAuditoriaService auditoriaService;
+	private transient IAuditoriaService auditoriaService;
 
 	@Inject
 	public MovimientosBean(IAuditoriaService auditoriaService, IProductoService iProductoService,
@@ -85,11 +85,12 @@ public class MovimientosBean implements Serializable {
 		try {
 			list = service.getAll();
 		} catch (ExceptionMessage e) {
+			e.getMessage();
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -108,7 +109,7 @@ public class MovimientosBean implements Serializable {
 					Mensajes.USUARIO + nombreUsuario + " registro un elemento a la tabla", Mensajes.INFO.toString(),
 					idUsuario);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -116,7 +117,6 @@ public class MovimientosBean implements Serializable {
 
 	public void saveTable() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-		System.err.println("Lista Movimientos: " + listaMovimientosGuardar.size());
 		try {
 			if (listaMovimientosGuardar != null && !listaMovimientosGuardar.isEmpty()) {
 				service.save(listaMovimientosGuardar);
@@ -128,7 +128,7 @@ public class MovimientosBean implements Serializable {
 				listaMovimientosGuardar.clear();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -189,12 +189,12 @@ public class MovimientosBean implements Serializable {
 					Mensajes.INFO.toString(), idUsuario);
 
 		} catch (ExceptionMessage e) {
-			e.printStackTrace();
+			e.getMessage();
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 	}
 
