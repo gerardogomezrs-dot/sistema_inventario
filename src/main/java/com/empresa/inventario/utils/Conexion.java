@@ -33,15 +33,10 @@ public class Conexion {
 		String url = properties.getProperty("db.url");
 		String user = properties.getProperty("db.user");
 		String pass = properties.getProperty("db.pass");
-
 		try {
-
 			Class.forName("com.mysql.cj.jdbc.Driver");
-
 			return DriverManager.getConnection(url, user, pass);
-
 		} catch (ClassNotFoundException | SQLException e) {
-
 			throw new ExceptionMessage("Error al conectar con la base de datos" + e);
 		}
 	}

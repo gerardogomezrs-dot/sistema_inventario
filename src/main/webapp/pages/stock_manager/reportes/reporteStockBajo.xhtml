@@ -65,14 +65,14 @@
 
                         <p:commandButton value="Exportar Excel" icon="pi pi-file-excel" ajax="false"
                             styleClass="btn-excel">
-                            <p:dataExporter type="xls" target="tblMovimientos"
-                             preProcessor="#{reportesManagerBean.exportarReporteStockBajo}"
-                                fileName="#{reportesManagerBean.reporteStockBajo}" pageOnly="false" />
+                            <p:dataExporter type="xlsx" target="tblMovimientos"
+                             postProcessor="#{reportesManagerBean.exportarReporteStockBajoExcel}"
+                                fileName="#{reportesManagerBean.reporteReabastecimiento}" pageOnly="false" />
                         </p:commandButton>
                         <p:commandButton value="Exportar Pdf" icon="pi pi-file-pdf" ajax="false" styleClass="btn-pdf">
                             <p:dataExporter type="pdf" target="tblMovimientos"
-                             preProcessor="#{reportesManagerBean.exportarReporteStockBajo}"
-                                fileName="#{reportesManagerBean.reporteStockBajo}" />
+                             preProcessor="#{reportesManagerBean.exportarReporteStockBajoPdf}"
+                                fileName="#{reportesManagerBean.reporteReabastecimiento}" />
                         </p:commandButton>
                     </div>
                 </f:facet>

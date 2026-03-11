@@ -15,7 +15,6 @@ public class AuditoriaServiceImpl implements IAuditoriaService {
 	
 	private  AuditoriaDao auditoriaDao;
 	
-
 	@Override
 	public void registroAuditoria(Auditoria auditoria) {
 		try {

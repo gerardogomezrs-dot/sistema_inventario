@@ -86,7 +86,7 @@
         <h:panelGroup id="tablaMermasDevoluciones" layout="block">
             <p:panel header="Mermas y Devoluciones Registradas" style="margin-top: 10px;">
                 <p:dataTable id="tablaRegistros" value="#{mermasDevolucionesBean.listaMermasDevoluciones}" var="prod"
-                    emptyMessage="No hay  registrados en esta sesión." scrollable="true" scrollHeight="500">
+                    emptyMessage="No hay  registrados en esta sesión."  rows="10" paginator="true" scrollable="true" scrollHeight="500">
 
                     <f:facet name="header">Mermas y Devoluciones Guardadas</f:facet>
                     <p:column headerText="Nombre Producto" width="100">

@@ -117,7 +117,7 @@ public class ReportesBean implements Serializable {
 				Mensajes.INFO.toString(), idUsuario);
 		ReportesUtils.exportarReporteExcel(document);
 	}
-	
+
 	public void exportarReporteStockBajoPdf(Object document) {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
 		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
@@ -126,7 +126,6 @@ public class ReportesBean implements Serializable {
 		ReportesUtils.postProcessPDF(document, reporteReabastecimiento);
 	}
 
-	
 	public void exportarReporteInventarioValorizadoExcel(Object document) {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
 		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
@@ -135,7 +134,7 @@ public class ReportesBean implements Serializable {
 		ReportesUtils.exportarReporteExcel(document);
 
 	}
-	
+
 	public void exportarReporteInventarioValorizadoPdf(Object document) {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
 		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
@@ -145,7 +144,6 @@ public class ReportesBean implements Serializable {
 
 	}
 
-	
 	public void exportarReporteMovimientosExcel(Object document) {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
 		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
@@ -153,7 +151,7 @@ public class ReportesBean implements Serializable {
 				Mensajes.INFO.toString(), idUsuario);
 		ReportesUtils.exportarReporteExcel(document);
 	}
-	
+
 	public void exportarReporteMovimientosPdf(Object document) {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
 		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
@@ -169,7 +167,7 @@ public class ReportesBean implements Serializable {
 				Mensajes.INFO.toString(), idUsuario);
 		ReportesUtils.exportarReporteExcel(document);
 	}
-	
+
 	public void exportarReporteAuditoriaUsuarioPdf(Object document) {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
 		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
@@ -185,7 +183,7 @@ public class ReportesBean implements Serializable {
 				Mensajes.INFO.toString(), idUsuario);
 		ReportesUtils.exportarReporteExcel(document);
 	}
-	
+
 	public void exportarRotacionInventarioPdf(Object document) {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
 		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
@@ -201,7 +199,7 @@ public class ReportesBean implements Serializable {
 				Mensajes.INFO.toString(), idUsuario);
 		ReportesUtils.exportarReporteExcel(document);
 	}
-	
+
 	public void exportarClasificacionABCPdf(Object document) {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
 		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
@@ -217,7 +215,7 @@ public class ReportesBean implements Serializable {
 				Mensajes.INFO.toString(), idUsuario);
 		ReportesUtils.exportarReporteExcel(document);
 	}
-	
+
 	public void exportarMermasDevolucionesPdf(Object document) {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
 		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
@@ -284,7 +282,6 @@ public class ReportesBean implements Serializable {
 
 	public String irAReporteRotacionInventario() {
 		BaseAuditoriaBean baseAuditoriaBean = new BaseAuditoriaBean();
-
 		baseAuditoriaBean.registrarNavegacion(auditoriaService, "Reporte Rotacion Inventario",
 				"entro a Reporte Rotacion Inventario", idUsuario, nombreUsuario);
 		return "/pages/admin/reportes/reporteRotacionInventario.xhtml?faces-redirect=true";
@@ -299,7 +296,6 @@ public class ReportesBean implements Serializable {
 
 	public String irAReportePrincipal() {
 		BaseAuditoriaBean baseAuditoriaBean = new BaseAuditoriaBean();
-
 		baseAuditoriaBean.registrarNavegacion(auditoriaService, "Reporte Principal", "entro a Reporte Principal",
 				idUsuario, nombreUsuario);
 		return "/pages/admin/reportes/reportes.xhtml?faces-redirect=true";

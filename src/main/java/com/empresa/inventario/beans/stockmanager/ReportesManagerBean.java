@@ -49,22 +49,22 @@ public class ReportesManagerBean implements Serializable {
 	private transient List<ReporteRotacionInventario> listaIndiceInventario;
 
 	private transient List<ReporteClasificacionABC> clasificacionABCs;
-	
+
 	private transient List<ReporteMermasDevolucion> mermasDevolucions;
 
-	private String reporteReabastecimiento = null;
+	private String reporteReabastecimiento ;
 
-	private String reporteInventarioValorizado = null;
+	private String reporteInventarioValorizado ;
 
-	private String reporteMovimientos = null;
+	private String reporteMovimientos ;
 
-	private String reporteAuditoriaUsuario = null;
+	private String reporteAuditoriaUsuario ;
 
-	private String reporteRotacionInventario = null;
+	private String reporteRotacionInventario ;
 
-	private String reporteClasificacionABC = null;
-	
-	private String reporteMermasDevoluciones = null ;
+	private String reporteClasificacionABC ;
+
+	private String reporteMermasDevoluciones ;
 
 	private int idUsuario;
 
@@ -92,6 +92,7 @@ public class ReportesManagerBean implements Serializable {
 		buscarAuditoriaUsuario();
 		buscarIndiceRotacion();
 		buscarClasificacion();
+		buscarMermasDevoluciones();
 		Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.get("sessionUsuario");
 		idUsuario = user.getIdUsuario();
@@ -116,7 +117,7 @@ public class ReportesManagerBean implements Serializable {
 				Mensajes.INFO.toString(), idUsuario);
 		ReportesUtils.exportarReporteExcel(document);
 	}
-	
+
 	public void exportarReporteStockBajoPdf(Object document) {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
 		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
@@ -125,7 +126,6 @@ public class ReportesManagerBean implements Serializable {
 		ReportesUtils.postProcessPDF(document, reporteReabastecimiento);
 	}
 
-	
 	public void exportarReporteInventarioValorizadoExcel(Object document) {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
 		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
@@ -134,7 +134,7 @@ public class ReportesManagerBean implements Serializable {
 		ReportesUtils.exportarReporteExcel(document);
 
 	}
-	
+
 	public void exportarReporteInventarioValorizadoPdf(Object document) {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
 		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
@@ -144,7 +144,6 @@ public class ReportesManagerBean implements Serializable {
 
 	}
 
-	
 	public void exportarReporteMovimientosExcel(Object document) {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
 		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
@@ -152,7 +151,7 @@ public class ReportesManagerBean implements Serializable {
 				Mensajes.INFO.toString(), idUsuario);
 		ReportesUtils.exportarReporteExcel(document);
 	}
-	
+
 	public void exportarReporteMovimientosPdf(Object document) {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
 		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
@@ -168,7 +167,7 @@ public class ReportesManagerBean implements Serializable {
 				Mensajes.INFO.toString(), idUsuario);
 		ReportesUtils.exportarReporteExcel(document);
 	}
-	
+
 	public void exportarReporteAuditoriaUsuarioPdf(Object document) {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
 		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
@@ -184,7 +183,7 @@ public class ReportesManagerBean implements Serializable {
 				Mensajes.INFO.toString(), idUsuario);
 		ReportesUtils.exportarReporteExcel(document);
 	}
-	
+
 	public void exportarRotacionInventarioPdf(Object document) {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
 		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
@@ -200,7 +199,7 @@ public class ReportesManagerBean implements Serializable {
 				Mensajes.INFO.toString(), idUsuario);
 		ReportesUtils.exportarReporteExcel(document);
 	}
-	
+
 	public void exportarClasificacionABCPdf(Object document) {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
 		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
@@ -216,7 +215,7 @@ public class ReportesManagerBean implements Serializable {
 				Mensajes.INFO.toString(), idUsuario);
 		ReportesUtils.exportarReporteExcel(document);
 	}
-	
+
 	public void exportarMermasDevolucionesPdf(Object document) {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
 		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
@@ -247,19 +246,15 @@ public class ReportesManagerBean implements Serializable {
 
 	public void buscarIndiceRotacion() {
 		listaIndiceInventario = iReporteService.reporteRotacionInventario();
-
 	}
 
 	public void buscarClasificacion() {
 		clasificacionABCs = iReporteService.reporteClasificacionABC();
-
 	}
-	
 
 	public void buscarMermasDevoluciones() {
 		mermasDevolucions = iReporteService.mermasDevolucions();
 	}
-
 
 	public String irAReporteMovimientos() {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
@@ -321,5 +316,12 @@ public class ReportesManagerBean implements Serializable {
 		auditoriaBean.registrarNavegacion(auditoriaService, "Reporte Clasificacion ABC",
 				"entro a Reporte Clasificacion ABC", idUsuario, nombreUsuario);
 		return "/pages/stock_manager/reportes/reporteClasificacionABC.xhtml?faces-redirect=true";
+	}
+	
+	public String irAReporteMermasDevoluciones() {
+		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
+		auditoriaBean.registrarNavegacion(auditoriaService, "Reporte Mermas Devoluciones",
+				"entro a Reporte Mermas Devoluciones", idUsuario, nombreUsuario);
+		return "/pages/stock_manager/reportes/reporteMermasDevoluciones.xhtml?faces-redirect=true";
 	}
 }

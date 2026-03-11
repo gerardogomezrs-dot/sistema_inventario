@@ -89,6 +89,13 @@
                          <p:commandButton value="Clasificación ABC"
                         action="#{reportesManagerBean.irAReporteClasificacionABC}" icon="pi pi-list"
                         styleClass="report-btn ui-button-info" />
+
+                       <p:commandButton value="Mermas y Devoluciones"
+                 action="#{reportesManagerBean.irAReporteMermasDevoluciones}" 
+                 icon="pi pi-undo"
+                 process="@this"
+                 update="@none"
+                 styleClass="report-btn ui-button-info" />
                         
                 </div>
                 <f:facet name="footer">

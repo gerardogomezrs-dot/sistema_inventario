@@ -1,6 +1,5 @@
 package com.empresa.inventario.dao;
 
-import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,13 +11,9 @@ import com.empresa.inventario.mapper.CategoriaMapper;
 import com.empresa.inventario.model.Categorias;
 import com.empresa.inventario.utils.Conexion;
 
-public class CategoriasDAO implements Serializable {
+public class CategoriasDAO  {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private transient CategoriaMapper mapper = new CategoriaMapper();
+	private  CategoriaMapper mapper = new CategoriaMapper();
 
 	public void guardar(Categorias e) {
 		String sql = "INSERT INTO categorias (nombre, descripcion) VALUES (?, ?)";

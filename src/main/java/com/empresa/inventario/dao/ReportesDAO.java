@@ -1,6 +1,5 @@
 package com.empresa.inventario.dao;
 
-import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,13 +18,10 @@ import com.empresa.inventario.model.ReporteStockBajo;
 import com.empresa.inventario.model.ReportesMovimiento;
 import com.empresa.inventario.utils.Conexion;
 
-public class ReportesDAO  implements Serializable{
+public class ReportesDAO {
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private transient ReportesMapper mapper = new ReportesMapper();
+	
+	private  ReportesMapper mapper = new ReportesMapper();
 
 	public List<ReportesMovimiento> getAllCategorias(LocalDateTime dateTimeInicio, LocalDateTime dateTimeFin) {
 

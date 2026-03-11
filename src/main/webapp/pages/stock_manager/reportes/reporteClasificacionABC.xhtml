@@ -84,14 +84,14 @@
                         <span style="font-weight: bold;"></span>
                         <p:commandButton value="Exportar Excel" icon="pi pi-file-excel" ajax="false"
                             styleClass="btn-excel">
-                            <p:dataExporter type="xls" target="tblMovimientos"
-                                preProcessor="#{reportesManagerBean.exportarReporteClasificacionABC}"
+                            <p:dataExporter type="xlsx" target="tblMovimientos"
+                                postProcessor="#{reportesManagerBean.exportarClasificacionABCExcel}"
                                 fileName="#{reportesManagerBean.reporteClasificacionABC}" pageOnly="false" />
                         </p:commandButton>
 
                         <p:commandButton value="Exportar Pdf" icon="pi pi-file-pdf" ajax="false" styleClass="btn-pdf">
                             <p:dataExporter type="pdf" target="tblMovimientos"
-                                preProcessor="#{reportesManagerBean.exportarReporteClasificacionABC}"
+                                preProcessor="#{reportesManagerBean.exportarClasificacionABCPdf}"
                                 fileName="#{reportesManagerBean.reporteClasificacionABC}" />
                         </p:commandButton>
                     </div>

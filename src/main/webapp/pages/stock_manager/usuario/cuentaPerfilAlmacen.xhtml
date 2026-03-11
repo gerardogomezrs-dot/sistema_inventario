@@ -5,91 +5,163 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
-    <title>Sistema de Inventario - Perfil de Usuario</title>
+    <f:facet name="first">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </f:facet>
+    <title>Sistema de Inventario - Perfil</title>
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
-    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
-    <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
-    <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
 
     <style>
-        .badge-info {
-            background-color: #e3f2fd;
-            color: #1565c0;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 12px;
+        /* Contenedor principal con flexbox */
+        .container-perfil {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 20px;
+            min-height: 80vh;
+        }
+
+        .profile-card {
+            width: 100%;
+            max-width: 700px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .label-bold {
             font-weight: bold;
-            border: 1px solid #2196f3;
+            color: #444;
+            margin-bottom: 8px;
             display: inline-block;
         }
 
-        .menu-grid .ui-button {
-            width: 100%;
-            margin-bottom: 5px;
+        /* Estilo para campos deshabilitados */
+        .ui-state-disabled {
+            opacity: 0.8 !important;
+            background-color: #444 !important;
         }
 
-        .ui-panel {
-            margin-top: 10px;
+        .section-title {
+            color: #1565c0;
+            margin: 25px 0 15px 0;
+            display: block;
+            font-size: 0.95em;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 5px;
+        }
+
+        .form-footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            letter-spacing: 0.5px;
         }
     </style>
 </h:head>
 
 <h:body>
+    <p:growl id="mensajes" showDetail="true" life="4000" />
+
     <h:form id="formPerfilUsuario">
         <ui:include src="/pages/stock_manager/menu.xhtml" />
-        <p:separator />
-        <div class="flex-container">
-            <p:panel header="Perfil Usuario" style="width: 600px; margin: 0 auto;">
 
-                <p:messages id="mensajes" showDetail="true" closable="true" />
+        <div class="container-perfil">
+            <p:panel header="Mi Perfil de Usuario" styleClass="profile-card">
+                <f:facet name="actions">
+                    <i class="pi pi-user-edit" style="color: #666"></i>
+                </f:facet>
 
-                <h:panelGrid columns="2" columnClasses="label,value" cellpadding="5">
-                    <p:outputLabel for="nombre" value="Nombre Completo:" />
-                    <p:inputText id="nombre" value="#{perfilUsuarioManagerBean.usuario.nombre}" required="true" />
+                <div class="ui-fluid">
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-6, ui-grid-col-6" layout="grid"
+                        styleClass="ui-panelgrid-blank">
 
-                    <p:outputLabel for="userName" value="Nombre Usuario:" />
-                    <p:inputText id="userName" value="#{perfilUsuarioManagerBean.usuario.userName}" required="true" />
+                        <h:panelGroup>
+                            <p:outputLabel for="nombre" value="Nombre Completo" styleClass="label-bold" />
+                            <p:inputText id="nombre" value="#{perfilUsuarioManagerBean.usuario.nombre}" required="true"
+                                requiredMessage="El nombre es obligatorio" />
+                        </h:panelGroup>
 
-                    <p:outputLabel for="pass" value="Password:" />
-                    <p:inputText id="pass" widgetVar="pw" value="#{perfilUsuarioManagerBean.usuario.password}"
-                        required="true" />
-                    <h:outputText value=" Mostrar password" />
-                    <h:selectBooleanCheckbox onchange="PF('pw').jq.attr('type', this.checked ? 'text' : 'password')" />
+                        <h:panelGroup>
+                            <p:outputLabel for="userName" value="Usuario de Acceso" styleClass="label-bold" />
+                            <p:inputText id="userName" value="#{perfilUsuarioManagerBean.usuario.userName}"
+                                required="true" requiredMessage="El nombre de usuario es obligatorio" />
+                        </h:panelGroup>
 
-                    <p:outputLabel value="Permisos Asignados:" />
-                    <p:inputText value="#{perfilUsuarioManagerBean.usuario.permisos}" readonly="true"
-                        styleClass="readonly" />
+                        <h:panelGroup>
+                            <p:outputLabel for="pass" value="Contraseña" styleClass="label-bold" />
+                            <p:password id="pass" value="#{perfilUsuarioManagerBean.usuario.password}" required="true"
+                                toggleMask="true" redisplay="true" />
+                        </h:panelGroup>
 
-                    <p:outputLabel value="Rol:" />
-                    <p:inputText value="#{perfilUsuarioManagerBean.usuario.rol}" readonly="true"
-                        styleClass="readonly" />
+                    </p:panelGrid>
 
-                    <p:outputLabel value="Estado:" />
-                    <p:selectBooleanCheckbox value="#{perfilUsuarioManagerBean.usuario.activo}" disabled="true" />
-                </h:panelGrid>
+                    <h:outputText value="Información de Sistema" styleClass="section-title" />
 
-                <p:separator />
+                    <p:panelGrid columns="3" columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4" layout="grid"
+                        styleClass="ui-panelgrid-blank">
 
-                <div style="margin-top: 10px;">
-                    <p:commandButton value="Guardar" icon="pi pi-save" update="formPerfilUsuario"
-                        action="#{perfilUsuarioManagerBean.actualizarPerfil}"
-                        oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
+                        <h:panelGroup>
+                            <p:outputLabel value="Rol" styleClass="label-bold" />
+                            <p:inputText value="#{perfilUsuarioManagerBean.usuario.rol}" readonly="true"
+                                disabled="true" />
+                        </h:panelGroup>
 
-                    <p:commandButton value="Regresar" icon="pi pi-chevron-left" immediate="true"
-                        style="margin-left: 10px;" action="#{perfilUsuarioManagerBean.irAIndex}" />
+                        <h:panelGroup>
+                            <p:outputLabel value="Estado" styleClass="label-bold" />
+                            <div style="margin-top: 8px;">
+                                <h:outputText
+                                    value="#{perfilUsuarioManagerBean.usuario.activo ? '● ACTIVO' : '● INACTIVO'}"
+                                    styleClass="#{perfilUsuarioManagerBean.usuario.activo ? 'status-activo' : 'status-inactivo'}" />
+                            </div>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel value="Permisos" styleClass="label-bold" />
+                            <p:inputText value="#{perfilUsuarioManagerBean.usuario.permisos}" readonly="true"
+                                disabled="true" />
+                        </h:panelGroup>
+
+                    </p:panelGrid>
+                </div>
+
+                <div class="form-footer">
+                    <p:commandButton value="Regresar" icon="pi pi-chevron-left"
+                        action="#{perfilUsuarioManagerBean.irAIndex}" immediate="true"
+                        styleClass="ui-button-outlined ui-button-secondary" />
+
+                    <p:commandButton value="Guardar Cambios" icon="pi pi-save"
+                        action="#{perfilUsuarioManagerBean.actualizarPerfil}" update="formPerfilUsuario mensajes"
+                        oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();"
+                        styleClass="ui-button-raised" />
                 </div>
             </p:panel>
         </div>
-    </h:form>
-    <p:dialog header="Mensaje" widgetVar="dlgConfirmacion" modal="true" appendTo="@(body)">
-        <h:form id="formDialogo">
-            <h:panelGrid columns="1" style="text-align: center;">
-                <h:outputText value="Datos guardados correctamente." />
-                <p:commandButton value="Aceptar" onclick="PF('dlgConfirmacion').hide();" type="button" />
-            </h:panelGrid>
-        </h:form>
+
+          <p:dialog header="Operación Exitosa" widgetVar="dlgConfirmacion" modal="true" resizable="false" closable="false"
+        width="350" showEffect="fade">
+        <div style="text-align: center; padding: 10px;">
+            <i class="pi pi-check-circle" style="font-size: 4em; color: #4caf50;"></i>
+            <p style="margin: 20px 0; font-size: 1.1em;">Tu perfil ha sido actualizado con éxito.</p>
+            <p:commandButton value="Aceptar" onclick="PF('dlgConfirmacion').hide();" type="button"
+                styleClass="ui-button-success" />
+        </div>
     </p:dialog>
+
     <ui:include src="/pages/stock_manager/footer.xhtml" />
+    </h:form>
+
+  
 </h:body>
 
 </html>

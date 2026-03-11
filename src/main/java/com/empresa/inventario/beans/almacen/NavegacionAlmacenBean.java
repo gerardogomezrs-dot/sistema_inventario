@@ -64,5 +64,12 @@ public class NavegacionAlmacenBean implements Serializable {
 				nombreUsuario);
 		return "/pages/almacen/dashboard.xhtml?faces-redirect=true";
 	}
+	
+	public String irAGestionReportes() {
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		baseBean.registrarNavegacion(auditoriaService, Mensajes.NAVEGACION, "navego a dashboard", idUsuario,
+				nombreUsuario);
+		return "/pages/almacen/reportes/reportesDashboard.xhtml?faces-redirect=true";
+	}
 
 }

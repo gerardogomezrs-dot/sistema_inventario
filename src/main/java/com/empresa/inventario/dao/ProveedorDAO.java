@@ -1,6 +1,5 @@
 package com.empresa.inventario.dao;
 
-import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,13 +11,9 @@ import com.empresa.inventario.mapper.ProveedorMapper;
 import com.empresa.inventario.model.Proveedor;
 import com.empresa.inventario.utils.Conexion;
 
-public class ProveedorDAO implements Serializable{
+public class ProveedorDAO{
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private transient ProveedorMapper mapper = new ProveedorMapper();
+	private ProveedorMapper mapper = new ProveedorMapper();
 
 	public List<Proveedor> getAll() {
 		String sql = "SELECT p.* from proveedor p";

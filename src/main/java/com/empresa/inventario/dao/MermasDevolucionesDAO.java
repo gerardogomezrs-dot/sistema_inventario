@@ -26,7 +26,7 @@ public class MermasDevolucionesDAO {
 			ps.setInt(6, mermasDevoluciones.getIdUsuario());
 			ps.executeUpdate();
 		} catch (Exception e) {
-			e.getMessage();
+			e.printStackTrace();
 		}
 	}
 	

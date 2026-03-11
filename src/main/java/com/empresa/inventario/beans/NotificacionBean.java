@@ -49,6 +49,4 @@ public class NotificacionBean implements Serializable{/**
         this.mostrarAlerta = false;
     }
 	
-
-	
 }

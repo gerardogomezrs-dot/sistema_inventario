@@ -146,5 +146,4 @@ public class CategoriaServiceImpl implements ICategoriaService {
 		}
 		return categorias;
 	}
-
 }

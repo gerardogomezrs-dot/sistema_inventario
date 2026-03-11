@@ -129,13 +129,19 @@
 
                     <p:commandButton value="Gestionar Productos" 
                                      action="#{navegacionAlmacenBean.irAGestionProductos}"
-                                     icon="pi pi-box" 
+                                     icon="pi pi-briefcase" 
                                      styleClass="dashboard-btn"
                                      ajax="false" />
 
                     <p:commandButton value="Movimientos"
                                      action="#{navegacionAlmacenBean.irAGestionMovimientos}" 
-                                     icon="pi pi-sync" 
+                                     icon="pi pi-search" 
+                                     styleClass="dashboard-btn"
+                                     ajax="false" />
+
+                                      <p:commandButton value="Reportes"
+                                     action="#{navegacionAlmacenBean.irAGestionReportes}" 
+                                     icon="pi pi-chart-bar" 
                                      styleClass="dashboard-btn"
                                      ajax="false" />
                 </div>

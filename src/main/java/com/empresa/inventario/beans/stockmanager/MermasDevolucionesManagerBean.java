@@ -160,5 +160,36 @@ public class MermasDevolucionesManagerBean implements Serializable{
 					Mensajes.ERROR.toString(), idUsuario);
 		}
 	}
+	
+	public void cargarArchivos() {
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		try {
+			if (uploadedFile == null || uploadedFile.getContents() == null) {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
+			}
+			devoluciones = devolucionesService.cargarArchivo(uploadedFile);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
+
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.CARGA_MASIVA_REGISTROS.getTexto(),
+					Mensajes.USUARIO + nombreUsuario + " realizo una carga masiva de registros",
+					Mensajes.INFO.toString(), idUsuario);
+
+		} catch (ExceptionMessage e) {
+			e.printStackTrace();
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
+					Mensajes.ERROR.toString(), idUsuario);
+		} catch (Exception e) {
+			e.printStackTrace();
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
+					Mensajes.ERROR.toString(), idUsuario);
+		}
+	}
+	
+	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
+	}
 
 }

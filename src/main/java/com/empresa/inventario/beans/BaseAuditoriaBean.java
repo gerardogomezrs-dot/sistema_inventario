@@ -3,6 +3,8 @@ package com.empresa.inventario.beans;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.slf4j.LoggerFactory;
+
 import com.empresa.inventario.model.Auditoria;
 import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.utils.Mensajes;
@@ -14,6 +16,8 @@ public class BaseAuditoriaBean implements Serializable {/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BaseAuditoriaBean.class);
+
 	private int idUsuario;
     private String nombreUsuario;
    

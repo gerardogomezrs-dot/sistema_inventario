@@ -8,11 +8,14 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.slf4j.LoggerFactory;
+
 import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.service.IAuthService;
 import com.empresa.inventario.utils.Mensajes;
+
 import lombok.Data;
 
 @Named("loginBean")
@@ -23,6 +26,8 @@ public class LoginBean implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(LoginBean.class);
+
 	private String userName;
 	private String password;
 	private transient Usuario usuario;
@@ -95,13 +100,14 @@ public class LoginBean implements Serializable {
 				return ruta;
 			}
 		} catch (ExceptionMessage e) {
+			logger.debug("Error: " + e.getMessage());
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 			auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 			return null;
 		} catch (Exception e) {
 			mensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", "Ocurrió un error en el servidor. ");
-			e.getMessage();
+			logger.debug("Error: " + e.getMessage());
 			auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 			return null;

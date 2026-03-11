@@ -21,7 +21,6 @@ import com.empresa.inventario.model.ReportesMovimiento;
 @Named("reportesService")
 @ApplicationScoped
 public class ReportesServiceImpl implements IReporteService {
-
 	private ReportesDAO dao = new ReportesDAO();
 
 	@Override
@@ -38,22 +37,22 @@ public class ReportesServiceImpl implements IReporteService {
 	}
 
 	@Override
-	public List<ReporteInventarioValorizado> reporteInventarioValorizado()  {
+	public List<ReporteInventarioValorizado> reporteInventarioValorizado() {
 		List<ReporteInventarioValorizado> reportesMovimientos = new ArrayList<>();
 		try {
-		reportesMovimientos = dao.getInventarioValorizado();
-		}catch (Exception e) {
+			reportesMovimientos = dao.getInventarioValorizado();
+		} catch (Exception e) {
 			e.getMessage();
 		}
 		return reportesMovimientos;
 	}
 
 	@Override
-	public List<ReporteStockBajo> reporteStockBajo()  {
+	public List<ReporteStockBajo> reporteStockBajo() {
 		List<ReporteStockBajo> list = new ArrayList<>();
 		try {
-		list = dao.getStockBajo();
-		}catch (Exception e) {
+			list = dao.getStockBajo();
+		} catch (Exception e) {
 			e.getMessage();
 		}
 		return list;
@@ -63,8 +62,8 @@ public class ReportesServiceImpl implements IReporteService {
 	public List<ReporteAuditoriaUsuario> reporteAuditoriaUsuario() {
 		List<ReporteAuditoriaUsuario> list = new ArrayList<>();
 		try {
-		list = dao.getAuditoriaUsuario();
-		}catch (Exception e) {
+			list = dao.getAuditoriaUsuario();
+		} catch (Exception e) {
 			e.getMessage();
 		}
 		return list;
@@ -74,8 +73,8 @@ public class ReportesServiceImpl implements IReporteService {
 	public List<ReporteRotacionInventario> reporteRotacionInventario() {
 		List<ReporteRotacionInventario> list = new ArrayList<>();
 		try {
-		list = dao.getRotacionInventario();
-		}catch (Exception e) {
+			list = dao.getRotacionInventario();
+		} catch (Exception e) {
 			e.getMessage();
 		}
 		return list;
@@ -85,8 +84,8 @@ public class ReportesServiceImpl implements IReporteService {
 	public List<ReporteClasificacionABC> reporteClasificacionABC() {
 		List<ReporteClasificacionABC> clasificacionABCs = new ArrayList<>();
 		try {
-		clasificacionABCs = dao.getClasificacionABC();
-		}catch (Exception e) {
+			clasificacionABCs = dao.getClasificacionABC();
+		} catch (Exception e) {
 			e.getMessage();
 		}
 		return clasificacionABCs;
@@ -97,7 +96,7 @@ public class ReportesServiceImpl implements IReporteService {
 		List<ReporteMermasDevolucion> mermasDevolucions = new ArrayList<>();
 		try {
 			mermasDevolucions = dao.getReporteMermasDevoluciones();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.getMessage();
 		}
 		return mermasDevolucions;

@@ -8,6 +8,8 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.slf4j.LoggerFactory;
+
 import com.empresa.inventario.beans.BaseAuditoriaBean;
 import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Auditoria;
@@ -25,6 +27,8 @@ public class AuditoriaBean implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AuditoriaBean.class);
 
 	private transient List<Auditoria> filteredList;
 
@@ -52,14 +56,13 @@ public class AuditoriaBean implements Serializable {
 
 	public void cargarListaAuditoria() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-
 		try {
 		list = auditoriaService.getAll();
 		if (list.isEmpty()) {
 			throw new ExceptionMessage("Lista Vacia");
 		}
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug("Error " + e.toString());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}	

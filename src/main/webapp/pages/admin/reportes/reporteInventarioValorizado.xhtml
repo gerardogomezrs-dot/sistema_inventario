@@ -73,8 +73,8 @@
 
                         <p:commandButton value="Exportar Excel" icon="pi pi-file-excel" ajax="false"
                             styleClass="btn-excel">
-                            <p:dataExporter type="xls" target="tblMovimientos"
-                                preProcessor="#{inventarioReporteBean.exportarReporteInventarioValorizadoExcel}"
+                            <p:dataExporter type="xlsx" target="tblMovimientos"
+                                postProcessor="#{inventarioReporteBean.exportarReporteInventarioValorizadoExcel}"
                                 fileName="#{inventarioReporteBean.reporteInventarioValorizado}" pageOnly="false" />
                         </p:commandButton>
 

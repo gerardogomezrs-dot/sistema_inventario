@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es-MX" xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+    <f:facet name="first">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </f:facet>
+
+    <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+    <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
+
+    <title>Reportes | Almacén</title>
+    
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --dark-blue: #1e293b;
+            --bg-gray: #f1f5f9;
+            --text-main: #334155;
+            --surface-card: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-gray);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .dashboard-container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Estilo para el contenedor del botón de regreso */
+        .back-btn-container {
+            margin-bottom: 1rem;
+        }
+
+        .btn-back-link {
+            text-decoration: none !important;
+            color: #64748b !important;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s;
+        }
+
+        .btn-back-link:hover {
+            color: var(--primary-color) !important;
+        }
+
+        /* Card Principal */
+        .custom-menu-panel {
+            border: none !important;
+            border-radius: 16px !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+            overflow: hidden;
+        }
+
+        .custom-menu-panel .ui-panel-titlebar {
+            background: var(--dark-blue) !important;
+            color: white !important;
+            padding: 1.5rem !important;
+            font-size: 1.25rem;
+            border: none !important;
+            border-radius: 0 !important;
+        }
+
+        .custom-menu-panel .ui-panel-content {
+            padding: 0 !important;
+        }
+
+        /* Grid y Botones Estilizados */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            padding: 2.5rem;
+            background: white;
+        }
+
+        .report-btn {
+            height: 140px !important;
+            transition: all 0.3s ease !important;
+            border-radius: 12px !important;
+            border: 1px solid #e2e8f0 !important;
+            background: white !important;
+            color: var(--dark-blue) !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+        }
+
+        .report-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1) !important;
+            border-color: var(--primary-color) !important;
+            background: #eff6ff !important;
+        }
+
+        .report-btn .ui-button-icon-left, 
+        .report-btn .ui-button-icon-top {
+            font-size: 2.5rem !important;
+            margin: 0 0 10px 0 !important;
+            position: static !important;
+            display: inline-block !important;
+            color: var(--primary-color) !important;
+        }
+
+        .report-btn .ui-button-text {
+            padding: 0 !important;
+            font-weight: 600 !important;
+            font-size: 1rem !important;
+            display: block !important;
+        }
+    </style>
+</h:head>
+<h:body>
+
+    <h:form id="formDashboardAlmacen">
+        <ui:include src="/pages/almacen/menu.xhtml" />
+        
+        <div class="dashboard-container">
+            
+            <div class="back-btn-container">
+                <p:commandLink action="#{inventarioReporteAlmacenBean.irAMenuPrincipal}" 
+                               styleClass="btn-back-link" ajax="false">
+                    <i class="pi pi-arrow-left"></i>
+                    <span>Regresar al Menú Principal</span>
+                </p:commandLink>
+            </div>
+
+            <div class="mb-4" style="margin-bottom: 2rem;">
+                <h2 style="margin: 0; font-weight: 700;">Módulo de Consultas</h2>
+                <p style="color: #64748b; margin-top: 0.5rem;">Selecciona el tipo de reporte que deseas generar.</p>
+            </div>
+
+            <p:panel header="Reportes Disponibles" styleClass="custom-menu-panel">
+                <div class="dashboard-grid">
+
+                    <p:commandButton value="Reporte de Existencias"
+                        action="#{inventarioReporteAlmacenBean.irAReporteExistencias}" 
+                        icon="pi pi-list"
+                        iconPos="top"
+                        styleClass="report-btn shadow-1" 
+                        ajax="false" />
+
+                    <p:commandButton value="Reporte Kardex" 
+                        action="#{inventarioReporteAlmacenBean.irAReporteMovimientos}"
+                        icon="pi pi-pencil" 
+                        iconPos="top"
+                        styleClass="report-btn shadow-1" 
+                        ajax="false" />
+
+                    <p:commandButton value="Baja Rotación"
+                        action="#{inventarioReporteAlmacenBean.irAReporteBajaRotacion}" 
+                        icon="pi pi-chart-bar"
+                        iconPos="top"
+                        styleClass="report-btn shadow-1" 
+                        ajax="false" />
+
+                    <p:commandButton value="Stock Crítico"
+                        action="#{inventarioReporteAlmacenBean.irAReporteStockCritico}"
+                        icon="pi pi-exclamation-triangle" 
+                        iconPos="top"
+                        styleClass="report-btn shadow-1" 
+                        ajax="false" />
+                </div>
+            </p:panel>
+        </div>
+        
+        <ui:include src="/pages/almacen/footer.xhtml" />
+    </h:form>
+</h:body>
+</html>
