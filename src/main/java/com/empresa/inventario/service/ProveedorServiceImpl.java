@@ -1,6 +1,5 @@
 package com.empresa.inventario.service;
 
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +13,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.primefaces.model.UploadedFile;
+import org.slf4j.LoggerFactory;
 
 import com.empresa.inventario.dao.ProveedorDAO;
 import com.empresa.inventario.exceptions.ExceptionMessage;
@@ -26,14 +26,17 @@ public class ProveedorServiceImpl implements IProveedorService {
 
 	private ProveedorDAO dao = new ProveedorDAO();
 
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ProveedorServiceImpl.class);
+
 	@Override
 	public List<Proveedor> proveedors() {
 		List<Proveedor> proveedors = new ArrayList<>();
 		dao = new ProveedorDAO();
 		try {
 			proveedors = dao.getAll();
+			System.err.println("Lista " + proveedors.size());
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return proveedors;
 	}
@@ -51,7 +54,7 @@ public class ProveedorServiceImpl implements IProveedorService {
 			}
 
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 	}
 
@@ -69,7 +72,7 @@ public class ProveedorServiceImpl implements IProveedorService {
 		try {
 			dao.update(proveedor);
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 	}
 
@@ -90,14 +93,14 @@ public class ProveedorServiceImpl implements IProveedorService {
 			try {
 				proveedors = leerCSV(file);
 			} catch (Exception e) {
-				e.getMessage();
+				logger.debug(e.getMessage());
 			}
 		}
 		if (fileName.endsWith(".xlsx") || fileName.endsWith(".lsx")) {
 			try {
 				proveedors = leerExcel(file);
 			} catch (Exception e) {
-				e.getMessage();
+				logger.debug(e.getMessage());
 			}
 		}
 		if (!fileName.endsWith(".xlsx") && !fileName.endsWith(".lsx") && !fileName.endsWith(".csv")) {
@@ -106,38 +109,42 @@ public class ProveedorServiceImpl implements IProveedorService {
 		return proveedors;
 	}
 
-	private List<Proveedor> leerExcel(UploadedFile file) throws IOException {
+	private List<Proveedor> leerExcel(UploadedFile file) {
 		List<Proveedor> proveedor = new ArrayList<>();
 		Proveedor proveedores;
-		Workbook workbook = WorkbookFactory.create(file.getInputstream());
-		Sheet sheet = workbook.getSheetAt(0);
-		for (Row row : sheet) {
-			if (row.getRowNum() == 0)
-				continue;
-			Cell cellNombreEmoresa = row.getCell(0);
-			Cell cellContactoEmpresa = row.getCell(1);
-			Cell cellTelefono = row.getCell(2);
-			Cell cellEmail = row.getCell(3);
-			Cell cellDireccion = row.getCell(4);
-			Cell cellActivo = row.getCell(5);
+		try {
+			Workbook workbook = WorkbookFactory.create(file.getInputstream());
+			Sheet sheet = workbook.getSheetAt(0);
+			for (Row row : sheet) {
+				if (row.getRowNum() == 0)
+					continue;
+				Cell cellNombreEmoresa = row.getCell(0);
+				Cell cellContactoEmpresa = row.getCell(1);
+				Cell cellTelefono = row.getCell(2);
+				Cell cellEmail = row.getCell(3);
+				Cell cellDireccion = row.getCell(4);
+				Cell cellActivo = row.getCell(5);
 
-			String nombreEmpresa = cellNombreEmoresa.getStringCellValue();
-			String contactoEmoresa = cellContactoEmpresa.getStringCellValue();
-			String telefono = cellTelefono.getStringCellValue();
-			String email = cellEmail.getStringCellValue();
-			String direccion = cellDireccion.getStringCellValue();
-			Boolean activo = cellActivo.getBooleanCellValue();
+				String nombreEmpresa = cellNombreEmoresa.getStringCellValue();
+				String contactoEmoresa = cellContactoEmpresa.getStringCellValue();
+				String telefono = cellTelefono.getStringCellValue();
+				String email = cellEmail.getStringCellValue();
+				String direccion = cellDireccion.getStringCellValue();
+				Boolean activo = cellActivo.getBooleanCellValue();
 
-			proveedores = new Proveedor();
-			proveedores.setNombreEmpresa(nombreEmpresa);
-			proveedores.setContactoEmpresa(contactoEmoresa);
-			proveedores.setTelefono(telefono);
-			proveedores.setEmail(email);
-			proveedores.setDireccion(direccion);
-			proveedores.setActivo(activo);
-			proveedor.add(proveedores);
+				proveedores = new Proveedor();
+				proveedores.setNombreEmpresa(nombreEmpresa);
+				proveedores.setContactoEmpresa(contactoEmoresa);
+				proveedores.setTelefono(telefono);
+				proveedores.setEmail(email);
+				proveedores.setDireccion(direccion);
+				proveedores.setActivo(activo);
+				proveedor.add(proveedores);
+			}
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
 		}
-		workbook.close();
+
 		return proveedor;
 	}
 
@@ -160,7 +167,7 @@ public class ProveedorServiceImpl implements IProveedorService {
 				}
 			}
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return proveedor;
 	}

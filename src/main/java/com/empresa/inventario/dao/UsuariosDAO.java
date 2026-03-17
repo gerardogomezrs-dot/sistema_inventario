@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.LoggerFactory;
+
 import com.empresa.inventario.mapper.UsuariosMapper;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.utils.Conexion;
@@ -15,6 +17,8 @@ import com.empresa.inventario.utils.PasswordUtil;
 public class UsuariosDAO {
 
 	private UsuariosMapper mapper = new UsuariosMapper();
+
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(UsuariosDAO.class);
 
 	public Usuario login(String userName) {
 
@@ -32,7 +36,7 @@ public class UsuariosDAO {
 				}
 			}
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return p;
 	}
@@ -52,7 +56,7 @@ public class UsuariosDAO {
 				}
 			}
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return p;
 	}
@@ -73,7 +77,7 @@ public class UsuariosDAO {
 				}
 			}
 		} catch (SQLException e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return userNameValidar;
 	}
@@ -92,7 +96,7 @@ public class UsuariosDAO {
 				lista.add(p);
 			}
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 
 		}
 		return lista;
@@ -114,7 +118,7 @@ public class UsuariosDAO {
 			ps.executeUpdate();
 
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 	}
 
@@ -134,7 +138,7 @@ public class UsuariosDAO {
 			ps.setInt(7, usuario.getIdUsuario());
 			ps.executeUpdate();
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 	}
 
@@ -146,7 +150,7 @@ public class UsuariosDAO {
 			statement.setInt(1, idUsuario);
 			statement.executeUpdate();
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 	}
 
@@ -164,7 +168,7 @@ public class UsuariosDAO {
 			ps.setInt(5, usuario.getIdUsuario());
 			ps.executeUpdate();
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 	}
 

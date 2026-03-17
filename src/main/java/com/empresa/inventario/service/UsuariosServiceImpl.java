@@ -6,6 +6,8 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 
+import org.slf4j.LoggerFactory;
+
 import com.empresa.inventario.dao.UsuariosDAO;
 import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Usuario;
@@ -14,16 +16,18 @@ import com.empresa.inventario.model.Usuario;
 @ApplicationScoped
 public class UsuariosServiceImpl implements IUsuariosService {
 
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(UsuariosServiceImpl.class);
+
 	@Override
 	public void save(Usuario usuario) {
-		  UsuariosDAO dao = new UsuariosDAO();
+		UsuariosDAO dao = new UsuariosDAO();
 		String nombreUsuario = "";
 		try {
 			dao = new UsuariosDAO();
 			nombreUsuario = dao.validarUserName(usuario.getUserName());
 			dao.guardar(usuario);
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		if (nombreUsuario.equals(usuario.getUserName())) {
 			throw new ExceptionMessage("Este usuario ya existe, intenta con otro");
@@ -33,7 +37,7 @@ public class UsuariosServiceImpl implements IUsuariosService {
 
 	@Override
 	public void update(Usuario usuario) {
-		  UsuariosDAO dao = new UsuariosDAO();
+		UsuariosDAO dao = new UsuariosDAO();
 
 		try {
 			if (usuario == null) {
@@ -43,14 +47,14 @@ public class UsuariosServiceImpl implements IUsuariosService {
 				dao.actualizar(usuario);
 			}
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 
 	}
 
 	@Override
 	public void delete(int id, int idUsuarioSesion) {
-		  UsuariosDAO dao = new UsuariosDAO();
+		UsuariosDAO dao = new UsuariosDAO();
 
 		if (id == idUsuarioSesion) {
 			throw new ExceptionMessage("No puedes eliminar tus datos");
@@ -62,13 +66,13 @@ public class UsuariosServiceImpl implements IUsuariosService {
 				dao.eliminarUsuario(id);
 			}
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 	}
 
 	@Override
 	public List<Usuario> getAll() {
-		  UsuariosDAO dao = new UsuariosDAO();
+		UsuariosDAO dao = new UsuariosDAO();
 
 		List<Usuario> usuarios = new ArrayList<>();
 		try {
@@ -78,7 +82,7 @@ public class UsuariosServiceImpl implements IUsuariosService {
 				throw new ExceptionMessage("lista vacia");
 			}
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return usuarios;
 
@@ -86,21 +90,19 @@ public class UsuariosServiceImpl implements IUsuariosService {
 
 	@Override
 	public void updateProfile(Usuario usuario) {
-		  UsuariosDAO dao = new UsuariosDAO();
-
-
+		UsuariosDAO dao = new UsuariosDAO();
 		try {
 			dao = new UsuariosDAO();
 
 			dao.actualizar(usuario);
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 	}
 
 	@Override
-	public Usuario getByIdUsuario(int usuario)  {
-		  UsuariosDAO dao = new UsuariosDAO();
+	public Usuario getByIdUsuario(int usuario) {
+		UsuariosDAO dao = new UsuariosDAO();
 
 		Usuario usuario2 = new Usuario();
 		try {

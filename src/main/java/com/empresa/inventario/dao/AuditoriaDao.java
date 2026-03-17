@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.LoggerFactory;
+
 import com.empresa.inventario.mapper.AuditoriaMapper;
 import com.empresa.inventario.model.Auditoria;
 import com.empresa.inventario.utils.Conexion;
@@ -17,6 +19,8 @@ public class AuditoriaDao implements Serializable{
 	/**
 	 * 
 	 */
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AuditoriaDao.class);
+
 	private static final long serialVersionUID = 1L;
 	private transient AuditoriaMapper auditoriaMapper = new AuditoriaMapper();
 
@@ -32,7 +36,7 @@ public class AuditoriaDao implements Serializable{
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return lista;
 	}
@@ -51,7 +55,7 @@ public class AuditoriaDao implements Serializable{
 			ps.setString(5, e.getNivel());
 			ps.executeUpdate();
 		} catch (SQLException ex) {
-			ex.getMessage();
+			logger.debug(ex.getMessage());
 		}
 	}
 }

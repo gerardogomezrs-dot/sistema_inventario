@@ -7,6 +7,8 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.slf4j.LoggerFactory;
+
 import com.empresa.inventario.beans.BaseAuditoriaBean;
 import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Usuario;
@@ -32,6 +34,8 @@ public class PerfilUsuarioManagerBean implements Serializable {
 	private String nombreUsuario;
 
 	private transient IAuditoriaService auditoriaService;
+
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(PerfilUsuarioManagerBean.class);
 
 	@Inject
 	public PerfilUsuarioManagerBean(IUsuariosService iUsuariosService, IAuditoriaService auditoriaService) {
@@ -60,11 +64,11 @@ public class PerfilUsuarioManagerBean implements Serializable {
 				throw new ExceptionMessage("Vacio");
 			}
 			iUsuariosService.updateProfile(usuario);
-			
+
 			baseBean.registrarAuditoria(auditoriaService, "Actualizar",
 					"El usuario " + nombreUsuario + " realizó una actualización", Mensajes.INFO.toString(), idUsuario);
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}

@@ -44,6 +44,10 @@
             <p:column headerText="Categoría">
                 <h:outputText value="#{prod.categorias.nombre}" />
             </p:column>
+
+             <p:column headerText="Proveedor">
+                 <h:outputText value="#{prod.proveedor.nombreEmpresa}" />
+            </p:column>
             <p:column headerText="Unidad">
                 <h:outputText value="#{prod.unidad}" />
             </p:column>
@@ -61,7 +65,7 @@
             </p:column>
             <p:column headerText="Acciones">
                 <!-- EDITAR -->
-                <p:commandButton icon="pi pi-pencil" process="@this" update=":dialogoEditar"
+                <p:commandButton icon="pi pi-pencil" process="@this" update=":formEditar"
                     oncomplete="PF('wdgEditar').show()">
                     <f:setPropertyActionListener value="#{prod}" target="#{productosManagerBean.producto}" />
                 </p:commandButton>

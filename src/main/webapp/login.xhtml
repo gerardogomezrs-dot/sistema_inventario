@@ -74,6 +74,12 @@
         }
     </style>
 </h:head>
+<f:metadata>
+    <f:event type="preRenderView" listener="#{loginBean.redirectIfLoggedIn}" />
+</f:metadata>
+
+<h:body>
+   </h:body>
 <h:body>
     <h:form id="loginForm">
         <p:growl id="messages" showDetail="true" />

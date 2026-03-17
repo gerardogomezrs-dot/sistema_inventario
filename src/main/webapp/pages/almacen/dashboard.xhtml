@@ -127,11 +127,24 @@
                                      styleClass="dashboard-btn" 
                                      ajax="false" />
 
-                    <p:commandButton value="Gestionar Productos" 
+                     <p:commandButton value="Catalogo Categorías" 
+                                     action="#{navegacionAlmacenBean.irAGestionCategorias}"
+                                        icon="pi pi-tags"
+                                        styleClass="dashboard-btn"
+                                        ajax="false" />
+
+                    <p:commandButton value="Catalogo Productos" 
                                      action="#{navegacionAlmacenBean.irAGestionProductos}"
                                      icon="pi pi-briefcase" 
                                      styleClass="dashboard-btn"
                                      ajax="false" />
+
+                                      <p:commandButton value="Catalogo Proveedores" 
+                                     action="#{navegacionAlmacenBean.irAGestionProveedores}"
+                                        icon="fa fa-industry"
+                                        styleClass="dashboard-btn"
+                                        ajax="false" />
+
 
                     <p:commandButton value="Movimientos"
                                      action="#{navegacionAlmacenBean.irAGestionMovimientos}" 
@@ -151,6 +164,5 @@
     <div style="margin-top: 50px;">
         <ui:include src="/pages/almacen/footer.xhtml" />
     </div>
-
 </h:body>
 </html>

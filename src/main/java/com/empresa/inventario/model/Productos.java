@@ -9,6 +9,7 @@ public class Productos{
 	private String nombre;
 	private String codigoBarras;
 	private String descripcion;
+	private int idProveedor;
 	private int	idCategoria;
 	private String unidad;
 	private double precioUnitario;
@@ -16,8 +17,6 @@ public class Productos{
 	private int stockMinimo;
 	private String ubicacion;
 	private boolean activo;
-
 	private Categorias categorias;
-	
-	
+	private Proveedor proveedor;
 }

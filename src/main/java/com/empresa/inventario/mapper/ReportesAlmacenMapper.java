@@ -20,7 +20,7 @@ public class ReportesAlmacenMapper {
 			existencias.setStockDisponible(resultSet.getInt("Cantidad Disponible"));
 			existencias.setUbicacion(resultSet.getString("Ubicacion"));
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 
 		return existencias;
@@ -38,7 +38,7 @@ public class ReportesAlmacenMapper {
 				bajaRotacion.setUltimaSalida(new java.util.Date(ts.getTime()));
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 
 		return bajaRotacion;
@@ -53,7 +53,7 @@ public class ReportesAlmacenMapper {
 			stockBajo.setStockPermitido(rs.getInt("Mínimo Permitido"));
 			stockBajo.setFaltanteReorden(rs.getInt("Faltante para Reorden"));
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 
 		return stockBajo;
@@ -71,7 +71,7 @@ public class ReportesAlmacenMapper {
 			reporteKardex.setCantidadMovida(rs.getString("Cantidad Movida"));
 			reporteKardex.setOperador(rs.getString("Operador"));
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 
 		return reporteKardex;

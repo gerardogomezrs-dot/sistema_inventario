@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.primefaces.model.UploadedFile;
+import org.slf4j.LoggerFactory;
 
 import com.empresa.inventario.beans.BaseAuditoriaBean;
 import com.empresa.inventario.exceptions.ExceptionMessage;
@@ -28,11 +29,13 @@ import lombok.Data;
 @javax.faces.view.ViewScoped
 @Data
 public class MovimientosManagerBean implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(MovimientosManagerBean.class);
+
 	private transient UploadedFile uploadedFile;
-	
+
 	private boolean modoManual = false;
 
 	private transient List<Movimientos> list;
@@ -47,7 +50,7 @@ public class MovimientosManagerBean implements Serializable {
 
 	private String infoProductoExtra;
 
-	private  transient List<Movimientos> listaMovimientosGuardar = new ArrayList<>();
+	private transient List<Movimientos> listaMovimientosGuardar = new ArrayList<>();
 
 	private int idUsuario;
 
@@ -88,15 +91,15 @@ public class MovimientosManagerBean implements Serializable {
 		try {
 			list = service.getAll();
 		} catch (ExceptionMessage e) {
+			logger.debug(e.getMessage());
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
 		return list;
 	}
-
 
 	public String irANuevoMovimiento() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
@@ -131,7 +134,7 @@ public class MovimientosManagerBean implements Serializable {
 					Mensajes.USUARIO + nombreUsuario + " registro un elemento a la tabla", Mensajes.INFO.toString(),
 					idUsuario);
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -142,7 +145,7 @@ public class MovimientosManagerBean implements Serializable {
 		this.movimientos.setCodigoBarras(null);
 	}
 
-	public void cargarInfoScanner()  {
+	public void cargarInfoScanner() {
 		String codigo = this.movimientos.getCodigoBarras();
 		if (codigo != null && !codigo.isEmpty()) {
 			this.infoProductoExtra = "Cargado: " + codigo + " - Producto encontrado";
@@ -167,12 +170,12 @@ public class MovimientosManagerBean implements Serializable {
 				listaMovimientosGuardar.clear();
 			}
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
 	}
-	
+
 	public void cargarArchivo() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 		List<Movimientos> liMovimientos = new ArrayList<>();
@@ -182,7 +185,7 @@ public class MovimientosManagerBean implements Serializable {
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
 			}
 			listaMovimientosGuardar = new ArrayList<>();
-			liMovimientos = service.cargaMasiva(uploadedFile);
+			liMovimientos = service.cargaMasiva(uploadedFile, idUsuario);
 			this.listaMovimientosGuardar = new ArrayList<>(liMovimientos);
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
@@ -192,17 +195,17 @@ public class MovimientosManagerBean implements Serializable {
 					Mensajes.INFO.toString(), idUsuario);
 
 		} catch (ExceptionMessage e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
 	}
-	
+
 	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}

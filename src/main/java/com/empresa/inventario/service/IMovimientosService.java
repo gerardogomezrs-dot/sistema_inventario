@@ -11,6 +11,6 @@ public interface IMovimientosService {
 	List<Movimientos> save(List<Movimientos> movimientos);
 	List<Movimientos> getAll() ;
 	List<Movimientos> getbyIdUsuarioMovimientos(int idUsuario);
-	List<Movimientos> cargaMasiva(UploadedFile file);
+	List<Movimientos> cargaMasiva(UploadedFile file, int idUsuario);
 
 }

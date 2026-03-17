@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.LoggerFactory;
+
 import com.empresa.inventario.mapper.ReportesMapper;
 import com.empresa.inventario.model.ReporteAuditoriaUsuario;
 import com.empresa.inventario.model.ReporteClasificacionABC;
@@ -22,6 +24,9 @@ public class ReportesDAO {
 	
 	
 	private  ReportesMapper mapper = new ReportesMapper();
+	
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ReportesDAO.class);
+
 
 	public List<ReportesMovimiento> getAllCategorias(LocalDateTime dateTimeInicio, LocalDateTime dateTimeFin) {
 
@@ -58,7 +63,7 @@ public class ReportesDAO {
 				}
 			}
 		} catch (SQLException e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return lista;
 	}
@@ -81,7 +86,7 @@ public class ReportesDAO {
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return lista;
 	}
@@ -103,8 +108,7 @@ public class ReportesDAO {
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
-
+			logger.debug(e.getMessage());
 		}
 		return lista;
 	}
@@ -114,7 +118,7 @@ public class ReportesDAO {
 				+ "    p.nombre AS Producto,\r\n" + "    m.tipo_movimiento AS Operacion,\r\n"
 				+ "    m.cantidad AS Cantidad,\r\n" + "    m.observaciones AS Justificacion \r\n"
 				+ "FROM movimientos m \r\n" + "JOIN usuarios u ON m.id_usuario = u.id_usuario \r\n"
-				+ "JOIN productos p ON m.id_producto = p.id_producto \r\n" + "WHERE m.tipo_movimiento = 'AJUSTE' \r\n"
+				+ "JOIN productos p ON m.id_producto = p.id_producto  \r\n"
 				+ "ORDER BY m.fecha_hora DESC";
 		List<ReporteAuditoriaUsuario> lista = new ArrayList<>();
 		try (Connection con = Conexion.getConexion();
@@ -126,7 +130,7 @@ public class ReportesDAO {
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return lista;
 	}
@@ -148,7 +152,7 @@ public class ReportesDAO {
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return lista;
 	}
@@ -176,7 +180,7 @@ public class ReportesDAO {
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return lista;
 	}
@@ -204,7 +208,7 @@ public class ReportesDAO {
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return lista;
 	}

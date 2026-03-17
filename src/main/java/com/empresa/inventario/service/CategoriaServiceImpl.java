@@ -13,6 +13,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.primefaces.model.UploadedFile;
+import org.slf4j.LoggerFactory;
 
 import com.empresa.inventario.dao.CategoriasDAO;
 import com.empresa.inventario.exceptions.ExceptionMessage;
@@ -24,6 +25,8 @@ import com.opencsv.CSVReader;
 public class CategoriaServiceImpl implements ICategoriaService {
 
 	private CategoriasDAO dao = new CategoriasDAO();
+	
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(CategoriaServiceImpl.class);
 
 	private Categorias cat;
 
@@ -39,7 +42,7 @@ public class CategoriaServiceImpl implements ICategoriaService {
 			}
 
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 
 	}
@@ -49,7 +52,7 @@ public class CategoriaServiceImpl implements ICategoriaService {
 		try {
 			dao.actualizar(categorias);
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 	}
 
@@ -63,7 +66,7 @@ public class CategoriaServiceImpl implements ICategoriaService {
 				throw new ExceptionMessage("Lista Vacia");
 			}
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return categorias;
 	}
@@ -73,7 +76,9 @@ public class CategoriaServiceImpl implements ICategoriaService {
 		try {
 			dao.eliminarCategoria(idCategoria);
 		} catch (Exception e) {
+			logger.debug(e.getMessage());
 			throw new ExceptionMessage("No se puede eliminar la categoria");
+			
 		}
 	}
 
@@ -89,14 +94,14 @@ public class CategoriaServiceImpl implements ICategoriaService {
 			try {
 				categorias = leerCSV(file);
 			} catch (Exception e) {
-				e.getMessage();
+				logger.debug(e.getMessage());
 			}
 		}
 		if (fileName.endsWith(".xlsx") || fileName.endsWith(".lsx")) {
 			try {
 				categorias = leerExcel(file);
 			} catch (Exception e) {
-				e.getMessage();
+				logger.debug(e.getMessage());
 			}
 		}
 
@@ -142,7 +147,7 @@ public class CategoriaServiceImpl implements ICategoriaService {
 				}
 			}
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return categorias;
 	}

@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.LoggerFactory;
+
 import com.empresa.inventario.mapper.ReportesAlmacenMapper;
 import com.empresa.inventario.model.ReporteBajaRotacion;
 import com.empresa.inventario.model.ReporteKardex;
@@ -17,6 +19,9 @@ import com.empresa.inventario.utils.Conexion;
 public class ReportesAlmacenDAO {
 
 	private ReportesAlmacenMapper mapper;
+	
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ReportesAlmacenDAO.class);
+
 
 	public List<ReportesExistencias> getInventarioValorizado() {
 		String sql = "SELECT \r\n" + "    p.codigo_barras  AS 'Codigo',\r\n" + "    p.nombre AS 'Producto',\r\n"
@@ -35,7 +40,7 @@ public class ReportesAlmacenDAO {
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.debug(e.getMessage());
 		}
 		return lista;
 	}
@@ -59,7 +64,7 @@ public class ReportesAlmacenDAO {
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.debug(e.getMessage());
 		}
 		return lista;
 	}
@@ -81,7 +86,7 @@ public class ReportesAlmacenDAO {
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.debug(e.getMessage());
 		}
 		return lista;
 	}
@@ -118,7 +123,7 @@ public class ReportesAlmacenDAO {
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.debug(e.getMessage());
 		}
 		return lista;
 	}

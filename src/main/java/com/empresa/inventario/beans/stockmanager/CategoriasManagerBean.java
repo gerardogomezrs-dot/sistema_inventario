@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.primefaces.model.UploadedFile;
+import org.slf4j.LoggerFactory;
 
 import com.empresa.inventario.beans.BaseAuditoriaBean;
 import com.empresa.inventario.exceptions.ExceptionMessage;
@@ -26,6 +27,8 @@ import lombok.Data;
 @javax.faces.view.ViewScoped
 @Data
 public class CategoriasManagerBean implements Serializable {
+
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(CategoriasManagerBean.class);
 
 	private static final long serialVersionUID = 1L;
 
@@ -98,7 +101,7 @@ public class CategoriasManagerBean implements Serializable {
 					Mensajes.USUARIO + nombreUsuario + " registro un elemento a la tabla", Mensajes.INFO.toString(),
 					idUsuario);
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -115,7 +118,7 @@ public class CategoriasManagerBean implements Serializable {
 					Mensajes.USUARIO + nombreUsuario + "realizo el guardado de un registro", Mensajes.INFO.toString(),
 					idUsuario);
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -132,7 +135,7 @@ public class CategoriasManagerBean implements Serializable {
 		try {
 			list = categoriaService.getAllCategorias();
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -152,7 +155,7 @@ public class CategoriasManagerBean implements Serializable {
 						idUsuario);
 			}
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -179,7 +182,7 @@ public class CategoriasManagerBean implements Serializable {
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.validationFailed();
 			context.renderResponse();
-			e.getMessage();
+			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -189,7 +192,7 @@ public class CategoriasManagerBean implements Serializable {
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.validationFailed();
 			context.renderResponse();
-			ex.getMessage();
+			logger.debug(ex.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + ex.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -214,9 +217,9 @@ public class CategoriasManagerBean implements Serializable {
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
-			e.getMessage();
+			logger.debug(e.getMessage());
 		} catch (Exception ex) {
-			ex.getMessage();
+			logger.debug(ex.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + ex.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}

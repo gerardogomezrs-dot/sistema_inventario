@@ -17,6 +17,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.primefaces.model.UploadedFile;
+import org.slf4j.LoggerFactory;
 
 import com.empresa.inventario.dao.ProductosDAO;
 import com.empresa.inventario.exceptions.ExceptionMessage;
@@ -30,6 +31,8 @@ public class ProductosServiceImp implements IProductoService {
 
 	private ProductosDAO productosDAO = new ProductosDAO();
 
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ProductosServiceImp.class);
+
 	@Override
 	public void delete(int idProducto) {
 		try {
@@ -39,6 +42,7 @@ public class ProductosServiceImp implements IProductoService {
 				productosDAO.eliminarProducto(idProducto);
 			}
 		} catch (Exception e) {
+			logger.debug(e.getMessage());
 			throw new ExceptionMessage("No se puede eliminar el producto");
 		}
 	}
@@ -59,7 +63,7 @@ public class ProductosServiceImp implements IProductoService {
 
 				listaProducto.add(p);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.debug(e.getMessage());
 			}
 		}
 		try {
@@ -68,7 +72,7 @@ public class ProductosServiceImp implements IProductoService {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug(e.getMessage());
 		}
 		return productosLista;
 	}
@@ -84,7 +88,7 @@ public class ProductosServiceImp implements IProductoService {
 				throw new ExceptionMessage("Lista Vacia ");
 			}
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return getProductos;
 	}
@@ -99,7 +103,7 @@ public class ProductosServiceImp implements IProductoService {
 				dao.actualizar(productos);
 			}
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 	}
 
@@ -116,14 +120,14 @@ public class ProductosServiceImp implements IProductoService {
 			try {
 				p = leerCVS(uploadedFile);
 			} catch (Exception e) {
-				e.getMessage();
+				logger.debug(e.getMessage());
 			}
 		}
 		if (fileName.endsWith("xlsx") || fileName.endsWith("lsx")) {
 			try {
 				p = leerExcel(uploadedFile);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.debug(e.getMessage());
 			}
 		}
 		if (!fileName.endsWith(".xlsx") && !fileName.endsWith(".lsx") && !fileName.endsWith(".csv")) {
@@ -133,62 +137,66 @@ public class ProductosServiceImp implements IProductoService {
 		return p;
 	}
 
-	private List<Productos> leerExcel(UploadedFile uploadedFile)  {
+	private List<Productos> leerExcel(UploadedFile uploadedFile) {
 		List<Productos> productosList = new ArrayList<>();
 		Productos productos;
 		try {
-		Workbook workbook = WorkbookFactory.create(uploadedFile.getInputstream());
-		Sheet sheet = workbook.getSheetAt(0); 
-		for (Row row : sheet) {
-			if (row.getRowNum() == 0)
-				continue;
-			Cell cellNombre = row.getCell(0);
-			Cell cellDescripcion = row.getCell(2);
-			Cell cellCodigoBarras = row.getCell(1);
-			Cell cellIdCategoria = row.getCell(3);
-			Cell cellUnidad = row.getCell(4);
-			Cell cellPrecioUnitario = row.getCell(5);
-			Cell cellStockActual = row.getCell(6);
-			Cell cellStockMinimo = row.getCell(7);
-			Cell cellUbicacion = row.getCell(8);
-			Cell cellActivo = row.getCell(9);
+			Workbook workbook = WorkbookFactory.create(uploadedFile.getInputstream());
+			Sheet sheet = workbook.getSheetAt(0);
+			for (Row row : sheet) {
+				if (row.getRowNum() == 0)
+					continue;
+				Cell cellNombre = row.getCell(0);
+				Cell cellDescripcion = row.getCell(2);
+				Cell cellCodigoBarras = row.getCell(1);
+				Cell cellIdCategoria = row.getCell(3);
+				Cell cellUnidad = row.getCell(4);
+				Cell cellPrecioUnitario = row.getCell(5);
+				Cell cellStockActual = row.getCell(6);
+				Cell cellStockMinimo = row.getCell(7);
+				Cell cellUbicacion = row.getCell(8);
+				Cell cellActivo = row.getCell(9);
+				Cell cellIdProveedor = row.getCell(10);
 
-			productos = new Productos();
+				productos = new Productos();
 
-			DataFormatter dataFormatter = new DataFormatter();
-			
-			long valorLong = 0;
+				DataFormatter dataFormatter = new DataFormatter();
 
-			if (cellCodigoBarras != null) {
-			    if (cellCodigoBarras.getCellType() == CellType.NUMERIC) {
-			        valorLong = (long) cellCodigoBarras.getNumericCellValue();
-			    } else if (cellCodigoBarras.getCellType() == CellType.STRING) {
-			        valorLong = Long.parseLong(cellCodigoBarras.getStringCellValue());
-			    }
+				long valorLong = 0;
+
+				if (cellCodigoBarras != null) {
+					if (cellCodigoBarras.getCellType() == CellType.NUMERIC) {
+						valorLong = (long) cellCodigoBarras.getNumericCellValue();
+					} else if (cellCodigoBarras.getCellType() == CellType.STRING) {
+						valorLong = Long.parseLong(cellCodigoBarras.getStringCellValue());
+					}
+				}
+				productos.setNombre(dataFormatter.formatCellValue(cellNombre));
+				productos.setDescripcion(dataFormatter.formatCellValue(cellDescripcion));
+				productos.setCodigoBarras(String.valueOf(valorLong));
+				String idCategoria = dataFormatter.formatCellValue(cellIdCategoria);
+				int categoria = NumberUtils.toInt(idCategoria, 0);
+
+				productos.setIdCategoria(categoria);
+				productos.setUnidad(dataFormatter.formatCellValue(cellUnidad));
+				String precioUnitario = dataFormatter.formatCellValue(cellPrecioUnitario);
+				double precioU = NumberUtils.toDouble(precioUnitario, 0.0);
+				productos.setPrecioUnitario(precioU);
+				String stockActual = dataFormatter.formatCellValue(cellStockActual);
+				String stockMinimo = dataFormatter.formatCellValue(cellStockMinimo);
+				int stockAct = NumberUtils.toInt(stockActual, 0);
+				int stockMin = NumberUtils.toInt(stockMinimo, 0);
+				productos.setStockActual(stockAct);
+				productos.setStockMinimo(stockMin);
+				productos.setUbicacion(dataFormatter.formatCellValue(cellUbicacion));
+				productos.setActivo(Boolean.parseBoolean(dataFormatter.formatCellValue(cellActivo)));
+				String idProveedor = dataFormatter.formatCellValue(cellIdProveedor);
+				int idProveedores = NumberUtils.toInt(idProveedor);
+				productos.setIdProveedor(idProveedores);
+				productosList.add(productos);
 			}
-			productos.setNombre(dataFormatter.formatCellValue(cellNombre));
-			productos.setDescripcion(dataFormatter.formatCellValue(cellDescripcion));
-			productos.setCodigoBarras(String.valueOf(valorLong));
-			String idCategoria = dataFormatter.formatCellValue(cellIdCategoria);
-			int categoria = NumberUtils.toInt(idCategoria, 0);
-
-			productos.setIdCategoria(categoria);
-			productos.setUnidad(dataFormatter.formatCellValue(cellUnidad));
-			String precioUnitario = dataFormatter.formatCellValue(cellPrecioUnitario);
-			double precioU = NumberUtils.toDouble(precioUnitario, 0.0);
-			productos.setPrecioUnitario(precioU);
-			String stockActual = dataFormatter.formatCellValue(cellStockActual);
-			String stockMinimo = dataFormatter.formatCellValue(cellStockMinimo);
-			int stockAct = NumberUtils.toInt(stockActual, 0);
-			int stockMin = NumberUtils.toInt(stockMinimo, 0);
-			productos.setStockActual(stockAct);
-			productos.setStockMinimo(stockMin);
-			productos.setUbicacion(dataFormatter.formatCellValue(cellUbicacion));
-			productos.setActivo(Boolean.parseBoolean(dataFormatter.formatCellValue(cellActivo)));
-			productosList.add(productos);
-		}
-		}catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
 		}
 		return productosList;
 	}
@@ -212,11 +220,13 @@ public class ProductosServiceImp implements IProductoService {
 					p.setStockMinimo(Integer.parseInt(fila[7]));
 					p.setUbicacion(fila[8]);
 					p.setActivo(Boolean.parseBoolean(fila[9]));
+					p.setIdProveedor(Integer.parseInt(fila[10]));
+
 					list.add(p);
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug(e.getMessage());
 		}
 		return list;
 	}
@@ -227,9 +237,11 @@ public class ProductosServiceImp implements IProductoService {
 		try {
 			if (codigoBarras != null) {
 				p = productosDAO.getByIdCodigoBarras(codigoBarras);
+				System.out.println("Nombre producto " + p.getNombre());
 			}
 		} catch (Exception e) {
-			e.getMessage();
+			e.printStackTrace();
+			logger.debug(e.getMessage());
 		}
 		return p;
 	}
@@ -239,7 +251,7 @@ public class ProductosServiceImp implements IProductoService {
 		try {
 			productosDAO.bajaProducto(idProducto);
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 	}
 
@@ -248,17 +260,27 @@ public class ProductosServiceImp implements IProductoService {
 		List<Productos> productos = new ArrayList<>();
 		try {
 			productos = productosDAO.getStockBajo();
-			return productos.stream()
-		            .filter(p -> p.getStockActual() <= p.getStockMinimo())
-		            .collect(Collectors.toList());
+			return productos.stream().filter(p -> p.getStockActual() <= p.getStockMinimo())
+					.collect(Collectors.toList());
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return productos;
 	}
-	
+
 	public int contarCriticos() {
-        return getStockBajo().size();
-    }
+		return getStockBajo().size();
+	}
+
+	@Override
+	public List<Productos> sinExistencias() {
+		List<Productos> list = new ArrayList<>();
+		try {
+			list = productosDAO.getProductosFaltantes();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 	 list;
+	}
 
 }

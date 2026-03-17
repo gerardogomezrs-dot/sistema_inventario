@@ -1,4 +1,4 @@
-package com.empresa.inventario.beans.admin;
+package com.empresa.inventario.beans.almacen;
 
 import java.io.Serializable;
 import java.util.List;
@@ -8,31 +8,29 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.slf4j.LoggerFactory;
-
 import com.empresa.inventario.beans.BaseAuditoriaBean;
-import com.empresa.inventario.exceptions.ExceptionMessage;
-import com.empresa.inventario.model.Auditoria;
+import com.empresa.inventario.model.Proveedor;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
+import com.empresa.inventario.service.IProveedorService;
 import com.empresa.inventario.utils.Mensajes;
 
 import lombok.Data;
 
-@Named("auditoriaBean")
+@Named("proveedoresAlmacenBean")
 @javax.faces.view.ViewScoped
 @Data
-public class AuditoriaBean implements Serializable {
+public class ProveedoresAlmacenBean implements Serializable {
 	/**
-	 * 
-	 */
+	* 
+	*/
 	private static final long serialVersionUID = 1L;
 
-	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AuditoriaBean.class);
+	private transient List<Proveedor> list;
 
-	private transient List<Auditoria> filteredList;
+	private IProveedorService iProveedorService;
 
-	private transient List<Auditoria> list;
+	private transient List<Proveedor> filteredList;
 
 	private int idUsuario;
 
@@ -41,28 +39,27 @@ public class AuditoriaBean implements Serializable {
 	private IAuditoriaService auditoriaService;
 
 	@Inject
-	public AuditoriaBean(IAuditoriaService auditoriaService) {
+	public ProveedoresAlmacenBean(IProveedorService iProveedorService, IAuditoriaService auditoriaService) {
+		this.iProveedorService = iProveedorService;
 		this.auditoriaService = auditoriaService;
 	}
 
 	@PostConstruct
 	public void init() {
-		cargarListaAuditoria();
+		listaProveedores();
 		Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.get("sessionUsuario");
 		idUsuario = user.getIdUsuario();
 		nombreUsuario = user.getNombre();
 	}
 
-	public void cargarListaAuditoria() {
+	public void listaProveedores() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+
 		try {
-			list = auditoriaService.getAll();
-			if (list.isEmpty()) {
-				throw new ExceptionMessage("Lista Vacia");
-			}
+			list = iProveedorService.proveedors();
 		} catch (Exception e) {
-			logger.debug(e.toString());
+			e.printStackTrace();
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -72,6 +69,8 @@ public class AuditoriaBean implements Serializable {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 		baseBean.registrarNavegacion(auditoriaService, Mensajes.NAVEGACION, "navego a dashboard", idUsuario,
 				nombreUsuario);
-		return "/pages/admin/dashboard.xhtml?faces-redirect=true";
+		return "/pages/almacen/dashboard.xhtml?faces-redirect=true";
+
 	}
+
 }

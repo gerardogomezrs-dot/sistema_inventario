@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.LoggerFactory;
+
 import com.empresa.inventario.mapper.ProveedorMapper;
 import com.empresa.inventario.model.Proveedor;
 import com.empresa.inventario.utils.Conexion;
@@ -14,6 +16,9 @@ import com.empresa.inventario.utils.Conexion;
 public class ProveedorDAO{
 
 	private ProveedorMapper mapper = new ProveedorMapper();
+	
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ProveedorDAO.class);
+
 
 	public List<Proveedor> getAll() {
 		String sql = "SELECT p.* from proveedor p";
@@ -27,7 +32,7 @@ public class ProveedorDAO{
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-				e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return lista;
 	}
@@ -45,7 +50,7 @@ public class ProveedorDAO{
 			ps.setBoolean(6, e.isActivo());
 			ps.executeUpdate();
 		} catch (SQLException ex) {
-			ex.getMessage();
+			logger.debug(ex.getMessage());
 		}
 	}
 
@@ -57,7 +62,7 @@ public class ProveedorDAO{
 			statement.setInt(1, idProveedor);
 			statement.executeUpdate();
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 	}
 
@@ -74,7 +79,7 @@ public class ProveedorDAO{
 			ps.setInt(7, e.getIdProveedor());
 			ps.executeUpdate();
 		} catch (SQLException ex) {
-			ex.getMessage();
+			logger.debug(ex.getMessage());
 		
 		}
 	}

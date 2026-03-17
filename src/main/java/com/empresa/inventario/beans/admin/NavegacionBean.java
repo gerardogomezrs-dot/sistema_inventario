@@ -7,6 +7,8 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.primefaces.PrimeFaces;
+
 import com.empresa.inventario.beans.BaseAuditoriaBean;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
@@ -38,6 +40,8 @@ public class NavegacionBean implements Serializable {
 				.get("sessionUsuario");
 		idUsuario = user.getIdUsuario();
 		nombreUsuario = user.getNombre();
+		// Importar org.primefaces.PrimeFaces;
+		PrimeFaces.current().executeScript("PF('dlgSinStock').show()");
 	}
 
 	public String irAProductos() {
@@ -102,12 +106,11 @@ public class NavegacionBean implements Serializable {
 				nombreUsuario);
 		return "/pages/admin/dashboard.xhtml?faces-redirect=true";
 	}
-	
-	
+
 	public String irAMermasDevoluciones() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-		baseBean.registrarNavegacion(auditoriaService, Mensajes.NAVEGACION, "navego a tabla Mermas Devoluciones", idUsuario,
-				nombreUsuario);
+		baseBean.registrarNavegacion(auditoriaService, Mensajes.NAVEGACION, "navego a tabla Mermas Devoluciones",
+				idUsuario, nombreUsuario);
 		return "/pages/admin/mermasDevoluciones/tablaMermasDevoluciones.xhtml?faces-redirect=true";
 	}
 

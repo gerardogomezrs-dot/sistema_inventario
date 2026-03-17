@@ -19,8 +19,16 @@
                     <f:selectItem itemLabel="Seleccione una categoría" itemValue="" noSelectionOption="true" />
 
                     <f:selectItems value="#{productoBean.listaCategorias}" var="cat" itemLabel="#{cat.nombre}"
-                        itemValue="#{cat.idCategoria}" style="width: 200px;"/>
+                        itemValue="#{cat.idCategoria}" style="width: 200px;" />
 
+                </p:selectOneMenu>
+
+                <p:outputLabel for="proveedor" value="Proveedor:" />
+                <p:selectOneMenu id="proveedor" value="#{productoBean.producto.idProveedor}" style="width: 200px;">
+                    <f:selectItem itemLabel="Seleccione un proveedor" itemValue="#{null}" noSelectionOption="true" />
+
+                    <f:selectItems value="#{productoBean.listaProveedores}" var="prov" itemLabel="#{prov.nombreEmpresa}"
+                        itemValue="#{prov.idProveedor}" />
                 </p:selectOneMenu>
 
                 <h:outputLabel value="Unidad:" />
@@ -28,7 +36,7 @@
 
                 <h:outputLabel value="Precio Unitario:" />
                 <p:inputText value="#{productoBean.producto.precioUnitario}" placeholder="$ 0.00" />
-                
+
                 <h:outputLabel value="Stock Actual:" />
                 <p:inputText value="#{productoBean.producto.stockActual}" />
 

@@ -11,8 +11,10 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.primefaces.model.UploadedFile;
+import org.slf4j.LoggerFactory;
 
 import com.empresa.inventario.beans.BaseAuditoriaBean;
+import com.empresa.inventario.beans.admin.AuditoriaBean;
 import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Proveedor;
 import com.empresa.inventario.model.Usuario;
@@ -28,6 +30,8 @@ import lombok.Data;
 public class ProveedorManagerBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AuditoriaBean.class);
 
 	private transient List<Proveedor> listaProveedorGuardar = new ArrayList<>();
 
@@ -90,7 +94,7 @@ public class ProveedorManagerBean implements Serializable {
 		try {
 			list = iProveedorService.proveedors();
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 	}
 
@@ -107,7 +111,7 @@ public class ProveedorManagerBean implements Serializable {
 					idUsuario);
 
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 			auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -125,7 +129,7 @@ public class ProveedorManagerBean implements Serializable {
 			auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.ELIMINAR.getTexto(),
 					Mensajes.USUARIO + nombreUsuario + " realizo una eliminacion", Mensajes.INFO.toString(), idUsuario);
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 			auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
@@ -156,7 +160,7 @@ public class ProveedorManagerBean implements Serializable {
 						Mensajes.USUARIO + nombreUsuario + "realizo el guardado de un registro",
 						Mensajes.INFO.toString(), idUsuario);
 			} catch (Exception e) {
-				e.getMessage();
+				logger.debug(e.getMessage());
 				auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.ERROR,
 						Mensajes.ERROR + ": " + e.getMessage(), Mensajes.ERROR.toString(), idUsuario);
 			}
@@ -191,12 +195,12 @@ public class ProveedorManagerBean implements Serializable {
 					Mensajes.INFO.toString(), idUsuario);
 		} catch (ExceptionMessage e) {
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
-			e.getMessage();
+			logger.debug(e.getMessage());
 			auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 
 			auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);

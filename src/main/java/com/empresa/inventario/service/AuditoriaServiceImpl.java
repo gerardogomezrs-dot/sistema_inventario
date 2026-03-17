@@ -6,6 +6,8 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 
+import org.slf4j.LoggerFactory;
+
 import com.empresa.inventario.dao.AuditoriaDao;
 import com.empresa.inventario.model.Auditoria;
 
@@ -15,13 +17,15 @@ public class AuditoriaServiceImpl implements IAuditoriaService {
 	
 	private  AuditoriaDao auditoriaDao;
 	
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AuditoriaServiceImpl.class);
+	
 	@Override
 	public void registroAuditoria(Auditoria auditoria) {
 		try {
 			auditoriaDao = new AuditoriaDao();
 			auditoriaDao.guardar(auditoria);
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 	}
 
@@ -32,7 +36,7 @@ public class AuditoriaServiceImpl implements IAuditoriaService {
 			auditoriaDao = new AuditoriaDao();
 			auditorias = auditoriaDao.getAllAuditoria();
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return auditorias;
 	}

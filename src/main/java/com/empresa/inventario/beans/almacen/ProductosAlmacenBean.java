@@ -7,6 +7,8 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.slf4j.LoggerFactory;
+
 import com.empresa.inventario.beans.BaseAuditoriaBean;
 import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Productos;
@@ -24,6 +26,8 @@ public class ProductosAlmacenBean implements Serializable {
 	* 
 	*/
 	private static final long serialVersionUID = 1L;
+
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ProductosAlmacenBean.class);
 
 	private transient IProductoService iProductoService;
 
@@ -56,7 +60,7 @@ public class ProductosAlmacenBean implements Serializable {
 				throw new ExceptionMessage("Lista Vacia");
 			}
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}

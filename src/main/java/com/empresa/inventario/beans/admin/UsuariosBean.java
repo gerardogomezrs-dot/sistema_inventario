@@ -9,6 +9,8 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.slf4j.LoggerFactory;
+
 import com.empresa.inventario.beans.BaseAuditoriaBean;
 import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Usuario;
@@ -24,8 +26,11 @@ import lombok.Data;
 public class UsuariosBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	
 	private IUsuariosService iUsuariosService;
 
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(UsuariosBean.class);
+	
 	private transient List<Usuario> list;
 
 	private transient Usuario usuario;
@@ -87,7 +92,7 @@ public class UsuariosBean implements Serializable {
 					idUsuario);
 
 		} catch (ExceptionMessage e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage());
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.validationFailed();
@@ -99,7 +104,7 @@ public class UsuariosBean implements Serializable {
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.validationFailed();
 			context.renderResponse();
-			e.getMessage();
+			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -116,11 +121,12 @@ public class UsuariosBean implements Serializable {
 					Mensajes.USUARIO + nombreUsuario + " realizo una eliminacion", Mensajes.INFO.toString(), idUsuario);
 
 		} catch (ExceptionMessage e) {
+			logger.debug(e.getMessage());
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -142,11 +148,13 @@ public class UsuariosBean implements Serializable {
 					Mensajes.USUARIO + nombreUsuario + " realizo una actualizacion", Mensajes.INFO.toString(),
 					idUsuario);
 		} catch (ExceptionMessage e) {
+			logger.debug(e.getMessage());
+
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -169,7 +177,7 @@ public class UsuariosBean implements Serializable {
 					Mensajes.USUARIO + nombreUsuario + " realizo una actualizacion", Mensajes.INFO.toString(),
 					idUsuario);
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}

@@ -15,7 +15,6 @@ public class ReportesMapper {
 
 	public ReportesMovimiento row(ResultSet resultSet) {
 		ReportesMovimiento movimiento = new ReportesMovimiento();
-
 		try {
 			movimiento.setIdMovimiento(resultSet.getInt("idMovimiento"));
 			movimiento.setFechaHora(resultSet.getDate("fechaHora"));

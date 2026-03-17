@@ -11,15 +11,18 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.primefaces.model.UploadedFile;
+import org.slf4j.LoggerFactory;
 
 import com.empresa.inventario.beans.BaseAuditoriaBean;
 import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Categorias;
 import com.empresa.inventario.model.Productos;
+import com.empresa.inventario.model.Proveedor;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.service.ICategoriaService;
 import com.empresa.inventario.service.IProductoService;
+import com.empresa.inventario.service.IProveedorService;
 import com.empresa.inventario.utils.Mensajes;
 
 import lombok.Data;
@@ -31,7 +34,11 @@ public class ProductoBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private transient List<Categorias> listaCategorias;
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ProductoBean.class);
+
+	private  List<Categorias> listaCategorias;
+	
+	private  List<Proveedor> listaProveedores;
 
 	private transient List<Productos> listaProductosGuardar = new ArrayList<>();
 
@@ -46,6 +53,8 @@ public class ProductoBean implements Serializable {
 	private transient IProductoService iProductoService;
 
 	private transient ICategoriaService iCategoriaService;
+	
+	private transient IProveedorService iProveedorService;
 
 	private int idUsuario;
 
@@ -55,15 +64,17 @@ public class ProductoBean implements Serializable {
 
 	@Inject
 	public ProductoBean(IProductoService iProductoService, ICategoriaService iCategoriaService,
-			IAuditoriaService auditoriaService) {
+			IAuditoriaService auditoriaService, IProveedorService iProveedorService) {
 		this.iProductoService = iProductoService;
 		this.iCategoriaService = iCategoriaService;
 		this.auditoriaService = auditoriaService;
+		this.iProveedorService = iProveedorService;
 	}
 
 	@PostConstruct
 	public void init() {
 		listaProductos();
+		listaProveedores();
 		listaCategorias = iCategoriaService.getAllCategorias();
 		Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.get("sessionUsuario");
@@ -82,7 +93,7 @@ public class ProductoBean implements Serializable {
 					Mensajes.USUARIO + nombreUsuario + " registro un elemento a la tabla", Mensajes.INFO.toString(),
 					idUsuario);
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 			baseBeanGuardarTabla.registrarAuditoria(auditoriaService, Mensajes.ERROR,
 					Mensajes.ERROR + ": " + e.getMessage(), Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -99,7 +110,7 @@ public class ProductoBean implements Serializable {
 					Mensajes.USUARIO + nombreUsuario + "realizo el guardado de un registro", Mensajes.INFO.toString(),
 					idUsuario);
 		} catch (Exception ex) {
-			ex.getMessage();
+			logger.debug(ex.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + ex.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -125,7 +136,7 @@ public class ProductoBean implements Serializable {
 					Mensajes.USUARIO + nombreUsuario + " realizo una actualizacion", Mensajes.INFO.toString(),
 					idUsuario);
 		} catch (Exception ex) {
-			ex.getMessage();
+			logger.debug(ex.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + ex.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -146,19 +157,32 @@ public class ProductoBean implements Serializable {
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.validationFailed();
 			context.renderResponse();
-			e.getMessage();
+			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		} catch (Exception ex) {
-			ex.getMessage();
+			logger.debug(ex.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + ex.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
 
 	}
+	
+	public void listaProveedores() {
+		try {
+			listaProveedores = iProveedorService.proveedors();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	public void listaProductos() {
-		this.list = iProductoService.getAll();
+		try {
+			this.list = iProductoService.getAll();
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
+
+		}
 	}
 
 	public void cargaArchivos() {
@@ -177,7 +201,15 @@ public class ProductoBean implements Serializable {
 					Mensajes.INFO.toString(), idUsuario);
 		} catch (ExceptionMessage e) {
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
-			e.getMessage();
+			logger.debug(e.getMessage());
+
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
+					Mensajes.ERROR.toString(), idUsuario);
+		}
+
+		catch (Exception e) {
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+			logger.debug(e.getMessage());
 
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
@@ -203,15 +235,12 @@ public class ProductoBean implements Serializable {
 
 	public String irANuevoProducto() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-
 		baseBean.registrarNavegacion(auditoriaService, Mensajes.NUEVO_REGISTRO, "entro a nuevo producto", idUsuario,
 				nombreUsuario);
-
 		return "/pages/admin/productos/productos.xhtml?faces-redirect=true";
 	}
 
 	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
-
 }

@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.LoggerFactory;
+
 import com.empresa.inventario.mapper.MermasDevolucionesMapper;
 import com.empresa.inventario.model.MermasDevoluciones;
 import com.empresa.inventario.utils.Conexion;
@@ -13,6 +15,9 @@ import com.empresa.inventario.utils.Conexion;
 public class MermasDevolucionesDAO {
 
 	MermasDevolucionesMapper mapper;
+	
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(MermasDevolucionesDAO.class);
+
 	
 	public void guardar(MermasDevoluciones mermasDevoluciones) {
 		String sql = "INSERT INTO mermas_perdidas\r\n" + "(id_producto, cantidad, motivo, fecha, costo, tipo, id_usuario)\r\n"
@@ -26,7 +31,7 @@ public class MermasDevolucionesDAO {
 			ps.setInt(6, mermasDevoluciones.getIdUsuario());
 			ps.executeUpdate();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug(e.getMessage());
 		}
 	}
 	
@@ -51,7 +56,7 @@ public class MermasDevolucionesDAO {
 				lista.add(p);
 			}
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return lista;
 	}

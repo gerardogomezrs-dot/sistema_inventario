@@ -85,6 +85,14 @@
                 <h:outputText value="#{prod.origenDestino}" />
             </p:column>
 
+             <p:column headerText="Stock Previo">
+                <h:outputText value="#{prod.stockPrevio}" />
+            </p:column>
+
+            <p:column headerText="Stock Posterior">
+                 <h:outputText value="#{prod.stockPosterior}" />
+            </p:column>
+
             <p:column headerText="Usuario Responsable" filterBy="#{prod.idUsuario}" filterMatchMode="contains">
                 <h:outputText value="#{prod.usuario.nombre}" />
             </p:column>

@@ -7,6 +7,8 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.slf4j.LoggerFactory;
+
 import com.empresa.inventario.beans.BaseAuditoriaBean;
 import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Usuario;
@@ -20,6 +22,8 @@ import lombok.Data;
 @javax.faces.view.ViewScoped
 @Data
 public class PerfilUsuarioBean implements Serializable {
+	
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(PerfilUsuarioBean.class);
 
 	private static final long serialVersionUID = 1L;
 
@@ -53,12 +57,9 @@ public class PerfilUsuarioBean implements Serializable {
 
 	public String irADashboard() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-
 		baseBean.registrarNavegacion(auditoriaService, "Dashboard", "entro a Dashboard", idUsuario, nombreUsuario);
-
 		return "/pages/admin/dashboard?faces-redirect=true";
 	}
-
 	public void actualizarPerfil() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 
@@ -70,7 +71,7 @@ public class PerfilUsuarioBean implements Serializable {
 			baseBean.registrarAuditoria(auditoriaService, "Actualizar",
 					"El usuario " + nombreUsuario + " realizó una actualización", Mensajes.INFO.toString(), idUsuario);
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}

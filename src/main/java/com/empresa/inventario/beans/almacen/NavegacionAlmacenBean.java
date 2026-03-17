@@ -19,6 +19,8 @@ public class NavegacionAlmacenBean implements Serializable {
 	* 
 	*/
 	private static final long serialVersionUID = 1L;
+	
+
 
 	private int idUsuario;
 
@@ -51,11 +53,25 @@ public class NavegacionAlmacenBean implements Serializable {
 				idUsuario, nombreUsuario);
 		return "/pages/almacen/productos/tablaProductos.xhtml?faces-redirect=true";
 	}
+	
+	public String irAGestionProveedores() {
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		baseBean.registrarNavegacion(auditoriaService, Mensajes.MODULO_PRODUCTOS, "entro al modulo de proveedores",
+				idUsuario, nombreUsuario);
+		return "/pages/almacen/proveedores/tablaProveedores.xhtml?faces-redirect=true";
+	}
 
 	public String irAGestionMovimientos() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 		baseBean.registrarNavegacion(auditoriaService, Mensajes.MODULO_MOVIMIENTOS, "entro al modulo de movimientos", idUsuario, nombreUsuario);
 		return "/pages/almacen/movimientos/tablaMovimientos.xhtml?faces-redirect=true";
+	}
+	
+	public String irAGestionCategorias() {
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		baseBean.registrarNavegacion(auditoriaService, Mensajes.MODULO_PRODUCTOS, "entro al modulo de categorias",
+				idUsuario, nombreUsuario);
+		return "/pages/almacen/categorias/tablaCategorias.xhtml?faces-redirect=true";
 	}
 
 	public String irADashboard() {

@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.LoggerFactory;
+
 import com.empresa.inventario.mapper.CategoriaMapper;
 import com.empresa.inventario.model.Categorias;
 import com.empresa.inventario.utils.Conexion;
@@ -14,6 +16,9 @@ import com.empresa.inventario.utils.Conexion;
 public class CategoriasDAO  {
 
 	private  CategoriaMapper mapper = new CategoriaMapper();
+	
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(CategoriasDAO.class);
+
 
 	public void guardar(Categorias e) {
 		String sql = "INSERT INTO categorias (nombre, descripcion) VALUES (?, ?)";
@@ -25,8 +30,8 @@ public class CategoriasDAO  {
 
 			ps.executeUpdate();
 
-		} catch (SQLException ex) {
-			ex.getMessage();
+		} catch (SQLException exception) {
+			logger.debug(exception.getMessage());
 
 		}
 	}
@@ -39,7 +44,7 @@ public class CategoriasDAO  {
 			ps.setInt(3, e.getIdCategoria());
 			ps.executeUpdate();
 		} catch (SQLException ex) {
-			ex.getMessage();
+			logger.debug(ex.getMessage());
 		}
 	}
 
@@ -56,7 +61,7 @@ public class CategoriasDAO  {
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return lista;
 	}
@@ -68,7 +73,7 @@ public class CategoriasDAO  {
 			statement.setInt(1, idCategoria);
 			statement.executeUpdate();
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 	}
 

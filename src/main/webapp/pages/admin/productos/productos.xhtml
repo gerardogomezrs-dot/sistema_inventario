@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE  html>
+<!DOCTYPE html>
 <html lang="es-MX" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
     xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
@@ -8,7 +8,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
     <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
-        <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
+    <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
 
     <style type="text/css">
         .ui-panelgrid .ui-grid-responsive .ui-grid-row {
@@ -54,8 +54,8 @@
                 <p:panel header="Registro de Producto" style="width: 600px; margin: 0 auto;">
                     <h:panelGrid columns="2" columnClasses="label,value">
                         <h:outputLabel value="Codigo de Barras:" />
-                        <p:inputText id="barcodeManual" value="#{productoBean.producto.codigoBarras}"
-                            required="false" placeholder="Ingrese código manualmente..." style="width: 100%;">
+                        <p:inputText id="barcodeManual" value="#{productoBean.producto.codigoBarras}" required="false"
+                            placeholder="Ingrese código manualmente..." style="width: 100%;">
                             <p:ajax event="blur" process="@this" />
                         </p:inputText>
 
@@ -69,8 +69,16 @@
                         <p:selectOneMenu id="categoria" value="#{productoBean.producto.idCategoria}"
                             style="width: 200px;">
                             <f:selectItem itemLabel="Seleccione una categoría" itemValue="" noSelectionOption="true" />
-                            <f:selectItems value="#{productoBean.listaCategorias}" var="cat"
-                                itemLabel="#{cat.nombre}" itemValue="#{cat.idCategoria}" />
+                            <f:selectItems value="#{productoBean.listaCategorias}" var="cat" itemLabel="#{cat.nombre}"
+                                itemValue="#{cat.idCategoria}" />
+                        </p:selectOneMenu>
+
+                        <p:outputLabel for="proveedor" value="Proveedor:" />
+                        <p:selectOneMenu id="proveedor" value="#{productoBean.producto.idProveedor}"
+                            style="width: 200px;">
+                            <f:selectItem itemLabel="Seleccione un proveedor" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{productoBean.listaProveedores}" var="prov"
+                                itemLabel="#{prov.nombreEmpresa}" itemValue="#{prov.idProveedor}" />
                         </p:selectOneMenu>
 
                         <h:outputLabel value="Unidad:" />
@@ -100,8 +108,7 @@
                         oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
 
                     <p:commandButton value="Regresar" icon="pi pi-chevron-left"
-                        action="#{productoBean.irATablaProductos}" immediate="true"
-                        style="margin-left: 10px;" />
+                        action="#{productoBean.irATablaProductos}" immediate="true" style="margin-left: 10px;" />
 
                     <div class="upload-section" style="margin-top: 20px;">
                         <h:outputLabel value="Cargar desde archivo (CSV, Excel):"
@@ -109,9 +116,8 @@
                         <p:fileUpload value="#{productoBean.uploadedFile}" mode="simple" skinSimple="true"
                             label="Seleccionar Archivo" chooseIcon="pi pi-upload" />
 
-                        <p:commandButton value="Procesar Archivo" action="#{productoBean.cargaArchivos}"
-                            ajax="false" styleClass="ui-button-help" style="margin-top: 5px;"
-                            icon="pi pi-file-import" />
+                        <p:commandButton value="Procesar Archivo" action="#{productoBean.cargaArchivos}" ajax="false"
+                            styleClass="ui-button-help" style="margin-top: 5px;" icon="pi pi-file-import" />
                     </div>
                 </p:panel>
             </div>
@@ -134,6 +140,10 @@
                         <h:outputText value="#{prod.idCategoria}" />
                     </p:column>
 
+                    <p:column headerText="Proveedor">
+                        <h:outputText value="#{prod.idProveedor}" />
+                    </p:column>
+
                     <p:column headerText="Precio" width="80">
                         <h:outputText value="#{prod.precioUnitario}">
                             <f:convertNumber type="currency" currencySymbol="$" />
@@ -151,14 +161,10 @@
 
                 <p:separator />
 
-           <p:commandButton value="Guardar" 
-                 icon="pi pi-save" 
-                 action="#{productoBean.guardarProductoTabla}" 
-                 process="@form"
-                 update="tablaRegistros, msgs" 
-                 widgetVar="btnGuardar"
-                 onclick="PF('pbAjax').start(); PF('btnGuardar').disable();"
-                 oncomplete="if (args.validationFailed) { PF('pbAjax').cancel(); PF('btnGuardar').enable(); } else { PF('dlgConfirmacionGuardar').show(); }" />
+                <p:commandButton value="Guardar" icon="pi pi-save" action="#{productoBean.guardarProductoTabla}"
+                    process="@form" update="tablaRegistros, msgs" widgetVar="btnGuardar"
+                    onclick="PF('pbAjax').start(); PF('btnGuardar').disable();"
+                    oncomplete="if (args.validationFailed) { PF('pbAjax').cancel(); PF('btnGuardar').enable(); } else { PF('dlgConfirmacionGuardar').show(); }" />
             </div>
 
         </div>
@@ -174,7 +180,7 @@
             <br /><br />
             <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacionGuardar').hide();" />
         </p:dialog>
-        		<ui:include src="/pages/admin/footer.xhtml" />
+        <ui:include src="/pages/admin/footer.xhtml" />
     </h:form>
 
 </h:body>

@@ -28,7 +28,7 @@ public class AuthService implements IAuthService {
 			usuario = dao.login(userName);
 
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 
 		if (usuario == null) {
@@ -41,7 +41,7 @@ public class AuthService implements IAuthService {
 		try {
 			passwordDecoficado = usuario.getPassword();
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		if (password.equals(passwordDecoficado)) {
 			logger.info("Bienvenido");

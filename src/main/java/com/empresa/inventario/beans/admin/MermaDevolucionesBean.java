@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.primefaces.model.UploadedFile;
+import org.slf4j.LoggerFactory;
 
 import com.empresa.inventario.beans.BaseAuditoriaBean;
 import com.empresa.inventario.exceptions.ExceptionMessage;
@@ -32,7 +33,8 @@ public class MermaDevolucionesBean implements Serializable {
 	* 
 	*/
 	private static final long serialVersionUID = 1L;
-	
+
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(MermaDevolucionesBean.class);
 
 	private transient MermasDevoluciones mermasDevoluciones;
 
@@ -108,7 +110,7 @@ public class MermaDevolucionesBean implements Serializable {
 			listaProductos = new ArrayList<>();
 			listaProductos = iProductoService.getAll();
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -119,7 +121,7 @@ public class MermaDevolucionesBean implements Serializable {
 		try {
 			listaMermasDevoluciones = devolucionesService.getListaMermasDevoluciones();
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -137,7 +139,7 @@ public class MermaDevolucionesBean implements Serializable {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 					"Registro guardado", "El registro fue guardado en la tabla"));
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -156,7 +158,7 @@ public class MermaDevolucionesBean implements Serializable {
 					idUsuario);
 			devoluciones.clear();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -178,12 +180,12 @@ public class MermaDevolucionesBean implements Serializable {
 					Mensajes.INFO.toString(), idUsuario);
 
 		} catch (ExceptionMessage e) {
-			e.printStackTrace();
+			logger.debug(e.getMessage());
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}

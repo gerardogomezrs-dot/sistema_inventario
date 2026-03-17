@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.LoggerFactory;
+
 import com.empresa.inventario.mapper.ProductosMapper;
 import com.empresa.inventario.model.Productos;
 import com.empresa.inventario.utils.Conexion;
@@ -15,9 +17,14 @@ public class ProductosDAO {
 
 	private ProductosMapper mapper = new ProductosMapper();
 
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ProductosDAO.class);
+
 	public List<Productos> getAll() {
-		String sql = "SELECT p.*, c.id_categoria as idCategoria, c.nombre as "
-				+ "nombreCategoria FROM productos p inner join categorias c on p.id_categoria = c.id_categoria";
+		String sql = "SELECT \r\n" + "    p.*, \r\n" + "    c.id_categoria AS idCategoria, \r\n"
+				+ "    c.nombre AS nombreCategoria, \r\n" + "    pv.id_proveedor as idProveedor, \r\n"
+				+ "    pv.nombre_empresa AS nombreProveedor \r\n" + "FROM productos p \r\n"
+				+ "INNER JOIN categorias c ON p.id_categoria = c.id_categoria \r\n"
+				+ "LEFT JOIN proveedor pv ON p.id_proveedor = pv.id_proveedor ";
 		List<Productos> lista = new ArrayList<>();
 
 		try (Connection con = Conexion.getConexion();
@@ -30,7 +37,8 @@ public class ProductosDAO {
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.getMessage();
+			e.printStackTrace();
+			logger.debug(e.getMessage());
 		}
 		return lista;
 	}
@@ -38,8 +46,9 @@ public class ProductosDAO {
 	public void guardar(Productos productos) {
 		String sql = "INSERT INTO productos "
 				+ "(codigo_barras, nombre, descripcion, id_categoria, unidad, precio_unitario, "
-				+ "stock_actual, stock_minimo, ubicacion, activo) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		
+				+ "stock_actual, stock_minimo, ubicacion, activo, id_proveedor) "
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
 		try (Connection conexion = Conexion.getConexion(); PreparedStatement ps = conexion.prepareStatement(sql)) {
 
 			ps.setString(1, productos.getCodigoBarras());
@@ -52,11 +61,11 @@ public class ProductosDAO {
 			ps.setInt(8, productos.getStockMinimo());
 			ps.setString(9, productos.getUbicacion());
 			ps.setBoolean(10, productos.isActivo());
-
+			ps.setInt(11, productos.getIdProveedor());
 			ps.executeUpdate();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug(e.getMessage());
 		}
 	}
 
@@ -64,7 +73,8 @@ public class ProductosDAO {
 
 		String sql = "UPDATE productos SET " + "codigo_barras = ?, " + "nombre = ?, " + "descripcion = ?, "
 				+ "id_categoria = ?, " + "unidad = ?, " + "precio_unitario = ?, " + "stock_actual = ?, "
-				+ "stock_minimo = ?, " + "ubicacion = ?, " + "activo = ? " + "WHERE id_producto = ?";
+				+ "stock_minimo = ?, " + "ubicacion = ?, " + "activo = ?, " + "id_proveedor = ? "
+				+ "WHERE id_producto = ?";
 
 		try (Connection conexion = Conexion.getConexion(); PreparedStatement ps = conexion.prepareStatement(sql);) {
 
@@ -78,11 +88,14 @@ public class ProductosDAO {
 			ps.setInt(8, productos.getStockMinimo());
 			ps.setString(9, productos.getUbicacion());
 			ps.setBoolean(10, productos.isActivo());
-			ps.setInt(11, productos.getIdProducto());
+			ps.setInt(11, productos.getIdProveedor());
+			;
+			ps.setInt(12, productos.getIdProducto());
 
 			ps.executeUpdate();
 		} catch (Exception e) {
-			e.getMessage();
+			e.printStackTrace();
+			logger.debug(e.getMessage());
 		}
 
 	}
@@ -96,7 +109,7 @@ public class ProductosDAO {
 			ps.setInt(2, idProducto);
 			ps.executeUpdate();
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 
 	}
@@ -110,7 +123,7 @@ public class ProductosDAO {
 			statement.setInt(1, idProducto);
 			statement.executeUpdate();
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 	}
 
@@ -125,13 +138,13 @@ public class ProductosDAO {
 				p = rs.getInt("stock_actual");
 			}
 		} catch (SQLException e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return p;
 	}
 
 	public Productos getByIdCodigoBarras(String codigoBarras) {
-		String sql = "SELECT id_producto as id, nombre as nombreProducto, codigo_barras, descripcion, id_categoria, unidad, precio_unitario, stock_actual as stockActual, stock_minimo as stockMinimo, ubicacion, activo FROM productos  where codigo_barras = ?";
+		String sql = "SELECT id_producto, nombre as nombreProducto, codigo_barras, descripcion, id_categoria, unidad, precio_unitario, stock_actual as stockActual, stock_minimo as stockMinimo, ubicacion, activo FROM productos  where codigo_barras = ?";
 		Productos p = new Productos();
 		try (Connection con = Conexion.getConexion(); PreparedStatement ps = con.prepareStatement(sql);) {
 			ps.setString(1, codigoBarras);
@@ -141,6 +154,7 @@ public class ProductosDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			logger.debug(e.getMessage());
 		}
 		return p;
 	}
@@ -157,7 +171,7 @@ public class ProductosDAO {
 				p = mapper.mapRowBy(rs);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.debug(e.getMessage());
 		}
 		return p;
 	}
@@ -170,7 +184,7 @@ public class ProductosDAO {
 			statement.setInt(1, idProducto);
 			statement.executeUpdate();
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 
 	}
@@ -188,7 +202,26 @@ public class ProductosDAO {
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.getMessage();
+			e.printStackTrace();
+			logger.debug(e.getMessage());
+		}
+		return lista;
+	}
+	
+	public List<Productos> getProductosFaltantes() {
+		String sql = "select * from productos where stock_actual = 0;";
+		List<Productos> lista = new ArrayList<>();
+		try (Connection con = Conexion.getConexion();
+				PreparedStatement ps = con.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
+			while (rs.next()) {
+				Productos p = new Productos();
+				p = mapper.mapRowSinExistencias(rs);
+				lista.add(p);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			logger.debug(e.getMessage());
 		}
 		return lista;
 	}

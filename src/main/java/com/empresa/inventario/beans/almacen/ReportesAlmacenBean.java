@@ -33,22 +33,21 @@ public class ReportesAlmacenBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private transient IAuditoriaService auditoriaService;
-	
+
 	private String reporteExistencias;
-	
+
 	private String reporteBajaRotacion;
-	
+
 	private String reporteStockCritico;
-	
+
 	private String reporteKardex;
 
-
 	private transient List<ReportesExistencias> reportesExistencias;
-	
+
 	private transient List<ReporteBajaRotacion> reporteBajaRotacions;
-	
+
 	private transient List<ReporteStockBajoAlmacen> reporteStockBajos;
-	
+
 	private transient List<ReporteKardex> reporteKardexs;
 
 	private IReporteAlmacenService almacenService;
@@ -103,35 +102,34 @@ public class ReportesAlmacenBean implements Serializable {
 				nombreUsuario);
 		return "/pages/almacen/reportes/reporteExistencias.xhtml?faces-redirect=true";
 	}
-	
+
 	public String irAReporteBajaRotacion() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 		baseBean.registrarNavegacion(auditoriaService, "Reporte Existencias", "entro a Baja Rotacion", idUsuario,
 				nombreUsuario);
 		return "/pages/almacen/reportes/reporteBajaRotacion.xhtml?faces-redirect=true";
 	}
-	
+
 	public String irAReporteMovimientos() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 		baseBean.registrarNavegacion(auditoriaService, "Reporte Baja Rotacion", "entro a Reporte Kartex", idUsuario,
 				nombreUsuario);
 		return "/pages/almacen/reportes/reporteMovimientos.xhtml?faces-redirect=true";
 	}
-	
+
 	public String irAReporteStockCritico() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-		baseBean.registrarNavegacion(auditoriaService, "Reporte Stock Critico", "entro a Reporte Stock Critico", idUsuario,
-				nombreUsuario);
+		baseBean.registrarNavegacion(auditoriaService, "Reporte Stock Critico", "entro a Reporte Stock Critico",
+				idUsuario, nombreUsuario);
 		return "/pages/almacen/reportes/reporteStockCritico.xhtml?faces-redirect=true";
 	}
-	
+
 	public String irADashBoard() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-		baseBean.registrarNavegacion(auditoriaService, "Dashboard", "entro a Dashboard", idUsuario,
-				nombreUsuario);
+		baseBean.registrarNavegacion(auditoriaService, "Dashboard", "entro a Dashboard", idUsuario, nombreUsuario);
 		return "/pages/almacen/reportes/reportesDashboard.xhtml?faces-redirect=true";
 	}
-	
+
 	public String irAMenuPrincipal() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 		baseBean.registrarNavegacion(auditoriaService, "Menu Principal", "entro a Menu Principal", idUsuario,
@@ -150,11 +148,10 @@ public class ReportesAlmacenBean implements Serializable {
 	public void exportarReporteExistenciasPdf(Object document) {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
 		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
-				Mensajes.USUARIO + nombreUsuario + " realizo la exportación de Existencias",
-				Mensajes.INFO.toString(), idUsuario);
+				Mensajes.USUARIO + nombreUsuario + " realizo la exportación de Existencias", Mensajes.INFO.toString(),
+				idUsuario);
 		ReportesUtils.postProcessPDF(document, reporteExistencias);
-	}	
-	
+	}
 
 	public void exportarReporteBajaRotacionExcel(Object document) {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
@@ -170,8 +167,8 @@ public class ReportesAlmacenBean implements Serializable {
 				Mensajes.USUARIO + nombreUsuario + " realizo la exportación de Reporte de Baja Rotacion",
 				Mensajes.INFO.toString(), idUsuario);
 		ReportesUtils.postProcessPDF(document, reporteBajaRotacion);
-	}	
-	
+	}
+
 	public void exportarReporteStockBajoExcel(Object document) {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
 		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
@@ -186,8 +183,8 @@ public class ReportesAlmacenBean implements Serializable {
 				Mensajes.USUARIO + nombreUsuario + " realizo la exportación de Reporte de Stock Bajo",
 				Mensajes.INFO.toString(), idUsuario);
 		ReportesUtils.postProcessPDF(document, reporteStockCritico);
-	}	
-	
+	}
+
 	public void exportarReporteKardexExcel(Object document) {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
 		auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.EXPORTAR_REPORTE.getTexto(),
@@ -202,6 +199,6 @@ public class ReportesAlmacenBean implements Serializable {
 				Mensajes.USUARIO + nombreUsuario + " realizo la exportación de Reporte de Kardex",
 				Mensajes.INFO.toString(), idUsuario);
 		ReportesUtils.postProcessPDF(document, reporteKardex);
-	}	
-	
+	}
+
 }

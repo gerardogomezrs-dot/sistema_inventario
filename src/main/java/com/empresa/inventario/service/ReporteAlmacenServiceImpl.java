@@ -6,6 +6,8 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 
+import org.slf4j.LoggerFactory;
+
 import com.empresa.inventario.dao.ReportesAlmacenDAO;
 import com.empresa.inventario.model.ReporteBajaRotacion;
 import com.empresa.inventario.model.ReporteKardex;
@@ -17,6 +19,8 @@ import com.empresa.inventario.model.ReportesExistencias;
 public class ReporteAlmacenServiceImpl implements IReporteAlmacenService {
 
 	private ReportesAlmacenDAO almacenDAO;
+	
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ReporteAlmacenServiceImpl.class);
 
 	@Override
 	public List<ReportesExistencias> getReporteExistencias() {
@@ -25,7 +29,7 @@ public class ReporteAlmacenServiceImpl implements IReporteAlmacenService {
 		try {
 			existencias = almacenDAO.getInventarioValorizado();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug(e.getMessage());
 		}
 		return existencias;
 	}
@@ -37,7 +41,7 @@ public class ReporteAlmacenServiceImpl implements IReporteAlmacenService {
 		try {
 			bajaRotacions = almacenDAO.getBajaRotacion();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug(e.getMessage());
 		}
 		return bajaRotacions;
 	}
@@ -49,7 +53,7 @@ public class ReporteAlmacenServiceImpl implements IReporteAlmacenService {
 		try {
 			stockBajoAlmacens = almacenDAO.getStockCritico();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug(e.getMessage());
 		}
 		return stockBajoAlmacens;
 	}
@@ -61,7 +65,7 @@ public class ReporteAlmacenServiceImpl implements IReporteAlmacenService {
 		try {
 			kardexs = almacenDAO.getReporteKardex();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug(e.getMessage());
 		}
 		return kardexs;
 	}

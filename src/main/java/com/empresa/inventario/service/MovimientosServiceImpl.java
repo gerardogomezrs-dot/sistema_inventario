@@ -17,6 +17,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.primefaces.model.UploadedFile;
+import org.slf4j.LoggerFactory;
 
 import com.empresa.inventario.dao.MovimientosDAO;
 import com.empresa.inventario.dao.ProductosDAO;
@@ -27,6 +28,8 @@ import com.opencsv.CSVReader;
 @Named("movimientoService")
 @ApplicationScoped
 public class MovimientosServiceImpl implements IMovimientosService {
+	
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(MovimientosServiceImpl.class);
 
 	private MovimientosDAO dao;
 
@@ -41,26 +44,37 @@ public class MovimientosServiceImpl implements IMovimientosService {
 
 				int totalStock = 0;
 				int unidad = movimientos.getCantidad();
-
+				
 				dao = new MovimientosDAO();
-				dao.guardar(movimientos);
+				
 				ProductosDAO productosDAO = new ProductosDAO();
-				if (movimientos.getTipoMovimiento().equals("Entrada")) {
+				if (movimientos.getTipoMovimiento().equalsIgnoreCase("Entrada")) {
 					int nuevoSock = productosDAO.getByIdProducto(movimientos.getIdProducto());
 					totalStock = nuevoSock + movimientos.getCantidad();
 					productosDAO.actualizarStock(movimientos.getIdProducto(), totalStock);
+					movimientos.setStockPrevio(nuevoSock);
+					movimientos.setStockPosterior(totalStock);
+					dao.guardar(movimientos);
 				}
-				if (movimientos.getTipoMovimiento().equals("Salida")) {
+				if (movimientos.getTipoMovimiento().equalsIgnoreCase("Salida")) {
 					int nuevoSock = productosDAO.getByIdProducto(movimientos.getIdProducto());
 					totalStock = nuevoSock - movimientos.getCantidad();
 					productosDAO.actualizarStock(movimientos.getIdProducto(), totalStock);
+					movimientos.setStockPrevio(nuevoSock);
+					movimientos.setStockPosterior(totalStock);
+					dao.guardar(movimientos);
 				}
-				if (movimientos.getTipoMovimiento().equals("Ajuste")) {
+				if (movimientos.getTipoMovimiento().equalsIgnoreCase("Ajuste")) {
 					productosDAO.actualizarStock(movimientos.getIdProducto(), unidad);
+					int nuevoSock = productosDAO.getByIdProducto(movimientos.getIdProducto());
+					movimientos.setStockPrevio(nuevoSock);
+					movimientos.setStockPosterior(unidad);
+					dao.guardar(movimientos);
 				}
 			}
 		} catch (Exception e) {
-			e.getMessage();
+			e.printStackTrace();
+			logger.debug(e.getMessage());
 		}
 		return list;
 	}
@@ -75,7 +89,7 @@ public class MovimientosServiceImpl implements IMovimientosService {
 			movimientos = new ArrayList<>(list);
 
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return movimientos;
 	}
@@ -88,13 +102,13 @@ public class MovimientosServiceImpl implements IMovimientosService {
 			dao = new MovimientosDAO();
 			movimientos = dao.getByUsuario(idUsuario);
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return movimientos;
 	}
 
 	@Override
-	public List<Movimientos> cargaMasiva(UploadedFile uploadedFile) {
+	public List<Movimientos> cargaMasiva(UploadedFile uploadedFile, int idUsuario) {
 		List<Movimientos> p = new ArrayList<>();
 		if (uploadedFile.getFileName() == null || uploadedFile.getFileName().trim().isEmpty()) {
 			throw new ExceptionMessage("Inserta un archivo");
@@ -104,16 +118,16 @@ public class MovimientosServiceImpl implements IMovimientosService {
 
 		if (fileName.endsWith(".csv")) {
 			try {
-				p = leerCVS(uploadedFile);
+				p = leerCVS(uploadedFile, idUsuario);
 			} catch (Exception e) {
-				e.getMessage();
+				logger.debug(e.getMessage());
 			}
 		}
 		if (fileName.endsWith("xlsx") || fileName.endsWith("lsx")) {
 			try {
-				p = leerExcel(uploadedFile);
+				p = leerExcel(uploadedFile, idUsuario);
 			} catch (Exception e) {
-				e.getMessage();
+				logger.debug(e.getMessage());
 			}
 		}
 		if (!fileName.endsWith(".xlsx") && !fileName.endsWith(".lsx") && !fileName.endsWith(".csv")) {
@@ -122,7 +136,7 @@ public class MovimientosServiceImpl implements IMovimientosService {
 		return p;
 	}
 
-	private List<Movimientos> leerExcel(UploadedFile file) {
+	private List<Movimientos> leerExcel(UploadedFile file, int idUsuario) {
 		List<Movimientos> list = new ArrayList<>();
 		Movimientos movimientos;
 		try {
@@ -136,8 +150,7 @@ public class MovimientosServiceImpl implements IMovimientosService {
 				Cell cellCantidad = row.getCell(2);
 				Cell cellFechaHora = row.getCell(3);
 				Cell cellOrigenDestino = row.getCell(4);
-				Cell cellIdUsuario = row.getCell(5);
-				Cell cellObservaciones = row.getCell(6);
+				Cell cellObservaciones = row.getCell(5);
 
 				DataFormatter dataFormatter = new DataFormatter();
 
@@ -149,8 +162,7 @@ public class MovimientosServiceImpl implements IMovimientosService {
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 				LocalDateTime fecha = LocalDateTime.parse(cellFechaHora.getStringCellValue(), formatter);
 				String origenDestino = cellOrigenDestino.getStringCellValue();
-				String idUsuarioString = dataFormatter.formatCellValue(cellIdUsuario);
-				int idUsuario = NumberUtils.toInt(idUsuarioString, 0);
+				
 				String observaciones = cellObservaciones.getStringCellValue();
 				movimientos = new Movimientos();
 				movimientos.setIdProducto(id);
@@ -158,17 +170,17 @@ public class MovimientosServiceImpl implements IMovimientosService {
 				movimientos.setCantidad(cantidad);
 				movimientos.setFechaHora(java.sql.Timestamp.valueOf(fecha));
 				movimientos.setOrigenDestino(origenDestino);
-				movimientos.setIdUsuario(idUsuario);
 				movimientos.setObservaciones(observaciones);
+				movimientos.setIdUsuario(idUsuario);
 				list.add(movimientos);
 			}
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return list;
 	}
 
-	private List<Movimientos> leerCVS(UploadedFile uploadedFile) {
+	private List<Movimientos> leerCVS(UploadedFile uploadedFile, int idUsuario) {
 
 		List<Movimientos> list = new ArrayList<>();
 		Movimientos p;
@@ -186,13 +198,13 @@ public class MovimientosServiceImpl implements IMovimientosService {
 					LocalDateTime fecha = LocalDateTime.parse(fila[3], formatter);
 					p.setFechaHora(java.sql.Timestamp.valueOf(fecha));
 					p.setOrigenDestino(fila[4]);
-					p.setIdUsuario(Integer.valueOf(fila[5]));
-					p.setObservaciones(fila[6]);
+					p.setObservaciones(fila[5]);
+					p.setIdUsuario(idUsuario);
 					list.add(p);
 				}
 			}
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return list;
 	}

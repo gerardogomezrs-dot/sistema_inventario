@@ -11,15 +11,18 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.primefaces.model.UploadedFile;
+import org.slf4j.LoggerFactory;
 
 import com.empresa.inventario.beans.BaseAuditoriaBean;
 import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Categorias;
 import com.empresa.inventario.model.Productos;
+import com.empresa.inventario.model.Proveedor;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.service.ICategoriaService;
 import com.empresa.inventario.service.IProductoService;
+import com.empresa.inventario.service.IProveedorService;
 import com.empresa.inventario.utils.Mensajes;
 
 import lombok.Data;
@@ -31,11 +34,17 @@ public class ProductosManagerBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ProductosManagerBean.class);
+
 	private transient List<Categorias> listaCategorias;
 
 	private transient List<Productos> listaProductosGuardar = new ArrayList<>();
 
 	private transient List<Productos> listaProductosList;
+	
+	private transient List<Proveedor> listaProveedores;
+	
+	private transient IProveedorService iProveedorService;
 
 	private transient UploadedFile uploadedFile;
 
@@ -54,22 +63,33 @@ public class ProductosManagerBean implements Serializable {
 	private ICategoriaService iCategoriaService;
 
 	@Inject
-	public ProductosManagerBean(IAuditoriaService auditoriaService, IProductoService iProductoService,
-			ICategoriaService iCategoriaService) {
-		this.auditoriaService = auditoriaService;
+	public ProductosManagerBean(IProductoService iProductoService, ICategoriaService iCategoriaService,
+			IAuditoriaService auditoriaService, IProveedorService iProveedorService) {
 		this.iProductoService = iProductoService;
 		this.iCategoriaService = iCategoriaService;
+		this.auditoriaService = auditoriaService;
+		this.iProveedorService = iProveedorService;
 	}
 
 	@PostConstruct
 	public void init() {
 		listaProductos();
+		listaProveedores();
 		listaCategorias = iCategoriaService.getAllCategorias();
 		Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.get("sessionUsuario");
 		idUsuario = user.getIdUsuario();
 		nombreUsuario = user.getNombre();
 		producto = new Productos();
+	}
+
+	private void listaProveedores() {
+		try {
+			this.listaProveedores = iProveedorService.proveedors();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	public void listaProductos() {
@@ -103,13 +123,13 @@ public class ProductosManagerBean implements Serializable {
 	public void guardarTabla() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 		try {
-		listaProductosGuardar.add(producto);
-		this.producto = new Productos();
-		baseBean.registrarAuditoria(auditoriaService, Mensajes.GUARDAR_REGISTRO_TABLA,
-				Mensajes.USUARIO + nombreUsuario + " registro un elemento a la tabla", Mensajes.INFO.toString(),
-				idUsuario);
-		}catch (Exception e) {
-			e.getMessage();
+			listaProductosGuardar.add(producto);
+			this.producto = new Productos();
+			baseBean.registrarAuditoria(auditoriaService, Mensajes.GUARDAR_REGISTRO_TABLA,
+					Mensajes.USUARIO + nombreUsuario + " registro un elemento a la tabla", Mensajes.INFO.toString(),
+					idUsuario);
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -117,7 +137,6 @@ public class ProductosManagerBean implements Serializable {
 
 	public void guardarProductoTabla() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-
 
 		try {
 			iProductoService.create(listaProductosGuardar);
@@ -127,7 +146,7 @@ public class ProductosManagerBean implements Serializable {
 					Mensajes.USUARIO + nombreUsuario + "realizo el guardado de un registro", Mensajes.INFO.toString(),
 					idUsuario);
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -153,7 +172,7 @@ public class ProductosManagerBean implements Serializable {
 					Mensajes.USUARIO + nombreUsuario + " realizo una actualizacion", Mensajes.INFO.toString(),
 					idUsuario);
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -175,12 +194,12 @@ public class ProductosManagerBean implements Serializable {
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.validationFailed();
 			context.renderResponse();
-			e.getMessage();
+			logger.debug(e.getMessage());
 
 			auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 
 			auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
@@ -205,7 +224,15 @@ public class ProductosManagerBean implements Serializable {
 					Mensajes.INFO.toString(), idUsuario);
 		} catch (ExceptionMessage e) {
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
-			e.getMessage();
+			logger.debug(e.getMessage());
+
+			auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
+					Mensajes.ERROR.toString(), idUsuario);
+		}
+		
+		catch (Exception e) {
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+			logger.debug(e.getMessage());
 
 			auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);

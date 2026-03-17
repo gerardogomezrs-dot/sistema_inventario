@@ -6,12 +6,12 @@
 <h:head>
     <title>Gestión de Movimientos</title>
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
-    
+
     <style>
         /* Estilo para simular el p:tag en PrimeFaces 7 */
         .badge-info {
             background-color: #e3f2fd;
-            color: #1565c0; 
+            color: #1565c0;
             padding: 2px 8px;
             border-radius: 4px;
             font-size: 12px;
@@ -32,18 +32,19 @@
 </h:head>
 <h:body>
     <h:form id="formTablaMovimientos">
-        
+
         <ui:include src="/pages/stock_manager/menu.xhtml" />
 
         <p:growl id="msgs" showDetail="true" />
         <p:separator />
         <p:toolbar style="margin-bottom: 20px; border: none; background: transparent;">
             <f:facet name="left">
-        <p:commandButton value="Nuevo Movimiento" icon="pi pi-save" action="#{movimientosManagerBean.irANuevoMovimiento}" />
+                <p:commandButton value="Nuevo Movimiento" icon="pi pi-save"
+                    action="#{movimientosManagerBean.irANuevoMovimiento}" />
             </f:facet>
             <f:facet name="right">
-        <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{movimientosManagerBean.irADashboard}"
-            immediate="true" style="margin-left:10px;" />
+                <p:commandButton value="Regresar" icon="pi pi-chevron-left"
+                    action="#{movimientosManagerBean.irADashboard}" immediate="true" style="margin-left:10px;" />
             </f:facet>
         </p:toolbar>
         <p:separator />
@@ -51,9 +52,9 @@
         <div class="flex-container">
             <p:panel header="Tabla de Movimientos" style="width: 100%; margin: 0 auto;">
 
-                <p:dataTable id="tablaMovimientos" var="prod" value="#{movimientosManagerBean.list}" rows="10" paginator="true"
-                    filteredValue="#{movimientosManagerBean.filteredList}" emptyMessage="No se encontraron Movimientos"
-                    style="margin-top:20px;">
+                <p:dataTable id="tablaMovimientos" var="prod" value="#{movimientosManagerBean.list}" rows="10"
+                    paginator="true" filteredValue="#{movimientosManagerBean.filteredList}"
+                    emptyMessage="No se encontraron Movimientos" style="margin-top:20px;">
 
                     <p:column headerText="ID">
                         <h:outputText value="#{prod.idMovimiento}" />
@@ -79,6 +80,14 @@
                         <h:outputText value="#{prod.origenDestino}" />
                     </p:column>
 
+                    <p:column headerText="Stock Previo">
+                        <h:outputText value="#{prod.stockPrevio}" />
+                    </p:column>
+
+                    <p:column headerText="Stock Posterior">
+                        <h:outputText value="#{prod.stockPosterior}" />
+                    </p:column>
+
                     <p:column headerText="Usuario Responsable" filterBy="#{prod.idUsuario}" filterMatchMode="contains">
                         <h:outputText value="#{prod.usuario.nombre}" />
                     </p:column>
@@ -91,4 +100,5 @@
     </h:form>
     <ui:include src="/pages/stock_manager/footer.xhtml" />
 </h:body>
+
 </html>

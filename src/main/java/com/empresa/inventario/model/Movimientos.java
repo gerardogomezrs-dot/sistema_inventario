@@ -11,13 +11,26 @@ public class Movimientos {
 	 * 
 	 */
 	private int idMovimiento;
+	
 	private int idProducto;
+	
+	private String nombreProducto;
+	
 	private String tipoMovimiento;
+	
 	private int cantidad;
+	
 	private Date fechaHora;
+	
 	private String origenDestino;
+	
 	private int idUsuario;
+	
 	private String observaciones;
+	
+	private int stockPrevio;
+	
+	private int stockPosterior;
 
 	private Usuario usuario;
 

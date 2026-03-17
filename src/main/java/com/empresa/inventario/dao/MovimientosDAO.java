@@ -8,6 +8,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.LoggerFactory;
+
 import com.empresa.inventario.mapper.MovimientosMapper;
 import com.empresa.inventario.model.Movimientos;
 import com.empresa.inventario.utils.Conexion;
@@ -15,6 +17,9 @@ import com.empresa.inventario.utils.Conexion;
 public class MovimientosDAO {
 
 	private MovimientosMapper mapper = new MovimientosMapper();
+	
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(MovimientosDAO.class);
+
 
 	public List<Movimientos> getAll() {
 
@@ -35,15 +40,15 @@ public class MovimientosDAO {
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return lista;
 	}
 
 	public void guardar(Movimientos movimientos) {
 		String sql = "INSERT INTO movimientos (id_producto, "
-				+ " tipo_movimiento , cantidad, fecha_hora ,  origen_destino ,  id_usuario ,  observaciones ) "
-				+ " VALUES " + "(?, ?, ?, ?, ?, ?, ?)";
+				+ " tipo_movimiento , cantidad, fecha_hora ,  origen_destino ,  id_usuario ,  observaciones, stock_previo, stock_posterior ) "
+				+ " VALUES " + "(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		try (Connection conexion = Conexion.getConexion(); PreparedStatement ps = conexion.prepareStatement(sql);) {
 
@@ -54,41 +59,41 @@ public class MovimientosDAO {
 			ps.setString(5, movimientos.getOrigenDestino());
 			ps.setInt(6, movimientos.getIdUsuario());
 			ps.setString(7, movimientos.getObservaciones());
+			ps.setInt(8, movimientos.getStockPrevio());
+			ps.setInt(9, movimientos.getStockPosterior());
 			ps.executeUpdate();
 		} catch (Exception e) {
-			e.getMessage();
+			e.printStackTrace();
+			logger.debug(e.getMessage());
 		}
 
 	}
 	
 	public List<Movimientos> getByUsuario(int idUsuario) {
-	    // 1. Usamos un alias claro y la cláusula WHERE
-	    String sql = "SELECT m.*, u.nombre AS nombreUsuario, p.nombre AS nombreProducto "
-	               + "FROM MOVIMIENTOS m "
-	               + "INNER JOIN usuarios u ON m.id_usuario = u.id_usuario "
-	               + "INNER JOIN productos p ON m.id_producto = p.id_producto "
-	               + "WHERE m.id_usuario = ?"; // Filtro paramétrico
 
+		String sql = "SELECT m.*, u.nombre AS nombreUsuario, p.nombre AS nombreProducto "
+	               + "FROM MOVIMIENTOS m "
+	               + "LEFT JOIN usuarios u ON m.id_usuario = u.id_usuario "
+	               + "LEFT JOIN productos p ON m.id_producto = p.id_producto "
+	               + "WHERE m.id_usuario = ?"; // Filtro paramétrico
 	    List<Movimientos> lista = new ArrayList<>();
 
-	    // 2. Uso de Try-with-resources para auto-cerrar la conexión
 	    try (Connection con = Conexion.getConexion();
 	         PreparedStatement ps = con.prepareStatement(sql)) {
 	        
-	        // 3. Seteamos el parámetro de forma segura
 	        ps.setInt(1, idUsuario);
 
 	        try (ResultSet rs = ps.executeQuery()) {
 	            while (rs.next()) {
-	                // El mapper se encarga de la lógica de conversión
-	                lista.add(mapper.mapRow(rs));
+
+	            	lista.add(mapper.mapRowById(rs));
 	            }
 	        }
 	    } catch (SQLException e) {
-	    	e.getMessage();
+	    	e.printStackTrace();
+	    	logger.debug(e.getMessage());
 	    }
 	    return lista;
 	}
-
 
 }

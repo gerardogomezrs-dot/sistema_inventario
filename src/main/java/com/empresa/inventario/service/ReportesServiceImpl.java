@@ -9,6 +9,9 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 
+import org.slf4j.LoggerFactory;
+
+import com.empresa.inventario.beans.admin.AuditoriaBean;
 import com.empresa.inventario.dao.ReportesDAO;
 import com.empresa.inventario.model.ReporteAuditoriaUsuario;
 import com.empresa.inventario.model.ReporteClasificacionABC;
@@ -22,6 +25,8 @@ import com.empresa.inventario.model.ReportesMovimiento;
 @ApplicationScoped
 public class ReportesServiceImpl implements IReporteService {
 	private ReportesDAO dao = new ReportesDAO();
+	
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AuditoriaBean.class);
 
 	@Override
 	public List<ReportesMovimiento> movimientos(Date inicio, Date fin) {
@@ -42,7 +47,7 @@ public class ReportesServiceImpl implements IReporteService {
 		try {
 			reportesMovimientos = dao.getInventarioValorizado();
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return reportesMovimientos;
 	}
@@ -53,7 +58,7 @@ public class ReportesServiceImpl implements IReporteService {
 		try {
 			list = dao.getStockBajo();
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return list;
 	}
@@ -64,7 +69,7 @@ public class ReportesServiceImpl implements IReporteService {
 		try {
 			list = dao.getAuditoriaUsuario();
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return list;
 	}
@@ -75,7 +80,7 @@ public class ReportesServiceImpl implements IReporteService {
 		try {
 			list = dao.getRotacionInventario();
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return list;
 	}
@@ -86,7 +91,7 @@ public class ReportesServiceImpl implements IReporteService {
 		try {
 			clasificacionABCs = dao.getClasificacionABC();
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return clasificacionABCs;
 	}
@@ -97,7 +102,7 @@ public class ReportesServiceImpl implements IReporteService {
 		try {
 			mermasDevolucions = dao.getReporteMermasDevoluciones();
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return mermasDevolucions;
 	}

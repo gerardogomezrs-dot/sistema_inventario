@@ -51,13 +51,13 @@
             padding: 10px;
         }
 
-        /* ===== NUEVOS ESTILOS DE ALERTA ===== */
+        /* ===== ESTILOS DE ALERTA ===== */
         .alerta-stock {
             background-color: #2c3e50;
             border-left: 6px solid #e74c3c;
             border-radius: 8px;
             padding: 20px;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
@@ -138,8 +138,7 @@
                                 <div style="flex-grow: 1;">
                                     <h3 class="alerta-titulo">Atención: Stock Crítico</h3>
                                     <p class="alerta-texto">
-                                        Se han detectado <b>#{notificacionBean.cantidadCriticos}</b> productos bajo el
-                                        mínimo.
+                                        Se han detectado <b>#{notificacionBean.cantidadCriticos}</b> productos bajo el mínimo.
                                     </p>
                                 </div>
 
@@ -147,6 +146,32 @@
                                     oncomplete="PF('dlgStockCritico').show()" update="tablaDetalleCritico"
                                     process="@this"
                                     style="background-color: #e74c3c; border: none; width: auto; font-weight: bold; margin-right: 25px;" />
+                            </div>
+                        </h:panelGroup>
+
+                        <h:panelGroup id="seccionSinStock"
+                            rendered="#{notificacionBean.mostrarAlertaSinStock and notificacionBean.cantidadAgotados > 0}">
+                            <div class="alerta-stock" style="position: relative; border-left: 6px solid #636e72;">
+
+                                <p:commandLink action="#{notificacionBean.ocultarAlertaSinStock()}"
+                                    update="contenedorPadreAlertas" process="@this"
+                                    style="position: absolute; top: 10px; right: 15px; color: #bdc3c7; z-index: 10;">
+                                    <i class="pi pi-times" style="font-size: 1.2rem;"></i>
+                                </p:commandLink>
+
+                                <i class="pi pi-times-circle alerta-icono" style="color: #636e72;"></i>
+
+                                <div style="flex-grow: 1;">
+                                    <h3 class="alerta-titulo" style="color: #bdc3c7;">Agotado: Sin Existencias</h3>
+                                    <p class="alerta-texto">
+                                        Se han detectado <b>#{notificacionBean.cantidadAgotados}</b> productos con stock en cero.
+                                    </p>
+                                </div>
+
+                                <p:commandButton value="Ver Agotados" icon="pi pi-ban"
+                                    oncomplete="PF('dlgSinStock').show()" update="tablaDetalleAgotados"
+                                    process="@this"
+                                    style="background-color: #636e72; border: none; width: auto; font-weight: bold; margin-right: 25px;" />
                             </div>
                         </h:panelGroup>
 
@@ -177,11 +202,10 @@
                 </div>
             </div>
         </div>
-
         <p:dialog header="Productos en Estado Crítico" widgetVar="dlgStockCritico" modal="true" showEffect="fade"
             hideEffect="fade" width="600" responsive="true">
             <p:dataTable id="tablaDetalleCritico" value="#{notificacionBean.listaProductosCriticos}" var="p"
-                size="small" emptyMessage="No hay productos críticos registrados." scrollable="true" scrollHeight="500">
+                size="small" emptyMessage="No hay productos críticos registrados." scrollable="true" scrollHeight="400">
                 <p:column headerText="Producto">
                     <h:outputText value="#{p.nombre}" />
                 </p:column>
@@ -197,6 +221,24 @@
                     styleClass="ui-button-secondary" />
             </f:facet>
         </p:dialog>
+
+        <p:dialog header="Productos Sin Existencias" widgetVar="dlgSinStock" modal="true" showEffect="fade"
+            hideEffect="fade" width="600" responsive="true">
+            <p:dataTable id="tablaDetalleAgotados" value="#{notificacionBean.listaProductosAgotados}" var="p"
+                size="small" emptyMessage="No hay productos agotados." scrollable="true" scrollHeight="400">
+                <p:column headerText="Producto">
+                    <h:outputText value="#{p.nombre}" />
+                </p:column>
+                <p:column headerText="Stock" style="text-align: center;">
+                    <h:outputText value="0" style="color:#e74c3c; font-weight:bold;" />
+                </p:column>
+            </p:dataTable>
+            <f:facet name="footer">
+                <p:commandButton value="Cerrar" type="button" onclick="PF('dlgSinStock').hide()"
+                    styleClass="ui-button-secondary" />
+            </f:facet>
+        </p:dialog>
+
         <ui:include src="/pages/admin/footer.xhtml" />
     </h:form>
 </h:body>

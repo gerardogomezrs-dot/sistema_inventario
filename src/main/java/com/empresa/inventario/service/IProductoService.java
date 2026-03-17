@@ -23,4 +23,7 @@ public interface IProductoService {
 	Productos getByCodigoBarras(String codigoBarras);
 	
 	List<Productos> getStockBajo();
-	}
+	
+	List<Productos> sinExistencias();
+	
+}

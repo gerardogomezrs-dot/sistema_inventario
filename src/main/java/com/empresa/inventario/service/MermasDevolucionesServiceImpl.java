@@ -17,6 +17,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.primefaces.model.UploadedFile;
+import org.slf4j.LoggerFactory;
 
 import com.empresa.inventario.dao.MermasDevolucionesDAO;
 import com.empresa.inventario.dao.ProductosDAO;
@@ -30,6 +31,7 @@ import com.opencsv.CSVReader;
 @ApplicationScoped
 public class MermasDevolucionesServiceImpl implements IMermasDevolucionesService {
 
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(MermasDevolucionesServiceImpl.class);
 
 	@Override
 	public List<MermasDevoluciones> getListaMermasDevoluciones() {
@@ -38,7 +40,7 @@ public class MermasDevolucionesServiceImpl implements IMermasDevolucionesService
 		try {
 			devoluciones = devolucionesDAO.getAllMermasDevoluciones();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug(e.getMessage());
 		}
 		return devoluciones;
 	}
@@ -70,7 +72,7 @@ public class MermasDevolucionesServiceImpl implements IMermasDevolucionesService
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug(e.getMessage());
 		}
 	}
 
@@ -86,14 +88,14 @@ public class MermasDevolucionesServiceImpl implements IMermasDevolucionesService
 			try {
 				devoluciones = leerCSV(file);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.debug(e.getMessage());
 			}
 		}
 		if (fileName.endsWith(".xlsx") || fileName.endsWith(".lsx")) {
 			try {
 				devoluciones = leerExcel(file);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.debug(e.getMessage());
 			}
 		}
 
@@ -137,9 +139,9 @@ public class MermasDevolucionesServiceImpl implements IMermasDevolucionesService
 				mermasDevoluciones.add(cat);
 			}
 		} catch (EncryptedDocumentException e) {
-			e.printStackTrace();
+			logger.debug(e.getMessage());
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.debug(e.getMessage());
 		}
 		return mermasDevoluciones;
 	}
@@ -162,7 +164,7 @@ public class MermasDevolucionesServiceImpl implements IMermasDevolucionesService
 				}
 			}
 		} catch (Exception e) {
-			e.getMessage();
+			logger.debug(e.getMessage());
 		}
 		return list;
 	}

@@ -30,7 +30,7 @@ public class LoginBean implements Serializable {
 
 	private String userName;
 	private String password;
-	private transient Usuario usuario;
+	private  Usuario usuario;
 
 	private int idUsuario;
 
@@ -56,6 +56,33 @@ public class LoginBean implements Serializable {
 		this.auditoriaService = auditoriaService;
 	}
 
+
+	public void redirectIfLoggedIn() {
+	    FacesContext context = FacesContext.getCurrentInstance();
+	    Usuario userSession = (Usuario) context.getExternalContext().getSessionMap().get(sessionUser);
+
+	    if (userSession != null) {
+	        String ruta = "";
+	        String rol = userSession.getRol();
+
+	        if ("admin".equals(rol)) {
+	            ruta = "/pages/admin/dashboard.xhtml";
+	        } else if ("stock_manager".equals(rol)) {
+	            ruta = "/pages/stock_manager/dashboard.xhtml";
+	        } else if ("almacen".equals(rol)) {
+	            ruta = "/pages/almacen/dashboard.xhtml";
+	        }
+
+	        if (!ruta.isEmpty()) {
+	            try {
+	                context.getExternalContext().redirect(context.getExternalContext().getRequestContextPath() + ruta);
+	            } catch (java.io.IOException e) {
+	                logger.error("Error en redirección automática: " + e.getMessage());
+	            }
+	        }
+	    }
+	}
+	
 	public String login() {
 		try {
 			usuario = new Usuario();
@@ -100,14 +127,14 @@ public class LoginBean implements Serializable {
 				return ruta;
 			}
 		} catch (ExceptionMessage e) {
-			logger.debug("Error: " + e.getMessage());
+			logger.debug(e.getMessage());
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 			auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 			return null;
 		} catch (Exception e) {
 			mensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", "Ocurrió un error en el servidor. ");
-			logger.debug("Error: " + e.getMessage());
+			logger.debug(e.getMessage());
 			auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 			return null;
