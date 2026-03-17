@@ -118,18 +118,27 @@ public class MovimientosAlmacenBean implements Serializable {
 		this.movimientos.setCodigoBarras(null);
 	}
 
-	public void cargarInfoScanner() {
+	public void cargarInfoScanner() throws Exception {
 		String codigo = this.movimientos.getCodigoBarras();
-		if (codigo != null && !codigo.isEmpty()) {
-			this.infoProductoExtra = "Cargado: " + codigo + " - Producto encontrado";
-			Productos productos = iProductoService.getByCodigoBarras(codigo);
-			int idProducto = productos.getIdProducto();
-			String nombreProducto = productos.getNombre();
-			
-			movimientos.setIdProducto(idProducto);
-			movimientos.setNombreProducto(nombreProducto);
-		} else {
-			this.infoProductoExtra = "Código no válido";
+		Productos productos = new Productos();
+
+		try {
+			productos = iProductoService.getByCodigoBarras(codigo);
+			if (productos.getCodigoBarras().equals(codigo)) {
+				this.infoProductoExtra = "Cargado: " + codigo + " - Producto encontrado";
+				this.movimientos.setIdProducto(productos.getIdProducto());
+				this.movimientos.setNombreProducto(productos.getNombre());
+				this.infoProductoExtra = "";
+
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Producto encontrado."));
+			} else {
+
+			}
+		} catch (ExceptionMessage e) {
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", "No existe el producto");
+		} catch (Exception e) {
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", "No existe el producto");
 		}
 	}
 

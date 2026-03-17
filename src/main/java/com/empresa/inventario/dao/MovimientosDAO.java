@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,9 +16,8 @@ import com.empresa.inventario.utils.Conexion;
 public class MovimientosDAO {
 
 	private MovimientosMapper mapper = new MovimientosMapper();
-	
-	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(MovimientosDAO.class);
 
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(MovimientosDAO.class);
 
 	public List<Movimientos> getAll() {
 
@@ -48,52 +46,47 @@ public class MovimientosDAO {
 	public void guardar(Movimientos movimientos) {
 		String sql = "INSERT INTO movimientos (id_producto, "
 				+ " tipo_movimiento , cantidad, fecha_hora ,  origen_destino ,  id_usuario ,  observaciones, stock_previo, stock_posterior ) "
-				+ " VALUES " + "(?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		
-		try (Connection conexion = Conexion.getConexion(); PreparedStatement ps = conexion.prepareStatement(sql);) {
+				+ " VALUES " + "(?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?, ?, ?)";
 
+		try (Connection conexion = Conexion.getConexion(); PreparedStatement ps = conexion.prepareStatement(sql);) {
 			ps.setInt(1, movimientos.getIdProducto());
 			ps.setString(2, movimientos.getTipoMovimiento());
 			ps.setInt(3, movimientos.getCantidad());
-			ps.setTimestamp(4, new Timestamp(movimientos.getFechaHora().getTime()));
-			ps.setString(5, movimientos.getOrigenDestino());
-			ps.setInt(6, movimientos.getIdUsuario());
-			ps.setString(7, movimientos.getObservaciones());
-			ps.setInt(8, movimientos.getStockPrevio());
-			ps.setInt(9, movimientos.getStockPosterior());
+			ps.setString(4, movimientos.getOrigenDestino());
+			ps.setInt(5, movimientos.getIdUsuario());
+			ps.setString(6, movimientos.getObservaciones());
+			ps.setInt(7, movimientos.getStockPrevio());
+			ps.setInt(8, movimientos.getStockPosterior());
 			ps.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.debug(e.getMessage());
 		}
-
 	}
-	
+
 	public List<Movimientos> getByUsuario(int idUsuario) {
 
-		String sql = "SELECT m.*, u.nombre AS nombreUsuario, p.nombre AS nombreProducto "
-	               + "FROM MOVIMIENTOS m "
-	               + "LEFT JOIN usuarios u ON m.id_usuario = u.id_usuario "
-	               + "LEFT JOIN productos p ON m.id_producto = p.id_producto "
-	               + "WHERE m.id_usuario = ?"; // Filtro paramétrico
-	    List<Movimientos> lista = new ArrayList<>();
+		String sql = "SELECT m.*, u.nombre AS nombreUsuario, p.nombre AS nombreProducto " + "FROM MOVIMIENTOS m "
+				+ "LEFT JOIN usuarios u ON m.id_usuario = u.id_usuario "
+				+ "LEFT JOIN productos p ON m.id_producto = p.id_producto " + "WHERE m.id_usuario = ?"; // Filtro
+																										// paramétrico
+		List<Movimientos> lista = new ArrayList<>();
 
-	    try (Connection con = Conexion.getConexion();
-	         PreparedStatement ps = con.prepareStatement(sql)) {
-	        
-	        ps.setInt(1, idUsuario);
+		try (Connection con = Conexion.getConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
 
-	        try (ResultSet rs = ps.executeQuery()) {
-	            while (rs.next()) {
+			ps.setInt(1, idUsuario);
 
-	            	lista.add(mapper.mapRowById(rs));
-	            }
-	        }
-	    } catch (SQLException e) {
-	    	e.printStackTrace();
-	    	logger.debug(e.getMessage());
-	    }
-	    return lista;
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+
+					lista.add(mapper.mapRowById(rs));
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			logger.debug(e.getMessage());
+		}
+		return lista;
 	}
 
 }

@@ -30,19 +30,19 @@ public class LoginBean implements Serializable {
 
 	private String userName;
 	private String password;
-	private  Usuario usuario;
+	private transient Usuario usuario;
 
 	private int idUsuario;
 
-	private String nombreUsuario;
+	private transient  String nombreUsuario;
 
-	private String mensajeBienvenida1 = "¡Bienvenido!";
+	private transient String mensajeBienvenida1 = "¡Bienvenido!";
 
-	private String mensajeBienvenida2 = ", has iniciado sesión correctamente.";
+	private transient String mensajeBienvenida2 = ", has iniciado sesión correctamente.";
 
-	private String mensajeBienvenida3 = "Hola ";
+	private transient String mensajeBienvenida3 = "Hola ";
 
-	private String sessionUser = "sessionUsuario";
+	private transient String sessionUser = "sessionUsuario";
 
 	private IAuditoriaService auditoriaService;
 

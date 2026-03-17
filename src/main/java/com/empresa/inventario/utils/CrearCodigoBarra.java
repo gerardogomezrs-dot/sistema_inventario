@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 public class CrearCodigoBarra {
 
 	public static String generarCodigoBarra(String codigoBarras) {
-		return "PRD-" + codigoBarras;
+		return codigoBarras;
 	}
 }

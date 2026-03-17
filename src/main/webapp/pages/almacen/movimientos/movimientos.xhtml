@@ -42,7 +42,7 @@
             text-align: left;
             vertical-align: middle;
         }
-        
+
         /* Estilo para asegurar que todos los campos midan lo mismo */
         .ancho-fijo {
             width: 250px !important;
@@ -115,10 +115,13 @@
                                     placeholder="Escanee con la App..." styleClass="ancho-fijo" autocomplete="off"
                                     onkeydown="return manejarEntradaApp(event);">
                                     <p:ajax event="change" listener="#{movimientosAlmacenBean.cargarInfoScanner()}"
-                                        process="@this" update="panelInfoExtra txtIdProducto txtNombreProducto" oncomplete="limpiarScanner()" />
+                                        process="@this" update="panelInfoExtra txtIdProducto txtNombreProducto"
+                                        oncomplete="limpiarScanner()" />
                                 </p:inputText>
-                                <p:commandButton icon="pi pi-barcode" actionListener="#{movimientosAlmacenBean.toggleScanner()}"
-                                    update="lblProducto grupoProducto panelInfoExtra" process="@this" immediate="true" />
+                                <p:commandButton icon="pi pi-barcode"
+                                    actionListener="#{movimientosAlmacenBean.toggleScanner()}"
+                                    update="lblProducto grupoProducto panelInfoExtra" process="@this"
+                                    immediate="true" />
                             </div>
                         </h:panelGroup>
 
@@ -138,31 +141,29 @@
                             <f:selectItem itemLabel="Ajuste" itemValue="Ajuste" />
                         </p:selectOneMenu>
 
-                        <h:outputLabel value="Id Producto:" />
-                        <p:inputText id="txtIdProducto" value="#{movimientosAlmacenBean.movimientos.idProducto}" styleClass="ancho-fijo" />
-
                         <h:outputLabel value="Nombre Producto:" />
-                        <p:inputText id="txtNombreProducto" value="#{movimientosAlmacenBean.movimientos.nombreProducto}" styleClass="ancho-fijo" />
+                        <p:inputText id="txtNombreProducto" value="#{movimientosAlmacenBean.movimientos.nombreProducto}"
+                            styleClass="ancho-fijo" />
 
                         <h:outputLabel value="Cantidad:" />
                         <p:inputText value="#{movimientosAlmacenBean.movimientos.cantidad}" styleClass="ancho-fijo" />
 
-                        <h:outputLabel value="Fecha:" />
-                        <p:calendar value="#{movimientosAlmacenBean.movimientos.fechaHora}"
-                            pattern="dd/MM/yyyy HH:mm:ss" timeZone="America/Mexico_City" showButtonPanel="true" styleClass="ancho-fijo" />
-
                         <h:outputLabel value="Origen Destino:" />
-                        <p:inputText value="#{movimientosAlmacenBean.movimientos.origenDestino}" styleClass="ancho-fijo" />
+                        <p:inputText value="#{movimientosAlmacenBean.movimientos.origenDestino}"
+                            styleClass="ancho-fijo" />
 
                         <h:outputLabel value="Usuario logueado:" />
-                        <p:inputText value="#{loginBean.usuario.nombre}" readonly="true" styleClass="readonly ancho-fijo" />
+                        <p:inputText value="#{loginBean.usuario.nombre}" readonly="true"
+                            styleClass="readonly ancho-fijo" />
 
                         <h:outputLabel value="Observaciones:" />
-                        <p:inputTextarea rows="3" value="#{movimientosAlmacenBean.movimientos.observaciones}" styleClass="ancho-fijo" />
+                        <p:inputTextarea rows="3" value="#{movimientosAlmacenBean.movimientos.observaciones}"
+                            styleClass="ancho-fijo" />
 
                     </h:panelGrid>
 
                     <h:inputHidden value="#{movimientosAlmacenBean.movimientos.idUsuario}" />
+                      <h:inputHidden id="txtIdProducto" value="#{movimientosAlmacenBean.movimientos.idProducto}" />
 
                     <p:separator />
 
@@ -200,11 +201,7 @@
                     <p:column headerText="Cant.">
                         <h:outputText value="#{mov.cantidad}" />
                     </p:column>
-                    <p:column headerText="Fecha">
-                        <h:outputText value="#{mov.fechaHora}">
-                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
-                        </h:outputText>
-                    </p:column>
+                  
                     <p:column headerText="Origen">
                         <h:outputText value="#{mov.origenDestino}" />
                     </p:column>
@@ -239,4 +236,5 @@
     <ui:include src="/pages/almacen/footer.xhtml" />
 
 </h:body>
+
 </html>

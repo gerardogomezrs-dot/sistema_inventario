@@ -166,17 +166,25 @@ public class MovimientosBean implements Serializable {
 
 	public void cargarInfoScanner() throws Exception {
 		String codigo = this.movimientos.getCodigoBarras();
-		this.infoProductoExtra = "Cargado: " + codigo + " - Producto encontrado";
-		Productos productos = iProductoService.getByCodigoBarras(codigo);
-		if (productos != null) {
-			movimientos.setIdProducto(productos.getIdProducto());
-			movimientos.setNombreProducto(productos.getNombre());
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Producto Encontrado."));
-		}
-		if (productos == null) {
-			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", "Codigo no encontrado");
-			this.infoProductoExtra = "Código no válido";
+		Productos productos = new Productos();
+
+		try {
+			productos = iProductoService.getByCodigoBarras(codigo);
+			// 1. La forma correcta de comparar nulos es con '=='
+			if (productos.getCodigoBarras().equals(codigo)) {
+				this.infoProductoExtra = "Cargado: " + codigo + " - Producto encontrado";
+				this.movimientos.setIdProducto(productos.getIdProducto());
+				this.movimientos.setNombreProducto(productos.getNombre());
+				this.infoProductoExtra = "";
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Producto encontrado."));
+			} else {
+
+			}
+		} catch (ExceptionMessage e) {
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", "No existe el producto");
+		} catch (Exception e) {
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", "No existe el producto");
 		}
 	}
 

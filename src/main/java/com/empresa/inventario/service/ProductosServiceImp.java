@@ -235,13 +235,16 @@ public class ProductosServiceImp implements IProductoService {
 	public Productos getByCodigoBarras(String codigoBarras) {
 		Productos p = new Productos();
 		try {
-			if (codigoBarras != null) {
+			
 				p = productosDAO.getByIdCodigoBarras(codigoBarras);
-				System.out.println("Nombre producto " + p.getNombre());
-			}
+				if(p.getNombre()==null) {
+					throw new ExceptionMessage("Producto no encontrado");
+				} 
+
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.debug(e.getMessage());
+			
+			
 		}
 		return p;
 	}
@@ -280,7 +283,7 @@ public class ProductosServiceImp implements IProductoService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return 	 list;
+		return list;
 	}
 
 }

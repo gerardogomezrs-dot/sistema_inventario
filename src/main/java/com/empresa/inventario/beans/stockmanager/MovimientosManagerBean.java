@@ -36,7 +36,6 @@ public class MovimientosManagerBean implements Serializable {
 
 	private transient UploadedFile uploadedFile;
 
-	private boolean modoManual = false;
 
 	private transient List<Movimientos> list;
 
@@ -118,10 +117,8 @@ public class MovimientosManagerBean implements Serializable {
 
 	public String irATablaMovimientos() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-
 		baseBean.registrarNavegacion(auditoriaService, "Tabla Movimientoa", "entro a tabla Movimientoa", idUsuario,
 				nombreUsuario);
-
 		return "/pages/stock_manager/movimientos/tablaMovimientos.xhtml?faces-redirect=true";
 	}
 
@@ -145,14 +142,26 @@ public class MovimientosManagerBean implements Serializable {
 		this.movimientos.setCodigoBarras(null);
 	}
 
-	public void cargarInfoScanner() {
+	public void cargarInfoScanner() throws Exception {
 		String codigo = this.movimientos.getCodigoBarras();
-		if (codigo != null && !codigo.isEmpty()) {
-			this.infoProductoExtra = "Cargado: " + codigo + " - Producto encontrado";
-			Productos productos = iProductoService.getByCodigoBarras(codigo);
-			movimientos.setIdProducto(productos.getIdProducto());
-		} else {
-			this.infoProductoExtra = "Código no válido";
+		Productos productos = new Productos();
+
+		try {
+			productos = iProductoService.getByCodigoBarras(codigo);
+			if (productos.getCodigoBarras().equals(codigo)) {
+				this.infoProductoExtra = "Cargado: " + codigo + " - Producto encontrado";
+				this.movimientos.setIdProducto(productos.getIdProducto());
+				this.movimientos.setNombreProducto(productos.getNombre());
+				this.infoProductoExtra = "";
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Producto encontrado."));
+			} else {
+
+			}
+		} catch (ExceptionMessage e) {
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", "No existe el producto");
+		} catch (Exception e) {
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", "No existe el producto");
 		}
 	}
 

@@ -154,7 +154,7 @@ public class ProductosDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			logger.debug(e.getMessage());
+			//logger.debug(e.getMessage());
 		}
 		return p;
 	}
