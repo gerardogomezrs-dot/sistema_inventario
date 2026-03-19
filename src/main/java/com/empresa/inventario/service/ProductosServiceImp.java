@@ -19,6 +19,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.primefaces.model.UploadedFile;
 import org.slf4j.LoggerFactory;
 
+import com.empresa.inventario.dao.MovimientosDAO;
 import com.empresa.inventario.dao.ProductosDAO;
 import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Productos;
@@ -30,6 +31,8 @@ import com.opencsv.CSVReader;
 public class ProductosServiceImp implements IProductoService {
 
 	private ProductosDAO productosDAO = new ProductosDAO();
+	
+	private MovimientosDAO dao = new MovimientosDAO();
 
 	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ProductosServiceImp.class);
 
@@ -284,6 +287,20 @@ public class ProductosServiceImp implements IProductoService {
 			e.printStackTrace();
 		}
 		return list;
+	}
+
+	@Override
+	public int totalStockBajo() {
+		int  totalStock = 0;
+		totalStock = productosDAO.getTotalStockBajo();
+		return totalStock;
+	}
+
+	@Override
+	public int totalMovimientos(int idUsuario) {
+		int totalMovimientos = 0;
+		totalMovimientos = dao.totalMovimientos(idUsuario);	
+		return totalMovimientos;
 	}
 
 }

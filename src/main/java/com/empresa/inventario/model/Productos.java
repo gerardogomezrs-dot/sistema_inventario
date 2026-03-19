@@ -19,4 +19,5 @@ public class Productos{
 	private boolean activo;
 	private Categorias categorias;
 	private Proveedor proveedor;
+	private byte[] archivo;
 }

@@ -22,136 +22,100 @@ import lombok.Data;
 @SessionScoped
 @Data
 public class LoginBean implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(LoginBean.class);
 
-	private String userName;
-	private String password;
-	private transient Usuario usuario;
+    private static final long serialVersionUID = 1L;
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(LoginBean.class);
 
-	private int idUsuario;
+    // Llaves y mensajes (sin transient para evitar que se vuelvan null)
+    private static final String SESSION_USER_KEY = "sessionUsuario";
+    private final String mensajeBienvenida1 = "¡Bienvenido!";
+    private final String mensajeBienvenida2 = ", has iniciado sesión correctamente.";
+    private final String mensajeBienvenida3 = "Hola ";
 
-	private transient  String nombreUsuario;
+    private String userName;
+    private String password;
+    private Usuario usuario;
+    private int idUsuario;
+    private String nombreUsuario;
 
-	private transient String mensajeBienvenida1 = "¡Bienvenido!";
+    private IAuditoriaService auditoriaService;
+    private IAuthService authService;
+    private BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
 
-	private transient String mensajeBienvenida2 = ", has iniciado sesión correctamente.";
+    @Inject
+    public LoginBean(IAuthService authService, IAuditoriaService auditoriaService) {
+        this.authService = authService;
+        this.auditoriaService = auditoriaService;
+    }
 
-	private transient String mensajeBienvenida3 = "Hola ";
+    public String login() {
+        try {
+            usuario = authService.login(userName, password);
+            
+            if (usuario == null) {
+                resetearSesion();
+                mensaje(FacesMessage.SEVERITY_ERROR, "Error de Inventario", "Usuario o password inválido");
+                return null;
+            }
 
-	private transient String sessionUser = "sessionUsuario";
+            // 1. Guardar en sesión y preparar mensajes (Código común)
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(SESSION_USER_KEY, usuario);
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+            
+            mensaje(FacesMessage.SEVERITY_INFO, mensajeBienvenida1,
+                    mensajeBienvenida3 + usuario.getNombre() + mensajeBienvenida2);
 
-	private IAuditoriaService auditoriaService;
+            // 2. Determinar ruta según el rol
+            String ruta = determinarRutaPorRol(usuario.getRol());
 
-	private IAuthService authService;
+            // 3. Auditoría y datos de instancia
+            idUsuario = usuario.getIdUsuario();
+            nombreUsuario = usuario.getNombre();
+            auditoriaBean = new BaseAuditoriaBean();
+            auditoriaBean.registrarAuditoria(auditoriaService, "INICIO DE SESION",
+                    Mensajes.USUARIO + nombreUsuario + "INICIO SESION ", Mensajes.INFO.toString(), idUsuario);
 
-	private BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
+            return ruta;
 
-	@Inject
-	public LoginBean(IAuthService authService, IAuditoriaService auditoriaService) {
-		this.authService = authService;
-		this.auditoriaService = auditoriaService;
-	}
+        } catch (ExceptionMessage e) {
+            logger.debug(e.getMessage());
+            mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
+            auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
+                    Mensajes.ERROR.toString(), idUsuario);
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            mensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", "Ocurrió un error en el servidor. ");
+            logger.debug(e.getMessage());
+            auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
+                    Mensajes.ERROR.toString(), idUsuario);
+            return null;
+        }
+    }
 
+    private String determinarRutaPorRol(String rol) {
+        switch (rol) {
+            case "admin":
+                return "/pages/admin/dashboard.xhtml?faces-redirect=true";
+            case "stock_manager":
+                return "/pages/stock_manager/dashboard.xhtml?faces-redirect=true";
+            case "almacen":
+                return "/pages/almacen/dashboard.xhtml?faces-redirect=true";
+            default:
+                return null;
+        }
+    }
 
-	public void redirectIfLoggedIn() {
-	    FacesContext context = FacesContext.getCurrentInstance();
-	    Usuario userSession = (Usuario) context.getExternalContext().getSessionMap().get(sessionUser);
+    private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
+    }
 
-	    if (userSession != null) {
-	        String ruta = "";
-	        String rol = userSession.getRol();
+    private void resetearSesion() {
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+    }
 
-	        if ("admin".equals(rol)) {
-	            ruta = "/pages/admin/dashboard.xhtml";
-	        } else if ("stock_manager".equals(rol)) {
-	            ruta = "/pages/stock_manager/dashboard.xhtml";
-	        } else if ("almacen".equals(rol)) {
-	            ruta = "/pages/almacen/dashboard.xhtml";
-	        }
-
-	        if (!ruta.isEmpty()) {
-	            try {
-	                context.getExternalContext().redirect(context.getExternalContext().getRequestContextPath() + ruta);
-	            } catch (java.io.IOException e) {
-	                logger.error("Error en redirección automática: " + e.getMessage());
-	            }
-	        }
-	    }
-	}
-	
-	public String login() {
-		try {
-			usuario = new Usuario();
-			usuario = authService.login(userName, password);
-			if (usuario == null) {
-				resetearSesion();
-				mensaje(FacesMessage.SEVERITY_ERROR, "Error de Inventario", "Usuario o password inválido");
-				return null;
-			} else {
-				String ruta = "";
-				if (usuario.getRol().equals("admin")) {
-					FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(sessionUser, usuario);
-
-					FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-
-					mensaje(FacesMessage.SEVERITY_INFO, mensajeBienvenida1,
-							mensajeBienvenida3 + usuario.getNombre() + mensajeBienvenida2);
-
-					ruta = "/pages/admin/dashboard.xhtml?faces-redirect=true";
-				}
-				if (usuario.getRol().equals("stock_manager")) {
-					FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(sessionUser, usuario);
-					FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-					mensaje(FacesMessage.SEVERITY_INFO, mensajeBienvenida1,
-							mensajeBienvenida3 + usuario.getNombre() + mensajeBienvenida2);
-					ruta = "/pages/stock_manager/dashboard.xhtml?faces-redirect=true";
-				}
-
-				if (usuario.getRol().equals("almacen")) {
-					FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(sessionUser, usuario);
-					FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-					mensaje(FacesMessage.SEVERITY_INFO, mensajeBienvenida1,
-							mensajeBienvenida3 + usuario.getNombre() + mensajeBienvenida2);
-					ruta = "/pages/almacen/dashboard.xhtml?faces-redirect=true";
-				}
-
-				idUsuario = usuario.getIdUsuario();
-				nombreUsuario = usuario.getNombre();
-				auditoriaBean = new BaseAuditoriaBean();
-				auditoriaBean.registrarAuditoria(auditoriaService, "INICIO DE SESION",
-						Mensajes.USUARIO + nombreUsuario + "INICIO SESION ", Mensajes.INFO.toString(), idUsuario);
-				return ruta;
-			}
-		} catch (ExceptionMessage e) {
-			logger.debug(e.getMessage());
-			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
-			auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
-					Mensajes.ERROR.toString(), idUsuario);
-			return null;
-		} catch (Exception e) {
-			mensaje(FacesMessage.SEVERITY_FATAL, "Error inesperado", "Ocurrió un error en el servidor. ");
-			logger.debug(e.getMessage());
-			auditoriaBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
-					Mensajes.ERROR.toString(), idUsuario);
-			return null;
-		}
-	}
-
-	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
-	}
-
-	private void resetearSesion() {
-		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-	}
-
-	public String logout() {
-		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-		return "/login.xhtml?faces-redirect=true";
-	}
-
+    public String logout() {
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        return "/login.xhtml?faces-redirect=true";
+    }
 }

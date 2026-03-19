@@ -67,6 +67,11 @@
             <p:column headerText="Ubicación">
                 <h:outputText value="#{prod.ubicacion}" />
             </p:column>
+
+            <p:column headerText="Imagen">
+    <img src="#{productoBean.convertirABase64(prod.archivo)}" 
+         style="width:80px; height:auto;" />
+</p:column>
             <p:column headerText="Acciones">
                 <!-- EDITAR -->
                 <p:commandButton icon="pi pi-pencil" process="@this" update=":formEditar"

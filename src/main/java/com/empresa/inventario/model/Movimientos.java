@@ -16,6 +16,8 @@ public class Movimientos {
 	
 	private String nombreProducto;
 	
+	private int productoExistencias;
+	
 	private String tipoMovimiento;
 	
 	private int cantidad;
@@ -37,4 +39,6 @@ public class Movimientos {
 	private Productos productos;
 	
 	private String codigoBarras;
+	
+	private byte[] imagenProducto;
 }

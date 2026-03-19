@@ -89,4 +89,24 @@ public class MovimientosDAO {
 		return lista;
 	}
 
+	public int totalMovimientos(int idUsuario) {
+
+		String sql = "select COUNT(*) as total from movimientos where id_usuario  = ?";
+
+		int numero = 0;
+		try (Connection con = Conexion.getConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setInt(1, idUsuario);
+
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					numero = rs.getInt("total");
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			logger.debug(e.getMessage());
+		}
+		return numero;
+	}
 }

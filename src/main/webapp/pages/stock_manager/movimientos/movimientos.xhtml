@@ -94,7 +94,6 @@
 <h:body>
 
     <h:form id="formMovimiento" enctype="multipart/form-data">
-
         <ui:include src="/pages/stock_manager/menu.xhtml" />
 
         <p:growl id="messages" showDetail="true" />
@@ -145,6 +144,8 @@
                         <h:outputLabel value="Nombre Producto:" />
                         <p:inputText id="txtNombreProducto" value="#{movimientosManagerBean.movimientos.nombreProducto}"
                             styleClass="ancho-fijo" />
+                        <h:outputLabel value="Imagen Producto:" />
+                        <img src="#{movimientosManagerBean.convertirABase64(movimientos.imagenProducto)}" style="width:80px; height:auto;" />
 
                         <h:outputLabel value="Cantidad:" />
                         <p:inputText value="#{movimientosManagerBean.movimientos.cantidad}" styleClass="ancho-fijo" />
@@ -165,9 +166,8 @@
 
                     <h:inputHidden value="#{movimientosManagerBean.movimientos.idUsuario}" />
 
-                    
-                        <h:inputHidden id="txtIdProducto" value="#{movimientosManagerBean.movimientos.idProducto}"
-                             />
+
+                    <h:inputHidden id="txtIdProducto" value="#{movimientosManagerBean.movimientos.idProducto}" />
 
                     <p:separator />
 
@@ -205,7 +205,7 @@
                     <p:column headerText="Cant.">
                         <h:outputText value="#{mov.cantidad}" />
                     </p:column>
-                  
+
                     <p:column headerText="Origen">
                         <h:outputText value="#{mov.origenDestino}" />
                     </p:column>

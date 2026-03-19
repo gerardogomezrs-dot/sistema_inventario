@@ -2,6 +2,7 @@ package com.empresa.inventario.beans.admin;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -10,6 +11,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +47,8 @@ public class ProductoBean implements Serializable {
 	private transient List<Productos> list;
 
 	private transient UploadedFile uploadedFile;
+	
+	private transient UploadedFile uploadedImagen;
 
 	private transient Productos producto;
 
@@ -82,10 +86,22 @@ public class ProductoBean implements Serializable {
 		nombreUsuario = user.getNombre();
 		producto = new Productos();
 	}
+	
+	public void handleFileUpload(FileUploadEvent event) {
+	    byte[] contenido = event.getFile().getContents();
+	    producto.setArchivo(contenido);
+	}
 
 	public void guardarTabla() {
 		BaseAuditoriaBean baseBeanGuardarTabla = new BaseAuditoriaBean();
 		try {
+			if (uploadedImagen == null || uploadedImagen.getContents() == null) {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
+			}
+			  byte[] contenido = uploadedImagen.getContents();
+			    producto.setArchivo(contenido);
+			System.err.println("archivo recibido " + uploadedImagen.getFileName());
 			listaProductosGuardar.add(producto);
 			this.producto = new Productos();
 
@@ -93,6 +109,7 @@ public class ProductoBean implements Serializable {
 					Mensajes.USUARIO + nombreUsuario + " registro un elemento a la tabla", Mensajes.INFO.toString(),
 					idUsuario);
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.debug(e.getMessage());
 			baseBeanGuardarTabla.registrarAuditoria(auditoriaService, Mensajes.ERROR,
 					Mensajes.ERROR + ": " + e.getMessage(), Mensajes.ERROR.toString(), idUsuario);
@@ -184,6 +201,8 @@ public class ProductoBean implements Serializable {
 
 		}
 	}
+	
+	
 
 	public void cargaArchivos() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
@@ -210,7 +229,6 @@ public class ProductoBean implements Serializable {
 		catch (Exception e) {
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 			logger.debug(e.getMessage());
-
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
@@ -243,4 +261,27 @@ public class ProductoBean implements Serializable {
 	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
+	
+	public String convertirABase64(byte[] bytes) {
+//	    if (bytes == null || bytes.length == 0) return "";
+//
+//	    String base64 = Base64.getEncoder().encodeToString(bytes);
+//	    String mimeType = "image/jpeg"; // Por defecto
+//
+//	    // Detección básica por los primeros bytes (Magic Bytes)
+//	    if (bytes.length > 3 && bytes[0] == (byte) 0x89 && bytes[1] == (byte) 0x50) {
+//	        mimeType = "image/png";
+//	    } else if (bytes.length > 2 && bytes[0] == (byte) 0x47 && bytes[1] == (byte) 0x49) {
+//	        mimeType = "image/gif";
+//	    }
+//
+//	    return "data:" + mimeType + ";base64," + base64;
+	    if (bytes != null && bytes.length > 0) {
+	        System.out.println("Tamaño del archivo: " + bytes.length); // Mira tu consola
+	        return "data:image/png;base64," + Base64.getEncoder().encodeToString(bytes);
+	    }
+	    System.out.println("El archivo viene NULL o VACÍO");
+	    return "";
+	}
 }
+

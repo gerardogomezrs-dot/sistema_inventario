@@ -86,6 +86,7 @@ public class ReportesDAO {
 				lista.add(p);
 			}
 		} catch (SQLException e) {
+			e.printStackTrace();
 			logger.debug(e.getMessage());
 		}
 		return lista;

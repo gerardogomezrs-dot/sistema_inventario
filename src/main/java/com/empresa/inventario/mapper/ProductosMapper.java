@@ -31,6 +31,7 @@ public class ProductosMapper {
 		proveedor.setIdProveedor(rs.getInt("idProveedor"));
 		proveedor.setNombreEmpresa(rs.getString("nombreProveedor"));
 		productos.setProveedor(proveedor);
+		productos.setArchivo(rs.getBytes("imagenProducto"));
 		return productos;
 	}
 
@@ -47,6 +48,7 @@ public class ProductosMapper {
 		p.setStockMinimo(rs.getInt("stockMinimo"));
 		p.setUbicacion(rs.getString("ubicacion"));
 		p.setActivo(rs.getBoolean("activo"));
+		p.setArchivo(rs.getBytes("imagenProducto"));
 		return p;
 	}
 	

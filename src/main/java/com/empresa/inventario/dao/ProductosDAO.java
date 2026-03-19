@@ -46,8 +46,8 @@ public class ProductosDAO {
 	public void guardar(Productos productos) {
 		String sql = "INSERT INTO productos "
 				+ "(codigo_barras, nombre, descripcion, id_categoria, unidad, precio_unitario, "
-				+ "stock_actual, stock_minimo, ubicacion, activo, id_proveedor) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				+ "stock_actual, stock_minimo, ubicacion, activo, id_proveedor, imagenProducto) "
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		try (Connection conexion = Conexion.getConexion(); PreparedStatement ps = conexion.prepareStatement(sql)) {
 
@@ -62,6 +62,7 @@ public class ProductosDAO {
 			ps.setString(9, productos.getUbicacion());
 			ps.setBoolean(10, productos.isActivo());
 			ps.setInt(11, productos.getIdProveedor());
+			ps.setBytes(12, productos.getArchivo());
 			ps.executeUpdate();
 
 		} catch (Exception e) {
@@ -144,7 +145,7 @@ public class ProductosDAO {
 	}
 
 	public Productos getByIdCodigoBarras(String codigoBarras) {
-		String sql = "SELECT id_producto, nombre as nombreProducto, codigo_barras, descripcion, id_categoria, unidad, precio_unitario, stock_actual as stockActual, stock_minimo as stockMinimo, ubicacion, activo FROM productos  where codigo_barras = ?";
+		String sql = "SELECT id_producto, nombre as nombreProducto, codigo_barras, descripcion, id_categoria, unidad, precio_unitario, stock_actual as stockActual, stock_minimo as stockMinimo, ubicacion, activo, imagenProducto FROM productos  where codigo_barras = ?";
 		Productos p = new Productos();
 		try (Connection con = Conexion.getConexion(); PreparedStatement ps = con.prepareStatement(sql);) {
 			ps.setString(1, codigoBarras);
@@ -224,5 +225,19 @@ public class ProductosDAO {
 			logger.debug(e.getMessage());
 		}
 		return lista;
+	}
+	
+	public int getTotalStockBajo() {
+		String sql = "select COUNT(*) as total from productos where stock_actual <= stock_minimo ";
+		int numero = 0;
+		try (Connection con = Conexion.getConexion(); PreparedStatement ps = con.prepareStatement(sql);) {
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+numero = rs.getInt("total");			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			logger.debug(e.getMessage());
+		}
+		return numero;
 	}
 }

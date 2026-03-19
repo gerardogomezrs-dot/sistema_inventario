@@ -23,218 +23,300 @@
         }
 
         .form-side {
-            flex: 0 0 600px;
+            flex: 0 0 520px;
         }
 
+        /* Ajuste ligero para la imagen más grande */
         .table-side {
             flex: 1;
         }
 
-        .label {
-            width: 160px;
-            text-align: right;
+        /* Estilos Prácticos para Almacén */
+        .field-container {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 12px;
+        }
+
+        .label-style {
             font-weight: bold;
-            padding-right: 15px;
-            vertical-align: middle;
+            margin-bottom: 4px;
+            color: #444;
+            font-size: 0.95rem;
         }
 
-        .value {
-            text-align: left;
-            vertical-align: middle;
+        .label-highlight {
+            color: #2196F3;
+            font-size: 1.1rem;
         }
 
-        /* Estilo para asegurar que todos los campos midan lo mismo */
-        .ancho-fijo {
-            width: 250px !important;
+        .input-full {
+            width: 100% !important;
+            box-sizing: border-box;
+        }
+
+        .input-readonly {
+            background-color: #f8f9fa !important;
+            border-left: 4px solid #dee2e6 !important;
+            font-weight: bold;
+        }
+
+        /* Estilos de Imagen Ampliada */
+        .image-display-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-placeholder {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #ccc;
+            background-color: #fafafa;
+            border: 2px dashed #ddd;
+            border-radius: 4px;
+        }
+
+        /* Foco visible */
+        .ui-inputfield.ui-state-focus {
+            background-color: #fffde7 !important;
+            border-color: #fbc02d !important;
+            box-shadow: 0 0 8px rgba(251, 192, 45, 0.4) !important;
         }
     </style>
 
     <script type="text/javascript">
         //<![CDATA[
-
         function forceFocus() {
             var inputScanner = document.getElementById('formMovimiento:scannerInput');
-            var activeEl = document.activeElement.tagName.toLowerCase();
-            if (inputScanner && activeEl !== 'input' && activeEl !== 'textarea' && activeEl !== 'select') {
+            if (inputScanner) {
                 inputScanner.focus();
+                inputScanner.select();
             }
         }
 
         function manejarEntradaApp(event) {
-            if (event.key === "Enter") {
+            if (event.keyCode === 13) {
                 event.preventDefault();
                 var input = document.getElementById("formMovimiento:scannerInput");
                 if (input && input.value.trim() !== "") {
-                    input.dispatchEvent(new Event('change'));
+                    PF('wvScanner').$(PF('wvScanner').jqId).change();
                 }
                 return false;
             }
             return true;
         }
 
-        function limpiarScanner() {
-            var input = document.getElementById("formMovimiento:scannerInput");
-            if (input) {
-                input.value = "";
-                input.focus();
-            }
+        function despuesDeEscanear() {
+            PF('wvCantidad').focus();
+            setTimeout(function () {
+                var jqCant = PF('wvCantidad').getJQ();
+                jqCant.select();
+            }, 100);
         }
 
         $(document).ready(function () {
             forceFocus();
         });
-
         //]]>
     </script>
 
     <title>Registrar Movimiento</title>
-
 </h:head>
 
 <h:body>
-
     <h:form id="formMovimiento" enctype="multipart/form-data">
-
         <ui:include src="/pages/almacen/menu.xhtml" />
-
         <p:growl id="messages" showDetail="true" />
+
+        <p:focus context="formMovimiento" for="scannerInput" />
 
         <div class="main-container">
 
             <div class="form-side">
+                <p:panel header="Registro de Movimientos">
 
-                <p:panel header="Registro de Movimientos" style="width: 600px; margin: 0 auto;">
+                    <div class="field-container">
+                        <p:outputLabel for="scannerInput" value="Scanner (Código): *"
+                            styleClass="label-style label-highlight" />
+                        <div style="display: flex; gap: 5px; align-items: center;">
+                            <p:inputText id="scannerInput" widgetVar="wvScanner" autocomplete="off"
+                                value="#{movimientosAlmacenBean.movimientos.codigoBarras}" placeholder="Escanee aquí..."
+                                styleClass="input-full" onkeydown="return manejarEntradaApp(event);">
+                                <p:ajax event="change" listener="#{movimientosAlmacenBean.cargarInfoScanner()}"
+                                    process="@this"
+                                    update="panelInfoExtra txtIdProducto txtNombreProducto txtProductoExistente contenedorImagen messages"
+                                    oncomplete="despuesDeEscanear();" />
+                            </p:inputText>
+                            <p:commandButton icon="pi pi-barcode" immediate="true" process="@this"
+                                actionListener="#{movimientosAlmacenBean.toggleScanner()}" update="formMovimiento"
+                                oncomplete="forceFocus();" />
+                        </div>
+                    </div>
 
-                    <h:panelGrid columns="2" cellpadding="5" columnClasses="label,value" style="width: 100%;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="field-container">
+                            <p:outputLabel value="ID Producto:" styleClass="label-style" />
+                            <p:inputText id="txtIdProducto" value="#{movimientosAlmacenBean.movimientos.idProducto}"
+                                readonly="true" styleClass="input-full input-readonly" />
+                        </div>
+                        <div class="field-container">
+                            <p:outputLabel value="Existencia Actual:" styleClass="label-style" />
+                            <p:inputText id="txtProductoExistente"
+                                value="#{movimientosAlmacenBean.movimientos.productoExistencias}" readonly="true"
+                                styleClass="input-full"
+                                style="background: #e8f5e9; font-weight: bold; color: #2e7d32;" />
+                        </div>
+                    </div>
 
-                        <h:outputLabel id="lblProducto" value="Scanner (Código): *" />
-                        <h:panelGroup id="grupoProducto">
-                            <div style="display: flex; gap: 5px; align-items: center;">
-                                <p:inputText id="scannerInput"
-                                    value="#{movimientosAlmacenBean.movimientos.codigoBarras}"
-                                    placeholder="Escanee con la App..." styleClass="ancho-fijo" autocomplete="off"
-                                    onkeydown="return manejarEntradaApp(event);">
-                                    <p:ajax event="change" listener="#{movimientosAlmacenBean.cargarInfoScanner()}"
-                                        process="@this" update="panelInfoExtra txtIdProducto txtNombreProducto"
-                                        oncomplete="limpiarScanner()" />
-                                </p:inputText>
-                                <p:commandButton icon="pi pi-barcode"
-                                    actionListener="#{movimientosAlmacenBean.toggleScanner()}"
-                                    update="lblProducto grupoProducto panelInfoExtra" process="@this"
-                                    immediate="true" />
-                            </div>
+                    <div class="field-container">
+                        <p:outputLabel value="Nombre Producto:" styleClass="label-style" />
+                        <p:inputText id="txtNombreProducto" value="#{movimientosAlmacenBean.movimientos.nombreProducto}"
+                            styleClass="input-full input-readonly" readonly="true" />
+                    </div>
+
+                    <div class="field-container">
+                        <p:outputLabel value="Visualización del Producto:" styleClass="label-style"
+                            style="color: #666;" />
+                        <h:panelGroup id="contenedorImagen" layout="block" styleClass="image-display-container">
+                            <h:panelGroup rendered="#{not empty movimientosAlmacenBean.movimientos.imagenProducto}">
+                                <img src="#{movimientosAlmacenBean.convertirABase64(movimientosAlmacenBean.movimientos.imagenProducto)}"
+                                    style="width:540px; height: 540px; object-fit: contain; border-radius: 4px;" />
+                            </h:panelGroup>
+                            <h:panelGroup rendered="#{empty movimientosAlmacenBean.movimientos.imagenProducto}">
+                                <div class="image-placeholder" style="width:540px; height:540px;">
+                                    <i class="pi pi-image" style="font-size: 5rem; margin-bottom: 10px;"></i>
+                                    <span style="font-size: 0.9rem;">Sin Imagen</span>
+                                </div>
+                            </h:panelGroup>
                         </h:panelGroup>
+                    </div>
 
-                        <p:outputLabel value="Información:" />
+                    <p:spacer height="10" />
+                    <p:separator />
+                    <p:spacer height="10" />
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="field-container">
+                            <p:outputLabel for="movimiento" value="Tipo de Movimiento: *" styleClass="label-style" />
+                            <p:selectOneMenu id="movimiento"
+                                value="#{movimientosAlmacenBean.movimientos.tipoMovimiento}" filter="true"
+                                filterMatchMode="contains" styleClass="input-full">
+                                <f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+                                <f:selectItem itemLabel="Entrada" itemValue="Entrada" />
+                                <f:selectItem itemLabel="Salida" itemValue="Salida" />
+                                <f:selectItem itemLabel="Ajuste" itemValue="Ajuste" />
+                            </p:selectOneMenu>
+                        </div>
+
+                        <div class="field-container">
+                            <p:outputLabel value="Cantidad: *" styleClass="label-style label-highlight" />
+                            <p:inputText id="txtCantidad" widgetVar="wvCantidad"
+                                value="#{movimientosAlmacenBean.movimientos.cantidad}" styleClass="input-full"
+                                style="font-size: 1.6rem; font-weight: bold; text-align: center; color: #2e7d32; border-color: #2e7d32;"
+                                onkeypress="if(event.keyCode==13){document.getElementById('formMovimiento:btnGuardar').click(); return false;}">
+                                <p:keyFilter mask="num" />
+                            </p:inputText>
+                        </div>
+                    </div>
+
+                    <div class="field-container">
+                        <p:outputLabel value="Información Extra:" styleClass="label-style" />
                         <h:panelGroup id="panelInfoExtra">
                             <p:inputText value="#{movimientosAlmacenBean.infoProductoExtra}" readonly="true"
-                                styleClass="ancho-fijo" style="background:#f0f4f7; font-weight:bold; color:#0a58ca;"
-                                placeholder="Esperando lectura..." />
+                                styleClass="input-full" style="background:#f0f4f7; font-weight:bold; color:#0a58ca;" />
                         </h:panelGroup>
+                    </div>
 
-                        <p:outputLabel for="movimiento" value="Tipo de Movimiento: *" />
-                        <p:selectOneMenu id="movimiento" value="#{movimientosAlmacenBean.movimientos.tipoMovimiento}"
-                            filter="true" filterMatchMode="contains" styleClass="ancho-fijo">
-                            <f:selectItem itemLabel="Seleccione una opción" itemValue="" noSelectionOption="true" />
-                            <f:selectItem itemLabel="Entrada" itemValue="Entrada" />
-                            <f:selectItem itemLabel="Salida" itemValue="Salida" />
-                            <f:selectItem itemLabel="Ajuste" itemValue="Ajuste" />
-                        </p:selectOneMenu>
-
-                        <h:outputLabel value="Nombre Producto:" />
-                        <p:inputText id="txtNombreProducto" value="#{movimientosAlmacenBean.movimientos.nombreProducto}"
-                            styleClass="ancho-fijo" />
-
-                        <h:outputLabel value="Cantidad:" />
-                        <p:inputText value="#{movimientosAlmacenBean.movimientos.cantidad}" styleClass="ancho-fijo" />
-
-                        <h:outputLabel value="Origen Destino:" />
+                    <div class="field-container">
+                        <p:outputLabel value="Origen / Destino:" styleClass="label-style" />
                         <p:inputText value="#{movimientosAlmacenBean.movimientos.origenDestino}"
-                            styleClass="ancho-fijo" />
+                            styleClass="input-full" />
+                    </div>
 
-                        <h:outputLabel value="Usuario logueado:" />
-                        <p:inputText value="#{loginBean.usuario.nombre}" readonly="true"
-                            styleClass="readonly ancho-fijo" />
-
-                        <h:outputLabel value="Observaciones:" />
-                        <p:inputTextarea rows="3" value="#{movimientosAlmacenBean.movimientos.observaciones}"
-                            styleClass="ancho-fijo" />
-
-                    </h:panelGrid>
-
-                    <h:inputHidden value="#{movimientosAlmacenBean.movimientos.idUsuario}" />
-                      <h:inputHidden id="txtIdProducto" value="#{movimientosAlmacenBean.movimientos.idProducto}" />
+                    <div class="field-container">
+                        <p:outputLabel value="Observaciones:" styleClass="label-style" />
+                        <p:inputTextarea rows="2" value="#{movimientosAlmacenBean.movimientos.observaciones}"
+                            styleClass="input-full" />
+                    </div>
 
                     <p:separator />
 
-                    <p:commandButton value="Guardar" icon="pi pi-save" action="#{movimientosAlmacenBean.save}"
-                        process="@form" update="formMovimiento"
-                        oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 15px; margin-top: 15px;">
+                        <p:commandButton id="btnGuardar" value="Registrar Movimiento" icon="pi pi-save"
+                            action="#{movimientosAlmacenBean.save}" process="@form" update="formMovimiento" ajax="false"
+                            styleClass="ui-button-success" style="height: 45px; font-size: 1.1rem;"
+                            oncomplete="if (!args.validationFailed) { PF('dlgConfirmacion').show(); } else { forceFocus(); }" />
 
-                    <p:commandButton value="Regresar" icon="pi pi-chevron-left"
-                        action="#{movimientosAlmacenBean.irATablaMovimientos}" immediate="true"
-                        style="margin-left: 10px;" />
-
-                    <div class="upload-section" style="margin-top: 20px;">
-                        <h:outputLabel value="Cargar desde archivo (CSV, Excel):"
-                            style="display:block; margin-bottom:5px; font-weight:bold;" />
-                        <p:fileUpload value="#{movimientosAlmacenBean.uploadedFile}" mode="simple" skinSimple="true"
-                            label="Seleccionar Archivo" chooseIcon="pi pi-upload" />
-                        <p:commandButton value="Procesar Archivo" action="#{movimientosAlmacenBean.cargarArchivo}"
-                            ajax="false" styleClass="ui-button-help" style="margin-top: 5px;"
-                            icon="pi pi-file-import" />
+                        <p:commandButton value="Regresar" icon="pi pi-chevron-left"
+                            action="#{movimientosAlmacenBean.irATablaMovimientos}" immediate="true"
+                            styleClass="ui-button-secondary" />
                     </div>
 
+                    <p:fieldset legend="Carga Masiva" togglable="true" collapsed="true" style="margin-top: 20px;">
+                        <p:fileUpload value="#{movimientosAlmacenBean.uploadedFile}" mode="simple" skinSimple="true"
+                            label="Elegir Archivo" />
+                        <p:commandButton value="Procesar CSV/Excel" action="#{movimientosAlmacenBean.cargarArchivo}"
+                            ajax="false" icon="pi pi-file-import" styleClass="ui-button-help"
+                            style="margin-top: 5px; width: 100%;" />
+                    </p:fieldset>
                 </p:panel>
-
             </div>
 
             <div class="table-side">
                 <p:dataTable id="tablaRegistros" value="#{movimientosAlmacenBean.listaMovimientosGuardar}" var="mov"
-                    rows="10" paginator="true" paginatorPosition="bottom" emptyMessage="No hay movimientos registrados">
-                    <p:column headerText="Id Producto">
+                    rows="14" paginator="true" paginatorPosition="bottom" emptyMessage="No hay movimientos registrados">
+                    <p:column headerText="Código" style="width: 110px;">
+                        <h:outputText value="#{mov.codigoBarras}" />
+                    </p:column>
+                    <p:column headerText="Producto" style="width: 70px;">
                         <h:outputText value="#{mov.idProducto}" />
                     </p:column>
-                    <p:column headerText="Tipo">
+                    <p:column headerText="Nombre">
+                        <h:outputText value="#{mov.nombreProducto}" style="font-size: 0.9rem;" />
+                    </p:column>
+                    <p:column headerText="Tipo" style="width: 70px;">
                         <h:outputText value="#{mov.tipoMovimiento}" />
                     </p:column>
-                    <p:column headerText="Cant.">
-                        <h:outputText value="#{mov.cantidad}" />
-                    </p:column>
-                  
-                    <p:column headerText="Origen">
-                        <h:outputText value="#{mov.origenDestino}" />
-                    </p:column>
-                    <p:column headerText="Responsable">
-                        <h:outputText value="#{loginBean.usuario.nombre}" />
+                    <p:column headerText="Cant." style="width: 60px; text-align: center;">
+                        <h:outputText value="#{mov.cantidad}"
+                            style="font-weight: bold; color: #2e7d32; font-size: 1.1rem;" />
                     </p:column>
                 </p:dataTable>
 
                 <p:separator />
-
-                <p:commandButton value="Guardar Tabla" icon="pi pi-save" action="#{movimientosAlmacenBean.saveTable}"
-                    process="@form" update="tablaRegistros"
+                <p:commandButton value="Confirmar y Guardar Todos los Movimientos" icon="pi pi-check-circle"
+                    action="#{movimientosAlmacenBean.saveTable}" process="@form" update="tablaRegistros messages"
+                    style="width: 100%; height: 50px; font-size: 1.2rem;" styleClass="ui-button-warning" ajax="false"
                     oncomplete="if (!args.validationFailed) PF('dlgConfirmacionGuardar').show();" />
             </div>
-
         </div>
 
-        <p:dialog header="Mensaje" widgetVar="dlgConfirmacion" modal="true" closable="false">
-            <h:outputText value="Datos guardados correctamente." />
+        <p:dialog header="Éxito" widgetVar="dlgConfirmacion" modal="true" closable="false" responsive="true">
+            <h:outputText value="El movimiento se ha añadido a la tabla local." />
             <br /><br />
-            <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacion').hide();" />
+            <p:commandButton value="Escanear Siguiente" type="button"
+                onclick="PF('dlgConfirmacion').hide(); forceFocus();" styleClass="ui-button-info"
+                style="width: 100%;" />
         </p:dialog>
 
-        <p:dialog header="Mensaje" widgetVar="dlgConfirmacionGuardar" modal="true" closable="false">
-            <h:outputText value="Datos guardados correctamente." />
+        <p:dialog header="Finalizado" widgetVar="dlgConfirmacionGuardar" modal="true" closable="false">
+            <h:outputText value="Todos los datos de la tabla han sido guardados en la base de datos." />
             <br /><br />
-            <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacionGuardar').hide();" />
+            <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacionGuardar').hide(); forceFocus();"
+                style="width: 100%;" />
         </p:dialog>
 
     </h:form>
-
-    <ui:include src="/pages/almacen/footer.xhtml" />
-
 </h:body>
 
 </html>

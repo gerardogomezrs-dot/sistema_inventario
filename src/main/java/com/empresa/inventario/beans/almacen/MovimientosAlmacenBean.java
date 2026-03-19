@@ -2,6 +2,7 @@ package com.empresa.inventario.beans.almacen;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -34,7 +35,7 @@ public class MovimientosAlmacenBean implements Serializable {
 	* 
 	*/
 	private static final long serialVersionUID = 1L;
-	
+
 	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(MovimientosAlmacenBean.class);
 
 	private transient UploadedFile uploadedFile;
@@ -76,7 +77,7 @@ public class MovimientosAlmacenBean implements Serializable {
 		this.service = service;
 		this.iProductoService = iProductoService;
 		this.iUsuariosService = iUsuariosService;
-		
+
 	}
 
 	@PostConstruct
@@ -128,8 +129,10 @@ public class MovimientosAlmacenBean implements Serializable {
 				this.infoProductoExtra = "Cargado: " + codigo + " - Producto encontrado";
 				this.movimientos.setIdProducto(productos.getIdProducto());
 				this.movimientos.setNombreProducto(productos.getNombre());
+				this.movimientos.setProductoExistencias(productos.getStockActual());
+				this.movimientos.setImagenProducto(productos.getArchivo());
+				System.err.println("Tmaño de la imagen " + productos.getArchivo());
 				this.infoProductoExtra = "";
-
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Producto encontrado."));
 			} else {
@@ -166,6 +169,7 @@ public class MovimientosAlmacenBean implements Serializable {
 	}
 
 	public void saveTable() {
+		System.err.println("Guardando");
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 		try {
 			service.save(listaMovimientosGuardar);
@@ -234,4 +238,10 @@ public class MovimientosAlmacenBean implements Serializable {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
 
+	public String convertirABase64(byte[] bytes) {
+		if (bytes != null && bytes.length > 0) {
+			return "data:image/png;base64," + Base64.getEncoder().encodeToString(bytes);
+		}
+		return "";
+	}
 }

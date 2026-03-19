@@ -10,17 +10,19 @@ import javax.inject.Named;
 import com.empresa.inventario.beans.BaseAuditoriaBean;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
+import com.empresa.inventario.service.IProductoService;
 import com.empresa.inventario.utils.Mensajes;
+
+import lombok.Data;
 
 @Named("navegacionAlmacenBean")
 @javax.faces.view.ViewScoped
+@Data
 public class NavegacionAlmacenBean implements Serializable {
 	/**
 	* 
 	*/
 	private static final long serialVersionUID = 1L;
-	
-
 
 	private int idUsuario;
 
@@ -28,9 +30,15 @@ public class NavegacionAlmacenBean implements Serializable {
 
 	private transient IAuditoriaService auditoriaService;
 
+	private int stockBajoCount;
+	private int movimientosHoyCount;
+
+	private IProductoService iProductoService;
+
 	@Inject
-	public NavegacionAlmacenBean(IAuditoriaService auditoriaService) {
+	public NavegacionAlmacenBean(IAuditoriaService auditoriaService, IProductoService iProductoService) {
 		this.auditoriaService = auditoriaService;
+		this.iProductoService = iProductoService;
 	}
 
 	@PostConstruct
@@ -39,11 +47,19 @@ public class NavegacionAlmacenBean implements Serializable {
 				.get("sessionUsuario");
 		idUsuario = user.getIdUsuario();
 		nombreUsuario = user.getNombre();
+		actualizarDashboard();
+		movimientosHoyCount = iProductoService.totalMovimientos(idUsuario);
+		stockBajoCount = iProductoService.totalStockBajo();
+	}
+
+	public void actualizarDashboard() {
+
 	}
 
 	public String irAPerfilUsuario() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-		baseBean.registrarNavegacion(auditoriaService, Mensajes.PERFIL_USUARIO, "entro a consultar su perfil", idUsuario, nombreUsuario);
+		baseBean.registrarNavegacion(auditoriaService, Mensajes.PERFIL_USUARIO, "entro a consultar su perfil",
+				idUsuario, nombreUsuario);
 		return "/pages/almacen/usuarios/perfilUsuario.xhtml?faces-redirect=true";
 	}
 
@@ -53,7 +69,7 @@ public class NavegacionAlmacenBean implements Serializable {
 				idUsuario, nombreUsuario);
 		return "/pages/almacen/productos/tablaProductos.xhtml?faces-redirect=true";
 	}
-	
+
 	public String irAGestionProveedores() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 		baseBean.registrarNavegacion(auditoriaService, Mensajes.MODULO_PRODUCTOS, "entro al modulo de proveedores",
@@ -63,10 +79,11 @@ public class NavegacionAlmacenBean implements Serializable {
 
 	public String irAGestionMovimientos() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-		baseBean.registrarNavegacion(auditoriaService, Mensajes.MODULO_MOVIMIENTOS, "entro al modulo de movimientos", idUsuario, nombreUsuario);
+		baseBean.registrarNavegacion(auditoriaService, Mensajes.MODULO_MOVIMIENTOS, "entro al modulo de movimientos",
+				idUsuario, nombreUsuario);
 		return "/pages/almacen/movimientos/tablaMovimientos.xhtml?faces-redirect=true";
 	}
-	
+
 	public String irAGestionCategorias() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 		baseBean.registrarNavegacion(auditoriaService, Mensajes.MODULO_PRODUCTOS, "entro al modulo de categorias",
@@ -80,7 +97,7 @@ public class NavegacionAlmacenBean implements Serializable {
 				nombreUsuario);
 		return "/pages/almacen/dashboard.xhtml?faces-redirect=true";
 	}
-	
+
 	public String irAGestionReportes() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 		baseBean.registrarNavegacion(auditoriaService, Mensajes.NAVEGACION, "navego a dashboard", idUsuario,

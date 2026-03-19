@@ -26,4 +26,8 @@ public interface IProductoService {
 	
 	List<Productos> sinExistencias();
 	
+	int totalStockBajo();
+	
+	int totalMovimientos(int idUsuario);
+	
 }
