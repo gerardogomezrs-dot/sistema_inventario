@@ -7,7 +7,7 @@
 <h:head>
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
     <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
-        <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
+    <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
 
     <title>Gestión de Productos</title>
 </h:head>
@@ -49,8 +49,8 @@
                 <h:outputText value="#{prod.categorias.nombre}" />
             </p:column>
 
-             <p:column headerText="Proveedor">
-                 <h:outputText value="#{prod.proveedor.nombreEmpresa}" />
+            <p:column headerText="Proveedor">
+                <h:outputText value="#{prod.proveedor.nombreEmpresa}" />
             </p:column>
             <p:column headerText="Unidad">
                 <h:outputText value="#{prod.unidad}" />
@@ -65,13 +65,12 @@
                 <h:outputText value="#{prod.stockMinimo}" />
             </p:column>
             <p:column headerText="Ubicación">
-                <h:outputText value="#{prod.ubicacion}" />
+                <h:outputText value="#{prod.idUbicacion}" />
             </p:column>
 
             <p:column headerText="Imagen">
-    <img src="#{productoBean.convertirABase64(prod.archivo)}" 
-         style="width:80px; height:auto;" />
-</p:column>
+                <img src="#{productoBean.convertirABase64(prod.archivo)}" style="width:80px; height:auto;" />
+            </p:column>
             <p:column headerText="Acciones">
                 <!-- EDITAR -->
                 <p:commandButton icon="pi pi-pencil" process="@this" update=":formEditar"
@@ -99,4 +98,5 @@
     <ui:include src="/pages/admin/productos/actualizarProductos.xhtml" />
     <ui:include src="/pages/admin/footer.xhtml" />
 </h:body>
+
 </html>

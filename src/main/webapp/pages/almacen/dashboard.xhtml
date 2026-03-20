@@ -12,8 +12,8 @@
             --dark-blue: #1e293b;
             --bg-gray: #f8fafc;
             --text-main: #334155;
-            --danger: #ef4444; /* Nuevo: Rojo alerta */
-            --warning: #f59e0b; /* Nuevo: Naranja advertencia */
+            --danger: #ef4444;
+            --warning: #f59e0b;
         }
 
         body {
@@ -23,7 +23,36 @@
             color: var(--text-main);
         }
 
-        /* --- NUEVOS ESTILOS PARA ALERTAS --- */
+        /* --- ESTILOS DEL BUSCADOR --- */
+        .search-container {
+            margin-right: 15px;
+            display: inline-flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        .search-input {
+            border-radius: 20px !important;
+            padding-left: 35px !important;
+            border: 1px solid #e2e8f0 !important;
+            transition: all 0.3s ease !important;
+            width: 220px;
+        }
+
+        .search-input:focus {
+            width: 280px;
+            border-color: var(--primary-color) !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            color: #94a3b8;
+            z-index: 10;
+        }
+
+        /* --- ALERTAS --- */
         .alerts-wrapper {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -64,9 +93,8 @@
             color: #64748b;
             font-weight: 500;
         }
-        /* --- FIN ESTILOS ALERTAS --- */
 
-        /* Estilo para el Menubar */
+        /* --- MENU Y DASHBOARD --- */
         .ui-menubar {
             border-radius: 0 !important;
             padding: 0.5rem 2rem !important;
@@ -81,7 +109,6 @@
             padding: 0 20px;
         }
 
-        /* Panel Personalizado */
         .custom-menu-panel {
             border: none !important;
             box-shadow: 0 10px 25px rgba(0,0,0,0.05) !important;
@@ -99,7 +126,6 @@
             border: none !important;
         }
 
-        /* Grid de Botones */
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -108,7 +134,6 @@
             background: white;
         }
 
-        /* Botones estilo Tarjeta */
         .dashboard-btn {
             background: white !important;
             color: var(--dark-blue) !important;
@@ -126,7 +151,6 @@
             box-shadow: 0 12px 20px rgba(59, 130, 246, 0.15) !important;
         }
 
-        /* Iconos de los botones */
         .dashboard-btn .ui-button-icon-left {
             font-size: 2.5rem !important; 
             position: static !important;
@@ -140,7 +164,6 @@
             font-size: 1.1rem !important;
         }
 
-        /* Logout Button */
         .btn-logout {
             background-color: #ef4444 !important;
             border: none !important;
@@ -151,15 +174,37 @@
 </h:head>
 <h:body>
 
-    <h:form id="formPrincipal">
+    <!-- FORMULARIO 1: BARRA DE NAVEGACIÓN Y BUSCADOR -->
+    <h:form id="formNav">
         <p:menubar>
             <p:menuitem value="Inicio" url="dashboard.xhtml" icon="pi pi-home" />
+            
             <f:facet name="options">
-                <p:commandButton value="Cerrar Sesión" action="#{loginBean.logout}" 
-                                 icon="pi pi-power-off" styleClass="btn-logout" />
+                <div class="search-container">
+                    <i class="pi pi-search search-icon"></i>
+                    <p:inputText id="txtBusqueda" 
+                                 placeholder="Buscar productos..." 
+                                 styleClass="search-input" 
+                                 value="#{navegacionAlmacenBean.textoBusqueda}">
+                        <p:ajax event="keyup" 
+                                delay="800" 
+                                process="@this"
+                                listener="#{navegacionAlmacenBean.filtrarBusqueda}" 
+                                update=":formPrincipal:msgs" />
+                    </p:inputText>
+                </div>
+
+                <p:commandButton value="Cerrar Sesión" 
+                                 action="#{loginBean.logout}" 
+                                 icon="pi pi-power-off" 
+                                 styleClass="btn-logout" 
+                                 ajax="false" />
             </f:facet>
         </p:menubar>
+    </h:form>
 
+    <!-- FORMULARIO 2: CONTENIDO PRINCIPAL -->
+    <h:form id="formPrincipal">
         <p:growl id="msgs" showDetail="true" />
 
         <div class="dashboard-container">
@@ -207,7 +252,7 @@
                                      styleClass="dashboard-btn"
                                      ajax="false" />
 
-                                      <p:commandButton value="Catalogo Proveedores" 
+                    <p:commandButton value="Catalogo Proveedores" 
                                      action="#{navegacionAlmacenBean.irAGestionProveedores}"
                                         icon="fa fa-industry"
                                         styleClass="dashboard-btn"
@@ -220,7 +265,7 @@
                                      styleClass="dashboard-btn"
                                      ajax="false" />
 
-                                      <p:commandButton value="Reportes"
+                    <p:commandButton value="Reportes"
                                      action="#{navegacionAlmacenBean.irAGestionReportes}" 
                                      icon="pi pi-chart-bar" 
                                      styleClass="dashboard-btn"
@@ -229,6 +274,7 @@
             </p:panel>
         </div>
     </h:form>
+
     <div style="margin-top: 50px;">
         <ui:include src="/pages/almacen/footer.xhtml" />
     </div>

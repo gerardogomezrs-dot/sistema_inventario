@@ -187,11 +187,13 @@ public class ProductosServiceImp implements IProductoService {
 				productos.setPrecioUnitario(precioU);
 				String stockActual = dataFormatter.formatCellValue(cellStockActual);
 				String stockMinimo = dataFormatter.formatCellValue(cellStockMinimo);
+				String idUbicacion = dataFormatter.formatCellValue(cellUbicacion);
 				int stockAct = NumberUtils.toInt(stockActual, 0);
 				int stockMin = NumberUtils.toInt(stockMinimo, 0);
+				int ubicacion = NumberUtils.toInt(idUbicacion, 0);
 				productos.setStockActual(stockAct);
 				productos.setStockMinimo(stockMin);
-				productos.setUbicacion(dataFormatter.formatCellValue(cellUbicacion));
+				productos.setIdUbicacion(ubicacion);
 				productos.setActivo(Boolean.parseBoolean(dataFormatter.formatCellValue(cellActivo)));
 				String idProveedor = dataFormatter.formatCellValue(cellIdProveedor);
 				int idProveedores = NumberUtils.toInt(idProveedor);
@@ -221,10 +223,9 @@ public class ProductosServiceImp implements IProductoService {
 					p.setPrecioUnitario(Double.parseDouble(fila[5]));
 					p.setStockActual(Integer.parseInt(fila[6]));
 					p.setStockMinimo(Integer.parseInt(fila[7]));
-					p.setUbicacion(fila[8]);
+					p.setIdUbicacion(Integer.parseInt(fila[8]));
 					p.setActivo(Boolean.parseBoolean(fila[9]));
 					p.setIdProveedor(Integer.parseInt(fila[10]));
-
 					list.add(p);
 				}
 			}
@@ -301,6 +302,20 @@ public class ProductosServiceImp implements IProductoService {
 		int totalMovimientos = 0;
 		totalMovimientos = dao.totalMovimientos(idUsuario);	
 		return totalMovimientos;
+	}
+
+	@Override
+	public List<Productos> getByNombreProducto(String nombreProducto) {
+		List<Productos> list = new ArrayList<>();
+		try {
+		Productos productos = productosDAO.getByNombreProducto(nombreProducto);
+		System.err.println("producto " + productos.getNombre());
+	
+	list.add(productos);
+		}catch (Exception e) {
+			e.printStackTrace();
+			}
+		return list;
 	}
 
 }

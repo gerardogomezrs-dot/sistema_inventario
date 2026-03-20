@@ -1,6 +1,9 @@
 package com.empresa.inventario.beans.almacen;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
@@ -8,6 +11,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.empresa.inventario.beans.BaseAuditoriaBean;
+import com.empresa.inventario.model.Productos;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.service.IProductoService;
@@ -19,6 +23,7 @@ import lombok.Data;
 @javax.faces.view.ViewScoped
 @Data
 public class NavegacionAlmacenBean implements Serializable {
+
 	/**
 	* 
 	*/
@@ -26,9 +31,13 @@ public class NavegacionAlmacenBean implements Serializable {
 
 	private int idUsuario;
 
+	private String textoBusqueda;
+
 	private String nombreUsuario;
 
 	private transient IAuditoriaService auditoriaService;
+
+	private List<Productos> listaProductos;
 
 	private int stockBajoCount;
 	private int movimientosHoyCount;
@@ -103,6 +112,65 @@ public class NavegacionAlmacenBean implements Serializable {
 		baseBean.registrarNavegacion(auditoriaService, Mensajes.NAVEGACION, "navego a dashboard", idUsuario,
 				nombreUsuario);
 		return "/pages/almacen/reportes/reportesDashboard.xhtml?faces-redirect=true";
+	}
+
+	public void filtrarBusqueda() {
+//		listaProducto = iProductoService.getAll();
+//	    if (textoBusqueda != null && !textoBusqueda.trim().isEmpty()) {
+//	        try {
+//	            FacesContext context = FacesContext.getCurrentInstance();
+//	            
+//	            
+//	            
+//	            String url = "../almacen/productos/tablaProductos.xhtml?faces-redirect=true&query=" + textoBusqueda;
+//	            context.getExternalContext().redirect(url);
+//	        } catch (IOException e) {
+//	            e.printStackTrace();
+//	        }
+//	    }
+
+		if (textoBusqueda == null || textoBusqueda.trim().isEmpty()) {
+			// this.listaProductos;
+			return;
+		}
+		listaProductos = iProductoService.getAll();
+		String filtro = textoBusqueda.toLowerCase();
+
+		listaProductos.stream().filter(p -> (p.getNombre() != null && p.getNombre().toLowerCase().contains(filtro))
+				|| (p.getProveedor() != null && p.getProveedor().getNombreEmpresa().toLowerCase().contains(filtro))
+				|| (p.getCategorias() != null && p.getCategorias().getNombre().toLowerCase().contains(filtro)))
+				.collect(Collectors.toList());
+
+		// 🔥 Lógica de redirección
+		redirigirSegunBusqueda(filtro);
+	}
+
+	public void redirigirSegunBusqueda(String filtro) {
+		try {
+			FacesContext context = FacesContext.getCurrentInstance();
+
+			boolean esProveedor = listaProductos.stream().anyMatch(p -> p.getProveedor() != null
+					&& p.getProveedor().getNombreEmpresa().toLowerCase().contains(filtro));
+
+			boolean esCategoria = listaProductos.stream().anyMatch(
+					p -> p.getCategorias() != null && p.getCategorias().getNombre().toLowerCase().contains(filtro));
+
+			if (esProveedor) {
+				//context.getExternalContext().redirect("proveedores.xhtml");
+				String url = "../almacen/proveedores/tablaProveedores.xhtml?faces-redirect=true&query=" + textoBusqueda;
+				context.getExternalContext().redirect(url);
+			} else if (esCategoria) {
+				//context.getExternalContext().redirect("categorias.xhtml");
+				String url = "../almacen/categorias/tablaCategorias.xhtml?faces-redirect=true&query=" + textoBusqueda;
+				context.getExternalContext().redirect(url);
+			} else {
+				String url = "../almacen/productos/tablaProductos.xhtml?faces-redirect=true&query=" + textoBusqueda;
+				context.getExternalContext().redirect(url);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -13,5 +13,6 @@ public interface IProveedorService {
 	void delete(int idProveedor);
 	void update(Proveedor proveedor);
 	List<Proveedor> uploadFiles(UploadedFile file);
+	List<Proveedor> byNombreEmpresa(String nombreEmpresa);
 
 }

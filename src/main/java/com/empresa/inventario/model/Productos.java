@@ -15,7 +15,7 @@ public class Productos{
 	private double precioUnitario;
 	private int stockActual;
 	private int stockMinimo;
-	private String ubicacion;
+	private int idUbicacion;
 	private boolean activo;
 	private Categorias categorias;
 	private Proveedor proveedor;

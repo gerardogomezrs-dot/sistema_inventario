@@ -171,4 +171,11 @@ public class ProveedorServiceImpl implements IProveedorService {
 		}
 		return proveedor;
 	}
+
+	@Override
+	public List<Proveedor> byNombreEmpresa(String nombreEmpresa) {
+		List<Proveedor> list = new ArrayList<>();
+		list = dao.getByNombreEmpresa(nombreEmpresa);
+		return list;
+	}
 }

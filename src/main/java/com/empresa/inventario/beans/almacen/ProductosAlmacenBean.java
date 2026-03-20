@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -30,6 +32,8 @@ public class ProductosAlmacenBean implements Serializable {
 	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ProductosAlmacenBean.class);
 
 	private transient IProductoService iProductoService;
+	
+	private String filtro; // Getter y Setter necesarios
 
 	private transient List<Productos> productosList;
 	
@@ -70,6 +74,17 @@ public class ProductosAlmacenBean implements Serializable {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 		baseBean.registrarNavegacion(auditoriaService, "Dashboard", "entro a Dashboard", idUsuario, nombreUsuario);
 		return "/pages/almacen/dashboard?faces-redirect=true";
+	}
+	
+	public void aplicarFiltroExterno() {
+	    if (filtro != null && !filtro.trim().isEmpty()) {
+	        this.productosList = iProductoService.getByNombreProducto(filtro);
+	        System.err.println("Recibo nombre del producto " + filtro);
+	        FacesContext.getCurrentInstance().addMessage(null, 
+	            new FacesMessage(FacesMessage.SEVERITY_INFO, "Resultados", "Mostrando resultados para: " + filtro));
+	    } else {
+	        this.productosList = iProductoService.getAll();
+	    }
 	}
 
 }

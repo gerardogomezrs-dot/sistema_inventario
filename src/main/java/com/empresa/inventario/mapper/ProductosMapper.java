@@ -20,7 +20,7 @@ public class ProductosMapper {
 		productos.setPrecioUnitario(rs.getDouble("precio_unitario"));
 		productos.setStockActual(rs.getInt("stock_actual"));
 		productos.setStockMinimo(rs.getInt("stock_minimo"));
-		productos.setUbicacion(rs.getString("ubicacion"));
+		productos.setIdUbicacion(rs.getInt("id_ubicacion"));
 		productos.setActivo(rs.getBoolean("activo"));
 		productos.setIdProveedor(rs.getInt("id_proveedor"));
 		Categorias categorias = new Categorias();
@@ -46,7 +46,7 @@ public class ProductosMapper {
 		p.setPrecioUnitario(rs.getDouble("precio_unitario"));
 		p.setStockActual(rs.getInt("stockActual"));
 		p.setStockMinimo(rs.getInt("stockMinimo"));
-		p.setUbicacion(rs.getString("ubicacion"));
+		p.setIdUbicacion(rs.getInt("id_ubicacion"));
 		p.setActivo(rs.getBoolean("activo"));
 		p.setArchivo(rs.getBytes("imagenProducto"));
 		return p;
@@ -72,7 +72,7 @@ public class ProductosMapper {
 		p.setPrecioUnitario(rs.getDouble("precio_unitario"));
 		p.setStockActual(rs.getInt("stock_actual"));
 		p.setStockMinimo(rs.getInt("stock_minimo"));
-		p.setUbicacion(rs.getString("ubicacion"));
+		p.setIdUbicacion(rs.getInt("id_ubicacion"));
 		p.setActivo(rs.getBoolean("activo"));
 		return p;
 	}

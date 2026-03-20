@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -31,6 +32,8 @@ public class ProveedoresAlmacenBean implements Serializable {
 	private IProveedorService iProveedorService;
 
 	private transient List<Proveedor> filteredList;
+
+	private String filtro;
 
 	private int idUsuario;
 
@@ -71,6 +74,17 @@ public class ProveedoresAlmacenBean implements Serializable {
 				nombreUsuario);
 		return "/pages/almacen/dashboard.xhtml?faces-redirect=true";
 
+	}
+
+	public void aplicarFiltroExterno() {
+		if (filtro != null && !filtro.trim().isEmpty()) {
+			this.list = iProveedorService.byNombreEmpresa(filtro);
+			System.err.println("Recibo nombre del producto " + filtro);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Resultados", "Mostrando resultados para: " + filtro));
+		} else {
+			this.list = iProveedorService.proveedors();
+		}
 	}
 
 }

@@ -113,5 +113,12 @@ public class NavegacionBean implements Serializable {
 				idUsuario, nombreUsuario);
 		return "/pages/admin/mermasDevoluciones/tablaMermasDevoluciones.xhtml?faces-redirect=true";
 	}
+	
+	public String irAUbicaciones() {
+		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+		baseBean.registrarNavegacion(auditoriaService, Mensajes.NAVEGACION, "navego a tabla Ubicaciones",
+				idUsuario, nombreUsuario);
+		return "/pages/admin/ubicacion/tablaUbicaciones.xhtml?faces-redirect=true";
+	}
 
 }

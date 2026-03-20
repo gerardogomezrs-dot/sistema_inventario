@@ -30,4 +30,6 @@ public interface IProductoService {
 	
 	int totalMovimientos(int idUsuario);
 	
+	List<Productos> getByNombreProducto(String nombreProducto);
+	
 }

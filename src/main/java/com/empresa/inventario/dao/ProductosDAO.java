@@ -59,7 +59,7 @@ public class ProductosDAO {
 			ps.setDouble(6, productos.getPrecioUnitario());
 			ps.setInt(7, productos.getStockActual());
 			ps.setInt(8, productos.getStockMinimo());
-			ps.setString(9, productos.getUbicacion());
+			ps.setInt(9, productos.getIdUbicacion());
 			ps.setBoolean(10, productos.isActivo());
 			ps.setInt(11, productos.getIdProveedor());
 			ps.setBytes(12, productos.getArchivo());
@@ -87,7 +87,7 @@ public class ProductosDAO {
 			ps.setDouble(6, productos.getPrecioUnitario());
 			ps.setInt(7, productos.getStockActual());
 			ps.setInt(8, productos.getStockMinimo());
-			ps.setString(9, productos.getUbicacion());
+			ps.setInt(9, productos.getIdUbicacion());
 			ps.setBoolean(10, productos.isActivo());
 			ps.setInt(11, productos.getIdProveedor());
 			;
@@ -155,7 +155,7 @@ public class ProductosDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			//logger.debug(e.getMessage());
+			// logger.debug(e.getMessage());
 		}
 		return p;
 	}
@@ -208,7 +208,7 @@ public class ProductosDAO {
 		}
 		return lista;
 	}
-	
+
 	public List<Productos> getProductosFaltantes() {
 		String sql = "select * from productos where stock_actual = 0;";
 		List<Productos> lista = new ArrayList<>();
@@ -226,18 +226,38 @@ public class ProductosDAO {
 		}
 		return lista;
 	}
-	
+
 	public int getTotalStockBajo() {
 		String sql = "select COUNT(*) as total from productos where stock_actual <= stock_minimo ";
 		int numero = 0;
 		try (Connection con = Conexion.getConexion(); PreparedStatement ps = con.prepareStatement(sql);) {
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-numero = rs.getInt("total");			}
+				numero = rs.getInt("total");
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			logger.debug(e.getMessage());
 		}
 		return numero;
+	}
+
+	public Productos getByNombreProducto(String codigoBarras) {
+		String sql = "SELECT id_producto, nombre as nombreProducto, codigo_barras, "
+				+ "descripcion, id_categoria, unidad, precio_unitario, stock_actual as stockActual, "
+				+ "stock_minimo as stockMinimo, id_ubicacion,"
+				+ " activo, imagenProducto FROM productos  where nombre LIKE ?";
+		Productos p = new Productos();
+		try (Connection con = Conexion.getConexion(); PreparedStatement ps = con.prepareStatement(sql);) {
+			ps.setString(1, codigoBarras);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				p = mapper.mapRowBy(rs);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			logger.debug(e.getMessage());
+		}
+		return p;
 	}
 }

@@ -1,0 +1,36 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <p:dialog id="dialogoEditar" header="Editar Ubicación" widgetVar="wdgEditar" modal="true" appendTo="@(body)"
+        resizable="false">
+
+        <!-- Cambiamos el ID a formEditar para que la tabla lo encuentre -->
+        <h:form id="formEditar">
+            <h:panelGrid columns="2" columnClasses="label,value">
+                <h:outputLabel value="Pasillo:" />
+                <p:inputText value="#{ubicacionBean.ubicacion.pasillo}" />
+
+                <h:outputLabel value="Estante:" />
+                <p:inputTextarea value="#{ubicacionBean.ubicacion.estante}" rows="3" />
+
+                <h:outputLabel value="Nivel:" />
+                <p:inputText value="#{ubicacionBean.ubicacion.nivel}" />
+
+                <h:outputLabel value="Codigo Control:" />
+                <p:inputTextarea value="#{ubicacionBean.ubicacion.codigoControl}" rows="3" />
+
+                <h:outputLabel value="Estado:" />
+                <p:selectBooleanCheckbox value="#{ubicacionBean.ubicacion.estado}" />
+
+                <p:spacer height="10" />
+
+                <p:commandButton value="Actualizar Ubicación" action="#{ubicacionBean.actualizarUbicacion()}"
+                    icon="pi pi-save" styleClass="ui-button-success"
+                    update=":formTablaUbicaciones:tablaUbicaciones :formTablaUbicaciones:msgs"
+                    oncomplete="if (!args.validationFailed) PF('wdgEditar').hide()" />
+            </h:panelGrid>
+
+        </h:form>
+    </p:dialog>
+</ui:composition>

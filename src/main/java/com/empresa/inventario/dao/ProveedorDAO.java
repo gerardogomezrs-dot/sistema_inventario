@@ -83,5 +83,23 @@ public class ProveedorDAO{
 		
 		}
 	}
-
+	
+	public List<Proveedor> getByNombreEmpresa(String nombreEmpresa) {
+		String sql = "SELECT p.* from proveedor p where nombre_empresa like ?;";
+		List<Proveedor> proveedors = new ArrayList<>();
+		Proveedor p = new Proveedor();
+		try (Connection con = Conexion.getConexion(); PreparedStatement ps = con.prepareStatement(sql);) {
+			ps.setString(1, nombreEmpresa);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				p = mapper.rowtoMap(rs);
+				proveedors.add(p);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			logger.debug(e.getMessage());
+		}
+		return proveedors;
+	}
+	
 }

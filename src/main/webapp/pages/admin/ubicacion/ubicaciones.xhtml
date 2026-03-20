@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html lang="es-MX" 
+      xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <title>Nueva Ubicación</title>
+    <!-- Se corrigió la carga del CSS de PrimeIcons si es necesario, 
+         aunque PrimeFaces lo suele cargar automáticamente al usar iconos -->
+    <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
+
+    <style type="text/css">
+        .ui-panelgrid .ui-grid-responsive .ui-grid-row {
+            border: none !important;
+        }
+
+        .label {
+            font-weight: bold;
+            width: 150px;
+        }
+
+        .value {
+            width: 300px;
+        }
+
+        .main-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 20px;
+            width: 98%; 
+        }
+
+        .form-side {
+            flex: 0 0 600px;
+        }
+
+        .table-side {
+            flex: 1;
+            min-width: 0; 
+        }
+        
+        /* Corrección del selector CSS para h:outputText */
+        .ui-datatable .ui-column-custom {
+            word-break: break-all;
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <!-- Se recomienda que el menú esté FUERA del formulario si tiene sus propios links/formas -->
+
+    <h:form id="formUbicacion" enctype="multipart/form-data">
+            <ui:include src="/pages/admin/menu.xhtml" />
+
+        <p:growl id="msgs" showDetail="true" />
+
+        <div class="main-container">
+            <div class="form-side">
+                <p:panel header="Registro de Ubicación" style="width: 600px; margin: 0 auto;">
+                    <h:panelGrid columns="2" columnClasses="label,value">
+
+                        <h:outputLabel value="Pasillo:" />
+                        <p:inputText value="#{ubicacionBean.ubicacion.pasillo}" />
+
+                        <h:outputLabel value="Estante:" />
+                        <p:inputTextarea value="#{ubicacionBean.ubicacion.estante}" rows="3" />
+
+                        <h:outputLabel value="Nivel:" />
+                        <p:inputText value="#{ubicacionBean.ubicacion.nivel}" />
+
+                        <h:outputLabel value="Codigo Control:" />
+                        <p:inputTextarea value="#{ubicacionBean.ubicacion.codigoControl}" rows="3" />
+
+                        <h:outputLabel value="Estado:" />
+                        <p:selectBooleanCheckbox value="#{ubicacionBean.ubicacion.estado}" />
+
+                    </h:panelGrid>
+
+                    <p:separator />
+
+                    <!-- Nota: ajax="false" es correcto para p:fileUpload simple, 
+                         pero limita la actualización parcial de la página -->
+                    <p:commandButton value="Guardar" icon="pi pi-save" action="#{ubicacionBean.guardarTabla}" 
+                                     ajax="false" process="@form" update="formUbicacion" />
+
+                    <p:commandButton value="Regresar" icon="pi pi-chevron-left"
+                                     action="#{ubicacionBean.irATablaUbicaciones}" immediate="true" 
+                                     style="margin-left: 10px;" />
+
+                    <div class="upload-section" style="margin-top: 20px;">
+                        <h:outputLabel value="Cargar desde archivo (CSV, Excel):"
+                                       style="display:block; margin-bottom:5px; font-weight:bold;" />
+                        <p:fileUpload value="#{ubicacionBean.uploadedFile}" mode="simple" skinSimple="true"
+                                      label="Seleccionar Archivo" chooseIcon="pi pi-upload" />
+
+                        <p:commandButton value="Procesar Archivo" action="#{ubicacionBean.cargaArchivos}" 
+                                         ajax="false" styleClass="ui-button-help" style="margin-top: 5px;" 
+                                         icon="pi pi-file-import" />
+                    </div>
+                </p:panel>
+                <p:separator />
+            </div>
+
+            <div class="table-side">
+                <p:dataTable id="tablaRegistros" value="#{ubicacionBean.listaUbicaciones}" var="ubic"
+                             emptyMessage="No hay ubicaciones registradas en esta sesión." 
+                             style="margin-top:20px; width: 100%;" 
+                             scrollable="true" scrollHeight="500">
+
+                    <f:facet name="header">Ubicaciones Guardadas</f:facet>
+
+                    <p:column headerText="Pasillo" width="100">
+                        <h:outputText value="#{ubic.pasillo}" />
+                    </p:column>
+
+                    <p:column headerText="Estante" width="150">
+                        <h:outputText value="#{ubic.estante}" />
+                    </p:column>
+
+                    <p:column headerText="Nivel" width="80">
+                        <h:outputText value="#{ubic.nivel}" />
+                    </p:column>
+
+                    <p:column headerText="Codigo Control" width="150">
+                        <h:outputText value="#{ubic.codigoControl}" />
+                    </p:column>
+
+                    <p:column headerText="Estado" width="80">
+                        <h:outputText value="#{ubic.estado ? 'Activo' : 'Inactivo'}" />
+                    </p:column>
+                
+                </p:dataTable>
+
+                <p:separator />
+
+                <p:commandButton value="Confirmar Carga Total" icon="pi pi-save"
+                                 action="#{ubicacionBean.guardarUbicacionTabla}" 
+                                 process="@form" update="tablaRegistros, msgs"
+                                 ajax="false" />
+            </div>
+        </div>
+
+        <p:dialog header="Mensaje" widgetVar="dlgConfirmacion" modal="true" closable="false">
+            <h:outputText value="Datos guardados correctamente." />
+            <br /><br />
+            <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacion').hide();" />
+        </p:dialog>
+
+        <p:dialog header="Mensaje" widgetVar="dlgConfirmacionGuardar" modal="true" closable="false">
+            <h:outputText value="Datos guardados correctamente." />
+            <br /><br />
+            <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacionGuardar').hide();" />
+        </p:dialog>
+ 
+    <!-- Footer fuera del form para evitar anidamientos innecesarios -->
+    <ui:include src="/pages/admin/footer.xhtml" />
+    </h:form>
+   
+</h:body>
+</html>
