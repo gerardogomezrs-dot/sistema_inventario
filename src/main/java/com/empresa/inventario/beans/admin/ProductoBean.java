@@ -20,11 +20,13 @@ import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Categorias;
 import com.empresa.inventario.model.Productos;
 import com.empresa.inventario.model.Proveedor;
+import com.empresa.inventario.model.Ubicacion;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
 import com.empresa.inventario.service.ICategoriaService;
 import com.empresa.inventario.service.IProductoService;
 import com.empresa.inventario.service.IProveedorService;
+import com.empresa.inventario.service.IUbicacionService;
 import com.empresa.inventario.utils.Mensajes;
 
 import lombok.Data;
@@ -38,16 +40,18 @@ public class ProductoBean implements Serializable {
 
 	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ProductoBean.class);
 
-	private  List<Categorias> listaCategorias;
-	
-	private  List<Proveedor> listaProveedores;
+	private List<Categorias> listaCategorias;
+
+	private List<Proveedor> listaProveedores;
+
+	private List<Ubicacion> listaUbicaciones;
 
 	private transient List<Productos> listaProductosGuardar = new ArrayList<>();
 
 	private transient List<Productos> list;
 
 	private transient UploadedFile uploadedFile;
-	
+
 	private transient UploadedFile uploadedImagen;
 
 	private transient Productos producto;
@@ -57,8 +61,10 @@ public class ProductoBean implements Serializable {
 	private transient IProductoService iProductoService;
 
 	private transient ICategoriaService iCategoriaService;
-	
+
 	private transient IProveedorService iProveedorService;
+
+	private transient IUbicacionService iUbicacionService;
 
 	private int idUsuario;
 
@@ -68,17 +74,20 @@ public class ProductoBean implements Serializable {
 
 	@Inject
 	public ProductoBean(IProductoService iProductoService, ICategoriaService iCategoriaService,
-			IAuditoriaService auditoriaService, IProveedorService iProveedorService) {
+			IAuditoriaService auditoriaService, IProveedorService iProveedorService,
+			IUbicacionService ubicacionService) {
 		this.iProductoService = iProductoService;
 		this.iCategoriaService = iCategoriaService;
 		this.auditoriaService = auditoriaService;
 		this.iProveedorService = iProveedorService;
+		this.iUbicacionService = ubicacionService;
 	}
 
 	@PostConstruct
 	public void init() {
 		listaProductos();
 		listaProveedores();
+		listaUbicacion();
 		listaCategorias = iCategoriaService.getAllCategorias();
 		Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.get("sessionUsuario");
@@ -86,10 +95,10 @@ public class ProductoBean implements Serializable {
 		nombreUsuario = user.getNombre();
 		producto = new Productos();
 	}
-	
+
 	public void handleFileUpload(FileUploadEvent event) {
-	    byte[] contenido = event.getFile().getContents();
-	    producto.setArchivo(contenido);
+		byte[] contenido = event.getFile().getContents();
+		producto.setArchivo(contenido);
 	}
 
 	public void guardarTabla() {
@@ -99,8 +108,8 @@ public class ProductoBean implements Serializable {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
 			}
-			  byte[] contenido = uploadedImagen.getContents();
-			    producto.setArchivo(contenido);
+			byte[] contenido = uploadedImagen.getContents();
+			producto.setArchivo(contenido);
 			System.err.println("archivo recibido " + uploadedImagen.getFileName());
 			listaProductosGuardar.add(producto);
 			this.producto = new Productos();
@@ -184,12 +193,12 @@ public class ProductoBean implements Serializable {
 		}
 
 	}
-	
+
 	public void listaProveedores() {
 		try {
 			listaProveedores = iProveedorService.proveedors();
-		}catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
 		}
 	}
 
@@ -201,8 +210,6 @@ public class ProductoBean implements Serializable {
 
 		}
 	}
-	
-	
 
 	public void cargaArchivos() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
@@ -261,27 +268,15 @@ public class ProductoBean implements Serializable {
 	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
-	
+
 	public String convertirABase64(byte[] bytes) {
-//	    if (bytes == null || bytes.length == 0) return "";
-//
-//	    String base64 = Base64.getEncoder().encodeToString(bytes);
-//	    String mimeType = "image/jpeg"; // Por defecto
-//
-//	    // Detección básica por los primeros bytes (Magic Bytes)
-//	    if (bytes.length > 3 && bytes[0] == (byte) 0x89 && bytes[1] == (byte) 0x50) {
-//	        mimeType = "image/png";
-//	    } else if (bytes.length > 2 && bytes[0] == (byte) 0x47 && bytes[1] == (byte) 0x49) {
-//	        mimeType = "image/gif";
-//	    }
-//
-//	    return "data:" + mimeType + ";base64," + base64;
-	    if (bytes != null && bytes.length > 0) {
-	        System.out.println("Tamaño del archivo: " + bytes.length); // Mira tu consola
-	        return "data:image/png;base64," + Base64.getEncoder().encodeToString(bytes);
-	    }
-	    System.out.println("El archivo viene NULL o VACÍO");
-	    return "";
+		if (bytes != null && bytes.length > 0) {
+			return "data:image/png;base64," + Base64.getEncoder().encodeToString(bytes);
+		}
+		return "";
+	}
+	
+	public void listaUbicacion() {
+		listaUbicaciones = iUbicacionService.getAll();
 	}
 }
-

@@ -13,4 +13,5 @@ public interface ICategoriaService {
 	List<Categorias> getAllCategorias();
 	void delete(int idCategoria);
 	List<Categorias> cargarArchivo(UploadedFile file);
+	List<Categorias> byNombreCategoria(String nombre);
 }

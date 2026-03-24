@@ -9,6 +9,12 @@
     <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
 
     <title>Catalogo de Categorias</title>
+    <f:metadata>
+    <!-- Esto captura 'query' de la URL y lo mete en 'filtro' del Bean -->
+    <f:viewParam name="query" value="#{categoriasAlmacenBean.filtro}" />
+    <!-- Esto ejecuta la búsqueda automáticamente al cargar la página -->
+    <f:viewAction action="#{categoriasAlmacenBean.aplicarFiltroExterno}" />
+</f:metadata>
 </h:head>
 <h:body>
     <h:form id="formPrincipal">

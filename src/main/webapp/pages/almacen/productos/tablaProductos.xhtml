@@ -62,7 +62,11 @@
                 <h:outputText value="#{producto.stockMinimo}" />
             </p:column>
             <p:column headerText="Ubicación">
-                <h:outputText value="#{producto.idCategoria}" />
+                <h:outputText value="#{producto.ubicacion.pasillo}" />
+            </p:column>
+
+             <p:column headerText="Estante">
+                <h:outputText value="#{producto.ubicacion.estante}" />
             </p:column>
         </p:dataTable>
         <ui:include src="/pages/almacen/footer.xhtml" />

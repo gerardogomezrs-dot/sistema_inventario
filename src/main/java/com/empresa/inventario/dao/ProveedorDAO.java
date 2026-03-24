@@ -85,7 +85,7 @@ public class ProveedorDAO{
 	}
 	
 	public List<Proveedor> getByNombreEmpresa(String nombreEmpresa) {
-		String sql = "SELECT p.* from proveedor p where nombre_empresa like ?;";
+		String sql = "SELECT p.* from proveedor p where nombre_empresa like CONCAT('%', ?, '%');";
 		List<Proveedor> proveedors = new ArrayList<>();
 		Proveedor p = new Proveedor();
 		try (Connection con = Conexion.getConexion(); PreparedStatement ps = con.prepareStatement(sql);) {

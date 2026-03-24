@@ -65,12 +65,28 @@
                 <h:outputText value="#{prod.stockMinimo}" />
             </p:column>
             <p:column headerText="Ubicación">
-                <h:outputText value="#{prod.idUbicacion}" />
+                <h:outputText value="#{prod.ubicacion.pasillo}" />
             </p:column>
 
-            <p:column headerText="Imagen">
-                <img src="#{productoBean.convertirABase64(prod.archivo)}" style="width:80px; height:auto;" />
+            <p:column headerText="Estante">
+                <h:outputText value="#{prod.ubicacion.estante}" />
             </p:column>
+
+            <p:column headerText="Imagen" style="text-align:center; width:100px;">
+                <p:commandLink onclick="PF('wvImg#{prod.idProducto}').show();">
+                    <img src="#{productoBean.convertirABase64(prod.archivo)}"
+                        style="width:80px; height:auto; cursor:zoom-in; border: 1px solid #ccc;" />
+                </p:commandLink>
+
+                <p:dialog widgetVar="wvImg#{prod.idProducto}" header="Vista Previa" modal="true" responsive="true"
+                    closeOnEscape="true">
+                    <div style="text-align:center">
+                        <img src="#{productoBean.convertirABase64(prod.archivo)}"
+                            style="max-width:500px; max-height:500px;" />
+                    </div>
+                </p:dialog>
+            </p:column>
+
             <p:column headerText="Acciones">
                 <!-- EDITAR -->
                 <p:commandButton icon="pi pi-pencil" process="@this" update=":formEditar"

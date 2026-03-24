@@ -1,11 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html lang="es-MX" xmlns="http://www.w3.org/1999/xhtml"
+<html lang="es-MX" xmlns="http://www.w3.org/1999/xhtml" 
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" 
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Dashboard | Almacén</title>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+
     <style>
         :root {
             --primary-color: #3b82f6;
@@ -14,6 +18,7 @@
             --text-main: #334155;
             --danger: #ef4444;
             --warning: #f59e0b;
+            --success: #22c55e;
         }
 
         body {
@@ -23,17 +28,18 @@
             color: var(--text-main);
         }
 
-        /* --- ESTILOS DEL BUSCADOR --- */
+        /* --- BUSCADOR --- */
         .search-container {
             margin-right: 15px;
             display: inline-flex;
             align-items: center;
             position: relative;
         }
-        
+
         .search-input {
             border-radius: 20px !important;
             padding-left: 35px !important;
+            padding-right: 35px !important;
             border: 1px solid #e2e8f0 !important;
             transition: all 0.3s ease !important;
             width: 220px;
@@ -52,6 +58,17 @@
             z-index: 10;
         }
 
+        .scanner-trigger {
+            position: absolute;
+            right: 12px;
+            color: var(--primary-color);
+            cursor: pointer;
+            z-index: 10;
+            transition: transform 0.2s;
+        }
+
+        .scanner-trigger:hover { transform: scale(1.2); }
+
         /* --- ALERTAS --- */
         .alerts-wrapper {
             display: grid;
@@ -66,7 +83,7 @@
             border-radius: 12px;
             display: flex;
             align-items: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
             border: 1px solid #e2e8f0;
         }
 
@@ -94,12 +111,12 @@
             font-weight: 500;
         }
 
-        /* --- MENU Y DASHBOARD --- */
+        /* --- MENÚ Y PANEL --- */
         .ui-menubar {
             border-radius: 0 !important;
             padding: 0.5rem 2rem !important;
             background: white !important;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
             border: none !important;
         }
 
@@ -111,7 +128,7 @@
 
         .custom-menu-panel {
             border: none !important;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05) !important;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05) !important;
             border-radius: 12px !important;
             overflow: hidden;
         }
@@ -147,85 +164,83 @@
 
         .dashboard-btn:hover {
             border-color: var(--primary-color) !important;
-            transform: translateY(-8px);
-            box-shadow: 0 12px 20px rgba(59, 130, 246, 0.15) !important;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(59, 130, 246, 0.12) !important;
         }
 
         .dashboard-btn .ui-button-icon-left {
-            font-size: 2.5rem !important; 
+            font-size: 2.5rem !important;
             position: static !important;
-            margin-bottom: 15px !important;
+            margin-bottom: 12px !important;
             color: var(--primary-color) !important;
         }
 
         .dashboard-btn .ui-button-text {
             padding: 0 !important;
             font-weight: 600 !important;
-            font-size: 1.1rem !important;
+            font-size: 1.05rem !important;
         }
 
         .btn-logout {
-            background-color: #ef4444 !important;
+            background-color: var(--danger) !important;
             border: none !important;
             font-weight: bold !important;
-            border-radius: 6px !important;
+            color: white !important;
         }
     </style>
 </h:head>
-<h:body>
 
-    <!-- FORMULARIO 1: BARRA DE NAVEGACIÓN Y BUSCADOR -->
+<h:body>
     <h:form id="formNav">
         <p:menubar>
             <p:menuitem value="Inicio" url="dashboard.xhtml" icon="pi pi-home" />
-            
-            <f:facet name="options">
-                <div class="search-container">
-                    <i class="pi pi-search search-icon"></i>
-                    <p:inputText id="txtBusqueda" 
-                                 placeholder="Buscar productos..." 
-                                 styleClass="search-input" 
-                                 value="#{navegacionAlmacenBean.textoBusqueda}">
-                        <p:ajax event="keyup" 
-                                delay="800" 
-                                process="@this"
-                                listener="#{navegacionAlmacenBean.filtrarBusqueda}" 
-                                update=":formPrincipal:msgs" />
-                    </p:inputText>
-                </div>
 
-                <p:commandButton value="Cerrar Sesión" 
-                                 action="#{loginBean.logout}" 
-                                 icon="pi pi-power-off" 
-                                 styleClass="btn-logout" 
-                                 ajax="false" />
+            <f:facet name="options">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div class="search-container">
+                        <i class="pi pi-search search-icon"></i>
+                        <p:inputText id="txtBusqueda" placeholder="Buscar productos..." styleClass="search-input"
+                                     value="#{navegacionAlmacenBean.textoBusqueda}">
+                            <p:ajax event="keyup" delay="800" process="@this"
+                                    listener="#{navegacionAlmacenBean.filtrarBusqueda}" update=":formPrincipal:msgs" />
+                        </p:inputText>
+                        <i class="pi pi-camera scanner-trigger" onclick="PF('dlgScanner').show(); startScanner();"
+                           title="Escanear código con cámara"></i>
+                    </div>
+
+                    <p:commandButton value="Escaneo Rápido" icon="pi pi-bolt" type="button"
+                                     onclick="PF('dlgEscaneo').show(); setTimeout(function(){ document.getElementById('formEscaneo:codigoEscaneado').focus(); }, 400);"
+                                     styleClass="ui-button-raised ui-button-info"
+                                     style="font-weight: bold; border-radius: 8px;" />
+
+                    <p:commandButton value="Salir" action="#{loginBean.logout}" icon="pi pi-power-off"
+                                     styleClass="btn-logout" ajax="false" />
+                </div>
             </f:facet>
         </p:menubar>
     </h:form>
 
-    <!-- FORMULARIO 2: CONTENIDO PRINCIPAL -->
     <h:form id="formPrincipal">
         <p:growl id="msgs" showDetail="true" />
 
         <div class="dashboard-container">
-            
             <div class="alerts-wrapper">
                 <div class="alert-card critical">
                     <div class="alert-icon-box" style="color: var(--danger);">
-                        <i class="pi pi-exclamation-circle"></i>
+                        <i class="pi pi-exclamation-triangle"></i>
                     </div>
                     <div class="alert-data">
-                        <h:outputText value="#{navegacionAlmacenBean.stockBajoCount}" class="alert-number" />
+                        <h:outputText value="#{navegacionAlmacenBean.stockBajoCount}" styleClass="alert-number" />
                         <span class="alert-text">Stock Crítico</span>
                     </div>
                 </div>
 
                 <div class="alert-card pending">
                     <div class="alert-icon-box" style="color: var(--warning);">
-                        <i class="pi pi-sync"></i>
+                        <i class="pi pi-history"></i>
                     </div>
                     <div class="alert-data">
-                        <h:outputText value="#{navegacionAlmacenBean.movimientosHoyCount}" class="alert-number" />
+                        <h:outputText value="#{navegacionAlmacenBean.movimientosHoyCount}" styleClass="alert-number" />
                         <span class="alert-text">Movimientos hoy</span>
                     </div>
                 </div>
@@ -233,50 +248,84 @@
 
             <p:panel header="PANEL DE CONTROL ALMACÉN" styleClass="custom-menu-panel">
                 <div class="dashboard-grid">
-                    
-                    <p:commandButton value="Ver Perfil" 
-                                     action="#{navegacionAlmacenBean.irAPerfilUsuario()}" 
-                                     icon="pi pi-user"
-                                     styleClass="dashboard-btn" 
-                                     ajax="false" />
+                    <p:commandButton value="Mi Perfil" action="#{navegacionAlmacenBean.irAPerfilUsuario()}"
+                                     icon="pi pi-user-edit" styleClass="dashboard-btn" ajax="false" />
 
-                     <p:commandButton value="Catalogo Categorías" 
-                                     action="#{navegacionAlmacenBean.irAGestionCategorias}"
-                                        icon="pi pi-tags"
-                                        styleClass="dashboard-btn"
-                                        ajax="false" />
+                    <p:commandButton value="Categorías" action="#{navegacionAlmacenBean.irAGestionCategorias}"
+                                     icon="pi pi-list" styleClass="dashboard-btn" ajax="false" />
 
-                    <p:commandButton value="Catalogo Productos" 
-                                     action="#{navegacionAlmacenBean.irAGestionProductos}"
-                                     icon="pi pi-briefcase" 
-                                     styleClass="dashboard-btn"
-                                     ajax="false" />
+                    <p:commandButton value="Productos" action="#{navegacionAlmacenBean.irAGestionProductos}"
+                                     icon="pi pi-box" styleClass="dashboard-btn" ajax="false" />
 
-                    <p:commandButton value="Catalogo Proveedores" 
-                                     action="#{navegacionAlmacenBean.irAGestionProveedores}"
-                                        icon="fa fa-industry"
-                                        styleClass="dashboard-btn"
-                                        ajax="false" />
+                    <p:commandButton value="Proveedores" action="#{navegacionAlmacenBean.irAGestionProveedores}" 
+                                     icon="pi pi-truck" styleClass="dashboard-btn" ajax="false" />
 
+                    <p:commandButton value="Movimientos" action="#{navegacionAlmacenBean.irAGestionMovimientos}"
+                                     icon="pi pi-directions" styleClass="dashboard-btn" ajax="false" />
 
-                    <p:commandButton value="Movimientos"
-                                     action="#{navegacionAlmacenBean.irAGestionMovimientos}" 
-                                     icon="pi pi-search" 
-                                     styleClass="dashboard-btn"
-                                     ajax="false" />
-
-                    <p:commandButton value="Reportes"
-                                     action="#{navegacionAlmacenBean.irAGestionReportes}" 
-                                     icon="pi pi-chart-bar" 
-                                     styleClass="dashboard-btn"
-                                     ajax="false" />
+                    <p:commandButton value="Reportes" action="#{navegacionAlmacenBean.irAGestionReportes}"
+                                     icon="pi pi-chart-line" styleClass="dashboard-btn" ajax="false" />
                 </div>
             </p:panel>
         </div>
+
+        <ui:include src="/pages/almacen/footer.xhtml" />
+        <ui:include src="/pages/almacen/scanner.xhtml" />
     </h:form>
 
-    <div style="margin-top: 50px;">
-        <ui:include src="/pages/almacen/footer.xhtml" />
-    </div>
+    <p:dialog header="Escaneo de Inventario" widgetVar="dlgEscaneo" modal="true" resizable="false"
+              width="400" showEffect="fade" hideEffect="fade">
+        <h:form id="formEscaneo">
+            <div style="text-align: center; padding: 10px;">
+                <p:outputLabel for="codigoEscaneado" value="Pase el escáner por el código de barras:" style="font-weight: bold; margin-bottom: 15px; display: block;" />
+                <p:inputText id="codigoEscaneado" value="#{movimientosAlmacenBean.codigoFiltro}"
+                             style="width:100%; font-size: 1.5rem; text-align: center; border: 2px solid var(--primary-color);" 
+                             placeholder="Esperando..." autocomplete="off">
+                    <p:ajax event="keyup" listener="#{movimientosAlmacenBean.procesarEscaneo}" delay="100" />
+                </p:inputText>
+                
+                <p:message for="codigoEscaneado" />
+                
+                <div style="margin-top: 20px; background: #eff6ff; padding: 10px; border-radius: 5px;">
+                    <i class="pi pi-info-circle" style="color: var(--primary-color); margin-right: 5px;"></i>
+                    <span style="font-size: 0.85rem; color: var(--text-main);">La pistola enviará el código automáticamente.</span>
+                </div>
+            </div>
+        </h:form>
+    </p:dialog>
+
+    <script>
+        let html5QrCode;
+        function startScanner() {
+            // Asegurarse de que el elemento 'reader' exista en scanner.xhtml incluido
+            const readerElement = document.getElementById('reader');
+            if(!readerElement) return;
+
+            html5QrCode = new Html5Qrcode("reader");
+            const config = { fps: 15, qrbox: { width: 250, height: 180 } };
+            
+            html5QrCode.start(
+                { facingMode: "environment" },
+                config,
+                (decodedText) => {
+                    const input = document.getElementById('formNav:txtBusqueda');
+                    if (input) {
+                        input.value = decodedText;
+                        stopScanner(); // Detener cámara tras éxito
+                        PF('dlgScanner').hide();
+                        input.dispatchEvent(new Event('keyup'));
+                    }
+                }
+            ).catch(err => console.error("Error al iniciar cámara:", err));
+        }
+
+        function stopScanner() {
+            if (html5QrCode) {
+                html5QrCode.stop().then(() => {
+                    console.log("Cámara detenida");
+                }).catch(err => console.error("Error al detener cámara:", err));
+            }
+        }
+    </script>
 </h:body>
 </html>

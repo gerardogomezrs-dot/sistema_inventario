@@ -1,0 +1,14 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+<p:dialog widgetVar="dlgScanner" header="Escanear Código de Barras / QR" 
+              modal="true" width="400" resizable="false" closeOnEscape="true"
+              onHide="stopScanner()">
+        <div id="reader"></div>
+        <p:outputPanel style="text-align: center; margin-top: 10px;">
+            <p:commandButton value="Cancelar" type="button" onclick="PF('dlgScanner').hide();" styleClass="ui-button-secondary" />
+        </p:outputPanel>
+    </p:dialog>
+</ui:composition>

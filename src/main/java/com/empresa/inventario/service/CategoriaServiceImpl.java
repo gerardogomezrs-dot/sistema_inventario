@@ -151,4 +151,11 @@ public class CategoriaServiceImpl implements ICategoriaService {
 		}
 		return categorias;
 	}
+
+	@Override
+	public List<Categorias> byNombreCategoria(String nombre) {
+		List<Categorias> categorias = new ArrayList<>();
+		categorias = dao.getByCategorias(nombre);
+		return categorias;
+	}
 }

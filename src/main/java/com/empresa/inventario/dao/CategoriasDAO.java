@@ -76,5 +76,23 @@ public class CategoriasDAO  {
 			logger.debug(e.getMessage());
 		}
 	}
+	
+	public List<Categorias> getByCategorias(String nombreEmpresa) {
+		String sql = "SELECT p.* from categorias p where nombre like CONCAT('%', ?, '%');";
+		List<Categorias> proveedors = new ArrayList<>();
+		Categorias p = new Categorias();
+		try (Connection con = Conexion.getConexion(); PreparedStatement ps = con.prepareStatement(sql);) {
+			ps.setString(1, nombreEmpresa);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				p = mapper.mapRow(rs);
+				proveedors.add(p);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			logger.debug(e.getMessage());
+		}
+		return proveedors;
+	}
 
 }

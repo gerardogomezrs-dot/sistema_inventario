@@ -115,19 +115,6 @@ public class NavegacionAlmacenBean implements Serializable {
 	}
 
 	public void filtrarBusqueda() {
-//		listaProducto = iProductoService.getAll();
-//	    if (textoBusqueda != null && !textoBusqueda.trim().isEmpty()) {
-//	        try {
-//	            FacesContext context = FacesContext.getCurrentInstance();
-//	            
-//	            
-//	            
-//	            String url = "../almacen/productos/tablaProductos.xhtml?faces-redirect=true&query=" + textoBusqueda;
-//	            context.getExternalContext().redirect(url);
-//	        } catch (IOException e) {
-//	            e.printStackTrace();
-//	        }
-//	    }
 
 		if (textoBusqueda == null || textoBusqueda.trim().isEmpty()) {
 			// this.listaProductos;
@@ -141,7 +128,6 @@ public class NavegacionAlmacenBean implements Serializable {
 				|| (p.getCategorias() != null && p.getCategorias().getNombre().toLowerCase().contains(filtro)))
 				.collect(Collectors.toList());
 
-		// 🔥 Lógica de redirección
 		redirigirSegunBusqueda(filtro);
 	}
 
@@ -149,6 +135,8 @@ public class NavegacionAlmacenBean implements Serializable {
 		try {
 			FacesContext context = FacesContext.getCurrentInstance();
 
+			boolean esProducto = listaProductos.stream().anyMatch(p ->  p.getNombre().toLowerCase().contains(filtro));
+			
 			boolean esProveedor = listaProductos.stream().anyMatch(p -> p.getProveedor() != null
 					&& p.getProveedor().getNombreEmpresa().toLowerCase().contains(filtro));
 
@@ -156,18 +144,17 @@ public class NavegacionAlmacenBean implements Serializable {
 					p -> p.getCategorias() != null && p.getCategorias().getNombre().toLowerCase().contains(filtro));
 
 			if (esProveedor) {
-				//context.getExternalContext().redirect("proveedores.xhtml");
 				String url = "../almacen/proveedores/tablaProveedores.xhtml?faces-redirect=true&query=" + textoBusqueda;
 				context.getExternalContext().redirect(url);
-			} else if (esCategoria) {
-				//context.getExternalContext().redirect("categorias.xhtml");
+			} 
+			else if (esCategoria) {
 				String url = "../almacen/categorias/tablaCategorias.xhtml?faces-redirect=true&query=" + textoBusqueda;
 				context.getExternalContext().redirect(url);
-			} else {
+			} 
+			else if(esProducto){
 				String url = "../almacen/productos/tablaProductos.xhtml?faces-redirect=true&query=" + textoBusqueda;
 				context.getExternalContext().redirect(url);
 			}
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

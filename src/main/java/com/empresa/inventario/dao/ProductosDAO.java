@@ -20,11 +20,12 @@ public class ProductosDAO {
 	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ProductosDAO.class);
 
 	public List<Productos> getAll() {
-		String sql = "SELECT \r\n" + "    p.*, \r\n" + "    c.id_categoria AS idCategoria, \r\n"
-				+ "    c.nombre AS nombreCategoria, \r\n" + "    pv.id_proveedor as idProveedor, \r\n"
-				+ "    pv.nombre_empresa AS nombreProveedor \r\n" + "FROM productos p \r\n"
-				+ "INNER JOIN categorias c ON p.id_categoria = c.id_categoria \r\n"
-				+ "LEFT JOIN proveedor pv ON p.id_proveedor = pv.id_proveedor ";
+		String sql = "SELECT p.*, c.id_categoria AS idCategoria, \r\n"
+				+ "				     c.nombre AS nombreCategoria,     pv.id_proveedor as idProveedor, \r\n"
+				+ "				    pv.nombre_empresa AS nombreProveedor,  ub.pasillo, ub.estante  FROM productos p\r\n"
+				+ "				INNER JOIN categorias c ON p.id_categoria = c.id_categoria \r\n"
+				+ "				LEFT JOIN proveedor pv ON p.id_proveedor = pv.id_proveedor \r\n"
+				+ "				left join ubicacion ub on p.id_ubicacion  = ub.id_ubicacion";
 		List<Productos> lista = new ArrayList<>();
 
 		try (Connection con = Conexion.getConexion();
@@ -46,7 +47,7 @@ public class ProductosDAO {
 	public void guardar(Productos productos) {
 		String sql = "INSERT INTO productos "
 				+ "(codigo_barras, nombre, descripcion, id_categoria, unidad, precio_unitario, "
-				+ "stock_actual, stock_minimo, ubicacion, activo, id_proveedor, imagenProducto) "
+				+ "stock_actual, stock_minimo, id_ubicacion, activo, id_proveedor, imagenProducto) "
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		try (Connection conexion = Conexion.getConexion(); PreparedStatement ps = conexion.prepareStatement(sql)) {
@@ -74,7 +75,7 @@ public class ProductosDAO {
 
 		String sql = "UPDATE productos SET " + "codigo_barras = ?, " + "nombre = ?, " + "descripcion = ?, "
 				+ "id_categoria = ?, " + "unidad = ?, " + "precio_unitario = ?, " + "stock_actual = ?, "
-				+ "stock_minimo = ?, " + "ubicacion = ?, " + "activo = ?, " + "id_proveedor = ? "
+				+ "stock_minimo = ?, " + "id_ubicacion = ?, " + "activo = ?, " + "id_proveedor = ? "
 				+ "WHERE id_producto = ?";
 
 		try (Connection conexion = Conexion.getConexion(); PreparedStatement ps = conexion.prepareStatement(sql);) {
@@ -95,7 +96,6 @@ public class ProductosDAO {
 
 			ps.executeUpdate();
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.debug(e.getMessage());
 		}
 
@@ -145,7 +145,12 @@ public class ProductosDAO {
 	}
 
 	public Productos getByIdCodigoBarras(String codigoBarras) {
-		String sql = "SELECT id_producto, nombre as nombreProducto, codigo_barras, descripcion, id_categoria, unidad, precio_unitario, stock_actual as stockActual, stock_minimo as stockMinimo, ubicacion, activo, imagenProducto FROM productos  where codigo_barras = ?";
+		String sql = "SELECT     p.*, c.id_categoria AS idCategoria, \r\n"
+				+ "				     c.nombre AS nombreCategoria,     pv.id_proveedor as idProveedor, \r\n"
+				+ "				    pv.nombre_empresa AS nombreProveedor,  ub.pasillo, ub.estante  FROM productos p\r\n"
+				+ "				INNER JOIN categorias c ON p.id_categoria = c.id_categoria \r\n"
+				+ "				LEFT JOIN proveedor pv ON p.id_proveedor = pv.id_proveedor \r\n"
+				+ "				left join ubicacion ub on p.id_ubicacion  = ub.id_ubicacion where p.codigo_barras like CONCAT('%', ?, '%')";
 		Productos p = new Productos();
 		try (Connection con = Conexion.getConexion(); PreparedStatement ps = con.prepareStatement(sql);) {
 			ps.setString(1, codigoBarras);
@@ -155,7 +160,7 @@ public class ProductosDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			// logger.debug(e.getMessage());
+			 logger.debug(e.getMessage());
 		}
 		return p;
 	}
@@ -203,7 +208,6 @@ public class ProductosDAO {
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
 			logger.debug(e.getMessage());
 		}
 		return lista;
@@ -221,7 +225,6 @@ public class ProductosDAO {
 				lista.add(p);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
 			logger.debug(e.getMessage());
 		}
 		return lista;
@@ -236,17 +239,24 @@ public class ProductosDAO {
 				numero = rs.getInt("total");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
 			logger.debug(e.getMessage());
 		}
 		return numero;
 	}
 
 	public Productos getByNombreProducto(String codigoBarras) {
-		String sql = "SELECT id_producto, nombre as nombreProducto, codigo_barras, "
-				+ "descripcion, id_categoria, unidad, precio_unitario, stock_actual as stockActual, "
-				+ "stock_minimo as stockMinimo, id_ubicacion,"
-				+ " activo, imagenProducto FROM productos  where nombre LIKE ?";
+		String sql = "SELECT p.*, \r\n"
+				+ "       c.id_categoria AS idCategoria, \r\n"
+				+ "       c.nombre AS nombreCategoria,     \r\n"
+				+ "       pv.id_proveedor as idProveedor, \r\n"
+				+ "       pv.nombre_empresa AS nombreProveedor,  \r\n"
+				+ "       ub.pasillo, \r\n"
+				+ "       ub.estante  \r\n"
+				+ "FROM productos p\r\n"
+				+ "INNER JOIN categorias c ON p.id_categoria = c.id_categoria \r\n"
+				+ "LEFT JOIN proveedor pv ON p.id_proveedor = pv.id_proveedor \r\n"
+				+ "LEFT JOIN ubicacion ub ON p.id_ubicacion = ub.id_ubicacion \r\n"
+				+ "WHERE p.nombre LIKE CONCAT('%', ?, '%')";
 		Productos p = new Productos();
 		try (Connection con = Conexion.getConexion(); PreparedStatement ps = con.prepareStatement(sql);) {
 			ps.setString(1, codigoBarras);
@@ -255,7 +265,6 @@ public class ProductosDAO {
 				p = mapper.mapRowBy(rs);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
 			logger.debug(e.getMessage());
 		}
 		return p;

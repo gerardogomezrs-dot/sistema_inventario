@@ -68,6 +68,13 @@
                                            itemLabel="#{prov.nombreEmpresa}" itemValue="#{prov.idProveedor}" />
                         </p:selectOneMenu>
 
+                        <p:outputLabel for="ubicacion" value="Ubicación:" />
+                        <p:selectOneMenu id="ubicacion" value="#{productoBean.producto.idUbicacion}" style="width: 200px;">
+                            <f:selectItem itemLabel="Seleccione una ubicación" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{productoBean.listaUbicaciones}" var="ubi"
+                                           itemLabel="#{ubi.pasillo} - #{ubi.estante}" itemValue="#{ubi.idUbicacion}" />
+                        </p:selectOneMenu>
+
                         <h:outputLabel value="Unidad:" />
                         <p:inputText value="#{productoBean.producto.unidad}" />
 
@@ -79,9 +86,6 @@
 
                         <h:outputLabel value="Stock Mínimo:" />
                         <p:inputText value="#{productoBean.producto.stockMinimo}" />
-
-                        <h:outputLabel value="Ubicación:" />
-                        <p:inputText value="#{productoBean.producto.idUbicacion}" />
 
                         <h:outputLabel value="Activo:" />
                         <p:selectBooleanCheckbox value="#{productoBean.producto.activo}" />

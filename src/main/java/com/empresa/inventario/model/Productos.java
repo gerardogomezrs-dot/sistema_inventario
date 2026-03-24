@@ -19,5 +19,6 @@ public class Productos{
 	private boolean activo;
 	private Categorias categorias;
 	private Proveedor proveedor;
+	private Ubicacion ubicacion;
 	private byte[] archivo;
 }

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -28,12 +29,14 @@ public class CategoriasAlmacenBean implements Serializable {
 	*/
 	private static final long serialVersionUID = 1L;
 
+	private String filtro;
+
 	private List<Categorias> list;
-	
+
 	private List<Categorias> filteredList;
 
 	private ICategoriaService categoriaServicio;
-	
+
 	private transient UploadedFile uploadedFile;
 
 	private int idUsuario;
@@ -60,16 +63,26 @@ public class CategoriasAlmacenBean implements Serializable {
 	public void cargarListaCategorias() {
 		try {
 			list = categoriaServicio.getAllCategorias();
-			}catch (Exception e) {
-				e.printStackTrace();
-			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-	
+
 	public String irADashboard() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 		baseBean.registrarNavegacion(auditoriaService, Mensajes.NAVEGACION, "navego a dashboard", idUsuario,
 				nombreUsuario);
 		return "/pages/almacen/dashboard.xhtml?faces-redirect=true";
+	}
 
+	public void aplicarFiltroExterno() {
+		if (filtro != null && !filtro.trim().isEmpty()) {
+			this.list = categoriaServicio.byNombreCategoria(filtro);
+			System.err.println("Recibo nombre del producto " + filtro);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Resultados", "Mostrando resultados para: " + filtro));
+		} else {
+			this.list = categoriaServicio.getAllCategorias();
+		}
 	}
 }

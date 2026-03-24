@@ -62,13 +62,15 @@ public class MovimientosAlmacenBean implements Serializable {
 
 	private transient Usuario user;
 
-	private transient IAuditoriaService auditoriaService;
+	private IAuditoriaService auditoriaService;
 
-	private transient IMovimientosService service;
+	private IMovimientosService service;
 
-	private transient IProductoService iProductoService;
+	private IProductoService iProductoService;
 
-	private transient IUsuariosService iUsuariosService;
+	private IUsuariosService iUsuariosService;
+
+	private String codigoFiltro;
 
 	@Inject
 	MovimientosAlmacenBean(IAuditoriaService auditoriaService, IMovimientosService service,
@@ -119,19 +121,20 @@ public class MovimientosAlmacenBean implements Serializable {
 		this.movimientos.setCodigoBarras(null);
 	}
 
-	public void cargarInfoScanner() throws Exception {
+	public void cargarInfoScanner(String codigoFiltro) throws Exception {
 		String codigo = this.movimientos.getCodigoBarras();
 		Productos productos = new Productos();
 
 		try {
-			productos = iProductoService.getByCodigoBarras(codigo);
+			productos = iProductoService.getByCodigoBarras(codigoFiltro);
 			if (productos.getCodigoBarras().equals(codigo)) {
 				this.infoProductoExtra = "Cargado: " + codigo + " - Producto encontrado";
 				this.movimientos.setIdProducto(productos.getIdProducto());
 				this.movimientos.setNombreProducto(productos.getNombre());
 				this.movimientos.setProductoExistencias(productos.getStockActual());
 				this.movimientos.setImagenProducto(productos.getArchivo());
-				System.err.println("Tmaño de la imagen " + productos.getArchivo());
+				this.movimientos.setUbicacion(
+						productos.getUbicacion().getPasillo() + "/" + productos.getUbicacion().getEstante());
 				this.infoProductoExtra = "";
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Producto encontrado."));
@@ -169,7 +172,6 @@ public class MovimientosAlmacenBean implements Serializable {
 	}
 
 	public void saveTable() {
-		System.err.println("Guardando");
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 		try {
 			service.save(listaMovimientosGuardar);
@@ -243,5 +245,42 @@ public class MovimientosAlmacenBean implements Serializable {
 			return "data:image/png;base64," + Base64.getEncoder().encodeToString(bytes);
 		}
 		return "";
+	}
+
+	public void limpiarCampos() {
+		this.movimientos = new Movimientos();
+		this.infoProductoExtra = "";
+	}
+
+	public void procesarEscaneo() {
+		System.err.println("error");
+		FacesContext context = FacesContext.getCurrentInstance();
+		String url = "../almacen/movimientos/movimientos.xhtml?faces-redirect=true&query=" + codigoFiltro;
+		try {
+			context.getExternalContext().redirect(url);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void procesarEscaneoMovimientos() {
+		System.err.println("error");
+		FacesContext context = FacesContext.getCurrentInstance();
+		String url = "../movimientos/movimientos.xhtml?faces-redirect=true&query=" + codigoFiltro;
+		try {
+			context.getExternalContext().redirect(url);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void aplicarFiltroExterno() throws Exception {
+		if (codigoFiltro != null && !codigoFiltro.trim().isEmpty()) {
+			this.movimientos.setCodigoBarras(codigoFiltro);
+			cargarInfoScanner(codigoFiltro);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+					"Resultados", "Mostrando resultados para: " + codigoFiltro));
+		} else {
+		}
 	}
 }

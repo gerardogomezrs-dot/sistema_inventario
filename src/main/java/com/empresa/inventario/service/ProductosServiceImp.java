@@ -31,7 +31,7 @@ import com.opencsv.CSVReader;
 public class ProductosServiceImp implements IProductoService {
 
 	private ProductosDAO productosDAO = new ProductosDAO();
-	
+
 	private MovimientosDAO dao = new MovimientosDAO();
 
 	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ProductosServiceImp.class);
@@ -239,16 +239,13 @@ public class ProductosServiceImp implements IProductoService {
 	public Productos getByCodigoBarras(String codigoBarras) {
 		Productos p = new Productos();
 		try {
-			
-				p = productosDAO.getByIdCodigoBarras(codigoBarras);
-				if(p.getNombre()==null) {
-					throw new ExceptionMessage("Producto no encontrado");
-				} 
 
+			p = productosDAO.getByIdCodigoBarras(codigoBarras);
+			if (p.getNombre() == null) {
+				throw new ExceptionMessage("Producto no encontrado");
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			
-			
+			e.getMessage();
 		}
 		return p;
 	}
@@ -292,7 +289,7 @@ public class ProductosServiceImp implements IProductoService {
 
 	@Override
 	public int totalStockBajo() {
-		int  totalStock = 0;
+		int totalStock = 0;
 		totalStock = productosDAO.getTotalStockBajo();
 		return totalStock;
 	}
@@ -300,7 +297,7 @@ public class ProductosServiceImp implements IProductoService {
 	@Override
 	public int totalMovimientos(int idUsuario) {
 		int totalMovimientos = 0;
-		totalMovimientos = dao.totalMovimientos(idUsuario);	
+		totalMovimientos = dao.totalMovimientos(idUsuario);
 		return totalMovimientos;
 	}
 
@@ -308,13 +305,13 @@ public class ProductosServiceImp implements IProductoService {
 	public List<Productos> getByNombreProducto(String nombreProducto) {
 		List<Productos> list = new ArrayList<>();
 		try {
-		Productos productos = productosDAO.getByNombreProducto(nombreProducto);
-		System.err.println("producto " + productos.getNombre());
-	
-	list.add(productos);
-		}catch (Exception e) {
+			Productos productos = productosDAO.getByNombreProducto(nombreProducto);
+			System.err.println("producto " + productos.getNombre());
+
+			list.add(productos);
+		} catch (Exception e) {
 			e.printStackTrace();
-			}
+		}
 		return list;
 	}
 

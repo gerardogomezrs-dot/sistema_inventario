@@ -70,7 +70,7 @@ public class ReportesDAO {
 
 	public List<ReporteInventarioValorizado> getInventarioValorizado() {
 		String sql = "SELECT \r\n" + "    p.codigo_barras as codigoBarra,\r\n" + "    p.nombre as producto,\r\n"
-				+ "    c.nombre AS categoria,\r\n" + "    p.ubicacion as ubicacionProducto,\r\n"
+				+ "    c.nombre AS categoria,\r\n" + "    p.id_ubicacion as ubicacionProducto,\r\n"
 				+ "    p.stock_actual as stockActual,\r\n" + "    p.unidad as unidad,\r\n"
 				+ "    p.precio_unitario as precioUnitario,\r\n"
 				+ "    (p.stock_actual * p.precio_unitario) AS valorTotal\r\n" + "FROM productos p\r\n"

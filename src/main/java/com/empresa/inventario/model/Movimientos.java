@@ -14,6 +14,8 @@ public class Movimientos {
 	
 	private int idProducto;
 	
+	private String ubicacion;
+	
 	private String nombreProducto;
 	
 	private int productoExistencias;

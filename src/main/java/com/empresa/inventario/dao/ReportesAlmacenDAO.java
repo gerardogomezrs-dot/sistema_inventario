@@ -24,11 +24,18 @@ public class ReportesAlmacenDAO {
 
 
 	public List<ReportesExistencias> getInventarioValorizado() {
-		String sql = "SELECT \r\n" + "    p.codigo_barras  AS 'Codigo',\r\n" + "    p.nombre AS 'Producto',\r\n"
-				+ "    c.nombre AS 'Categoria',\r\n" + "    p.stock_actual  AS 'Cantidad Disponible',\r\n"
-				+ "    p.ubicacion AS 'Ubicacion',\r\n" + "    p.precio_unitario AS 'Precio Unitario'\r\n"
-				+ "FROM productos p\r\n" + "JOIN categorias c ON p.id_categoria = c.id_categoria \r\n"
-				+ "WHERE p.activo  = 1\r\n" + "ORDER BY c.nombre, p.nombre;";
+		String sql = "SELECT \r\n"
+				+ "    p.codigo_barras AS 'Codigo',\r\n"
+				+ "    p.nombre AS 'Producto',\r\n"
+				+ "    c.nombre AS 'Categoria',\r\n"
+				+ "    p.stock_actual AS 'Cantidad Disponible',\r\n"
+				+ "    CONCAT(u.pasillo,' ', u.estante) as Ubicacion,\r\n"
+				+ "    p.precio_unitario AS 'Precio Unitario'\r\n"
+				+ "FROM productos p\r\n"
+				+ "inner JOIN categorias c ON p.id_categoria = c.id_categoria\r\n"
+				+ "INNER join ubicacion u on p.id_ubicacion  = u.id_ubicacion \r\n"
+				+ "WHERE p.activo = 1\r\n"
+				+ "ORDER BY c.nombre, p.nombre;";
 		List<ReportesExistencias> lista = new ArrayList<>();
 		try (Connection con = Conexion.getConexion();
 				PreparedStatement ps = con.prepareStatement(sql);
