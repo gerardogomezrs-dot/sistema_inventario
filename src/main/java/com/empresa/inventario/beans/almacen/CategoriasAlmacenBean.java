@@ -78,7 +78,6 @@ public class CategoriasAlmacenBean implements Serializable {
 	public void aplicarFiltroExterno() {
 		if (filtro != null && !filtro.trim().isEmpty()) {
 			this.list = categoriaServicio.byNombreCategoria(filtro);
-			System.err.println("Recibo nombre del producto " + filtro);
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Resultados", "Mostrando resultados para: " + filtro));
 		} else {

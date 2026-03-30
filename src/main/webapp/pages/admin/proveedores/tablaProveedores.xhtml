@@ -6,8 +6,10 @@
 
 <h:head>
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
-    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
+    <link rel="stylesheet" href="https://unpkg.com/primeicons/primeicons.css" />
     <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
+        <link rel="stylesheet" href="#{request.contextPath}/css/dark-mode.css" />
+
 
     <title>Gestión de Proveedores</title>
     <style type="text/css">
@@ -30,6 +32,11 @@
             margin-right: 5px !important;
         }
     </style>
+    <title>Gestión de Productos</title>
+      <f:metadata>
+        <f:viewParam name="query" value="#{proveedorBean.filtro}" />
+        <f:viewAction action="#{proveedorBean.aplicarFiltroExterno}" />
+    </f:metadata>
 </h:head>
 <h:body>
     <h:form id="form">

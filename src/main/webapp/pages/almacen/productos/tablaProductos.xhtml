@@ -8,12 +8,15 @@
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
     <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
     <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
+    <link rel="stylesheet" href="#{request.contextPath}/css/dark-mode.css" />
+    
+
     <f:metadata>
-    <!-- Esto captura 'query' de la URL y lo mete en 'filtro' del Bean -->
-    <f:viewParam name="query" value="#{productosAlmacenBean.filtro}" />
-    <!-- Esto ejecuta la búsqueda automáticamente al cargar la página -->
-    <f:viewAction action="#{productosAlmacenBean.aplicarFiltroExterno}" />
-</f:metadata>
+        <!-- Esto captura 'query' de la URL y lo mete en 'filtro' del Bean -->
+        <f:viewParam name="query" value="#{productosAlmacenBean.filtro}" />
+        <!-- Esto ejecuta la búsqueda automáticamente al cargar la página -->
+        <f:viewAction action="#{productosAlmacenBean.aplicarFiltroExterno}" />
+    </f:metadata>
 </h:head>
 <h:body>
     <h:form id="form">
@@ -61,15 +64,16 @@
             <p:column headerText="Stock Mínimo">
                 <h:outputText value="#{producto.stockMinimo}" />
             </p:column>
-            <p:column headerText="Ubicación">
+            <p:column headerText="Pasillo:">
                 <h:outputText value="#{producto.ubicacion.pasillo}" />
             </p:column>
 
-             <p:column headerText="Estante">
+            <p:column headerText="Estante">
                 <h:outputText value="#{producto.ubicacion.estante}" />
             </p:column>
         </p:dataTable>
         <ui:include src="/pages/almacen/footer.xhtml" />
     </h:form>
 </h:body>
+
 </html>

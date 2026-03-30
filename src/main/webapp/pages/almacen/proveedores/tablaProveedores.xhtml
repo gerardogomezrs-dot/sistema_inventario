@@ -29,12 +29,14 @@
     <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
     <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
     <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
+    <link rel="stylesheet" href="#{request.contextPath}/css/dark-mode.css" />
+
     <f:metadata>
-    <!-- Esto captura 'query' de la URL y lo mete en 'filtro' del Bean -->
-    <f:viewParam name="query" value="#{proveedoresAlmacenBean.filtro}" />
-    <!-- Esto ejecuta la búsqueda automáticamente al cargar la página -->
-    <f:viewAction action="#{proveedoresAlmacenBean.aplicarFiltroExterno}" />
-</f:metadata>
+        <!-- Esto captura 'query' de la URL y lo mete en 'filtro' del Bean -->
+        <f:viewParam name="query" value="#{proveedoresAlmacenBean.filtro}" />
+        <!-- Esto ejecuta la búsqueda automáticamente al cargar la página -->
+        <f:viewAction action="#{proveedoresAlmacenBean.aplicarFiltroExterno}" />
+    </f:metadata>
 </h:head>
 <h:body>
     <h:form id="formTablaProveedores">
@@ -44,7 +46,7 @@
         <p:growl id="msgs" showDetail="true" />
         <p:separator />
         <p:toolbar style="margin-bottom: 20px; border: none; background: transparent;">
-           
+
             <f:facet name="left">
                 <p:commandButton value="Regresar" icon="pi pi-chevron-left"
                     action="#{proveedoresAlmacenBean.irADashboard}" immediate="true" style="margin-left:10px;" />
@@ -81,4 +83,5 @@
         <ui:include src="/pages/almacen/footer.xhtml" />
     </h:form>
 </h:body>
+
 </html>

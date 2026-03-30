@@ -303,6 +303,7 @@ public class ProductosServiceImp implements IProductoService {
 
 	@Override
 	public List<Productos> getByNombreProducto(String nombreProducto) {
+		System.err.println("hola");
 		List<Productos> list = new ArrayList<>();
 		try {
 			Productos productos = productosDAO.getByNombreProducto(nombreProducto);

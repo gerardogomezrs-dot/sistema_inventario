@@ -1,11 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html lang="es-MX" xmlns="http://www.w3.org/1999/xhtml" 
-    xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:f="http://xmlns.jcp.org/jsf/core" 
-    xmlns:p="http://primefaces.org/ui"
+<html lang="es-MX" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
     <title>Perfil de Usuario | Almacén</title>
+    <link rel="stylesheet" href="#{request.contextPath}/css/dark-mode.css" />
+    <link rel="stylesheet" href="https://unpkg.com/primeicons/primeicons.css" />
+
+
     <style>
         :root {
             --primary-color: #0a58ca;
@@ -39,7 +42,6 @@
             margin-bottom: 35px;
         }
 
-        /* Avatar circular decorativo */
         .profile-avatar {
             width: 80px;
             height: 80px;
@@ -89,7 +91,6 @@
             padding-left: 10px;
         }
 
-        /* Estilo mejorado para el botón de PrimeFaces */
         .ui-button.back-button {
             width: 100% !important;
             margin-top: 35px !important;
@@ -111,15 +112,27 @@
         }
 
         @media (max-width: 480px) {
-            .profile-container { margin: 20px; padding: 25px; }
-            .detail-row { grid-template-columns: 1fr; gap: 5px; }
+            .profile-container {
+                margin: 20px;
+                padding: 25px;
+            }
+
+            .detail-row {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
         }
     </style>
 </h:head>
 <h:body>
+    <div class="menu-wrapper">
+
+    </div>
 
     <h:form id="formPerfil">
         <ui:include src="/pages/almacen/menu.xhtml" />
+
+        <p:growl id="msgs" showDetail="true" />
 
         <div class="profile-container">
             <div class="profile-header">
@@ -136,14 +149,12 @@
                         <h:outputText value="#{loginBean.usuario.nombre}" />
                     </div>
                 </div>
-
                 <div class="detail-row">
                     <div class="label"><i class="pi pi-user-edit" style="margin-right: 8px;"></i>Usuario:</div>
                     <div class="value">
                         <h:outputText value="#{loginBean.usuario.userName}" />
                     </div>
                 </div>
-
                 <div class="detail-row">
                     <div class="label"><i class="pi pi-tag" style="margin-right: 8px;"></i>Rol:</div>
                     <div class="value">
@@ -151,15 +162,17 @@
                     </div>
                 </div>
             </div>
-            <p:commandButton value="Regresar al Dashboard" 
-                             icon="pi pi-arrow-left"
-                             action="#{navegacionAlmacenBean.irADashboard()}" 
-                             styleClass="back-button" 
-                             ajax="false" />
+
+            <p:commandButton value="Regresar al Dashboard" icon="pi pi-arrow-left"
+                action="#{navegacionAlmacenBean.irADashboard()}" styleClass="back-button" ajax="false" immediate="true"
+                process="@this" />
         </div>
     </h:form>
+
     <div class="footer-wrapper">
         <ui:include src="/pages/almacen/footer.xhtml" />
     </div>
+
 </h:body>
+
 </html>

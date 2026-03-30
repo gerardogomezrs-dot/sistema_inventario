@@ -5,10 +5,15 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
-    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
+    <link rel="stylesheet" href="https://unpkg.com/primeicons/primeicons.css" />
     <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
+    <link rel="stylesheet" href="#{request.contextPath}/css/dark-mode.css" />
 
     <title>Gestión de Categorías</title>
+    <f:metadata>
+        <f:viewParam name="query" value="#{categoriasBean.filtro}" />
+        <f:viewAction action="#{categoriasBean.aplicarFiltroExterno}" />
+    </f:metadata>
 </h:head>
 <h:body>
     <h:form id="form">

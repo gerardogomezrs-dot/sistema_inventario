@@ -1,6 +1,30 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
     xmlns:p="http://primefaces.org/ui" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
     xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:outputScript>
+        function toggleTheme() {
+        const doc = document.documentElement;
+        const theme = doc.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        doc.setAttribute("data-theme", theme);
+        localStorage.setItem("almacen-theme", theme);
+        }
+
+        // Se ejecuta inmediatamente para evitar el parpadeo blanco
+        (function() {
+        const savedTheme = localStorage.getItem("almacen-theme") || "light";
+        document.documentElement.setAttribute("data-theme", savedTheme);
+
+        // Si el checkbox existe en el DOM, actualizar su estado
+        document.addEventListener("DOMContentLoaded", function() {
+        const darkSwitch = document.querySelector("[id$='darkSwitch_input']");
+        if (darkSwitch) {
+        darkSwitch.checked = (savedTheme === "dark");
+        }
+        });
+        })();
+    </h:outputScript>
+
     <div id="footer" style="
     background-color: #222; 
     color: #999; 
@@ -10,13 +34,16 @@
     font-family: Arial, sans-serif;
     font-size: 13px;
     margin-top: 30px;">
+
         <p style="margin: 5px 0;">
             <strong>SISTEMA DE CONTROL DE INVENTARIO</strong> &#169; 2026
         </p>
+
         <p style="margin: 0;">
             Versión del Sistema: 1.0.2 | Usuario activo: <strong>
                 <h:outputText value="#{loginBean.usuario.userName}" />
             </strong>
         </p>
     </div>
+
 </ui:composition>

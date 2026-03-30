@@ -106,7 +106,7 @@
     </style>
 
     <h:outputScript>
-        /*
+       /*
         <![CDATA[ */
         function forceFocus() {
             var inputScanner = document.getElementById('formMovimiento:scannerInput');
@@ -160,7 +160,7 @@
         $(document).ready(function () {
             forceFocus();
         });
- /* ]]> */
+       /* ]]> */
     </h:outputScript>
 
     <f:metadata>
@@ -312,9 +312,9 @@
                     <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 15px; margin-top: 15px;">
                         <p:commandButton id="btnGuardar" value="Añadir a Lista" icon="pi pi-plus" ajax="true"
                             action="#{movimientosAlmacenBean.save}" process="@form"
-                            update="tablaRegistros scannerInput txtCodigoBarras
-                             txtIdProducto txtNombreProducto txtProductoExistente
-                              txtUbicacion contenedorImagen panelInfoExtra txtCantidad movimiento txtOrigenDestino txtObservaciones messages"
+                            update="tablaRegistros scannerInput txtOrigenDestino txtCodigoBarras txtIdProducto 
+                            txtNombreProducto txtProductoExistente movimiento txtCantidad txtObservaciones
+                            txtUbicacion contenedorImagen panelInfoExtra messages"
                             oncomplete="prepararSiguienteEscaneo();" styleClass="ui-button-success"
                             style="height: 45px;" />
 

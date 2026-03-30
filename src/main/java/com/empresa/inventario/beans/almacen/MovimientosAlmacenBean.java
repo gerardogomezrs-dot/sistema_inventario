@@ -72,6 +72,8 @@ public class MovimientosAlmacenBean implements Serializable {
 
 	private String codigoFiltro;
 
+	private String codigoBarras;
+	
 	@Inject
 	MovimientosAlmacenBean(IAuditoriaService auditoriaService, IMovimientosService service,
 			IProductoService iProductoService, IUsuariosService iUsuariosService) {
@@ -122,6 +124,7 @@ public class MovimientosAlmacenBean implements Serializable {
 	}
 
 	public void cargarInfoScanner(String codigoFiltro) throws Exception {
+		System.err.println("Hola");
 		String codigo = this.movimientos.getCodigoBarras();
 		Productos productos = new Productos();
 
@@ -129,6 +132,33 @@ public class MovimientosAlmacenBean implements Serializable {
 			productos = iProductoService.getByCodigoBarras(codigoFiltro);
 			if (productos.getCodigoBarras().equals(codigo)) {
 				this.infoProductoExtra = "Cargado: " + codigo + " - Producto encontrado";
+				this.movimientos.setIdProducto(productos.getIdProducto());
+				this.movimientos.setNombreProducto(productos.getNombre());
+				this.movimientos.setProductoExistencias(productos.getStockActual());
+				this.movimientos.setImagenProducto(productos.getArchivo());
+				this.movimientos.setUbicacion(
+						productos.getUbicacion().getPasillo() + "/" + productos.getUbicacion().getEstante());
+				this.infoProductoExtra = "";
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Producto encontrado."));
+			} else {
+
+			}
+		} catch (ExceptionMessage e) {
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", "No existe el producto");
+		} catch (Exception e) {
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", "No existe el producto");
+		}
+	}
+	
+	public void cargarInfoScanner2() throws Exception {
+		String codigoBarras = this.movimientos.getCodigoBarras();
+		Productos productos = new Productos();
+
+		try {
+			productos = iProductoService.getByCodigoBarras(codigoBarras);
+			if (productos.getCodigoBarras().equals(codigoBarras)) {
+				this.infoProductoExtra = "Cargado: " + codigoBarras + " - Producto encontrado";
 				this.movimientos.setIdProducto(productos.getIdProducto());
 				this.movimientos.setNombreProducto(productos.getNombre());
 				this.movimientos.setProductoExistencias(productos.getStockActual());
@@ -155,7 +185,6 @@ public class MovimientosAlmacenBean implements Serializable {
 			Usuario usuario = iUsuariosService.getByIdUsuario(idUsuario);
 			if (usuario == null) {
 				throw new ExceptionMessage("Vacio");
-
 			}
 			list = service.getbyIdUsuarioMovimientos(usuario.getIdUsuario());
 		} catch (ExceptionMessage e) {
@@ -181,7 +210,10 @@ public class MovimientosAlmacenBean implements Serializable {
 
 			if (listaMovimientosGuardar != null) {
 				listaMovimientosGuardar.clear();
+				this.movimientos = new Movimientos();
 			}
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Registros guardados"));
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
@@ -198,38 +230,10 @@ public class MovimientosAlmacenBean implements Serializable {
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.GUARDAR_REGISTRO_TABLA,
 					Mensajes.USUARIO + nombreUsuario + " registro un elemento a la tabla", Mensajes.INFO.toString(),
 					idUsuario);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Registro guardado"));
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.debug(e.getMessage());
-			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
-					Mensajes.ERROR.toString(), idUsuario);
-		}
-	}
-
-	public void cargarArchivo() {
-		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-		List<Movimientos> liMovimientos = new ArrayList<>();
-		try {
-			if (uploadedFile == null || uploadedFile.getContents() == null) {
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
-			}
-			listaMovimientosGuardar = new ArrayList<>();
-			liMovimientos = service.cargaMasiva(uploadedFile, idUsuario);
-			this.listaMovimientosGuardar = new ArrayList<>(liMovimientos);
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
-
-			baseBean.registrarAuditoria(auditoriaService, Mensajes.CARGA_MASIVA_REGISTROS.getTexto(),
-					Mensajes.USUARIO + nombreUsuario + " realizo una carga masiva de registros",
-					Mensajes.INFO.toString(), idUsuario);
-
-		} catch (ExceptionMessage e) {
-			logger.debug(e.getMessage());
-			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
-			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
-					Mensajes.ERROR.toString(), idUsuario);
-		} catch (Exception e) {
 			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
@@ -253,9 +257,8 @@ public class MovimientosAlmacenBean implements Serializable {
 	}
 
 	public void procesarEscaneo() {
-		System.err.println("error");
 		FacesContext context = FacesContext.getCurrentInstance();
-		String url = "../almacen/movimientos/movimientos.xhtml?faces-redirect=true&query=" + codigoFiltro;
+		String url = "../almacen/movimientos/escaneoRapido.xhtml?faces-redirect=true&query=" + codigoFiltro;
 		try {
 			context.getExternalContext().redirect(url);
 		} catch (Exception e) {
@@ -264,7 +267,6 @@ public class MovimientosAlmacenBean implements Serializable {
 	}
 
 	public void procesarEscaneoMovimientos() {
-		System.err.println("error");
 		FacesContext context = FacesContext.getCurrentInstance();
 		String url = "../movimientos/movimientos.xhtml?faces-redirect=true&query=" + codigoFiltro;
 		try {
@@ -275,12 +277,9 @@ public class MovimientosAlmacenBean implements Serializable {
 	}
 
 	public void aplicarFiltroExterno() throws Exception {
-		if (codigoFiltro != null && !codigoFiltro.trim().isEmpty()) {
 			this.movimientos.setCodigoBarras(codigoFiltro);
 			cargarInfoScanner(codigoFiltro);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 					"Resultados", "Mostrando resultados para: " + codigoFiltro));
-		} else {
-		}
 	}
 }

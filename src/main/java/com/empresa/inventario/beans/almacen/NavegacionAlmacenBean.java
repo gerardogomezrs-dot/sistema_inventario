@@ -11,10 +11,13 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.empresa.inventario.beans.BaseAuditoriaBean;
+import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Productos;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
+import com.empresa.inventario.service.ICategoriaService;
 import com.empresa.inventario.service.IProductoService;
+import com.empresa.inventario.service.IProveedorService;
 import com.empresa.inventario.utils.Mensajes;
 
 import lombok.Data;
@@ -43,11 +46,18 @@ public class NavegacionAlmacenBean implements Serializable {
 	private int movimientosHoyCount;
 
 	private IProductoService iProductoService;
+	
+	private ICategoriaService iCategoriaService;
+	
+	private IProveedorService iProveedorService;
 
 	@Inject
-	public NavegacionAlmacenBean(IAuditoriaService auditoriaService, IProductoService iProductoService) {
+	public NavegacionAlmacenBean(IAuditoriaService auditoriaService, IProductoService iProductoService,
+			ICategoriaService iCategoriaService, IProveedorService iProveedorService) {
 		this.auditoriaService = auditoriaService;
 		this.iProductoService = iProductoService;
+		this.iCategoriaService = iCategoriaService;
+		this.iProveedorService = iProveedorService;
 	}
 
 	@PostConstruct
@@ -115,49 +125,53 @@ public class NavegacionAlmacenBean implements Serializable {
 	}
 
 	public void filtrarBusqueda() {
+	    System.err.println("Iniciando búsqueda: " + textoBusqueda);
 
-		if (textoBusqueda == null || textoBusqueda.trim().isEmpty()) {
-			// this.listaProductos;
-			return;
-		}
-		listaProductos = iProductoService.getAll();
-		String filtro = textoBusqueda.toLowerCase();
+	    if (textoBusqueda == null || textoBusqueda.trim().isEmpty()) {
+	        // Mantengo tu lógica de excepción, aunque podrías usar FacesMessage para no romper el flujo
+	        throw new ExceptionMessage("Error: El campo de búsqueda está vacío");
+	    }
 
-		listaProductos.stream().filter(p -> (p.getNombre() != null && p.getNombre().toLowerCase().contains(filtro))
-				|| (p.getProveedor() != null && p.getProveedor().getNombreEmpresa().toLowerCase().contains(filtro))
-				|| (p.getCategorias() != null && p.getCategorias().getNombre().toLowerCase().contains(filtro)))
-				.collect(Collectors.toList());
+	    String filtro = textoBusqueda.toLowerCase().trim();
 
-		redirigirSegunBusqueda(filtro);
+	    // 1. Verificamos si existe coincidencia en Proveedores
+	    boolean esProveedor = iProveedorService.proveedors().stream()
+	            .anyMatch(prov -> prov.getNombreEmpresa().toLowerCase().contains(filtro));
+
+	    // 2. Verificamos si existe coincidencia en Categorías
+	    boolean esCategoria = iCategoriaService.getAllCategorias().stream()
+	            .anyMatch(cat -> cat.getNombre().toLowerCase().contains(filtro));
+
+	    // 3. Verificamos si existe coincidencia en Productos
+	    // (Actualizamos la lista de productos por si se necesita mostrar después)
+	    listaProductos = iProductoService.getAll().stream()
+	            .filter(p -> p.getNombre().toLowerCase().contains(filtro))
+	            .collect(Collectors.toList());
+	    
+	    boolean esProducto = !listaProductos.isEmpty();
+
+	    // Ejecutamos la redirección con los resultados encontrados
+	    redirigirSegunBusqueda(esProveedor, esCategoria, esProducto);
 	}
 
-	public void redirigirSegunBusqueda(String filtro) {
-		try {
-			FacesContext context = FacesContext.getCurrentInstance();
-
-			boolean esProducto = listaProductos.stream().anyMatch(p ->  p.getNombre().toLowerCase().contains(filtro));
-			
-			boolean esProveedor = listaProductos.stream().anyMatch(p -> p.getProveedor() != null
-					&& p.getProveedor().getNombreEmpresa().toLowerCase().contains(filtro));
-
-			boolean esCategoria = listaProductos.stream().anyMatch(
-					p -> p.getCategorias() != null && p.getCategorias().getNombre().toLowerCase().contains(filtro));
-
-			if (esProveedor) {
-				String url = "../almacen/proveedores/tablaProveedores.xhtml?faces-redirect=true&query=" + textoBusqueda;
-				context.getExternalContext().redirect(url);
-			} 
-			else if (esCategoria) {
-				String url = "../almacen/categorias/tablaCategorias.xhtml?faces-redirect=true&query=" + textoBusqueda;
-				context.getExternalContext().redirect(url);
-			} 
-			else if(esProducto){
-				String url = "../almacen/productos/tablaProductos.xhtml?faces-redirect=true&query=" + textoBusqueda;
-				context.getExternalContext().redirect(url);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void redirigirSegunBusqueda(boolean esProveedor, boolean esCategoria, boolean esProducto) {
+	    try {
+	        FacesContext context = FacesContext.getCurrentInstance();
+	        String queryParam = "?faces-redirect=true&query=" + textoBusqueda;
+	        String url = "";
+	        if (esProveedor) {
+	            url = "../almacen/proveedores/tablaProveedores.xhtml" + queryParam;
+	        } else if (esCategoria) {
+	            url = "../almacen/categorias/tablaCategorias.xhtml" + queryParam;
+	        } else if (esProducto) {
+	            url = "../almacen/productos/tablaProductos.xhtml" + queryParam;
+	        } else {
+	            url = "../almacen/dashboard.xhtml";
+	            
+	        }
+	        context.getExternalContext().redirect(url);	        
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
 	}
-
 }

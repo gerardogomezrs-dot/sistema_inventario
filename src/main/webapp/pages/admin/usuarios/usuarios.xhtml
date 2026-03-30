@@ -1,87 +1,113 @@
 <!DOCTYPE html>
-<html lang="es-MX" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<html lang="es-MX" 
+    xmlns="http://www.w3.org/1999/xhtml" 
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" 
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
-	<link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
-	<link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
-	    <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
+    <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+    <link rel="stylesheet" href="https://unpkg.com/primeicons/primeicons.css" />
+    <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
+    <link rel="stylesheet" href="#{request.contextPath}/css/dark-mode.css" />
 
-	<style>
-		.ui-panelgrid .ui-grid-responsive .ui-grid-row {
-			border: none !important;
-		}
+    <style>
+        /* Eliminamos bordes innecesarios y mejoramos el centrado */
+        .ui-panelgrid.ui-panelgrid-blank .ui-panelgrid-content {
+            border: none !important;
+        }
 
-		.label {
-			font-weight: bold;
-			width: 150px;
-		}
+        .centered-panel {
+            max-width: 600px;
+            margin: 2rem auto;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
 
-		.value {
-			width: 300px;
-		}
-	</style>
-	<script type="text/javascript">
-		function manejarRegistro(args) {
-			if (!args.validationFailed) {
-				PF('dlgConfirmacion').show();
-			}
-		}
-	</script>
-	<title>Registrar Usuarios</title>
+        .label {
+            font-weight: bold;
+            width: 160px;
+            display: inline-block;
+        }
+
+        /* Asegura que los inputs ocupen el ancho disponible */
+        .full-width {
+            width: 100% !important;
+        }
+    </style>
+
+    <script type="text/javascript">
+        function manejarRegistro(args) {
+            if (!args.validationFailed) {
+                PF('dlgConfirmacion').show();
+            }
+        }
+    </script>
+    <title>Registrar Usuarios</title>
 </h:head>
 
 <h:body>
+    <p:growl id="msjs" showDetail="true" life="4000" />
 
-	<p:growl id="msjs" showDetail="true" />
+    <h:form id="formUsuario">
+        <ui:include src="/pages/admin/menu.xhtml" />
+        
+        <div style="height: 20px;"></div>
 
-	<h:form id="formUsuario">
-		<ui:include src="/pages/admin/menu.xhtml" />
-		<separator />
-		<p:panel header="Registro de Usuarios" style="width: 600px; margin: 0 auto;">
+        <p:panel header="Registro de Usuarios" styleClass="centered-panel">
+            
+            <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="label, value">
 
-			<h:panelGrid columns="2" columnClasses="label,value">
+                <p:outputLabel for="nombre" value="Nombre:" />
+                <p:inputText id="nombre" value="#{usuariosBean.usuario.nombre}" styleClass="full-width" />
 
-				<h:outputLabel value="Nombre:" />
-				<p:inputText value="#{usuariosBean.usuario.nombre}" required="false" />
+                <p:outputLabel for="rol" value="Rol:" />
+                <p:inputText id="rol" value="#{usuariosBean.usuario.rol}" styleClass="full-width" />
 
-				<h:outputLabel value="Rol:" />
-				<p:inputText value="#{usuariosBean.usuario.rol}" required="false" />
+                <p:outputLabel for="permisos" value="Permisos:" />
+                <p:inputText id="permisos" value="#{usuariosBean.usuario.permisos}" styleClass="full-width" />
 
-				<h:outputLabel value="Permisos:" />
-				<p:inputText value="#{usuariosBean.usuario.permisos}" required="false" />
+                <p:outputLabel for="user" value="Nombre Usuario:" />
+                <p:inputText id="user" value="#{usuariosBean.usuario.userName}" styleClass="full-width" />
 
-				<h:outputLabel value="Nombre Usuario:" />
-				<p:inputText value="#{usuariosBean.usuario.userName}" required="false" />
+                <p:outputLabel for="pass" value="Password:" />
+                <p:password id="pass" value="#{usuariosBean.usuario.password}" toggleMask="true" redisplay="true" styleClass="full-width" />
 
-				<h:outputLabel value="Password :" />
-				<p:inputText value="#{usuariosBean.usuario.password}" required="false" />
+                <p:outputLabel for="activo" value="Estado Activo:" />
+                <p:inputSwitch id="activo" value="#{usuariosBean.usuario.activo}" />
 
-				<h:outputLabel value="Activo :" />
-				<p:selectBooleanCheckbox value="#{usuariosBean.usuario.activo}" required="false" />
+            </p:panelGrid>
 
-			</h:panelGrid>
+            <f:facet name="footer">
+                <div style="display: flex; justify-content: flex-end; gap: 10px; padding: 10px 0;">
+                    <p:commandButton value="Guardar" 
+                                     icon="pi pi-save" 
+                                     action="#{usuariosBean.guardar}" 
+                                     process="@form"
+                                     update=":msjs @form" 
+                                     oncomplete="manejarRegistro(args)"
+                                     styleClass="ui-button-success" />
 
-			<p:separator />
+                    <p:commandButton value="Regresar" 
+                                     icon="pi pi-chevron-left" 
+                                     action="#{usuariosBean.irATablaUsuario}"
+                                     immediate="true" 
+                                     styleClass="ui-button-secondary" />
+                </div>
+            </f:facet>
+        </p:panel>
 
-			<p:commandButton value="Guardar" icon="pi pi-save" action="#{usuariosBean.guardar}" process="@form"
-				update=":msjs @form" oncomplete="manejarRegistro(args)" />
+        <p:dialog header="Éxito" widgetVar="dlgConfirmacion" modal="true" closable="false" showEffect="fade" hideEffect="fade">
+            <div style="text-align: center; padding: 10px;">
+                <i class="pi pi-check-circle" style="font-size: 3rem; color: var(--green-500); margin-bottom: 1rem;"></i>
+                <p style="margin: 0;">Los datos se han guardado correctamente.</p>
+                <br />
+                <p:commandButton value="Aceptar" type="button" icon="pi pi-check"
+                                 onclick="PF('dlgConfirmacion').hide(); location.reload();" />
+            </div>
+        </p:dialog>
 
-			<p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{usuariosBean.irATablaUsuario}"
-				immediate="true" style="margin-left: 10px;" />
-		</p:panel>
-
-		<!-- Dialog -->
-		<p:dialog header="Mensaje" widgetVar="dlgConfirmacion" modal="true" closable="false">
-			<h:outputText value="Datos guardados correctamente." />
-			<br /><br />
-			<p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacion').hide(); location.reload();" />
-		</p:dialog>
-		<ui:include src="/pages/admin/footer.xhtml" />
-
-	</h:form>
-
+        <ui:include src="/pages/admin/footer.xhtml" />
+    </h:form>
 </h:body>
-
 </html>

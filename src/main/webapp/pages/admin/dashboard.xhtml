@@ -8,7 +8,9 @@
     <title>Sistema de Inventario - Panel de Control</title>
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
     <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
-
+    <link rel="stylesheet" href="https://unpkg.com/primeicons/primeicons.css" />
+    <link rel="stylesheet" href="#{request.contextPath}/css/dark-mode.css" />
+    <link rel="stylesheet" href="#{request.contextPath}/css/styles.css" />
     <style>
         /* ===== ESTILOS ORIGINALES ===== */
         .badge-info {
@@ -92,9 +94,43 @@
 
         <p:menubar>
             <p:menuitem value="Inicio" url="dashboard.xhtml" icon="pi pi-home" />
+
             <f:facet name="options">
-                <p:commandButton value="Cerrar Sesión" action="#{loginBean.logout}" icon="pi pi-power-off"
-                    style="background-color: #c63934; color: white; border: none;" />
+                <div style="display: flex; align-items: center; gap: 15px;">
+                   <div class="dark-mode-container">
+                    <i class="pi pi-moon" style="color: var(--primary-color);"></i>
+                    <p:inputSwitch id="darkSwitch" widgetVar="darkSwitchWV" onchange="toggleTheme()">
+                        <p:ajax update="@none" />
+                    </p:inputSwitch>
+                    <h:outputLabel for="darkSwitch" value="Modo Oscuro" styleClass="mode-label" />
+                </div>
+
+                   <div class="search-container">
+    <i class="pi pi-search search-icon"></i>
+    
+    <p:inputText id="txtBusqueda" 
+                 placeholder="Buscar productos..." 
+                 styleClass="search-input"
+                 value="#{navBean.textoBusqueda}">
+        <p:ajax event="keyup" 
+                delay="800" 
+                process="@this" 
+                listener="#{navBean.filtrarBusqueda}"
+                update=":formPrincipal:messages" />
+    </p:inputText>
+
+    <i class="pi pi-camera scanner-trigger" 
+       onclick="PF('dlgScanner').show(); startScanner();"
+       title="Escanear código con cámara"></i>
+</div>
+
+                    <p:commandButton value="Escaneo Rápido" icon="pi pi-bolt" type="button"
+                        onclick="PF('dlgEscaneo').show(); setTimeout(function(){ document.getElementById('formEscaneo:codigoEscaneado').focus(); }, 400);"
+                        styleClass="ui-button-raised ui-button-info" style="font-weight: bold; border-radius: 8px;" />
+
+                    <p:commandButton value="Salir" action="#{loginBean.logout}" icon="pi pi-power-off"
+                        styleClass="btn-logout" ajax="false" />
+                </div>
             </f:facet>
         </p:menubar>
 
@@ -138,7 +174,8 @@
                                 <div style="flex-grow: 1;">
                                     <h3 class="alerta-titulo">Atención: Stock Crítico</h3>
                                     <p class="alerta-texto">
-                                        Se han detectado <b>#{notificacionBean.cantidadCriticos}</b> productos bajo el mínimo.
+                                        Se han detectado <b>#{notificacionBean.cantidadCriticos}</b> productos bajo el
+                                        mínimo.
                                     </p>
                                 </div>
 
@@ -164,13 +201,13 @@
                                 <div style="flex-grow: 1;">
                                     <h3 class="alerta-titulo" style="color: #bdc3c7;">Agotado: Sin Existencias</h3>
                                     <p class="alerta-texto">
-                                        Se han detectado <b>#{notificacionBean.cantidadAgotados}</b> productos con stock en cero.
+                                        Se han detectado <b>#{notificacionBean.cantidadAgotados}</b> productos con stock
+                                        en cero.
                                     </p>
                                 </div>
 
                                 <p:commandButton value="Ver Agotados" icon="pi pi-ban"
-                                    oncomplete="PF('dlgSinStock').show()" update="tablaDetalleAgotados"
-                                    process="@this"
+                                    oncomplete="PF('dlgSinStock').show()" update="tablaDetalleAgotados" process="@this"
                                     style="background-color: #636e72; border: none; width: auto; font-weight: bold; margin-right: 25px;" />
                             </div>
                         </h:panelGroup>
@@ -189,17 +226,15 @@
                                 icon="pi pi-search" />
                             <p:commandButton value="Gestionar Reportes" action="#{navBean.irAReportes()}"
                                 icon="pi pi-chart-bar" styleClass="ui-button-info" />
-                           <p:commandButton value="Gestionar Proveedores"
-                                action="#{navBean.irAProveedores}" icon="fa fa-industry"
-                                ajax="false" styleClass="ui-button-raised" />
+                            <p:commandButton value="Gestionar Proveedores" action="#{navBean.irAProveedores}"
+                                icon="fa fa-industry" ajax="false" styleClass="ui-button-raised" />
                             <p:commandButton value="Gestionar Auditoría" action="#{navBean.irAAuditoria()}"
                                 icon="pi pi-eye" />
                             <p:commandButton value="Gestionar Mermas y Devoluciones"
                                 action="#{navBean.irAMermasDevoluciones()}" icon="pi pi-exclamation-triangle"
                                 styleClass="ui-button-warning" />
-                                 <p:commandButton value="Gestionar Ubicaciones"
-                                action="#{navBean.irAUbicaciones()}" icon="pi pi-map-marker" ajax="false"
-                                styleClass="ui-button-warning" />
+                            <p:commandButton value="Gestionar Ubicaciones" action="#{navBean.irAUbicaciones()}"
+                                icon="pi pi-map-marker" ajax="false" styleClass="ui-button-warning" />
                         </h:panelGrid>
                     </p:panel>
                 </div>
@@ -244,5 +279,19 @@
 
         <ui:include src="/pages/admin/footer.xhtml" />
     </h:form>
+    <p:dialog header="Escaneo de Inventario" widgetVar="dlgEscaneo" modal="true" resizable="false" width="400"
+        showEffect="fade" hideEffect="fade">
+        <h:form id="formEscaneo">
+            <div style="text-align: center; padding: 10px;">
+                <p:outputLabel for="codigoEscaneado" value="Pase el escáner por el código de barras:"
+                    style="font-weight: bold; margin-bottom: 15px; display: block;" />
+                <p:inputText id="codigoEscaneado" value="#{movimientosBean.codigoFiltro}"
+                    style="width:100%; font-size: 1.5rem; text-align: center; border: 2px solid var(--primary-color); background: var(--card-bg); color: var(--text-main);"
+                    placeholder="Esperando..." autocomplete="off">
+                    <p:ajax event="keyup" listener="#{movimientosBean.procesarEscaneo}" delay="100" />
+                </p:inputText>
+            </div>
+        </h:form>
+    </p:dialog>
 </h:body>
 </html>

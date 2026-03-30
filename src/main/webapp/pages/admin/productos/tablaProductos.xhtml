@@ -6,10 +6,16 @@
 
 <h:head>
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
-    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
+    <link rel="stylesheet" href="https://unpkg.com/primeicons/primeicons.css" />
     <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
+        <link rel="stylesheet" href="#{request.contextPath}/css/dark-mode.css" />
+
 
     <title>Gestión de Productos</title>
+      <f:metadata>
+        <f:viewParam name="query" value="#{productoBean.filtro}" />
+        <f:viewAction action="#{productoBean.aplicarFiltroExterno}" />
+    </f:metadata>
 </h:head>
 <h:body>
     <h:form id="form">
@@ -52,23 +58,23 @@
             <p:column headerText="Proveedor">
                 <h:outputText value="#{prod.proveedor.nombreEmpresa}" />
             </p:column>
-            <p:column headerText="Unidad">
+            <p:column headerText="Unidad:">
                 <h:outputText value="#{prod.unidad}" />
             </p:column>
-            <p:column headerText="Precio Unitario">
+            <p:column headerText="Precio Unitario:">
                 <h:outputText value="#{prod.precioUnitario}" />
             </p:column>
-            <p:column headerText="Stock Actual">
+            <p:column headerText="Stock Actual:">
                 <h:outputText value="#{prod.stockActual}" />
             </p:column>
-            <p:column headerText="Stock Mínimo">
+            <p:column headerText="Stock Mínimo:">
                 <h:outputText value="#{prod.stockMinimo}" />
             </p:column>
-            <p:column headerText="Ubicación">
+            <p:column headerText="Pasillo:">
                 <h:outputText value="#{prod.ubicacion.pasillo}" />
             </p:column>
 
-            <p:column headerText="Estante">
+            <p:column headerText="Estante:">
                 <h:outputText value="#{prod.ubicacion.estante}" />
             </p:column>
 

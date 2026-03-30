@@ -47,6 +47,8 @@ public class CategoriasBean implements Serializable {
 
 	private transient List<Categorias> categoriasList;
 
+	private transient String filtro;
+	
 	private Integer progreso = 0;
 
 	private ICategoriaService categoriaService;
@@ -218,5 +220,15 @@ public class CategoriasBean implements Serializable {
 
 	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
+	}
+	
+	public void aplicarFiltroExterno() {
+		if (filtro != null && !filtro.trim().isEmpty()) {
+			this.list = categoriaService.byNombreCategoria(filtro);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Resultados", "Mostrando resultados para: " + filtro));
+		} else {
+			this.list = categoriaService.getAllCategorias();
+		}
 	}
 }

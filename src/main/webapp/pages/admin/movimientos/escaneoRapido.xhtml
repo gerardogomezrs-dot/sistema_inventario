@@ -160,26 +160,26 @@
         $(document).ready(function () {
             forceFocus();
         });
- /* ]]> */
+       /* ]]> */
     </h:outputScript>
 
     <f:metadata>
-        <f:viewParam name="query" value="#{movimientosAlmacenBean.codigoFiltro}" />
-        <f:viewAction action="#{movimientosAlmacenBean.aplicarFiltroExterno}" />
+        <f:viewParam name="query" value="#{movimientosBean.codigoFiltro}" />
+        <f:viewAction action="#{movimientosBean.aplicarFiltroExterno}" />
     </f:metadata>
 
 </h:head>
 
 <h:body>
     <h:form id="formMovimiento" enctype="multipart/form-data">
-        <ui:include src="/pages/almacen/menu.xhtml" />
+        <ui:include src="/pages/admin/menu.xhtml" />
         <p:growl id="messages" showDetail="true" />
 
         <div style="padding: 0 20px; margin-top: 10px;">
             <p:commandButton value="Nuevo Escaneo" icon="pi pi-external-link"
-                actionListener="#{movimientosAlmacenBean.movimientos.setCodigoBarras('')}"
-                oncomplete="PF('dlgEscaneo').show();" update="modalScannerInput"
-                styleClass="ui-button-raised ui-button-info" style="width: 200px; height: 50px; font-weight: bold;" />
+                actionListener="#{movimientosBean.limpiarParaNuevoEscaneo()}" oncomplete="PF('dlgEscaneo').show();"
+                update="pnlInternoDialogo" styleClass="ui-button-raised ui-button-info"
+                style="width: 200px; height: 50px; font-weight: bold;" />
         </div>
 
         <p:focus context="formMovimiento" for="scannerInput" />
@@ -193,16 +193,15 @@
                             styleClass="label-style label-highlight" />
                         <div style="display: flex; gap: 5px; align-items: center;">
                             <p:inputText id="scannerInput" widgetVar="wvScanner" autocomplete="off"
-                                value="#{movimientosAlmacenBean.movimientos.codigoBarras}" placeholder="Escanee aquí..."
+                                value="#{movimientosBean.movimientos.codigoBarras}" placeholder="Escanee aquí..."
                                 styleClass="input-full" onkeydown="return manejarEntradaApp(event);">
-                                <p:ajax event="change" listener="#{movimientosAlmacenBean.cargarInfoScanner()}"
-                                    process="@this"
+                                <p:ajax event="change" listener="#{movimientosBean.cargarInfoScanner()}" process="@this"
                                     update="panelInfoExtra txtCodigoBarras txtIdProducto txtNombreProducto txtProductoExistente txtUbicacion contenedorImagen messages"
                                     oncomplete="despuesDeEscanear();" />
                             </p:inputText>
 
                             <p:commandButton icon="pi pi-barcode" immediate="true" process="@this"
-                                actionListener="#{movimientosAlmacenBean.toggleScanner()}"
+                                actionListener="#{movimientosBean.toggleScanner()}"
                                 update="scannerInput txtCodigoBarras txtIdProducto txtNombreProducto txtProductoExistente txtUbicacion contenedorImagen panelInfoExtra messages"
                                 oncomplete="forceFocus();" />
                         </div>
@@ -211,19 +210,19 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                         <div class="field-container">
                             <p:outputLabel value="Codigo Barras:" style="color: white !important; font-weight: bold;" />
-                            <p:inputText id="txtCodigoBarras" value="#{movimientosAlmacenBean.movimientos.codigoBarras}"
+                            <p:inputText id="txtCodigoBarras" value="#{movimientosBean.movimientos.codigoBarras}"
                                 readonly="true" styleClass="input-full input-readonly" />
                         </div>
                         <div class="field-container">
                             <p:outputLabel value="ID Producto:" style="color: white !important; font-weight: bold;" />
-                            <p:inputText id="txtIdProducto" value="#{movimientosAlmacenBean.movimientos.idProducto}"
+                            <p:inputText id="txtIdProducto" value="#{movimientosBean.movimientos.idProducto}"
                                 readonly="true" styleClass="input-full input-readonly" />
                         </div>
                         <div class="field-container">
                             <p:outputLabel value="Existencia Actual:"
                                 style="color: white !important; font-weight: bold;" />
                             <p:inputText id="txtProductoExistente"
-                                value="#{movimientosAlmacenBean.movimientos.productoExistencias}" readonly="true"
+                                value="#{movimientosBean.movimientos.productoExistencias}" readonly="true"
                                 styleClass="input-full"
                                 style="background: #e8f5e9; font-weight: bold; color: #2e7d32; border: 1px solid #2e7d32;" />
                         </div>
@@ -231,7 +230,7 @@
                         <div class="field-container">
                             <p:outputLabel value="Pasillo/Estante:"
                                 style="color: white !important; font-weight: bold;" />
-                            <p:inputText id="txtUbicacion" value="#{movimientosAlmacenBean.movimientos.ubicacion}"
+                            <p:inputText id="txtUbicacion" value="#{movimientosBean.movimientos.ubicacion}"
                                 readonly="true" styleClass="input-full"
                                 style="background: #e8f5e9; font-weight: bold; color: #2e7d32; border: 1px solid #2e7d32;" />
                         </div>
@@ -239,7 +238,7 @@
 
                     <div class="field-container">
                         <p:outputLabel value="Nombre Producto:" style="color: white !important; font-weight: bold;" />
-                        <p:inputText id="txtNombreProducto" value="#{movimientosAlmacenBean.movimientos.nombreProducto}"
+                        <p:inputText id="txtNombreProducto" value="#{movimientosBean.movimientos.nombreProducto}"
                             styleClass="input-full input-readonly" readonly="true" />
                     </div>
 
@@ -247,11 +246,11 @@
                         <p:outputLabel value="Visualización del Producto:"
                             style="color: white !important; font-weight: bold;" />
                         <h:panelGroup id="contenedorImagen" layout="block" styleClass="image-display-container">
-                            <h:panelGroup rendered="#{not empty movimientosAlmacenBean.movimientos.imagenProducto}">
-                                <img src="#{movimientosAlmacenBean.convertirABase64(movimientosAlmacenBean.movimientos.imagenProducto)}"
+                            <h:panelGroup rendered="#{not empty movimientosBean.movimientos.imagenProducto}">
+                                <img src="#{movimientosBean.convertirABase64(movimientosBean.movimientos.imagenProducto)}"
                                     style="max-width:100%; height: 300px; object-fit: contain; border-radius: 4px;" />
                             </h:panelGroup>
-                            <h:panelGroup rendered="#{empty movimientosAlmacenBean.movimientos.imagenProducto}">
+                            <h:panelGroup rendered="#{empty movimientosBean.movimientos.imagenProducto}">
                                 <div class="image-placeholder" style="width:100%; height:200px;">
                                     <i class="pi pi-image" style="font-size: 4rem; margin-bottom: 10px;"></i>
                                     <span style="font-size: 0.9rem;">Sin Imagen</span>
@@ -259,16 +258,13 @@
                             </h:panelGroup>
                         </h:panelGroup>
                     </div>
-
                     <p:separator />
-
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                         <div class="field-container">
                             <p:outputLabel for="movimiento" value="Tipo de Movimiento: *"
                                 style="color: white !important; font-weight: bold;" />
-                            <p:selectOneMenu id="movimiento"
-                                value="#{movimientosAlmacenBean.movimientos.tipoMovimiento}" filter="true"
-                                filterMatchMode="contains" styleClass="input-full">
+                            <p:selectOneMenu id="movimiento" value="#{movimientosBean.movimientos.tipoMovimiento}"
+                                filter="true" filterMatchMode="contains" styleClass="input-full">
                                 <f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
                                 <f:selectItem itemLabel="Entrada" itemValue="Entrada" />
                                 <f:selectItem itemLabel="Salida" itemValue="Salida" />
@@ -279,7 +275,7 @@
                         <div class="field-container">
                             <p:outputLabel value="Cantidad: *" styleClass="label-style label-highlight" />
                             <p:inputText id="txtCantidad" widgetVar="wvCantidad"
-                                value="#{movimientosAlmacenBean.movimientos.cantidad}" styleClass="input-full"
+                                value="#{movimientosBean.movimientos.cantidad}" styleClass="input-full"
                                 style="font-size: 1.6rem; font-weight: bold; text-align: center; color: #000000; border: 2px solid #333;"
                                 onkeypress="if(event.keyCode==13){document.getElementById('formMovimiento:btnGuardar').click(); return false;}">
                                 <p:keyFilter mask="num" />
@@ -290,7 +286,7 @@
                     <div class="field-container">
                         <p:outputLabel value="Información Extra:" style="color: white !important; font-weight: bold;" />
                         <h:panelGroup id="panelInfoExtra">
-                            <p:inputText value="#{movimientosAlmacenBean.infoProductoExtra}" readonly="true"
+                            <p:inputText value="#{movimientosBean.infoProductoExtra}" readonly="true"
                                 styleClass="input-full"
                                 style="background:#f0f4f7; font-weight:bold; color:#0a58ca; border-left: 5px solid #0a58ca;" />
                         </h:panelGroup>
@@ -298,36 +294,34 @@
 
                     <div class="field-container">
                         <p:outputLabel value="Origen / Destino:" style="color: white !important; font-weight: bold;" />
-                        <p:inputText id="txtOrigenDestino" value="#{movimientosAlmacenBean.movimientos.origenDestino}"
+                        <p:inputText id="txtOrigenDestino" value="#{movimientosBean.movimientos.origenDestino}"
                             styleClass="input-full" style="color: #000; font-weight: 500;" />
                     </div>
 
                     <div class="field-container">
                         <p:outputLabel value="Observaciones:" style="color: white !important; font-weight: bold;" />
                         <p:inputTextarea id="txtObservaciones" rows="2"
-                            value="#{movimientosAlmacenBean.movimientos.observaciones}" styleClass="input-full"
+                            value="#{movimientosBean.movimientos.observaciones}" styleClass="input-full"
                             style="color: #000;" />
                     </div>
 
                     <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 15px; margin-top: 15px;">
                         <p:commandButton id="btnGuardar" value="Añadir a Lista" icon="pi pi-plus" ajax="true"
-                            action="#{movimientosAlmacenBean.save}" process="@form"
-                            update="tablaRegistros scannerInput txtCodigoBarras
-                             txtIdProducto txtNombreProducto txtProductoExistente
-                              txtUbicacion contenedorImagen panelInfoExtra txtCantidad movimiento txtOrigenDestino txtObservaciones messages"
-                            oncomplete="prepararSiguienteEscaneo();" styleClass="ui-button-success"
+                            action="#{movimientosBean.save}" process="@form"
+                            update="tablaRegistros scannerInput movimiento txtCodigoBarras txtObservaciones txtOrigenDestino txtCantidad txtIdProducto txtNombreProducto txtProductoExistente txtUbicacion contenedorImagen panelInfoExtra messages"
+                            oncomplete="if(window.prepararSiguienteEscaneo) { prepararSiguienteEscaneo(); }"
                             style="height: 45px;" />
 
                         <p:commandButton value="Regresar" icon="pi pi-chevron-left"
-                            action="#{movimientosAlmacenBean.irATablaMovimientos}" immediate="true"
+                            action="#{movimientosBean.irATablaMovimientos}" immediate="true"
                             styleClass="ui-button-secondary" />
                     </div>
                 </p:panel>
             </div>
 
             <div class="table-side">
-                <p:dataTable id="tablaRegistros" value="#{movimientosAlmacenBean.listaMovimientosGuardar}" var="mov"
-                    rows="10" paginator="true" paginatorPosition="bottom" emptyMessage="No hay movimientos pendientes">
+                <p:dataTable id="tablaRegistros" value="#{movimientosBean.listaMovimientosGuardar}" var="mov" rows="10"
+                    paginator="true" paginatorPosition="bottom" emptyMessage="No hay movimientos pendientes">
                     <p:column headerText="Código" style="width: 120px;">
                         <h:outputText value="#{mov.codigoBarras}" />
                     </p:column>
@@ -345,38 +339,36 @@
                 <p:separator style="margin: 20px 0;" />
 
                 <p:commandButton value="Confirmar y Guardar Todo" icon="pi pi-save"
-                    action="#{movimientosAlmacenBean.saveTable}" process="@this" update="formMovimiento"
+                    action="#{movimientosBean.saveTable}" process="@this" update="formMovimiento"
                     style="width: 100%; height: 60px; font-size: 1.2rem;" styleClass="ui-button-warning" ajax="false" />
             </div>
         </div>
-
         <p:dialog header="Escanee el Producto" widgetVar="dlgEscaneo" modal="true" resizable="false" draggable="false"
-            width="500" onShow="PF('wvModalScanner').jq.focus();" onHide="forceFocus();">
-
-            <div style="text-align: center; padding: 20px;">
+            width="500">
+            <p:outputPanel id="pnlInternoDialogo" style="text-align: center; padding: 20px;">
                 <i class="pi pi-barcode" style="font-size: 5rem; color: #007bff; margin-bottom: 20px;"></i>
                 <h2 style="margin-bottom: 20px;">POR FAVOR ESCANEE</h2>
 
                 <p:inputText id="modalScannerInput" widgetVar="wvModalScanner" autocomplete="off"
-                    value="#{movimientosAlmacenBean.movimientos.codigoBarras}" styleClass="scanner-modal-input"
+                    value="#{movimientosBean.movimientos.codigoBarras}" styleClass="scanner-modal-input"
                     onkeydown="return manejarEntradaModal(event);">
-                    <p:ajax event="change" listener="#{movimientosAlmacenBean.cargarInfoScanner2()}" process="@this"
+                    <p:ajax event="change" listener="#{movimientosBean.cargarInfoScanner2()}" process="@this"
                         update=":formMovimiento:scannerInput :formMovimiento:panelInfoExtra :formMovimiento:txtCodigoBarras :formMovimiento:txtIdProducto :formMovimiento:txtNombreProducto :formMovimiento:txtProductoExistente :formMovimiento:txtUbicacion :formMovimiento:contenedorImagen :formMovimiento:messages"
                         oncomplete="despuesDeEscanear();" />
                 </p:inputText>
 
+                <script>setTimeout(function () { PF('wvModalScanner').jq.focus(); }, 250);</script>
+
                 <p:commandButton value="Cancelar" type="button" onclick="PF('dlgEscaneo').hide();"
                     styleClass="ui-button-secondary" style="margin-top: 20px;" />
-            </div>
+            </p:outputPanel>
         </p:dialog>
-
         <p:dialog header="Éxito" widgetVar="dlgConfirmacion" modal="true" closable="false" responsive="true">
             <h:outputText value="El movimiento se ha añadido a la tabla local." />
             <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacion').hide(); forceFocus();"
                 styleClass="ui-button-info" style="width: 100%; margin-top: 10px;" />
         </p:dialog>
-
-        <ui:include src="/pages/almacen/footer.xhtml" />
+        <ui:include src="/pages/admin/footer.xhtml" />
     </h:form>
 </h:body>
 

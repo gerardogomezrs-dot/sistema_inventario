@@ -7,10 +7,13 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
+  
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
-    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
+    <link rel="stylesheet" href="https://unpkg.com/primeicons/primeicons.css" />
     <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
+        <link rel="stylesheet" href="#{request.contextPath}/css/dark-mode.css" />
+
 
     <style type="text/css">
         .ui-panelgrid .ui-grid-responsive .ui-grid-row {
@@ -29,11 +32,10 @@
     </style>
 
     <title>Registrar Producto</title>
+    
 </h:head>
 
 <h:body>
-  
-
     <h:form id="formProducto" enctype="multipart/form-data">
           <ui:include src="/pages/admin/menu.xhtml" />
         <p:growl id="msgs" showDetail="true" />

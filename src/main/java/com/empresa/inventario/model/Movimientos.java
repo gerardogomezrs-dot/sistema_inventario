@@ -7,9 +7,6 @@ import lombok.Data;
 @Data
 public class Movimientos {
 
-	/**
-	 * 
-	 */
 	private int idMovimiento;
 	
 	private int idProducto;

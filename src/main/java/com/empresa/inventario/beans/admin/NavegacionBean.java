@@ -1,6 +1,9 @@
 package com.empresa.inventario.beans.admin;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
@@ -10,8 +13,13 @@ import javax.inject.Named;
 import org.primefaces.PrimeFaces;
 
 import com.empresa.inventario.beans.BaseAuditoriaBean;
+import com.empresa.inventario.exceptions.ExceptionMessage;
+import com.empresa.inventario.model.Productos;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
+import com.empresa.inventario.service.ICategoriaService;
+import com.empresa.inventario.service.IProductoService;
+import com.empresa.inventario.service.IProveedorService;
 import com.empresa.inventario.utils.Mensajes;
 
 import lombok.Data;
@@ -29,9 +37,23 @@ public class NavegacionBean implements Serializable {
 
 	private IAuditoriaService auditoriaService;
 
+	private String textoBusqueda;
+
+	private List<Productos> listaProductos;
+
+	private IProductoService iProductoService;
+
+	private ICategoriaService iCategoriaService;
+
+	private IProveedorService iProveedorService;
+
 	@Inject
-	public NavegacionBean(IAuditoriaService auditoriaService) {
+	public NavegacionBean(IAuditoriaService auditoriaService, IProductoService iProductoService,
+			ICategoriaService iCategoriaService, IProveedorService iProveedorService) {
 		this.auditoriaService = auditoriaService;
+		this.iProductoService = iProductoService;
+		this.iCategoriaService = iCategoriaService;
+		this.iProveedorService = iProveedorService;
 	}
 
 	@PostConstruct
@@ -113,12 +135,57 @@ public class NavegacionBean implements Serializable {
 				idUsuario, nombreUsuario);
 		return "/pages/admin/mermasDevoluciones/tablaMermasDevoluciones.xhtml?faces-redirect=true";
 	}
-	
+
 	public String irAUbicaciones() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-		baseBean.registrarNavegacion(auditoriaService, Mensajes.NAVEGACION, "navego a tabla Ubicaciones",
-				idUsuario, nombreUsuario);
+		baseBean.registrarNavegacion(auditoriaService, Mensajes.NAVEGACION, "navego a tabla Ubicaciones", idUsuario,
+				nombreUsuario);
 		return "/pages/admin/ubicacion/tablaUbicaciones.xhtml?faces-redirect=true";
 	}
 
+	public void filtrarBusqueda() {
+		System.err.println("Iniciando búsqueda: " + textoBusqueda);
+
+		if (textoBusqueda == null || textoBusqueda.trim().isEmpty()) {
+			throw new ExceptionMessage("Error: El campo de búsqueda está vacío");
+		}
+
+		String filtro = textoBusqueda.toLowerCase().trim();
+
+		boolean esProveedor = iProveedorService.proveedors().stream()
+				.anyMatch(prov -> prov.getNombreEmpresa().toLowerCase().contains(filtro));
+
+		boolean esCategoria = iCategoriaService.getAllCategorias().stream()
+				.anyMatch(cat -> cat.getNombre().toLowerCase().contains(filtro));
+
+		listaProductos = iProductoService.getAll().stream().filter(p -> p.getNombre().toLowerCase().contains(filtro))
+				.collect(Collectors.toList());
+
+		boolean esProducto = !listaProductos.isEmpty();
+
+		redirigirSegunBusqueda(esProveedor, esCategoria, esProducto);
+	}
+
+	public void redirigirSegunBusqueda(boolean esProveedor, boolean esCategoria, boolean esProducto) {
+		try {
+			FacesContext context = FacesContext.getCurrentInstance();
+			String queryParam = "?faces-redirect=true&query=" + textoBusqueda;
+			String url = "";
+			if (esProveedor) {
+				url = "../admin/proveedores/tablaProveedores.xhtml" + queryParam;
+			} 
+			else if (esCategoria) {
+				url = "../admin/categorias/tablaCategorias.xhtml" + queryParam;
+			} 
+			else if (esProducto) {
+				url = "../admin/productos/tablaProductos.xhtml" + queryParam;
+			} 
+			else {
+				url = "../admin/dashboard.xhtml";
+			}
+			context.getExternalContext().redirect(url);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

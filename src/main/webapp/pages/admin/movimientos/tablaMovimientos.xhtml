@@ -5,8 +5,10 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
-    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
-        <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
+    <link rel="stylesheet" href="https://unpkg.com/primeicons/primeicons.css" />
+    <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
+        <link rel="stylesheet" href="#{request.contextPath}/css/dark-mode.css" />
+
 
     <title>Gestión de Movimientos</title>
     <style type="text/css">
@@ -46,9 +48,10 @@
 
         <p:toolbar style="margin-bottom: 20px; border: none; background: transparent;">
             <f:facet name="left">
-
-                <p:commandButton value="Nuevo Movimiento" icon="pi pi-save"
-                    action="#{movimientosBean.irANuevoMovimiento}" />
+                <p:commandButton value="Nuevo Movimiento" icon="pi pi-plus" type="button"
+                    onclick="PF('dlgEscaneo').show();"
+                    oncomplete="setTimeout(function(){ document.getElementById('formEscaneo:codigoEscaneado').focus(); }, 250);"
+                    styleClass="ui-button-info" />
             </f:facet>
             <f:facet name="right">
                 <p:commandButton value="Regresar" icon="pi pi-chevron-left" action="#{movimientosBean.irADashboard}"
@@ -85,12 +88,12 @@
                 <h:outputText value="#{prod.origenDestino}" />
             </p:column>
 
-             <p:column headerText="Stock Previo">
+            <p:column headerText="Stock Previo">
                 <h:outputText value="#{prod.stockPrevio}" />
             </p:column>
 
             <p:column headerText="Stock Posterior">
-                 <h:outputText value="#{prod.stockPosterior}" />
+                <h:outputText value="#{prod.stockPosterior}" />
             </p:column>
 
             <p:column headerText="Usuario Responsable" filterBy="#{prod.idUsuario}" filterMatchMode="contains">
@@ -104,6 +107,22 @@
     </h:form>
     <ui:include src="/pages/admin/footer.xhtml" />
 
+       <p:dialog header="Escanear Producto para Movimiento" widgetVar="dlgEscaneo" modal="true" resizable="false"
+        width="400" showEffect="fade">
+        <h:form id="formEscaneo">
+            <div class="p-grid p-dir-col">
+                <p:outputLabel for="codigoEscaneado" value="Pase el escáner por el código de barras:" />
+                <p:inputText id="codigoEscaneado" value="#{movimientosBean.codigoFiltro}"
+                    style="width:100%; font-size: 1.5rem; text-align: center;" placeholder="Esperando lectura..."
+                    autocomplete="off">
+                    <p:ajax event="keyup" listener="#{movimientosBean.procesarEscaneoMovimientos}" delay="100" />
+                </p:inputText>
+                <p:message for="codigoEscaneado" />
+                <p:staticMessage severity="info" summary="INFO"
+                    detail="La pistola enviará el código automáticamente al terminar."
+                    style="width: 100%; margin-top: 10px;" />
+            </div>
+        </h:form>
+    </p:dialog>
 </h:body>
-
 </html>

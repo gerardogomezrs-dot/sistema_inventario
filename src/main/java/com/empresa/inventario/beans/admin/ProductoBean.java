@@ -71,6 +71,9 @@ public class ProductoBean implements Serializable {
 	private String nombreUsuario;
 
 	private transient IAuditoriaService auditoriaService;
+	
+	private String filtro; // Getter y Setter necesarios
+
 
 	@Inject
 	public ProductoBean(IProductoService iProductoService, ICategoriaService iCategoriaService,
@@ -278,5 +281,17 @@ public class ProductoBean implements Serializable {
 	
 	public void listaUbicacion() {
 		listaUbicaciones = iUbicacionService.getAll();
+	}
+	
+	public void aplicarFiltroExterno() {
+    	System.err.println("Hola!!!");
+
+	    if (filtro != null && !filtro.trim().isEmpty()) {
+	        this.list = iProductoService.getByNombreProducto(filtro);
+	        FacesContext.getCurrentInstance().addMessage(null, 
+	            new FacesMessage(FacesMessage.SEVERITY_INFO, "Resultados", "Mostrando resultados para: " + filtro));
+	    } else {
+	        this.list = iProductoService.getAll();
+	    }
 	}
 }

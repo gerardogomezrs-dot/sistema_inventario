@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="es-MX" xmlns="http://www.w3.org/1999/xhtml" 
-    xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:f="http://xmlns.jcp.org/jsf/core" 
-    xmlns:p="http://primefaces.org/ui"
+<html lang="es-MX" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
     <title>Gestión de Movimientos | Inventario</title>
+    <link rel="stylesheet" href="#{request.contextPath}/css/dark-mode.css" />
+    <link rel="stylesheet" href="https://unpkg.com/primeicons/primeicons.css" />
+
+
     <style>
         body {
             background-color: #f4f7fb;
@@ -15,7 +17,7 @@
         }
 
         .report-container {
-            max-width: 1200px; /* Aumentado para dar espacio a la tabla ancha */
+            max-width: 1200px;
             margin: 0 auto;
         }
 
@@ -25,17 +27,15 @@
             padding: 15px;
             font-size: 1.2rem;
         }
-        
-        /* Centrado de texto para columnas numéricas */
+
         .col-center {
             text-align: center;
         }
     </style>
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
-    <!-- PrimeIcons se carga automáticamente con PrimeFaces, pero si necesitas una versión específica: -->
     <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
     <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
-    
+
 </h:head>
 
 <h:body>
@@ -44,44 +44,38 @@
         <ui:include src="/pages/almacen/menu.xhtml" />
 
         <p:growl id="msgs" showDetail="true" />
-        
-        <p:toolbar style="margin-bottom: 20px; border: none; background: transparent;">
-                        <f:facet name="left">
 
-            <p:commandButton value="Nuevo Movimiento" icon="pi pi-plus"
-                 type="button"
-                 onclick="PF('dlgEscaneo').show();"
-                 oncomplete="setTimeout(function(){ document.getElementById('formEscaneo:codigoEscaneado').focus(); }, 250);"
-                 styleClass="ui-button-info" />
-                        </f:facet>
+        <p:toolbar style="margin-bottom: 20px; border: none; background: transparent;">
+            <f:facet name="left">
+
+                <p:commandButton value="Nuevo Movimiento" icon="pi pi-plus" type="button"
+                    onclick="PF('dlgEscaneo').show();"
+                    oncomplete="setTimeout(function(){ document.getElementById('formEscaneo:codigoEscaneado').focus(); }, 250);"
+                    styleClass="ui-button-info" />
+            </f:facet>
             <f:facet name="right">
                 <p:commandButton value="Regresar" icon="pi pi-chevron-left"
-                    action="#{movimientosAlmacenBean.irADashboard}" 
-                    immediate="true" 
-                    styleClass="ui-button-secondary" />
+                    action="#{movimientosAlmacenBean.irADashboard}" immediate="true" styleClass="ui-button-secondary" />
             </f:facet>
         </p:toolbar>
 
         <div class="report-container">
-            <!-- CORRECCIÓN: Se eliminó left: 100% que sacaba el panel de la vista -->
             <p:panel header="Tabla de Movimientos" style="width: 100%; margin: 0 auto;">
 
-                <p:dataTable id="tablaMovimientos" var="prod" value="#{movimientosAlmacenBean.list}" 
-                    rows="10" paginator="true" 
+                <p:dataTable id="tablaMovimientos" var="prod" value="#{movimientosAlmacenBean.list}" rows="10"
+                    paginator="true"
                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                     currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
-                    rowsPerPageTemplate="5,10,20"
-                    filteredValue="#{movimientosAlmacenBean.filteredList}"
-                    emptyMessage="No se encontraron Movimientos" 
-                    style="margin-top:20px;" 
-                    scrollable="true" 
+                    rowsPerPageTemplate="5,10,20" filteredValue="#{movimientosAlmacenBean.filteredList}"
+                    emptyMessage="No se encontraron Movimientos" style="margin-top:20px;" scrollable="true"
                     scrollHeight="400">
 
                     <p:column headerText="ID" style="width:60px;" styleClass="col-center">
                         <h:outputText value="#{prod.idMovimiento}" />
                     </p:column>
 
-                    <p:column headerText="Producto" style="width:200px;" filterBy="#{prod.productos.nombre}" filterMatchMode="contains">
+                    <p:column headerText="Producto" style="width:200px;" filterBy="#{prod.productos.nombre}"
+                        filterMatchMode="contains">
                         <h:outputText value="#{prod.productos.nombre}" />
                     </p:column>
 
@@ -127,27 +121,25 @@
         <ui:include src="/pages/almacen/footer.xhtml" />
     </h:form>
 
-    <p:dialog header="Escanear Producto para Movimiento" widgetVar="dlgEscaneo" 
-          modal="true" resizable="false" width="400" showEffect="fade">
-    <h:form id="formEscaneo">
-        <div class="p-grid p-dir-col">
-            <p:outputLabel for="codigoEscaneado" value="Pase el escáner por el código de barras:" />
-            <p:inputText id="codigoEscaneado" 
-                         value="#{movimientosAlmacenBean.codigoFiltro}" 
-                         style="width:100%; font-size: 1.5rem; text-align: center;"
-                         placeholder="Esperando lectura..."
-                         autocomplete="off">
-                <p:ajax event="keyup" listener="#{movimientosAlmacenBean.procesarEscaneoMovimientos}" 
-                        delay="100" />
-            </p:inputText>
-            
-            <p:message for="codigoEscaneado" />
-            
-            <p:staticMessage severity="info" summary="INFO" 
-                             detail="La pistola enviará el código automáticamente al terminar." 
-                             style="width: 100%; margin-top: 10px;"/>
-        </div>
-    </h:form>
-</p:dialog>
+    <p:dialog header="Escanear Producto para Movimiento" widgetVar="dlgEscaneo" modal="true" resizable="false"
+        width="400" showEffect="fade">
+        <h:form id="formEscaneo">
+            <div class="p-grid p-dir-col">
+                <p:outputLabel for="codigoEscaneado" value="Pase el escáner por el código de barras:" />
+                <p:inputText id="codigoEscaneado" value="#{movimientosAlmacenBean.codigoFiltro}"
+                    style="width:100%; font-size: 1.5rem; text-align: center;" placeholder="Esperando lectura..."
+                    autocomplete="off">
+                    <p:ajax event="keyup" listener="#{movimientosAlmacenBean.procesarEscaneoMovimientos}" delay="100" />
+                </p:inputText>
+
+                <p:message for="codigoEscaneado" />
+
+                <p:staticMessage severity="info" summary="INFO"
+                    detail="La pistola enviará el código automáticamente al terminar."
+                    style="width: 100%; margin-top: 10px;" />
+            </div>
+        </h:form>
+    </p:dialog>
 </h:body>
+
 </html>

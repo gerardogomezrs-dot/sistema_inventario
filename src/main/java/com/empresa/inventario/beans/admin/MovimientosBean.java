@@ -2,6 +2,7 @@ package com.empresa.inventario.beans.admin;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -36,6 +37,8 @@ public class MovimientosBean implements Serializable {
 
 	private transient UploadedFile uploadedFile;
 
+	private transient String textoBusqueda;
+
 	private boolean modoManual = false;
 
 	private transient List<Movimientos> list;
@@ -63,6 +66,8 @@ public class MovimientosBean implements Serializable {
 	private transient Usuario user;
 
 	private transient IAuditoriaService auditoriaService;
+
+	private String codigoFiltro;
 
 	@Inject
 	public MovimientosBean(IAuditoriaService auditoriaService, IProductoService iProductoService,
@@ -112,6 +117,8 @@ public class MovimientosBean implements Serializable {
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.GUARDAR_REGISTRO_TABLA,
 					Mensajes.USUARIO + nombreUsuario + " registro un elemento a la tabla", Mensajes.INFO.toString(),
 					idUsuario);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Registro guardado"));
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
@@ -131,6 +138,8 @@ public class MovimientosBean implements Serializable {
 			if (listaMovimientosGuardar != null) {
 				listaMovimientosGuardar.clear();
 			}
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Registro guardado"));
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.debug(e.getMessage());
@@ -164,17 +173,47 @@ public class MovimientosBean implements Serializable {
 		this.movimientos.setCodigoBarras(null);
 	}
 
-	public void cargarInfoScanner() throws Exception {
+	public void cargarInfoScanner(String codigoFiltro) throws Exception {
 		String codigo = this.movimientos.getCodigoBarras();
 		Productos productos = new Productos();
 
 		try {
-			productos = iProductoService.getByCodigoBarras(codigo);
-			// 1. La forma correcta de comparar nulos es con '=='
+			productos = iProductoService.getByCodigoBarras(codigoFiltro);
 			if (productos.getCodigoBarras().equals(codigo)) {
 				this.infoProductoExtra = "Cargado: " + codigo + " - Producto encontrado";
 				this.movimientos.setIdProducto(productos.getIdProducto());
 				this.movimientos.setNombreProducto(productos.getNombre());
+				this.movimientos.setProductoExistencias(productos.getStockActual());
+				this.movimientos.setImagenProducto(productos.getArchivo());
+				this.movimientos.setUbicacion(
+						productos.getUbicacion().getPasillo() + "/" + productos.getUbicacion().getEstante());
+				this.infoProductoExtra = "";
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Producto encontrado."));
+			} else {
+
+			}
+		} catch (ExceptionMessage e) {
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", "No existe el producto");
+		} catch (Exception e) {
+			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", "No existe el producto");
+		}
+	}
+	
+	public void cargarInfoScanner2() throws Exception {
+		String codigoBarras = this.movimientos.getCodigoBarras();
+		Productos productos = new Productos();
+
+		try {
+			productos = iProductoService.getByCodigoBarras(codigoBarras);
+			if (productos.getCodigoBarras().equals(codigoBarras)) {
+				this.infoProductoExtra = "Cargado: " + codigoBarras + " - Producto encontrado";
+				this.movimientos.setIdProducto(productos.getIdProducto());
+				this.movimientos.setNombreProducto(productos.getNombre());
+				this.movimientos.setProductoExistencias(productos.getStockActual());
+				this.movimientos.setImagenProducto(productos.getArchivo());
+				this.movimientos.setUbicacion(
+						productos.getUbicacion().getPasillo() + "/" + productos.getUbicacion().getEstante());
 				this.infoProductoExtra = "";
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Producto encontrado."));
@@ -221,5 +260,49 @@ public class MovimientosBean implements Serializable {
 
 	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
+	}
+
+	public void procesarEscaneo() {
+		FacesContext context = FacesContext.getCurrentInstance();
+		String url = "../admin/movimientos/escaneoRapido.xhtml?faces-redirect=true&query=" + codigoFiltro;
+		try {
+			context.getExternalContext().redirect(url);
+		} catch (Exception e) {
+			e.getMessage();
+		}
+	}
+	
+	public void procesarEscaneoMovimientos() {
+		FacesContext context = FacesContext.getCurrentInstance();
+		String url = "../movimientos/movimientos.xhtml?faces-redirect=true&query=" + codigoFiltro;
+		try {
+			context.getExternalContext().redirect(url);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void aplicarFiltroExterno() throws Exception {
+		this.movimientos.setCodigoBarras(codigoFiltro);
+		cargarInfoScanner(codigoFiltro);
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Resultados",
+				"Mostrando resultados para: " + codigoFiltro));
+
+	}
+
+	public String convertirABase64(byte[] bytes) {
+		if (bytes != null && bytes.length > 0) {
+			return "data:image/png;base64," + Base64.getEncoder().encodeToString(bytes);
+		}
+		return "";
+	}
+
+	public void limpiarCampos() {
+		this.movimientos = new Movimientos();
+		this.infoProductoExtra = "";
+	}
+	
+	public void limpiarParaNuevoEscaneo() {
+	    this.movimientos.setCodigoBarras("");
 	}
 }

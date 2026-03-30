@@ -200,7 +200,6 @@ public class CategoriasManagerBean implements Serializable {
 
 	public void cargarArchivo() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-
 		try {
 			if (uploadedFile == null || uploadedFile.getContents() == null) {
 				FacesContext.getCurrentInstance().addMessage(null,

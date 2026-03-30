@@ -5,8 +5,10 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
-    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
+    <link rel="stylesheet" href="https://unpkg.com/primeicons/primeicons.css" />
     <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
+    <link rel="stylesheet" href="#{request.contextPath}/css/dark-mode.css" />
+
 
     <title>Gestión de Auditoría</title>
 </h:head>
@@ -48,6 +50,7 @@
                 <h:outputText value="#{prod.nivel}" />
             </p:column>
         </p:dataTable>
+        <ui:include src="/pages/admin/footer.xhtml" />
     </h:form>
 </h:body>
 </html>

@@ -1,0 +1,149 @@
+/* =========================================================
+   1. VARIABLES GLOBALES DE MODO OSCURO
+   ========================================================= */
+[data-theme="dark"] {
+    /* Paleta base (Tus colores) */
+    --primary-color: #60a5fa; 
+    --dark-blue: #0f172a;
+    --bg-gray: #0f172a; 
+    --card-bg: #1e293b;
+    --border-color: #334155;
+    
+    /* Textos */
+    --text-main: #f1f5f9;
+    --text-muted: #94a3b8;
+
+    /* Elementos PrimeFaces */
+    --pf-widget-bg: #1e293b;         /* Fondo general de componentes */
+    --pf-header-bg: #000000;         /* Cabeceras de paneles y tablas */
+    --pf-input-bg: #334155;          /* Inputs y textareas */
+    --pf-hover-bg: #3b4b63;          /* Efecto hover general */
+    --pf-active-bg: #475569;         /* Elementos activos/seleccionados */
+}
+
+/* =========================================================
+   2. BODY Y FONDOS GLOBALES
+   ========================================================= */
+[data-theme="dark"] body {
+    background-color: var(--bg-gray) !important;
+    color: var(--text-main) !important;
+}
+
+/* =========================================================
+   3. NÚCLEO DE PRIMEFACES 7 (Afecta casi todo)
+   ========================================================= */
+/* Texto base en todos los widgets */
+[data-theme="dark"] .ui-widget,
+[data-theme="dark"] .ui-widget .ui-widget {
+    color: var(--text-main) !important;
+}
+
+/* Contenido de paneles, diálogos, tablas, etc. */
+[data-theme="dark"] .ui-widget-content {
+    background: var(--pf-widget-bg) !important;
+    color: var(--text-main) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Cabeceras de paneles, diálogos, tablas */
+[data-theme="dark"] .ui-widget-header {
+    background: var(--pf-header-bg) !important;
+    color: var(--text-main) !important;
+    border-color: var(--border-color) !important;
+    text-shadow: none !important; /* PF7 a veces pone sombras blancas al texto */
+}
+
+/* =========================================================
+   4. INPUTS, BOTONES Y ESTADOS
+   ========================================================= */
+/* Estado por defecto (botones, inputs, paginadores) */
+[data-theme="dark"] .ui-state-default,
+[data-theme="dark"] .ui-widget-content .ui-state-default,
+[data-theme="dark"] .ui-widget-header .ui-state-default {
+    background: var(--pf-input-bg) !important;
+    color: var(--text-main) !important;
+    border-color: var(--border-color) !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+}
+
+/* Campos de entrada de texto específicamente */
+[data-theme="dark"] .ui-inputfield {
+    background: var(--pf-input-bg) !important;
+    color: var(--text-main) !important;
+}
+
+/* Hover (pasar el mouse) */
+[data-theme="dark"] .ui-state-hover,
+[data-theme="dark"] .ui-widget-content .ui-state-hover,
+[data-theme="dark"] .ui-widget-header .ui-state-hover {
+    background: var(--pf-hover-bg) !important;
+    color: #ffffff !important;
+    border-color: var(--primary-color) !important;
+}
+
+/* Activo / Seleccionado / Focus */
+[data-theme="dark"] .ui-state-active,
+[data-theme="dark"] .ui-state-focus {
+    background: var(--pf-active-bg) !important;
+    border-color: var(--primary-color) !important;
+    color: #ffffff !important;
+}
+
+/* =========================================================
+   5. TABLAS (DataTables) Y MENÚS
+   ========================================================= */
+/* Filas de tablas pares e impares */
+[data-theme="dark"] .ui-datatable .ui-datatable-data > tr.ui-widget-content {
+    background: var(--pf-widget-bg) !important;
+}
+[data-theme="dark"] .ui-datatable .ui-datatable-data > tr.ui-widget-content.ui-datatable-even {
+    background: var(--bg-gray) !important;
+}
+
+/* Menús despegables y superpuestos */
+[data-theme="dark"] .ui-menu,
+[data-theme="dark"] .ui-selectonemenu-panel {
+    background: var(--pf-widget-bg) !important;
+    border-color: var(--border-color) !important;
+}
+[data-theme="dark"] .ui-menuitem-text {
+    color: var(--text-main) !important;
+}
+
+/* =========================================================
+   6. TUS COMPONENTES PERSONALIZADOS
+   ========================================================= */
+[data-theme="dark"] .alert-card, 
+[data-theme="dark"] .dashboard-grid,
+[data-theme="dark"] .dashboard-btn {
+    background: var(--card-bg) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-main) !important;
+}
+
+[data-theme="dark"] .alert-data .alert-number,
+[data-theme="dark"] .alert-data .alert-text,
+[data-theme="dark"] .value {
+    color: var(--text-main) !important;
+}
+
+[data-theme="dark"] .search-input {
+    background: var(--pf-input-bg) !important;
+    color: #ffffff !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .profile-container {
+    background-color: var(--card-bg) !important;
+    border: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .profile-avatar {
+    background: var(--pf-input-bg) !important;
+    color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .profile-details {
+    border-top-color: var(--border-color) !important;
+}

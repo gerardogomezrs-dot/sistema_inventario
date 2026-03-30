@@ -79,7 +79,6 @@ public class ProveedoresAlmacenBean implements Serializable {
 	public void aplicarFiltroExterno() {
 		if (filtro != null && !filtro.trim().isEmpty()) {
 			this.list = iProveedorService.byNombreEmpresa(filtro);
-			System.err.println("Recibo nombre del producto " + filtro);
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Resultados", "Mostrando resultados para: " + filtro));
 		} else {

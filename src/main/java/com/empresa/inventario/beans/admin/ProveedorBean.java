@@ -47,6 +47,8 @@ public class ProveedorBean implements Serializable {
 	private int idUsuario;
 
 	private String nombreUsuario;
+	
+	private String filtro;
 
 	private transient IAuditoriaService auditoriaService;
 
@@ -94,7 +96,6 @@ public class ProveedorBean implements Serializable {
 
 	public void guardarTabla() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-
 		try {
 			this.listaProveedorGuardar.add(this.proveedor);
 			this.proveedor = new Proveedor();
@@ -110,7 +111,6 @@ public class ProveedorBean implements Serializable {
 
 	public void guardarTablaProveedor() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-
 		try {
 			iProveedorService.save(listaProveedorGuardar);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -148,7 +148,6 @@ public class ProveedorBean implements Serializable {
 
 	public void eliminarProveedor() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-
 		try {
 			iProveedorService.delete(proveedor.getIdProveedor());
 			this.list = iProveedorService.proveedors();
@@ -166,7 +165,6 @@ public class ProveedorBean implements Serializable {
 
 	public void actualizarProveedor() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-
 		try {
 			iProveedorService.update(proveedor);
 			this.list = iProveedorService.proveedors();
@@ -184,7 +182,6 @@ public class ProveedorBean implements Serializable {
 
 	public void cargaArchivos() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-
 		try {
 			if (uploadedFile == null || uploadedFile.getContents() == null) {
 				FacesContext.getCurrentInstance().addMessage(null,
@@ -212,6 +209,15 @@ public class ProveedorBean implements Serializable {
 
 	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
+	}
+	public void aplicarFiltroExterno() {
+		if (filtro != null && !filtro.trim().isEmpty()) {
+			this.list = iProveedorService.byNombreEmpresa(filtro);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Resultados", "Mostrando resultados para: " + filtro));
+		} else {
+			this.list = iProveedorService.proveedors();
+		}
 	}
 
 }

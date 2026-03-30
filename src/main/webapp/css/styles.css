@@ -1,0 +1,40 @@
+/* Contenedor principal alineado a la derecha */
+.search-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Mantiene todo pegado a la derecha */
+    background-color: #f4f4f4;
+    border-radius: 20px;
+    padding: 5px 10px;
+    transition: all 0.3s ease;
+    border: 1px solid #ccc;
+    width: fit-content;
+    margin-left: auto; /* Empuja el contenedor a la derecha de su padre */
+}
+
+/* Estilo base del input de PrimeFaces */
+.search-input {
+    width: 150px; /* Ancho inicial */
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+    padding: 5px;
+}
+
+/* Cuando el input recibe el foco, se expande a la izquierda */
+.search-input:focus {
+    width: 300px; /* Ancho expandido */
+    outline: none;
+}
+
+/* Ajuste de iconos */
+.search-icon, .scanner-trigger {
+    color: #666;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+.scanner-trigger:hover {
+    color: #007bff;
+}
