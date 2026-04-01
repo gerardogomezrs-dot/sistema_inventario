@@ -1,15 +1,24 @@
 package com.empresa.inventario.beans.stockmanager;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.empresa.inventario.beans.BaseAuditoriaBean;
+import com.empresa.inventario.exceptions.ExceptionMessage;
+import com.empresa.inventario.model.Productos;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
+import com.empresa.inventario.service.ICategoriaService;
+import com.empresa.inventario.service.IProductoService;
+import com.empresa.inventario.service.IProveedorService;
 import com.empresa.inventario.utils.Mensajes;
 
 import lombok.Data;
@@ -24,12 +33,28 @@ public class NavegacionManagerBean implements Serializable {
 	private int idUsuario;
 
 	private String nombreUsuario;
+	
+	private String textoBusqueda;
 
 	private IAuditoriaService auditoriaService;
 	
+
+	private IProductoService iProductoService;
+
+	private ICategoriaService iCategoriaService;
+
+	private IProveedorService iProveedorService;
+	
+	private List<Productos> listaProductos;
+
+	
 	@Inject
-	public NavegacionManagerBean(IAuditoriaService auditoriaService) {
+	public NavegacionManagerBean(IAuditoriaService auditoriaService, IProductoService iProductoService,
+			ICategoriaService iCategoriaService, IProveedorService iProveedorService) {
 		this.auditoriaService = auditoriaService;
+		this.iProductoService = iProductoService;
+		this.iCategoriaService = iCategoriaService;
+		this.iProveedorService = iProveedorService;
 	}
 
 	@PostConstruct
@@ -87,6 +112,53 @@ public class NavegacionManagerBean implements Serializable {
 		baseBean.registrarNavegacion(auditoriaService, Mensajes.MODULO_MERMAS_DEVOLUCIONES, "entro al modulo de Mermas Devoluciones",
 				idUsuario, nombreUsuario);
 		return "/pages/stock_manager/mermasDevoluciones/tablaMermasDevoluciones.xhtml?faces-redirect=true";
+	}
+	
+	public void filtrarBusqueda() {
+		System.err.println("Iniciando búsqueda: " + textoBusqueda);
+
+		if (textoBusqueda == null || textoBusqueda.trim().isEmpty()) {
+
+			throw new ExceptionMessage("Error: El campo de búsqueda está vacío");
+		}
+
+		String filtro = textoBusqueda.toLowerCase().trim();
+
+		boolean esProveedor = iProveedorService.proveedors().stream()
+				.anyMatch(prov -> prov.getNombreEmpresa().toLowerCase().contains(filtro));
+
+		boolean esCategoria = iCategoriaService.getAllCategorias().stream()
+				.anyMatch(cat -> cat.getNombre().toLowerCase().contains(filtro));
+
+		listaProductos = iProductoService.getAll().stream().filter(p -> p.getNombre().toLowerCase().contains(filtro))
+				.collect(Collectors.toList());
+
+		boolean esProducto = !listaProductos.isEmpty();
+
+		redirigirSegunBusqueda(esProveedor, esCategoria, esProducto);
+	}
+
+	public void redirigirSegunBusqueda(boolean esProveedor, boolean esCategoria, boolean esProducto) {
+		try {
+			System.err.println("aqui estoy");
+			FacesContext context = FacesContext.getCurrentInstance();
+			String queryParam = "?faces-redirect=true&query=" + textoBusqueda;
+			String url = "";
+			if (esProveedor) {
+				url = "../stock_manager/proveedores/tablaProveedores.xhtml" + queryParam;
+			} else if (esCategoria) {
+				url = "../stock_manager/categorias/tablaCategorias.xhtml" + queryParam;
+			} else if (esProducto) {
+				url = "../stock_manager/productos/tablaProductos.xhtml" + queryParam;
+			} else {
+				url = "../stock_manager/dashboard.xhtml";
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "Error", "No se encontro"));
+			}
+			context.getExternalContext().redirect(url);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

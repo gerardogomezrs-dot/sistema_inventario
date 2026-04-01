@@ -46,7 +46,6 @@
             min-width: 0; 
         }
         
-        /* Corrección del selector CSS para h:outputText */
         .ui-datatable .ui-column-custom {
             word-break: break-all;
         }
@@ -54,7 +53,6 @@
 </h:head>
 
 <h:body>
-    <!-- Se recomienda que el menú esté FUERA del formulario si tiene sus propios links/formas -->
 
     <h:form id="formUbicacion" enctype="multipart/form-data">
             <ui:include src="/pages/admin/menu.xhtml" />
@@ -146,7 +144,6 @@
                                  ajax="false" />
             </div>
         </div>
-
         <p:dialog header="Mensaje" widgetVar="dlgConfirmacion" modal="true" closable="false">
             <h:outputText value="Datos guardados correctamente." />
             <br /><br />
@@ -159,9 +156,7 @@
             <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacionGuardar').hide();" />
         </p:dialog>
  
-    <!-- Footer fuera del form para evitar anidamientos innecesarios -->
     <ui:include src="/pages/admin/footer.xhtml" />
     </h:form>
-   
 </h:body>
 </html>

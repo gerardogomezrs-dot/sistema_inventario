@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -62,7 +63,6 @@ public class NavegacionBean implements Serializable {
 				.get("sessionUsuario");
 		idUsuario = user.getIdUsuario();
 		nombreUsuario = user.getNombre();
-		// Importar org.primefaces.PrimeFaces;
 		PrimeFaces.current().executeScript("PF('dlgSinStock').show()");
 	}
 
@@ -151,37 +151,33 @@ public class NavegacionBean implements Serializable {
 		}
 
 		String filtro = textoBusqueda.toLowerCase().trim();
-
 		boolean esProveedor = iProveedorService.proveedors().stream()
 				.anyMatch(prov -> prov.getNombreEmpresa().toLowerCase().contains(filtro));
-
 		boolean esCategoria = iCategoriaService.getAllCategorias().stream()
 				.anyMatch(cat -> cat.getNombre().toLowerCase().contains(filtro));
-
 		listaProductos = iProductoService.getAll().stream().filter(p -> p.getNombre().toLowerCase().contains(filtro))
 				.collect(Collectors.toList());
 
 		boolean esProducto = !listaProductos.isEmpty();
 
-		redirigirSegunBusqueda(esProveedor, esCategoria, esProducto);
+		redirigirSegundaBusqueda(esProveedor, esCategoria, esProducto);
 	}
 
-	public void redirigirSegunBusqueda(boolean esProveedor, boolean esCategoria, boolean esProducto) {
+	public void redirigirSegundaBusqueda(boolean esProveedor, boolean esCategoria, boolean esProducto) {
 		try {
 			FacesContext context = FacesContext.getCurrentInstance();
 			String queryParam = "?faces-redirect=true&query=" + textoBusqueda;
 			String url = "";
 			if (esProveedor) {
 				url = "../admin/proveedores/tablaProveedores.xhtml" + queryParam;
-			} 
-			else if (esCategoria) {
+			} else if (esCategoria) {
 				url = "../admin/categorias/tablaCategorias.xhtml" + queryParam;
-			} 
-			else if (esProducto) {
+			} else if (esProducto) {
 				url = "../admin/productos/tablaProductos.xhtml" + queryParam;
-			} 
-			else {
+			} else {
 				url = "../admin/dashboard.xhtml";
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "Error", "No se encontro"));
 			}
 			context.getExternalContext().redirect(url);
 		} catch (IOException e) {

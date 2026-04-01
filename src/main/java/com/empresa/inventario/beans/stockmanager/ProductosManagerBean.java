@@ -61,6 +61,9 @@ public class ProductosManagerBean implements Serializable {
 	private IProductoService iProductoService;
 
 	private ICategoriaService iCategoriaService;
+	
+	private transient String filtro;
+
 
 	@Inject
 	public ProductosManagerBean(IProductoService iProductoService, ICategoriaService iCategoriaService,
@@ -241,6 +244,17 @@ public class ProductosManagerBean implements Serializable {
 
 	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
+	}
+	
+	public void aplicarFiltroExterno() {
+		System.err.println("entro");
+		if (filtro != null && !filtro.trim().isEmpty()) {
+			this.listaProductosList = iProductoService.getByNombreProducto(filtro);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Resultados", "Mostrando resultados para: " + filtro));
+		} else {
+			this.listaProductosList = iProductoService.getAll();
+		}
 	}
 
 }

@@ -5,13 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.primefaces.model.UploadedFile;
+import org.slf4j.LoggerFactory;
 
 import com.empresa.inventario.beans.BaseAuditoriaBean;
+import com.empresa.inventario.exceptions.ExceptionMessage;
 import com.empresa.inventario.model.Ubicacion;
 import com.empresa.inventario.model.Usuario;
 import com.empresa.inventario.service.IAuditoriaService;
@@ -28,6 +31,8 @@ public class UbicacionBean implements Serializable {
 	* 
 	*/
 	private static final long serialVersionUID = 1L;
+	
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(UbicacionBean.class);
 
 	private List<Ubicacion> list;
 
@@ -68,6 +73,11 @@ public class UbicacionBean implements Serializable {
 
 	public void cargarLista() {
 		this.list = iUbicacionService.getAll();
+	}
+	
+	public void guardarUbicacionTabla() {
+		 iUbicacionService.create(listaUbicaciones);
+		 this.listaUbicaciones = new ArrayList<>();
 	}
 
 	public void guardarTabla() {
@@ -117,5 +127,41 @@ public class UbicacionBean implements Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void cargaArchivos() {
+	    BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
+	    try {
+	        // Validación mejorada
+	        if (uploadedFile == null || uploadedFile.getFileName().isEmpty()) {
+	            mensaje(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo válido");
+	            return;
+	        }
+
+	        // Llamada al servicio
+	        this.listaUbicaciones = iUbicacionService.cargarArchivo(uploadedFile);
+	        
+	        if (this.listaUbicaciones != null && !this.listaUbicaciones.isEmpty()) {
+	            mensaje(FacesMessage.SEVERITY_INFO, "Éxito", "Se han precargado " + listaUbicaciones.size() + " registros.");
+	            
+	            baseBean.registrarAuditoria(auditoriaService, Mensajes.CARGA_MASIVA_REGISTROS.getTexto(),
+	                    "Usuario " + nombreUsuario + " realizó una carga masiva",
+	                    Mensajes.INFO.toString(), idUsuario);
+	        } else {
+	            mensaje(FacesMessage.SEVERITY_WARN, "Aviso", "El archivo está vacío o no contiene datos válidos.");
+	        }
+
+	    } catch (ExceptionMessage e) {
+	        logger.error("Error de negocio: {}", e.getMessage());
+	        mensaje(FacesMessage.SEVERITY_ERROR, "Error de Validación:", e.getMessage());
+	        baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, "Error en carga: " + e.getMessage(), Mensajes.ERROR.toString(), idUsuario);
+	    } catch (Exception e) {
+	        logger.error("Error inesperado: ", e);
+	        mensaje(FacesMessage.SEVERITY_FATAL, "Error de Sistema:", "Ocurrió un error al procesar el archivo.");
+	        baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, "Excepción: " + e.getClass().getName(), Mensajes.ERROR.toString(), idUsuario);
+	    }
+	}
+	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}
 }

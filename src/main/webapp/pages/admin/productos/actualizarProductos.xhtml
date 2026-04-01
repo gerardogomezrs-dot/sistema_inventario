@@ -3,7 +3,6 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <p:dialog id="dialogoEditar" header="Editar Producto" widgetVar="wdgEditar" modal="true" appendTo="@(body)"
         resizable="false">
-
         <h:form id="formEditar">
             <h:panelGrid columns="2" cellpadding="5">
 
@@ -44,15 +43,16 @@
                 <p:inputText value="#{productoBean.producto.stockMinimo}" />
 
                 <h:outputLabel value="Ubicación:" />
-                <p:inputText value="#{productoBean.producto.idUbicacion}" />
-
+                 <p:selectOneMenu id="ubicacion" value="#{productoBean.producto.idUbicacion}" style="width: 200px;">
+                            <f:selectItem itemLabel="Seleccione una ubicación" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{productoBean.listaUbicaciones}" var="ubi"
+                                           itemLabel="#{ubi.pasillo} - #{ubi.estante}" itemValue="#{ubi.idUbicacion}" />
+                        </p:selectOneMenu>
                 <h:outputLabel value="Activo:" />
                 <p:selectBooleanCheckbox value="#{productoBean.producto.activo}" />
-
                 <p:commandButton value="Guardar" icon="pi pi-save" action="#{productoBean.guardarCambios}"
                     update=":form:tablaProductos :form:msgs"
                     oncomplete="if (!args.validationFailed) { PF('wdgEditar').hide(); }" />
-
             </h:panelGrid>
         </h:form>
     </p:dialog>

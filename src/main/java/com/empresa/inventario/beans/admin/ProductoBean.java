@@ -72,7 +72,7 @@ public class ProductoBean implements Serializable {
 
 	private transient IAuditoriaService auditoriaService;
 	
-	private String filtro; // Getter y Setter necesarios
+	private String filtro;
 
 
 	@Inject

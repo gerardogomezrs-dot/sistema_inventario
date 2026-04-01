@@ -38,17 +38,18 @@ public class UbicacionDAO {
 	public void guardar(Ubicacion ubicacion) {
 
 		String sql = "INSERT INTO inventarios.ubicacion\r\n"
-				+ "(id_ubicacion, pasillo, estante, nivel, codigo_control, estado)\r\n" + "VALUES(0, ?, ?, ?, ?, ?);";
+				+ "(pasillo, estante, nivel, codigo_control, estado)\r\n" + "VALUES( ?, ?, ?, ?, ?);";
 		try (Connection conexion = Conexion.getConexion(); PreparedStatement ps = conexion.prepareStatement(sql);) {
 
 			ps.setString(1, ubicacion.getPasillo());
 			ps.setString(2, ubicacion.getEstante());
 			ps.setString(3, ubicacion.getNivel());
 			ps.setString(4, ubicacion.getCodigoControl());
-			ps.setString(6, ubicacion.getEstado());
+			ps.setString(5, ubicacion.getEstado());
 			ps.executeUpdate();
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.debug(e.getMessage());
 		}
 	}

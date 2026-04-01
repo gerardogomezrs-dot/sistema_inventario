@@ -108,12 +108,10 @@ public class MovimientosBean implements Serializable {
 	public void save() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 		try {
+			this.movimientos.setIdUsuario(idUsuario);
 			listaMovimientosGuardar.add(movimientos);
-			int idActual = this.movimientos.getIdUsuario();
 			this.movimientos = new Movimientos();
 			this.infoProductoExtra = "";
-			this.movimientos.setIdUsuario(idActual);
-
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.GUARDAR_REGISTRO_TABLA,
 					Mensajes.USUARIO + nombreUsuario + " registro un elemento a la tabla", Mensajes.INFO.toString(),
 					idUsuario);
@@ -136,12 +134,12 @@ public class MovimientosBean implements Serializable {
 						Mensajes.INFO.toString(), idUsuario);
 			}
 			if (listaMovimientosGuardar != null) {
-				listaMovimientosGuardar.clear();
+				this.listaMovimientosGuardar.clear();
+				this.movimientos = new Movimientos();
 			}
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Registro guardado"));
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
@@ -199,7 +197,7 @@ public class MovimientosBean implements Serializable {
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", "No existe el producto");
 		}
 	}
-	
+
 	public void cargarInfoScanner2() throws Exception {
 		String codigoBarras = this.movimientos.getCodigoBarras();
 		Productos productos = new Productos();
@@ -217,44 +215,11 @@ public class MovimientosBean implements Serializable {
 				this.infoProductoExtra = "";
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Producto encontrado."));
-			} else {
-
 			}
 		} catch (ExceptionMessage e) {
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", "No existe el producto");
 		} catch (Exception e) {
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", "No existe el producto");
-		}
-	}
-
-	public void cargarArchivo() {
-		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-		List<Movimientos> liMovimientos = new ArrayList<>();
-		try {
-			if (uploadedFile == null || uploadedFile.getContents() == null) {
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Seleccione un archivo"));
-			}
-			listaMovimientosGuardar = new ArrayList<>();
-			liMovimientos = service.cargaMasiva(uploadedFile, idUsuario);
-			this.listaMovimientosGuardar = new ArrayList<>(liMovimientos);
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Datos cargados a la tabla."));
-
-			baseBean.registrarAuditoria(auditoriaService, Mensajes.CARGA_MASIVA_REGISTROS.getTexto(),
-					Mensajes.USUARIO + nombreUsuario + " realizo una carga masiva de registros",
-					Mensajes.INFO.toString(), idUsuario);
-
-		} catch (ExceptionMessage e) {
-			logger.debug(e.getMessage());
-			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
-			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
-					Mensajes.ERROR.toString(), idUsuario);
-		} catch (Exception e) {
-			logger.debug(e.getMessage());
-			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
-			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
-					Mensajes.ERROR.toString(), idUsuario);
 		}
 	}
 
@@ -271,7 +236,7 @@ public class MovimientosBean implements Serializable {
 			e.getMessage();
 		}
 	}
-	
+
 	public void procesarEscaneoMovimientos() {
 		FacesContext context = FacesContext.getCurrentInstance();
 		String url = "../movimientos/movimientos.xhtml?faces-redirect=true&query=" + codigoFiltro;
@@ -301,8 +266,8 @@ public class MovimientosBean implements Serializable {
 		this.movimientos = new Movimientos();
 		this.infoProductoExtra = "";
 	}
-	
+
 	public void limpiarParaNuevoEscaneo() {
-	    this.movimientos.setCodigoBarras("");
+		this.movimientos.setCodigoBarras("");
 	}
 }

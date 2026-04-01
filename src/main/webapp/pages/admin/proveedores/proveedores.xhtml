@@ -9,7 +9,7 @@
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
     <link rel="stylesheet" href="https://unpkg.com/primeicons/primeicons.css" />
     <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
-        <link rel="stylesheet" href="#{request.contextPath}/css/dark-mode.css" />
+    <link rel="stylesheet" href="#{request.contextPath}/css/dark-mode.css" />
 
 
     <style type="text/css">
@@ -76,10 +76,7 @@
                         <p:inputText value="#{proveedorBean.proveedor.direccion}" />
                         <p:outputLabel value="Activo:" />
                         <p:selectBooleanCheckbox value="#{proveedorBean.proveedor.activo}" />
-                        <p:outputLabel for="fechaReg" value="Fecha Registro:" />
-                        <p:datePicker id="fechaReg" value="#{proveedorBean.proveedor.fechaRegistro}"
-                            pattern="dd/MM/yyyy" showIcon="true" monthNavigator="true" yearNavigator="true"
-                            showOnFocus="false" />
+
                     </p:panelGrid>
                     <div style="margin-top: 15px;">
                         <p:commandButton value="Guardar" icon="pi pi-save" action="#{proveedorBean.guardarTabla}"

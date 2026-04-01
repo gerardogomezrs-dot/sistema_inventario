@@ -168,7 +168,7 @@ public class ProductosDAO {
 	public Productos getByIdProductoInfo(int idProducto) {
 		String sql = "SELECT id_producto, nombre as nombreProducto, codigo_barras, descripcion, id_categoria, unidad, "
 				+ "precio_unitario, stock_actual as stockActual, stock_minimo as stockMinimo, "
-				+ "ubicacion, activo FROM productos where id_producto = ?";
+				+ "id_ubicacion, activo FROM productos where id_producto = ?";
 		Productos p = new Productos();
 		try (Connection con = Conexion.getConexion(); PreparedStatement ps = con.prepareStatement(sql);) {
 			ps.setInt(1, idProducto);

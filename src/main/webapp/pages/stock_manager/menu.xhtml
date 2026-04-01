@@ -2,12 +2,86 @@
     xmlns:p="http://primefaces.org/ui" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
     xmlns:f="http://xmlns.jcp.org/jsf/core">
 
+    <style>
+        .menu-options-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .dark-mode-container {
+            display: flex;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 5px 12px;
+            border-radius: 20px;
+        }
+
+        .mode-label {
+            margin-left: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-main);
+            transition: color 0.3s;
+        }
+
+        body.dark-mode .mode-label {
+            color: #f1f5f9 !important;
+        }
+
+        body.dark-mode .dark-mode-container {
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
 
     <p:menubar>
         <p:menuitem value="Inicio" url="../dashboard.xhtml" icon="pi pi-home" />
+
         <f:facet name="options">
-            <p:commandButton value="Cerrar Sesión" action="#{loginBean.logout}" icon="pi pi-power-off"
-                style="background-color: #c9302c; color: white; border: none;" />
+            <div class="menu-options-container">
+                <div class="dark-mode-container">
+                    <i class="pi pi-moon" style="color: var(--primary-color);"></i>
+                    <p:inputSwitch id="darkSwitch" widgetVar="darkSwitchWV" onchange="toggleTheme()">
+                        <p:ajax update="@none" />
+                    </p:inputSwitch>
+                    <h:outputLabel for="darkSwitch" value="Modo Oscuro" styleClass="mode-label" />
+                </div>
+
+                <p:commandButton value="Salir" action="#{loginBean.logout}" icon="pi pi-power-off"
+                    style="background-color: #ef4444; color: white; border: none;" ajax="false" />
+            </div>
         </f:facet>
     </p:menubar>
+
+    <script>
+        function toggleTheme() {
+            const isDark = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        function applyTheme(state) {
+            const body = document.body;
+            const widget = PF('darkSwitchWV');
+
+            if (state === 'dark') {
+                body.classList.add('dark-mode');
+                if (widget) widget.check();
+            } else {
+                body.classList.remove('dark-mode');
+                if (widget) widget.uncheck();
+            }
+        }
+
+        window.addEventListener('storage', (event) => {
+            if (event.key === 'theme') {
+                applyTheme(event.newValue);
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            applyTheme(savedTheme);
+        });
+    </script>
+
 </ui:composition>

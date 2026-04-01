@@ -1,20 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html lang="es-MX" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
-    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<html lang="es-MX" xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
+    <f:facet name="first">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </f:facet>
+    
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
-    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
-    <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
+    
     <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
+    
+    <link rel="stylesheet" href="#{request.contextPath}/css/dark-mode.css" />
+    <link rel="stylesheet" href="#{request.contextPath}/css/styles.css" />
+
     <title>Sistema de Inventario - Panel de Control</title>
+    
     <style>
         /* Estilo para simular el p:tag en PrimeFaces 7 */
         .badge-info {
             background-color: #e3f2fd;
-            color: #0d47a1; /* Azul más oscuro para mejor contraste */
+            color: #0d47a1;
+            /* Azul más oscuro para mejor contraste */
             padding: 2px 8px;
             border-radius: 4px;
             font-size: 12px;
@@ -34,51 +46,96 @@
 
         /* ===== DASHBOARD TARJETAS ===== */
 
-.menu-grid {
-    width: 100%;
-}
+        .menu-grid {
+            width: 100%;
+        }
 
-.menu-grid .ui-button {
-    height: 120px;
-    border-radius: 12px !important;
-    font-size: 16px !important;
-    font-weight: bold;
-    background: linear-gradient(135deg, #2c3e50, #34495e) !important;
-    border: none !important;
-    color: white !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    transition: all 0.3s ease;
-}
+        .menu-grid .ui-button {
+            height: 120px;
+            border-radius: 12px !important;
+            font-size: 16px !important;
+            font-weight: bold;
+            background: linear-gradient(135deg, #2c3e50, #34495e) !important;
+            border: none !important;
+            color: white !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
 
-.menu-grid .ui-button .ui-button-icon-left {
-    font-size: 28px !important;
-    margin-bottom: 10px;
-}
+        .menu-grid .ui-button .ui-button-icon-left {
+            font-size: 28px !important;
+            margin-bottom: 10px;
+        }
 
-.menu-grid .ui-button:hover {
-    transform: translateY(-5px);
-    background: linear-gradient(135deg, #3498db, #2980b9) !important;
-    box-shadow: 0 8px 18px rgba(0,0,0,0.5);
-}
+        .menu-grid .ui-button:hover {
+            transform: translateY(-5px);
+            background: linear-gradient(135deg, #3498db, #2980b9) !important;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.5);
+        }
 
-.menu-grid td {
-    padding: 10px;
-}
+        .menu-grid td {
+            padding: 10px;
+        }
+        
+        .dark-mode-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .search-container {
+            display: flex; 
+            align-items: center; 
+            gap: 5px;
+        }
     </style>
 </h:head>
 
 <h:body>
     <h:form id="formPrincipal">
+        <p:growl id="msgs" showDetail="true" />
 
         <p:menubar>
             <p:menuitem value="Inicio" url="dashboard.xhtml" icon="pi pi-home" />
+
             <f:facet name="options">
-                <p:commandButton value="Cerrar Sesión" action="#{loginBean.logout}" icon="pi pi-power-off"
-                    style="background-color: #c62828; color: white; border: none;" />
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div class="dark-mode-container">
+                        <i class="pi pi-moon" style="color: var(--primary-color);"></i>
+                        <p:inputSwitch id="darkSwitch" widgetVar="darkSwitchWV" onchange="toggleTheme()">
+                            <p:ajax update="@none" />
+                        </p:inputSwitch>
+                        <h:outputLabel for="darkSwitch" value="Modo Oscuro" styleClass="mode-label" />
+                    </div>
+
+                    <div class="search-container">
+                        <i class="pi pi-search search-icon"></i>
+                        <p:inputText id="txtBusqueda" 
+                                     placeholder="Buscar productos..." 
+                                     styleClass="search-input"
+                                     value="#{navegacionManagerBean.textoBusqueda}">
+                            <p:ajax event="keyup" 
+                                    delay="800" 
+                                    process="@this" 
+                                    listener="#{navegacionManagerBean.filtrarBusqueda}"
+                                    update="msgs" /> </p:inputText>
+
+                        <i class="pi pi-camera scanner-trigger" 
+                           onclick="PF('dlgScanner').show(); startScanner();"
+                           title="Escanear código con cámara"
+                           style="cursor:pointer;"></i>
+                    </div>
+
+                    <p:commandButton value="Escaneo Rápido" icon="pi pi-bolt" type="button"
+                                     onclick="PF('dlgEscaneo').show(); setTimeout(function(){ document.getElementById('formEscaneo:codigoEscaneado').focus(); }, 400);"
+                                     styleClass="ui-button-raised ui-button-info" 
+                                     style="font-weight: bold; border-radius: 8px;" />
+
+                    <p:commandButton value="Salir" action="#{loginBean.logout}" icon="pi pi-power-off"
+                                     styleClass="btn-logout" ajax="false" />
+                </div>
             </f:facet>
         </p:menubar>
-
-        <p:growl id="msgs" showDetail="true" />
 
         <div class="ui-fluid">
             <div class="ui-g">
@@ -96,40 +153,43 @@
                         </h:panelGrid>
                     </p:panel>
                 </div>
+                
                 <div class="ui-g-12 ui-md-8">
                     <p:panel header="Menú Principal">
                         <h:panelGrid columns="2" cellpadding="10" styleClass="menu-grid" style="width:100%">
 
                             <p:commandButton value="Ver Perfil" action="#{navegacionManagerBean.irAPerfil()}"
-                                icon="pi pi-user" ajax="false" />
+                                             icon="pi pi-user" ajax="false" />
 
                             <p:commandButton value="Gestionar Categorias"
-                                action="#{navegacionManagerBean.irAGestionCategorias()}" icon="pi pi-tags"
-                                ajax="false" />
+                                             action="#{navegacionManagerBean.irAGestionCategorias()}" icon="pi pi-tags"
+                                             ajax="false" />
 
                             <p:commandButton value="Gestionar Productos"
-                                action="#{navegacionManagerBean.irAGestionProductos}" icon="pi pi-briefcase"
-                                ajax="false" />
+                                             action="#{navegacionManagerBean.irAGestionProductos}" icon="pi pi-briefcase"
+                                             ajax="false" />
 
                             <p:commandButton value="Gestionar Reportes"
-                                action="#{navegacionManagerBean.irAGestionReportes}" icon="pi pi-chart-bar"
-                                ajax="false" />
+                                             action="#{navegacionManagerBean.irAGestionReportes}" icon="pi pi-chart-bar"
+                                             ajax="false" />
 
                             <p:commandButton value="Gestionar Proveedores"
-                                action="#{navegacionManagerBean.irAGestionProveedores}" icon="fa fa-industry"
-                                ajax="false" styleClass="ui-button-raised" />
+                                             action="#{navegacionManagerBean.irAGestionProveedores}" icon="pi pi-home"
+                                             ajax="false" styleClass="ui-button-raised" />
 
                             <p:commandButton value="Gestionar Movimientos"
-                                action="#{navegacionManagerBean.irAGestionMovimientos}" icon="pi pi-search" />
+                                             action="#{navegacionManagerBean.irAGestionMovimientos}" icon="pi pi-search" />
+                            
                             <p:commandButton value="Gestionar Mermas y Devoluciones"
-                                action="#{navegacionManagerBean.irAGestionMermasDevoluciones()}" icon="pi pi-exclamation-triangle" />
-                            </h:panelGrid>
+                                             action="#{navegacionManagerBean.irAGestionMermasDevoluciones()}"
+                                             icon="pi pi-exclamation-triangle" />
+                        </h:panelGrid>
                     </p:panel>
                 </div>
             </div>
         </div>
+        
         <ui:include src="/pages/stock_manager/footer.xhtml" />
     </h:form>
 </h:body>
-
 </html>

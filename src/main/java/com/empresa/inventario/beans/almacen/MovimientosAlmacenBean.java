@@ -224,6 +224,7 @@ public class MovimientosAlmacenBean implements Serializable {
 	public void save() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 		try {
+			movimientos.setIdUsuario(idUsuario);
 			listaMovimientosGuardar.add(movimientos);
 			this.movimientos = new Movimientos();
 			this.infoProductoExtra = "";
@@ -281,5 +282,9 @@ public class MovimientosAlmacenBean implements Serializable {
 			cargarInfoScanner(codigoFiltro);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 					"Resultados", "Mostrando resultados para: " + codigoFiltro));
+	}
+	
+	public void limpiarParaNuevoEscaneo() {
+	    this.movimientos.setCodigoBarras("");
 	}
 }

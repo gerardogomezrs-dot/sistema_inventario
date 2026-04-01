@@ -167,7 +167,6 @@ public class UsuariosBean implements Serializable {
 
 	public void actualizarPerfil() {
 		 BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-
 		if (usuario == null) {
 			throw new ExceptionMessage("Vacio");
 		}

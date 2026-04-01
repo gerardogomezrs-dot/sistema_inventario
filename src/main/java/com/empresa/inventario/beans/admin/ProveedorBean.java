@@ -118,6 +118,7 @@ public class ProveedorBean implements Serializable {
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.GUARDAR,
 					Mensajes.USUARIO + nombreUsuario + "realizo el guardado de un registro", Mensajes.INFO.toString(),
 					idUsuario);
+			this.listaProveedorGuardar = new ArrayList<>();
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),

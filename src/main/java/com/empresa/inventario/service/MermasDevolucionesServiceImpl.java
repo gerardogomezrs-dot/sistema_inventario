@@ -52,9 +52,10 @@ public class MermasDevolucionesServiceImpl implements IMermasDevolucionesService
 		ProductosDAO dao = new ProductosDAO();
 		Productos productos = new Productos();
 		try {
-			for (MermasDevoluciones mermasDevoluciones2 : mermasDevoluciones) {				
+			for (MermasDevoluciones mermasDevoluciones2 : mermasDevoluciones) {	
+				System.err.println("mermas " + mermasDevoluciones2.getTipo());
 				mermasDevoluciones2.setIdUsuario(usuario.getIdUsuario());
-				if (mermasDevoluciones2.getTipo().equals("merma")) {
+				if (mermasDevoluciones2.getTipo().equalsIgnoreCase("merma")) {
 					productos = dao.getByIdProductoInfo(mermasDevoluciones2.getIdProducto());
 					double costo = productos.getPrecioUnitario() * mermasDevoluciones2.getCantidad();
 					mermasDevoluciones2.setCostoPerdido(costo);
@@ -62,7 +63,7 @@ public class MermasDevolucionesServiceImpl implements IMermasDevolucionesService
 					int stockActual = productos.getStockActual() - mermasDevoluciones2.getCantidad();
 					dao.actualizarStock(mermasDevoluciones2.getIdProducto(), stockActual);
 				}
-				 if (mermasDevoluciones2.getTipo().equals("devolucion")) {
+				 if (mermasDevoluciones2.getTipo().equalsIgnoreCase("devolucion")) {
 					productos = dao.getByIdProductoInfo(mermasDevoluciones2.getIdProducto());
 					double costo = 0;
 					mermasDevoluciones2.setCostoPerdido(costo);
@@ -72,6 +73,7 @@ public class MermasDevolucionesServiceImpl implements IMermasDevolucionesService
 				}
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.debug(e.getMessage());
 		}
 	}

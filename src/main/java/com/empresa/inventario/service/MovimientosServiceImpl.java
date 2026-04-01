@@ -49,6 +49,7 @@ public class MovimientosServiceImpl implements IMovimientosService {
 				
 				ProductosDAO productosDAO = new ProductosDAO();
 				if (movimientos.getTipoMovimiento().equalsIgnoreCase("Entrada")) {
+					System.err.println("Entrada");
 					int nuevoSock = productosDAO.getByIdProducto(movimientos.getIdProducto());
 					totalStock = nuevoSock + movimientos.getCantidad();
 					productosDAO.actualizarStock(movimientos.getIdProducto(), totalStock);
@@ -57,6 +58,7 @@ public class MovimientosServiceImpl implements IMovimientosService {
 					dao.guardar(movimientos);
 				}
 				if (movimientos.getTipoMovimiento().equalsIgnoreCase("Salida")) {
+					System.err.println("Salida");
 					int nuevoSock = productosDAO.getByIdProducto(movimientos.getIdProducto());
 					totalStock = nuevoSock - movimientos.getCantidad();
 					productosDAO.actualizarStock(movimientos.getIdProducto(), totalStock);

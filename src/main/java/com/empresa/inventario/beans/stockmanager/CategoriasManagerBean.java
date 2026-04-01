@@ -50,6 +50,8 @@ public class CategoriasManagerBean implements Serializable {
 
 	private int idUsuario;
 
+	private transient String filtro;
+
 	private String nombreUsuario;
 
 	private transient IAuditoriaService auditoriaService;
@@ -226,5 +228,16 @@ public class CategoriasManagerBean implements Serializable {
 
 	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
+	}
+	
+	public void aplicarFiltroExterno() {
+		System.err.println("entro");
+		if (filtro != null && !filtro.trim().isEmpty()) {
+			this.list = categoriaService.byNombreCategoria(filtro);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Resultados", "Mostrando resultados para: " + filtro));
+		} else {
+			this.list = categoriaService.getAllCategorias();
+		}
 	}
 }

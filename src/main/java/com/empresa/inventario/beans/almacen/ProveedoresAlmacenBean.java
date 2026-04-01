@@ -58,7 +58,6 @@ public class ProveedoresAlmacenBean implements Serializable {
 
 	public void listaProveedores() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-
 		try {
 			list = iProveedorService.proveedors();
 		} catch (Exception e) {
@@ -73,7 +72,6 @@ public class ProveedoresAlmacenBean implements Serializable {
 		baseBean.registrarNavegacion(auditoriaService, Mensajes.NAVEGACION, "navego a dashboard", idUsuario,
 				nombreUsuario);
 		return "/pages/almacen/dashboard.xhtml?faces-redirect=true";
-
 	}
 
 	public void aplicarFiltroExterno() {
@@ -85,5 +83,4 @@ public class ProveedoresAlmacenBean implements Serializable {
 			this.list = iProveedorService.proveedors();
 		}
 	}
-
 }

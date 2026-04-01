@@ -44,6 +44,7 @@ public class MovimientosDAO {
 	}
 
 	public void guardar(Movimientos movimientos) {
+		System.err.println("error: " + movimientos.getIdUsuario());
 		String sql = "INSERT INTO movimientos (id_producto, "
 				+ " tipo_movimiento , cantidad, fecha_hora ,  origen_destino ,  id_usuario ,  observaciones, stock_previo, stock_posterior ) "
 				+ " VALUES " + "(?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?, ?, ?)";

@@ -5,8 +5,8 @@
 <h:head>
     <title>Sistema de Inventario - Reporte de Clasificación ABC</title>
     <h:outputStylesheet library="css" name="style.css" />
-        <link rel="stylesheet" href="https://unpkg.com/primeicons/primeicons.css" />
-            <link rel="stylesheet" href="#{request.contextPath}/css/dark-mode.css" />
+    <link rel="stylesheet" href="https://unpkg.com/primeicons/primeicons.css" />
+    <link rel="stylesheet" href="#{request.contextPath}/css/dark-mode.css" />
 
 
     <style>
@@ -72,7 +72,7 @@
 <h:body>
 
     <h:form id="formReporte">
-        <ui:include src="/pages/almacen/menu.xhtml" />
+        <ui:include src="/pages/admin/menu.xhtml" />
 
         <p:separator />
         <p:toolbar style="margin-bottom: 20px; border: none; background: transparent;">
@@ -83,7 +83,7 @@
         </p:toolbar>
         <p:separator />
         <p:panel header="Reporte de Clasificación ABC">
-               <p:dataTable id="tblMovimientos" value="#{inventarioReporteBean.clasificacionABCs}" var="mov"
+            <p:dataTable id="tblMovimientos" value="#{inventarioReporteBean.clasificacionABCs}" var="mov"
                 paginator="true" rows="20" emptyMessage="No se encontraron movimientos">
                 <f:facet name="header">
                     <div style="display: flex; justify-content: center; align-items: center; gap: 15px;">
@@ -107,17 +107,19 @@
                 <p:column headerText="Nombre Producto">
                     <h:outputText value="#{mov.nombreProducto}" />
                 </p:column>
-                <p:column headerText="valor Stock">
-                    <h:outputText value="#{mov.valorStock}" />
+                <p:column headerText="Valor Stock">
+                    <h:outputText value="#{mov.valorStock}">
+                        <f:convertNumber type="currency" currencySymbol="$" locale="es_MX" />
+                    </h:outputText>
                 </p:column>
                 <p:column headerText="Clasificación ABC">
                     <h:outputText value="#{mov.clasificacionABC}" />
                 </p:column>
-                
+
             </p:dataTable>
         </p:panel>
     </h:form>
-    <ui:include src="/pages/almacen/footer.xhtml" />
+    <ui:include src="/pages/admin/footer.xhtml" />
 </h:body>
 
 </html>

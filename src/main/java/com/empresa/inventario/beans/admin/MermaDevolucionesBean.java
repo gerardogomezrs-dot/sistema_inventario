@@ -41,7 +41,7 @@ public class MermaDevolucionesBean implements Serializable {
 	private int idUsuario;
 
 	private String nombreUsuario;
-	
+
 	private transient Usuario usuario;
 
 	String tipo;
@@ -58,7 +58,7 @@ public class MermaDevolucionesBean implements Serializable {
 
 	private transient UploadedFile uploadedFile;
 
-	private transient  IMermasDevolucionesService devolucionesService;
+	private transient IMermasDevolucionesService devolucionesService;
 
 	private boolean tieneDevolucion;
 
@@ -80,6 +80,7 @@ public class MermaDevolucionesBean implements Serializable {
 		listaProductos();
 		listaMermasDevoluciones();
 		mermasDevoluciones = new MermasDevoluciones();
+		devoluciones = new ArrayList<>();
 		this.tieneDevolucion = true;
 	}
 
@@ -130,26 +131,28 @@ public class MermaDevolucionesBean implements Serializable {
 	public void guardarRegistroTabla() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 		try {
-			devoluciones = new ArrayList<>();
 			devoluciones.add(mermasDevoluciones);
-			mermasDevoluciones = new MermasDevoluciones();
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.GUARDAR_REGISTRO_TABLA,
 					Mensajes.USUARIO + nombreUsuario + " registro un elemento a la tabla", Mensajes.INFO.toString(),
 					idUsuario);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 					"Registro guardado", "El registro fue guardado en la tabla"));
+			this.mermasDevoluciones = new MermasDevoluciones();
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
 	}
+
 	public void guardarRegistros() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 		try {
 			if (devoluciones.isEmpty()) {
 				throw new ExceptionMessage("Lista Vacia");
 			}
+			System.err.println("Lista " + devoluciones.size());
 			devolucionesService.guardarMermasDevoluciones(devoluciones, usuario);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 					"Registro guardado", "El registro fue guardado correctamente"));
@@ -158,12 +161,13 @@ public class MermaDevolucionesBean implements Serializable {
 					idUsuario);
 			devoluciones.clear();
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
 		}
 	}
-	
+
 	public void cargarArchivos() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
 		try {
@@ -190,7 +194,7 @@ public class MermaDevolucionesBean implements Serializable {
 					Mensajes.ERROR.toString(), idUsuario);
 		}
 	}
-	
+
 	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
 	}

@@ -36,6 +36,9 @@ public class ProveedorManagerBean implements Serializable {
 	private transient List<Proveedor> listaProveedorGuardar = new ArrayList<>();
 
 	private transient List<Proveedor> list;
+	
+	private String filtro;
+
 
 	private transient UploadedFile uploadedFile;
 
@@ -178,7 +181,6 @@ public class ProveedorManagerBean implements Serializable {
 
 	public void cargaArchivos() {
 		BaseAuditoriaBean auditoriaBean = new BaseAuditoriaBean();
-
 		try {
 			if (uploadedFile == null || uploadedFile.getContents() == null) {
 				FacesContext.getCurrentInstance().addMessage(null,
@@ -209,5 +211,16 @@ public class ProveedorManagerBean implements Serializable {
 
 	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
+	}
+	
+
+	public void aplicarFiltroExterno() {
+		if (filtro != null && !filtro.trim().isEmpty()) {
+			this.list = iProveedorService.byNombreEmpresa(filtro);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Resultados", "Mostrando resultados para: " + filtro));
+		} else {
+			this.list = iProveedorService.proveedors();
+		}
 	}
 }

@@ -11,3 +11,4 @@ public class Ubicacion {
 	private String codigoControl;
 	private String estado;
 }
+

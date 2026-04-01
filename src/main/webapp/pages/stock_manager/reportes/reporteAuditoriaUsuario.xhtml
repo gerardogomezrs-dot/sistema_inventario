@@ -4,6 +4,12 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
     <title>Reporte de Auditoría de Usuario</title>
+    <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+    <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
+    <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
+        <link rel="stylesheet" href="#{request.contextPath}/css/dark-mode.css" />
+        
+
     <style>
         .ui-panelgrid .ui-grid-responsive .ui-grid-row {
             border: none !important;
@@ -101,6 +107,7 @@
                 </p:column>
             </p:dataTable>
         </p:panel>
+        <ui:include src="/pages/stock_manager/footer.xhtml" />
     </h:form>
 </h:body>
 </html>

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -46,9 +47,9 @@ public class NavegacionAlmacenBean implements Serializable {
 	private int movimientosHoyCount;
 
 	private IProductoService iProductoService;
-	
+
 	private ICategoriaService iCategoriaService;
-	
+
 	private IProveedorService iProveedorService;
 
 	@Inject
@@ -125,53 +126,48 @@ public class NavegacionAlmacenBean implements Serializable {
 	}
 
 	public void filtrarBusqueda() {
-	    System.err.println("Iniciando búsqueda: " + textoBusqueda);
+		System.err.println("Iniciando búsqueda: " + textoBusqueda);
 
-	    if (textoBusqueda == null || textoBusqueda.trim().isEmpty()) {
-	        // Mantengo tu lógica de excepción, aunque podrías usar FacesMessage para no romper el flujo
-	        throw new ExceptionMessage("Error: El campo de búsqueda está vacío");
-	    }
+		if (textoBusqueda == null || textoBusqueda.trim().isEmpty()) {
 
-	    String filtro = textoBusqueda.toLowerCase().trim();
+			throw new ExceptionMessage("Error: El campo de búsqueda está vacío");
+		}
 
-	    // 1. Verificamos si existe coincidencia en Proveedores
-	    boolean esProveedor = iProveedorService.proveedors().stream()
-	            .anyMatch(prov -> prov.getNombreEmpresa().toLowerCase().contains(filtro));
+		String filtro = textoBusqueda.toLowerCase().trim();
 
-	    // 2. Verificamos si existe coincidencia en Categorías
-	    boolean esCategoria = iCategoriaService.getAllCategorias().stream()
-	            .anyMatch(cat -> cat.getNombre().toLowerCase().contains(filtro));
+		boolean esProveedor = iProveedorService.proveedors().stream()
+				.anyMatch(prov -> prov.getNombreEmpresa().toLowerCase().contains(filtro));
 
-	    // 3. Verificamos si existe coincidencia en Productos
-	    // (Actualizamos la lista de productos por si se necesita mostrar después)
-	    listaProductos = iProductoService.getAll().stream()
-	            .filter(p -> p.getNombre().toLowerCase().contains(filtro))
-	            .collect(Collectors.toList());
-	    
-	    boolean esProducto = !listaProductos.isEmpty();
+		boolean esCategoria = iCategoriaService.getAllCategorias().stream()
+				.anyMatch(cat -> cat.getNombre().toLowerCase().contains(filtro));
 
-	    // Ejecutamos la redirección con los resultados encontrados
-	    redirigirSegunBusqueda(esProveedor, esCategoria, esProducto);
+		listaProductos = iProductoService.getAll().stream().filter(p -> p.getNombre().toLowerCase().contains(filtro))
+				.collect(Collectors.toList());
+
+		boolean esProducto = !listaProductos.isEmpty();
+
+		redirigirSegunBusqueda(esProveedor, esCategoria, esProducto);
 	}
 
 	public void redirigirSegunBusqueda(boolean esProveedor, boolean esCategoria, boolean esProducto) {
-	    try {
-	        FacesContext context = FacesContext.getCurrentInstance();
-	        String queryParam = "?faces-redirect=true&query=" + textoBusqueda;
-	        String url = "";
-	        if (esProveedor) {
-	            url = "../almacen/proveedores/tablaProveedores.xhtml" + queryParam;
-	        } else if (esCategoria) {
-	            url = "../almacen/categorias/tablaCategorias.xhtml" + queryParam;
-	        } else if (esProducto) {
-	            url = "../almacen/productos/tablaProductos.xhtml" + queryParam;
-	        } else {
-	            url = "../almacen/dashboard.xhtml";
-	            
-	        }
-	        context.getExternalContext().redirect(url);	        
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
+		try {
+			FacesContext context = FacesContext.getCurrentInstance();
+			String queryParam = "?faces-redirect=true&query=" + textoBusqueda;
+			String url = "";
+			if (esProveedor) {
+				url = "../almacen/proveedores/tablaProveedores.xhtml" + queryParam;
+			} else if (esCategoria) {
+				url = "../almacen/categorias/tablaCategorias.xhtml" + queryParam;
+			} else if (esProducto) {
+				url = "../almacen/productos/tablaProductos.xhtml" + queryParam;
+			} else {
+				url = "../almacen/dashboard.xhtml";
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "Error", "No se encontro"));
+			}
+			context.getExternalContext().redirect(url);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

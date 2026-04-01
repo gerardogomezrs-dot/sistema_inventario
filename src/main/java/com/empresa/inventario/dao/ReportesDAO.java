@@ -69,13 +69,21 @@ public class ReportesDAO {
 	}
 
 	public List<ReporteInventarioValorizado> getInventarioValorizado() {
-		String sql = "SELECT \r\n" + "    p.codigo_barras as codigoBarra,\r\n" + "    p.nombre as producto,\r\n"
-				+ "    c.nombre AS categoria,\r\n" + "    p.id_ubicacion as ubicacionProducto,\r\n"
-				+ "    p.stock_actual as stockActual,\r\n" + "    p.unidad as unidad,\r\n"
-				+ "    p.precio_unitario as precioUnitario,\r\n"
-				+ "    (p.stock_actual * p.precio_unitario) AS valorTotal\r\n" + "FROM productos p\r\n"
-				+ "JOIN categorias c ON p.id_categoria = c.id_categoria\r\n" + "WHERE p.activo = 1\r\n"
-				+ "ORDER BY valorTotal DESC;";
+		String sql = "SELECT \r\n"
+				+ "    p.codigo_barras AS codigoBarra,\r\n"
+				+ "    p.nombre AS producto,\r\n"
+				+ "    c.nombre AS categoria,\r\n"
+				+ "    concat(u.pasillo,' ', u.estante) AS ubicacionProducto,\r\n"
+				+ "    p.stock_actual AS stockActual,\r\n"
+				+ "    p.unidad AS unidad,\r\n"
+				+ "    p.precio_unitario AS precioUnitario,\r\n"
+				+ "    (p.stock_actual * p.precio_unitario) AS valorTotal\r\n"
+				+ "FROM productos p\r\n"
+				+ "JOIN categorias c ON p.id_categoria = c.id_categoria\r\n"
+				+ "join ubicacion u on p.id_ubicacion = u.id_ubicacion \r\n"
+				+ "WHERE p.activo = 1\r\n"
+				+ "ORDER BY valorTotal DESC;\r\n"
+				+ "";
 		List<ReporteInventarioValorizado> lista = new ArrayList<>();
 		try (Connection con = Conexion.getConexion();
 				PreparedStatement ps = con.prepareStatement(sql);
@@ -198,7 +206,7 @@ public class ReportesDAO {
 				+ "FROM mermas_perdidas m\r\n"
 				+ "JOIN usuarios u ON m.id_usuario = u.id_usuario\r\n"
 				+ "JOIN productos p ON m.id_producto = p.id_producto\r\n"
-				+ "WHERE u.activo = 1; -- Filtro usando tu campo 'activo'";
+				+ "WHERE u.activo = 1; -- Filtro usando tu campo 'activo' ";
 		List<ReporteMermasDevolucion> lista = new ArrayList<>();
 		try (Connection con = Conexion.getConexion();
 				PreparedStatement ps = con.prepareStatement(sql);
