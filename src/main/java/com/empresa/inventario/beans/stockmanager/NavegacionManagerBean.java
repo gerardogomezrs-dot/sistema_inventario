@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.faces.view.ViewScoped; 
+
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -24,7 +26,7 @@ import com.empresa.inventario.utils.Mensajes;
 import lombok.Data;
 
 @Named("navegacionManagerBean")
-@javax.faces.view.ViewScoped
+@ViewScoped
 @Data
 public class NavegacionManagerBean implements Serializable {
 
@@ -46,8 +48,9 @@ public class NavegacionManagerBean implements Serializable {
 	private IProveedorService iProveedorService;
 	
 	private List<Productos> listaProductos;
-
 	
+	private String codigoFiltro;
+
 	@Inject
 	public NavegacionManagerBean(IAuditoriaService auditoriaService, IProductoService iProductoService,
 			ICategoriaService iCategoriaService, IProveedorService iProveedorService) {
@@ -115,13 +118,11 @@ public class NavegacionManagerBean implements Serializable {
 	}
 	
 	public void filtrarBusqueda() {
-		System.err.println("Iniciando búsqueda: " + textoBusqueda);
 
 		if (textoBusqueda == null || textoBusqueda.trim().isEmpty()) {
 
 			throw new ExceptionMessage("Error: El campo de búsqueda está vacío");
 		}
-
 		String filtro = textoBusqueda.toLowerCase().trim();
 
 		boolean esProveedor = iProveedorService.proveedors().stream()
@@ -140,7 +141,6 @@ public class NavegacionManagerBean implements Serializable {
 
 	public void redirigirSegunBusqueda(boolean esProveedor, boolean esCategoria, boolean esProducto) {
 		try {
-			System.err.println("aqui estoy");
 			FacesContext context = FacesContext.getCurrentInstance();
 			String queryParam = "?faces-redirect=true&query=" + textoBusqueda;
 			String url = "";
@@ -157,7 +157,7 @@ public class NavegacionManagerBean implements Serializable {
 			}
 			context.getExternalContext().redirect(url);
 		} catch (IOException e) {
-			e.printStackTrace();
+			e.getMessage();
 		}
 	}
 

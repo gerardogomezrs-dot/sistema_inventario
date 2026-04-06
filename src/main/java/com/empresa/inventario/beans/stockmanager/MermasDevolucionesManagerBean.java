@@ -24,9 +24,10 @@ import com.empresa.inventario.service.IProductoService;
 import com.empresa.inventario.utils.Mensajes;
 
 import lombok.Data;
+import javax.faces.view.ViewScoped; 
 
 @Named("mermasDevolucionesManagerBean")
-@javax.faces.view.ViewScoped
+@ViewScoped
 @Data
 public class MermasDevolucionesManagerBean implements Serializable{
 	/**

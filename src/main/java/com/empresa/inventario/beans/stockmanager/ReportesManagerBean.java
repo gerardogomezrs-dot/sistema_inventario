@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.faces.view.ViewScoped; 
 
 import com.empresa.inventario.beans.BaseAuditoriaBean;
 import com.empresa.inventario.model.ReporteAuditoriaUsuario;
@@ -28,12 +29,11 @@ import com.empresa.inventario.utils.ReportesUtils;
 import lombok.Data;
 
 @Named("reportesManagerBean")
-@javax.faces.view.ViewScoped
+@ViewScoped
 @Data
 public class ReportesManagerBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
 
 	private Date fechaInicio;
 
@@ -53,32 +53,31 @@ public class ReportesManagerBean implements Serializable {
 
 	private transient List<ReporteMermasDevolucion> mermasDevolucions;
 
-	private String reporteReabastecimiento ;
+	private String reporteReabastecimiento;
 
-	private String reporteInventarioValorizado ;
+	private String reporteInventarioValorizado;
 
-	private String reporteMovimientos ;
+	private String reporteMovimientos;
 
-	private String reporteAuditoriaUsuario ;
+	private String reporteAuditoriaUsuario;
 
-	private String reporteRotacionInventario ;
+	private String reporteRotacionInventario;
 
-	private String reporteClasificacionABC ;
+	private String reporteClasificacionABC;
 
-	private String reporteMermasDevoluciones ;
+	private String reporteMermasDevoluciones;
 
 	private int idUsuario;
 
 	private String nombreUsuario;
 
-	private transient IAuditoriaService auditoriaService;
+	@Inject 
+	private IAuditoriaService auditoriaService;
 
-	private transient IReporteService iReporteService;
+	@Inject 
+	private IReporteService iReporteService;
 
-	@Inject
-	public ReportesManagerBean(IAuditoriaService auditoriaService, IReporteService iReporteService) {
-		this.auditoriaService = auditoriaService;
-		this.iReporteService = iReporteService;
+	public ReportesManagerBean() {
 	}
 
 	@PostConstruct
@@ -94,10 +93,13 @@ public class ReportesManagerBean implements Serializable {
 		buscarIndiceRotacion();
 		buscarClasificacion();
 		buscarMermasDevoluciones();
+		
 		Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.get("sessionUsuario");
-		idUsuario = user.getIdUsuario();
-		nombreUsuario = user.getNombre();
+		if (user != null) {
+			idUsuario = user.getIdUsuario();
+			nombreUsuario = user.getNombre();
+		}
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
 		String fechaHoy = sdf.format(new Date());
@@ -108,7 +110,6 @@ public class ReportesManagerBean implements Serializable {
 		reporteRotacionInventario = "Reporte Rotacion Inventario " + fechaHoy;
 		reporteClasificacionABC = "Reporte Clasificacion ABC " + fechaHoy;
 		reporteMermasDevoluciones = "Reporte Mermas Devoluciones " + fechaHoy;
-
 	}
 
 	public void exportarReporteStockBajoExcel(Object document) {
@@ -133,7 +134,6 @@ public class ReportesManagerBean implements Serializable {
 				Mensajes.USUARIO + nombreUsuario + " realizo la exportacion del Reporte de Inventario Valorizado",
 				Mensajes.INFO.toString(), idUsuario);
 		ReportesUtils.exportarReporteExcel(document);
-
 	}
 
 	public void exportarReporteInventarioValorizadoPdf(Object document) {
@@ -142,7 +142,6 @@ public class ReportesManagerBean implements Serializable {
 				Mensajes.USUARIO + nombreUsuario + " realizo la exportacion del Reporte de Inventario Valorizado",
 				Mensajes.INFO.toString(), idUsuario);
 		ReportesUtils.postProcessPDF(document, reporteInventarioValorizado);
-
 	}
 
 	public void exportarReporteMovimientosExcel(Object document) {
@@ -225,24 +224,21 @@ public class ReportesManagerBean implements Serializable {
 		ReportesUtils.postProcessPDF(document, reporteMermasDevoluciones);
 	}
 
+
 	public void buscarStockBajo() {
 		listaStockBajo = iReporteService.reporteStockBajo();
-
 	}
 
 	public void buscarInventarioValorizado() {
 		listaInventarioValorizado = iReporteService.reporteInventarioValorizado();
-
 	}
 
 	public void buscar() {
 		listaReporteMovimientos = iReporteService.movimientos(fechaInicio, fechaFin);
-
 	}
 
 	public void buscarAuditoriaUsuario() {
 		listaAuditoriaUsuario = iReporteService.reporteAuditoriaUsuario();
-
 	}
 
 	public void buscarIndiceRotacion() {

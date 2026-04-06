@@ -152,8 +152,7 @@
                             <h:outputText value="#{loginBean.usuario.userName}" />
                         </h:panelGrid>
                     </p:panel>
-                </div>
-                
+                </div>         
                 <div class="ui-g-12 ui-md-8">
                     <p:panel header="Menú Principal">
                         <h:panelGrid columns="2" cellpadding="10" styleClass="menu-grid" style="width:100%">
@@ -188,8 +187,21 @@
                 </div>
             </div>
         </div>
-        
         <ui:include src="/pages/stock_manager/footer.xhtml" />
     </h:form>
+     <p:dialog header="Escaneo de Inventario" widgetVar="dlgEscaneo" modal="true" resizable="false" width="400"
+        showEffect="fade" hideEffect="fade">
+        <h:form id="formEscaneo">
+            <div style="text-align: center; padding: 10px;">
+                <p:outputLabel for="codigoEscaneado" value="Pase el escáner por el código de barras:"
+                    style="font-weight: bold; margin-bottom: 15px; display: block;" />
+                <p:inputText id="codigoEscaneado" value="#{navegacionManagerBean.codigoFiltro}"
+                    style="width:100%; font-size: 1.5rem; text-align: center; border: 2px solid var(--primary-color); background: var(--card-bg); color: var(--text-main);"
+                    placeholder="Esperando..." autocomplete="off">
+                    <p:ajax event="keyup" listener="#{navegacionManagerBean.procesarEscaneo}" delay="100" />
+                </p:inputText>
+            </div>
+        </h:form>
+    </p:dialog>
 </h:body>
 </html>

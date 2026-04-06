@@ -285,10 +285,10 @@
             <div style="text-align: center; padding: 10px;">
                 <p:outputLabel for="codigoEscaneado" value="Pase el escáner por el código de barras:"
                     style="font-weight: bold; margin-bottom: 15px; display: block;" />
-                <p:inputText id="codigoEscaneado" value="#{movimientosBean.codigoFiltro}"
+                <p:inputText id="codigoEscaneado" value="#{movimientosManagerBean.codigoFiltro}"
                     style="width:100%; font-size: 1.5rem; text-align: center; border: 2px solid var(--primary-color); background: var(--card-bg); color: var(--text-main);"
                     placeholder="Esperando..." autocomplete="off">
-                    <p:ajax event="keyup" listener="#{movimientosBean.procesarEscaneo}" delay="100" />
+                    <p:ajax event="keyup" listener="#{movimientosManagerBean.procesarEscaneo}" delay="100" />
                 </p:inputText>
             </div>
         </h:form>

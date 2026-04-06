@@ -1,52 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html lang="es-MX" xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core" 
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<html lang="es-MX" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
-  
+
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
     <link rel="stylesheet" href="https://unpkg.com/primeicons/primeicons.css" />
     <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
-        <link rel="stylesheet" href="#{request.contextPath}/css/dark-mode.css" />
-
+    <link rel="stylesheet" href="#{request.contextPath}/css/dark-mode.css" />
 
     <style type="text/css">
         .ui-panelgrid .ui-grid-responsive .ui-grid-row {
             border: none !important;
         }
-        .label { font-weight: bold; width: 150px; }
-        .value { width: 300px; }
+
+        .label {
+            font-weight: bold;
+            width: 150px;
+        }
+
+        .value {
+            width: 300px;
+        }
+
         .main-container {
             display: flex;
             align-items: flex-start;
             gap: 20px;
             padding: 20px;
         }
-        .form-side { flex: 0 0 600px; }
-        .table-side { flex: 1; }
+
+        .form-side {
+            flex: 0 0 600px;
+        }
+
+        .table-side {
+            flex: 1;
+        }
     </style>
 
     <title>Registrar Producto</title>
-    
 </h:head>
-
 <h:body>
     <h:form id="formProducto" enctype="multipart/form-data">
-          <ui:include src="/pages/admin/menu.xhtml" />
+        <ui:include src="/pages/admin/menu.xhtml" />
         <p:growl id="msgs" showDetail="true" />
-        
+
         <div class="main-container">
             <div class="form-side">
                 <p:panel header="Registro de Producto" style="width: 600px; margin: 0 auto;">
                     <h:panelGrid columns="2" columnClasses="label,value">
                         <h:outputLabel value="Codigo de Barras:" />
-                        <p:inputText id="barcodeManual" value="#{productoBean.producto.codigoBarras}" 
-                                     placeholder="Ingrese código manualmente..." style="width: 100%;">
+                        <p:inputText id="barcodeManual" value="#{productoBean.producto.codigoBarras}"
+                            placeholder="Ingrese código manualmente..." style="width: 100%;">
                             <p:ajax event="blur" process="@this" />
                         </p:inputText>
 
@@ -57,26 +66,28 @@
                         <p:inputTextarea value="#{productoBean.producto.descripcion}" rows="3" />
 
                         <p:outputLabel for="categoria" value="Categoría:" />
-                        <p:selectOneMenu id="categoria" value="#{productoBean.producto.idCategoria}" style="width: 200px;">
+                        <p:selectOneMenu id="categoria" value="#{productoBean.producto.idCategoria}"
+                            style="width: 200px;">
                             <f:selectItem itemLabel="Seleccione una categoría" itemValue="" noSelectionOption="true" />
-                            <f:selectItems value="#{productoBean.listaCategorias}" var="cat" 
-                                           itemLabel="#{cat.nombre}" itemValue="#{cat.idCategoria}" />
+                            <f:selectItems value="#{productoBean.listaCategorias}" var="cat" itemLabel="#{cat.nombre}"
+                                itemValue="#{cat.idCategoria}" />
                         </p:selectOneMenu>
 
                         <p:outputLabel for="proveedor" value="Proveedor:" />
-                        <p:selectOneMenu id="proveedor" value="#{productoBean.producto.idProveedor}" style="width: 200px;">
+                        <p:selectOneMenu id="proveedor" value="#{productoBean.producto.idProveedor}"
+                            style="width: 200px;">
                             <f:selectItem itemLabel="Seleccione un proveedor" itemValue="" noSelectionOption="true" />
                             <f:selectItems value="#{productoBean.listaProveedores}" var="prov"
-                                           itemLabel="#{prov.nombreEmpresa}" itemValue="#{prov.idProveedor}" />
+                                itemLabel="#{prov.nombreEmpresa}" itemValue="#{prov.idProveedor}" />
                         </p:selectOneMenu>
 
                         <p:outputLabel for="ubicacion" value="Ubicación:" />
-                        <p:selectOneMenu id="ubicacion" value="#{productoBean.producto.idUbicacion}" style="width: 200px;">
+                        <p:selectOneMenu id="ubicacion" value="#{productoBean.producto.idUbicacion}"
+                            style="width: 200px;">
                             <f:selectItem itemLabel="Seleccione una ubicación" itemValue="" noSelectionOption="true" />
                             <f:selectItems value="#{productoBean.listaUbicaciones}" var="ubi"
-                                           itemLabel="#{ubi.pasillo} - #{ubi.estante}" itemValue="#{ubi.idUbicacion}" />
+                                itemLabel="#{ubi.pasillo} - #{ubi.estante}" itemValue="#{ubi.idUbicacion}" />
                         </p:selectOneMenu>
-
                         <h:outputLabel value="Unidad:" />
                         <p:inputText value="#{productoBean.producto.unidad}" />
 
@@ -91,82 +102,65 @@
 
                         <h:outputLabel value="Activo:" />
                         <p:selectBooleanCheckbox value="#{productoBean.producto.activo}" />
-
                         <h:outputLabel value="Imagen del Producto:" />
                         <p:fileUpload value="#{productoBean.uploadedImagen}" mode="simple" skinSimple="true"
-                                      label="Seleccionar Archivo" chooseIcon="pi pi-upload"
-                                      accept="image/*" /> </h:panelGrid>
-
+                            label="Seleccionar Archivo" chooseIcon="pi pi-upload" accept="image/*" />
+                    </h:panelGrid>
                     <p:separator />
-
                     <p:commandButton value="Guardar" icon="pi pi-save" action="#{productoBean.guardarTabla}"
-                                     process="@form" update="formProducto" ajax="false" />
-
+                        process="@form" update="formProducto" ajax="false" />
                     <p:commandButton value="Regresar" icon="pi pi-chevron-left"
-                                     action="#{productoBean.irATablaProductos}" immediate="true" style="margin-left: 10px;" />
-
+                        action="#{productoBean.irATablaProductos}" immediate="true" style="margin-left: 10px;" />
                     <div class="upload-section" style="margin-top: 20px;">
                         <h:outputLabel value="Cargar desde archivo (CSV, Excel):"
-                                       style="display:block; margin-bottom:5px; font-weight:bold;" />
+                            style="display:block; margin-bottom:5px; font-weight:bold;" />
                         <p:fileUpload value="#{productoBean.uploadedFile}" mode="simple" skinSimple="true"
-                                      label="Seleccionar Archivo" chooseIcon="pi pi-upload" />
+                            label="Seleccionar Archivo" chooseIcon="pi pi-upload" />
 
-                        <p:commandButton value="Procesar Archivo" action="#{productoBean.cargaArchivos}" 
-                                         ajax="false" styleClass="ui-button-help" style="margin-top: 5px;" icon="pi pi-file-import" />
+                        <p:commandButton value="Procesar Archivo" action="#{productoBean.cargaArchivos}" ajax="false"
+                            styleClass="ui-button-help" style="margin-top: 5px;" icon="pi pi-file-import" />
                     </div>
                 </p:panel>
             </div>
-
             <div class="table-side">
                 <p:dataTable id="tablaRegistros" value="#{productoBean.listaProductosGuardar}" var="prod"
-                             emptyMessage="No hay productos registrados en esta sesión." scrollable="true" scrollHeight="500">
-
+                    emptyMessage="No hay productos registrados en esta sesión." scrollable="true" scrollHeight="500">
                     <f:facet name="header">Productos Guardados</f:facet>
-
                     <p:column headerText="Código" width="100">
                         <h:outputText value="#{prod.codigoBarras}" />
                     </p:column>
-
                     <p:column headerText="Nombre">
                         <h:outputText value="#{prod.nombre}" />
                     </p:column>
-
                     <p:column headerText="Categoría">
                         <h:outputText value="#{prod.idCategoria}" />
                     </p:column>
-
                     <p:column headerText="Proveedor">
                         <h:outputText value="#{prod.idProveedor}" />
                     </p:column>
-
                     <p:column headerText="Precio" width="80">
                         <h:outputText value="#{prod.precioUnitario}">
                             <f:convertNumber type="currency" currencySymbol="$" />
                         </h:outputText>
                     </p:column>
-
                     <p:column headerText="Stock" width="60">
                         <h:outputText value="#{prod.stockActual}" />
                     </p:column>
-
                     <p:column headerText="Estado" width="70">
                         <h:outputText value="#{prod.activo ? 'Sí' : 'No'}" />
                     </p:column>
                 </p:dataTable>
-
                 <p:separator />
-
-                <p:commandButton value="Confirmar Carga Total" icon="pi pi-save" action="#{productoBean.guardarProductoTabla}"
-                                 process="@form" update="tablaRegistros, msgs" ajax="false" />
+                <p:commandButton value="Confirmar Carga Total" icon="pi pi-save"
+                    action="#{productoBean.guardarProductoTabla}" process="@form" update="tablaRegistros, msgs"
+                    ajax="false" />
             </div>
         </div>
-
         <p:dialog header="Mensaje" widgetVar="dlgConfirmacion" modal="true" closable="false">
             <h:outputText value="Datos guardados correctamente." />
             <br /><br />
             <p:commandButton value="Aceptar" type="button" onclick="PF('dlgConfirmacion').hide();" />
         </p:dialog>
-
         <p:dialog header="Mensaje" widgetVar="dlgConfirmacionGuardar" modal="true" closable="false">
             <h:outputText value="Datos guardados correctamente." />
             <br /><br />
@@ -174,7 +168,6 @@
         </p:dialog>
         <ui:include src="/pages/admin/footer.xhtml" />
     </h:form>
-
-    
 </h:body>
+
 </html>

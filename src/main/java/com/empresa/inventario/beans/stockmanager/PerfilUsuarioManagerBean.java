@@ -1,6 +1,8 @@
 package com.empresa.inventario.beans.stockmanager;
 
 import java.io.Serializable;
+import javax.faces.view.ViewScoped; 
+
 
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
@@ -19,7 +21,7 @@ import com.empresa.inventario.utils.Mensajes;
 import lombok.Data;
 
 @Named("perfilUsuarioManagerBean")
-@javax.faces.view.ViewScoped
+@ViewScoped
 @Data
 public class PerfilUsuarioManagerBean implements Serializable {
 
@@ -47,24 +49,20 @@ public class PerfilUsuarioManagerBean implements Serializable {
 	public void init() {
 		Usuario user = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.get("sessionUsuario");
-
 		int id = user.getIdUsuario();
 		usuario = iUsuariosService.getByIdUsuario(id);
 
 		idUsuario = user.getIdUsuario();
 		nombreUsuario = user.getNombre();
-
 	}
 
 	public void actualizarPerfil() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-
 		try {
 			if (usuario == null) {
 				throw new ExceptionMessage("Vacio");
 			}
 			iUsuariosService.updateProfile(usuario);
-
 			baseBean.registrarAuditoria(auditoriaService, "Actualizar",
 					"El usuario " + nombreUsuario + " realizó una actualización", Mensajes.INFO.toString(), idUsuario);
 		} catch (Exception e) {
@@ -76,7 +74,6 @@ public class PerfilUsuarioManagerBean implements Serializable {
 
 	public String irAIndex() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-
 		baseBean.registrarNavegacion(auditoriaService, "Dashboard", "entro a Dashboard", idUsuario, nombreUsuario);
 		return "/pages/stock_manager/dashboard?faces-redirect=true";
 	}

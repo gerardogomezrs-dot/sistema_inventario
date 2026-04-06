@@ -25,8 +25,10 @@ import com.empresa.inventario.utils.Mensajes;
 
 import lombok.Data;
 
+import javax.faces.view.ViewScoped; 
+
 @Named("mermasDevolucionesBean")
-@javax.faces.view.ViewScoped
+@ViewScoped
 @Data
 public class MermaDevolucionesBean implements Serializable {
 	/**
@@ -152,7 +154,6 @@ public class MermaDevolucionesBean implements Serializable {
 			if (devoluciones.isEmpty()) {
 				throw new ExceptionMessage("Lista Vacia");
 			}
-			System.err.println("Lista " + devoluciones.size());
 			devolucionesService.guardarMermasDevoluciones(devoluciones, usuario);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 					"Registro guardado", "El registro fue guardado correctamente"));

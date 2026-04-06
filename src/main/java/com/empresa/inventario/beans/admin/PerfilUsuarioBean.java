@@ -1,6 +1,8 @@
 package com.empresa.inventario.beans.admin;
 
 import java.io.Serializable;
+import javax.faces.view.ViewScoped; 
+
 
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
@@ -19,7 +21,7 @@ import com.empresa.inventario.utils.Mensajes;
 import lombok.Data;
 
 @Named("perfilUsuarioBean")
-@javax.faces.view.ViewScoped
+@ViewScoped
 @Data
 public class PerfilUsuarioBean implements Serializable {
 	

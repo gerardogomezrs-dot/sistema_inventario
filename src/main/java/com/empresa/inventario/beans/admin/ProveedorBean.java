@@ -1,6 +1,8 @@
 package com.empresa.inventario.beans.admin;
 
 import java.io.Serializable;
+import javax.faces.view.ViewScoped; 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +26,7 @@ import com.empresa.inventario.utils.Mensajes;
 import lombok.Data;
 
 @Named("proveedorBean")
-@javax.faces.view.ViewScoped
+@ViewScoped
 @Data
 public class ProveedorBean implements Serializable {
 
@@ -71,9 +73,7 @@ public class ProveedorBean implements Serializable {
 
 	public String irADashboard() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-
 		baseBean.registrarNavegacion(auditoriaService, "Dashboard", "entro a Dashboard", idUsuario, nombreUsuario);
-
 		return "/pages/admin/dashboard.xhtml?faces-redirect=true";
 	}
 

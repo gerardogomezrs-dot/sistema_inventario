@@ -1,6 +1,8 @@
 package com.empresa.inventario.beans.admin;
 
 import java.io.Serializable;
+import javax.faces.view.ViewScoped; 
+
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -27,7 +29,7 @@ import com.empresa.inventario.utils.Mensajes;
 import lombok.Data;
 
 @Named("movimientosBean")
-@javax.faces.view.ViewScoped
+@ViewScoped
 @Data
 public class MovimientosBean implements Serializable {
 
@@ -68,6 +70,8 @@ public class MovimientosBean implements Serializable {
 	private transient IAuditoriaService auditoriaService;
 
 	private String codigoFiltro;
+
+	private String url;
 
 	@Inject
 	public MovimientosBean(IAuditoriaService auditoriaService, IProductoService iProductoService,
@@ -174,6 +178,7 @@ public class MovimientosBean implements Serializable {
 	public void cargarInfoScanner(String codigoFiltro) throws Exception {
 		String codigo = this.movimientos.getCodigoBarras();
 		Productos productos = new Productos();
+		FacesContext context = FacesContext.getCurrentInstance();
 
 		try {
 			productos = iProductoService.getByCodigoBarras(codigoFiltro);
@@ -189,7 +194,10 @@ public class MovimientosBean implements Serializable {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Producto encontrado."));
 			} else {
-
+				url = "../dashboard.xhtml";
+				context.getExternalContext().redirect(url);
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "Error", "No se encontro"));
 			}
 		} catch (ExceptionMessage e) {
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", "No existe el producto");
@@ -215,6 +223,10 @@ public class MovimientosBean implements Serializable {
 				this.infoProductoExtra = "";
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Producto encontrado."));
+			}else {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "Error", "No se encontro"));
+				this.movimientos = new Movimientos();
 			}
 		} catch (ExceptionMessage e) {
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", "No existe el producto");
@@ -252,7 +264,6 @@ public class MovimientosBean implements Serializable {
 		cargarInfoScanner(codigoFiltro);
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Resultados",
 				"Mostrando resultados para: " + codigoFiltro));
-
 	}
 
 	public String convertirABase64(byte[] bytes) {

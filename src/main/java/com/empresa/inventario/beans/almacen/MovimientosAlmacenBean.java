@@ -1,6 +1,8 @@
 package com.empresa.inventario.beans.almacen;
 
 import java.io.Serializable;
+import javax.faces.view.ViewScoped; 
+
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -28,7 +30,7 @@ import com.empresa.inventario.utils.Mensajes;
 import lombok.Data;
 
 @Named("movimientosAlmacenBean")
-@javax.faces.view.ViewScoped
+@ViewScoped
 @Data
 public class MovimientosAlmacenBean implements Serializable {
 	/**

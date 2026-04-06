@@ -70,6 +70,27 @@ public class ProductosMapper {
 		return productos;
 	}
 
+	
+	public Productos mapRowByIdInfoProducto(ResultSet rs) throws SQLException {
+		Productos productos = new Productos();
+		productos.setIdProducto(rs.getInt("id_producto"));
+		productos.setCodigoBarras(rs.getString("codigo_barras"));
+		productos.setNombre(rs.getString("nombre"));
+		productos.setDescripcion(rs.getString("descripcion"));
+		productos.setIdCategoria(rs.getInt("id_categoria"));
+		productos.setUnidad(rs.getString("unidad"));
+		productos.setPrecioUnitario(rs.getDouble("precio_unitario"));
+		productos.setStockActual(rs.getInt("stock_actual"));
+		productos.setStockMinimo(rs.getInt("stock_minimo"));
+		productos.setIdUbicacion(rs.getInt("id_ubicacion"));
+		productos.setActivo(rs.getBoolean("activo"));
+		productos.setIdProveedor(rs.getInt("id_proveedor"));
+		
+		return productos;
+	
+	}
+
+	
 	public Productos mapRowStockBajo(ResultSet rs) throws SQLException {
 		Productos productos = new Productos();
 		productos.setIdProducto(rs.getInt("id_producto"));

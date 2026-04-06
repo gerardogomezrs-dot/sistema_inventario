@@ -1,6 +1,8 @@
 package com.empresa.inventario.beans;
 
 import java.io.Serializable;
+import javax.faces.view.ViewScoped; 
+
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -13,7 +15,7 @@ import com.empresa.inventario.service.IProductoService;
 import lombok.Data;
 
 @Named("notificacionBean")
-@javax.faces.view.ViewScoped
+@ViewScoped
 @Data
 public class NotificacionBean implements Serializable {
 

@@ -73,10 +73,7 @@
                         <p:inputText value="#{proveedorManagerBean.proveedor.direccion}" />
                         <p:outputLabel value="Activo:" />
                         <p:selectBooleanCheckbox value="#{proveedorManagerBean.proveedor.activo}" />
-                        <p:outputLabel for="fechaReg" value="Fecha Registro:" />
-                        <p:datePicker id="fechaReg" value="#{proveedorManagerBean.proveedor.fechaRegistro}"
-                            pattern="dd/MM/yyyy" showIcon="true" monthNavigator="true" yearNavigator="true"
-                            showOnFocus="false" />
+                        
                     </p:panelGrid>
                     <div style="margin-top: 15px;">
                         <p:commandButton value="Guardar" icon="pi pi-save" action="#{proveedorManagerBean.guardarTabla}"

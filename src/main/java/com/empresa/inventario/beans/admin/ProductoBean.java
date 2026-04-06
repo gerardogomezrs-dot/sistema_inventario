@@ -31,8 +31,10 @@ import com.empresa.inventario.utils.Mensajes;
 
 import lombok.Data;
 
+import javax.faces.view.ViewScoped; 
+
 @Named("productoBean")
-@javax.faces.view.ViewScoped
+@ViewScoped
 @Data
 public class ProductoBean implements Serializable {
 
@@ -71,9 +73,8 @@ public class ProductoBean implements Serializable {
 	private String nombreUsuario;
 
 	private transient IAuditoriaService auditoriaService;
-	
-	private String filtro;
 
+	private String filtro;
 
 	@Inject
 	public ProductoBean(IProductoService iProductoService, ICategoriaService iCategoriaService,
@@ -113,7 +114,6 @@ public class ProductoBean implements Serializable {
 			}
 			byte[] contenido = uploadedImagen.getContents();
 			producto.setArchivo(contenido);
-			System.err.println("archivo recibido " + uploadedImagen.getFileName());
 			listaProductosGuardar.add(producto);
 			this.producto = new Productos();
 
@@ -210,7 +210,6 @@ public class ProductoBean implements Serializable {
 			this.list = iProductoService.getAll();
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
-
 		}
 	}
 
@@ -234,9 +233,7 @@ public class ProductoBean implements Serializable {
 
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
 					Mensajes.ERROR.toString(), idUsuario);
-		}
-
-		catch (Exception e) {
+		} catch (Exception e) {
 			mensaje(FacesMessage.SEVERITY_ERROR, "Error:", e.getMessage());
 			logger.debug(e.getMessage());
 			baseBean.registrarAuditoria(auditoriaService, Mensajes.ERROR, Mensajes.ERROR + ": " + e.getMessage(),
@@ -249,15 +246,12 @@ public class ProductoBean implements Serializable {
 
 		baseBean.registrarNavegacion(auditoriaService, "Tabla Productos", "entro a tabla Productos", idUsuario,
 				nombreUsuario);
-
 		return "/pages/admin/productos/tablaProductos?faces-redirect=true";
 	}
 
 	public String menuPrincipal() {
 		BaseAuditoriaBean baseBean = new BaseAuditoriaBean();
-
 		baseBean.registrarNavegacion(auditoriaService, "Dashboard", "entro a Dashboard", idUsuario, nombreUsuario);
-
 		return "/pages/admin/dashboard?faces-redirect=true";
 	}
 
@@ -278,20 +272,18 @@ public class ProductoBean implements Serializable {
 		}
 		return "";
 	}
-	
+
 	public void listaUbicacion() {
 		listaUbicaciones = iUbicacionService.getAll();
 	}
-	
-	public void aplicarFiltroExterno() {
-    	System.err.println("Hola!!!");
 
-	    if (filtro != null && !filtro.trim().isEmpty()) {
-	        this.list = iProductoService.getByNombreProducto(filtro);
-	        FacesContext.getCurrentInstance().addMessage(null, 
-	            new FacesMessage(FacesMessage.SEVERITY_INFO, "Resultados", "Mostrando resultados para: " + filtro));
-	    } else {
-	        this.list = iProductoService.getAll();
-	    }
+	public void aplicarFiltroExterno() {
+		if (filtro != null && !filtro.trim().isEmpty()) {
+			this.list = iProductoService.getByNombreProducto(filtro);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Resultados", "Mostrando resultados para: " + filtro));
+		} else {
+			this.list = iProductoService.getAll();
+		}
 	}
 }

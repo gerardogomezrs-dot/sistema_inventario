@@ -166,15 +166,13 @@ public class ProductosDAO {
 	}
 
 	public Productos getByIdProductoInfo(int idProducto) {
-		String sql = "SELECT id_producto, nombre as nombreProducto, codigo_barras, descripcion, id_categoria, unidad, "
-				+ "precio_unitario, stock_actual as stockActual, stock_minimo as stockMinimo, "
-				+ "id_ubicacion, activo FROM productos where id_producto = ?";
+		String sql = "SELECT * FROM productos where id_producto = ?";
 		Productos p = new Productos();
 		try (Connection con = Conexion.getConexion(); PreparedStatement ps = con.prepareStatement(sql);) {
 			ps.setInt(1, idProducto);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-				p = mapper.mapRowBy(rs);
+				p = mapper.mapRowByIdInfoProducto(rs);
 			}
 		} catch (SQLException e) {
 			logger.debug(e.getMessage());

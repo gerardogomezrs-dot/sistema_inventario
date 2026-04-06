@@ -1,6 +1,8 @@
 package com.empresa.inventario.beans.almacen;
 
 import java.io.Serializable;
+import javax.faces.view.ViewScoped; 
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -24,7 +26,7 @@ import com.empresa.inventario.utils.ReportesUtils;
 import lombok.Data;
 
 @Named("inventarioReporteAlmacenBean")
-@javax.faces.view.ViewScoped
+@ViewScoped
 @Data
 public class ReportesAlmacenBean implements Serializable {
 	/**

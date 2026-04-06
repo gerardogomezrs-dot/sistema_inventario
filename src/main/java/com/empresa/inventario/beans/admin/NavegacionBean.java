@@ -1,6 +1,8 @@
 package com.empresa.inventario.beans.admin;
 
 import java.io.IOException;
+import javax.faces.view.ViewScoped; 
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,7 +28,7 @@ import com.empresa.inventario.utils.Mensajes;
 import lombok.Data;
 
 @Named("navBean")
-@javax.faces.view.ViewScoped
+@ViewScoped
 @Data
 public class NavegacionBean implements Serializable {
 

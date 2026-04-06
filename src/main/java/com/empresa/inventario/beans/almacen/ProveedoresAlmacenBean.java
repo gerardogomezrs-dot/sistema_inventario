@@ -1,6 +1,8 @@
 package com.empresa.inventario.beans.almacen;
 
 import java.io.Serializable;
+import javax.faces.view.ViewScoped; 
+
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -19,7 +21,7 @@ import com.empresa.inventario.utils.Mensajes;
 import lombok.Data;
 
 @Named("proveedoresAlmacenBean")
-@javax.faces.view.ViewScoped
+@ViewScoped
 @Data
 public class ProveedoresAlmacenBean implements Serializable {
 	/**

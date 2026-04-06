@@ -3,6 +3,8 @@ package com.empresa.inventario.beans.stockmanager;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.faces.view.ViewScoped; 
+
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -26,7 +28,7 @@ import com.empresa.inventario.utils.Mensajes;
 import lombok.Data;
 
 @Named("movimientosManagerBean")
-@javax.faces.view.ViewScoped
+@ViewScoped
 @Data
 public class MovimientosManagerBean implements Serializable {
 
@@ -62,6 +64,8 @@ public class MovimientosManagerBean implements Serializable {
 	private transient IMovimientosService service;
 
 	private transient IProductoService iProductoService;
+
+	private String codigoFiltro;
 
 	@Inject
 	public MovimientosManagerBean(IAuditoriaService auditoriaService, IMovimientosService service,
@@ -170,7 +174,6 @@ public class MovimientosManagerBean implements Serializable {
 		try {
 			if (listaMovimientosGuardar != null && !listaMovimientosGuardar.isEmpty()) {
 				service.save(listaMovimientosGuardar);
-
 				baseBean.registrarAuditoria(auditoriaService, Mensajes.GUARDAR,
 						Mensajes.USUARIO + nombreUsuario + "realizo el guardado de un registro",
 						Mensajes.INFO.toString(), idUsuario);
@@ -217,5 +220,15 @@ public class MovimientosManagerBean implements Serializable {
 
 	private void mensaje(FacesMessage.Severity severity, String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
+	}
+	
+	public void procesarEscaneo() {
+		FacesContext context = FacesContext.getCurrentInstance();
+		String url = "../stock_manager/movimientos/escaneoRapido.xhtml?faces-redirect=true&query=" + codigoFiltro;
+		try {
+			context.getExternalContext().redirect(url);
+		} catch (Exception e) {
+			e.getMessage();
+		}
 	}
 }

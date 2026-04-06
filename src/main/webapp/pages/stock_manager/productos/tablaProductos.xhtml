@@ -66,8 +66,12 @@
             <p:column headerText="Stock Minimo">
                 <h:outputText value="#{prod.stockMinimo}" />
             </p:column>
-            <p:column headerText="Ubicación">
-                <h:outputText value="#{prod.ubicacion}" />
+            <p:column headerText="Pasillo">
+                <h:outputText value="#{prod.ubicacion.pasillo}" />
+            </p:column>
+
+             <p:column headerText="Estante">
+                <h:outputText value="#{prod.ubicacion.estante}" />
             </p:column>
             <p:column headerText="Acciones">
                 <!-- EDITAR -->

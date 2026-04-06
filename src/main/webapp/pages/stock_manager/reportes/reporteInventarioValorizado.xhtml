@@ -25,26 +25,24 @@
             padding: 20px;
         }
 
-        /* Estilo extra para asegurar que el botón resalte */
         .btn-excel {
             background-color: #217346 !important;
-            /* Verde Excel */
             border-color: #217346 !important;
             color: white !important;
         }
 
         .btn-pdf {
             background-color: #D32F2F !important;
-            /* Rojo PDF */
             border-color: #D32F2F !important;
             color: white !important;
         }
     </style>
 
     <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
-        <link rel="stylesheet" href="#{request.contextPath}/css/dark-mode.css" />
+    <link rel="stylesheet" href="#{request.contextPath}/css/dark-mode.css" />
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
 </h:head>
+
 <h:body>
     <h:form id="formReporte">
 
@@ -53,7 +51,6 @@
         <p:separator />
         <p:toolbar style="margin-bottom: 20px; border: none; background: transparent;">
             <f:facet name="left">
-
                 <p:commandButton value="Regresar" icon="pi pi-chevron-left"
                     action="#{reportesManagerBean.irAReportePrincipal}" immediate="true" style="margin-left:10px;" />
             </f:facet>
@@ -65,29 +62,28 @@
             <p:dataTable id="tblMovimientos" value="#{reportesManagerBean.listaInventarioValorizado}" var="mov"
                 paginator="true" rows="20" emptyMessage="No se encontraron movimientos">
 
-
                 <f:facet name="header">
                     <div style="display: flex; justify-content: center; align-items: center; gap: 15px;">
-                        <span style="font-weight: bold;"></span>
-
+                        
                         <p:commandButton value="Exportar Excel" icon="pi pi-file-excel" ajax="false"
                             styleClass="btn-excel">
                             <p:dataExporter type="xlsx" target="tblMovimientos"
                                 postProcessor="#{reportesManagerBean.exportarReporteInventarioValorizadoExcel}"
-                                fileName="#{reportesManagerBean.reporteInventarioValorizado}" pageOnly="false" />
+                                fileName="#{reportesManagerBean.reporteInventarioValorizado}" />
                         </p:commandButton>
+
                         <p:commandButton value="Exportar Pdf" icon="pi pi-file-pdf" ajax="false" styleClass="btn-pdf">
                             <p:dataExporter type="pdf" target="tblMovimientos"
-                                preProcessor="#{reportesManagerBean.exportarReporteInventarioValorizado}"
+                                preProcessor="#{reportesManagerBean.exportarReporteInventarioValorizadoPdf}"
                                 fileName="#{reportesManagerBean.reporteInventarioValorizado}" />
                         </p:commandButton>
 
                     </div>
                 </f:facet>
+
                 <p:column headerText="Codigo Barras">
                     <h:outputText value="#{mov.codigoBarras}" />
                 </p:column>
-
 
                 <p:column headerText="Producto" filterBy="#{mov.nombreProducto}" filterMatchMode="contains">
                     <h:outputText value="#{mov.nombreProducto}" />
@@ -121,5 +117,4 @@
         <ui:include src="/pages/stock_manager/footer.xhtml" />
     </h:form>
 </h:body>
-
 </html>

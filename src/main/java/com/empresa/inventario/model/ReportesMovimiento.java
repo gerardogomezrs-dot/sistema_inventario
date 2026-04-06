@@ -1,12 +1,17 @@
 package com.empresa.inventario.model;
 
+import java.io.Serializable;
 import java.sql.Date;
 
 import lombok.Data;
 
 @Data
-public class ReportesMovimiento {
+public class ReportesMovimiento implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int idMovimiento;
 	private Date fechaHora;
 	private String codigoBarras;

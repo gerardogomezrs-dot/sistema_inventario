@@ -9,7 +9,7 @@
     <link rel="icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
     <link rel="stylesheet" href="https://unpkg.com/primeicons@2.0.0/primeicons.css" />
     <link rel="stylesheet" href="#{request.contextPath}/css/form.css" />
-        <link rel="stylesheet" href="#{request.contextPath}/css/dark-mode.css" />
+    <link rel="stylesheet" href="#{request.contextPath}/css/dark-mode.css" />
     <style type="text/css">
         .ui-panelgrid .ui-grid-responsive .ui-grid-row {
             border: none !important;
@@ -40,7 +40,7 @@
             flex: 1;
         }
     </style>
-    
+
 </h:head>
 
 <h:body>
@@ -55,8 +55,6 @@
                     <h:panelGrid columns="2" columnClasses="label,value">
 
                         <h:outputLabel value="Codigo de Barras:" />
-
-
                         <p:inputText id="barcodeManual" value="#{productosManagerBean.producto.codigoBarras}"
                             required="false" placeholder="Ingrese código manualmente..." style="width: 100%;">
                             <p:ajax event="blur" process="@this" />
@@ -76,12 +74,20 @@
                                 itemLabel="#{cat.nombre}" itemValue="#{cat.idCategoria}" />
                         </p:selectOneMenu>
 
-                         <p:outputLabel for="proveedor" value="Proveedor:" />
+                        <p:outputLabel for="proveedor" value="Proveedor:" />
                         <p:selectOneMenu id="proveedor" value="#{productosManagerBean.producto.idProveedor}"
                             style="width: 200px;">
                             <f:selectItem itemLabel="Seleccione un proveedor" itemValue="" noSelectionOption="true" />
                             <f:selectItems value="#{productosManagerBean.listaProveedores}" var="prov"
                                 itemLabel="#{prov.nombreEmpresa}" itemValue="#{prov.idProveedor}" />
+                        </p:selectOneMenu>
+
+                        <p:outputLabel for="ubicacion" value="Ubicación:" />
+                        <p:selectOneMenu id="ubicacion" value="#{productosManagerBean.producto.idUbicacion}"
+                            style="width: 200px;">
+                            <f:selectItem itemLabel="Seleccione una ubicación" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{productosManagerBean.listaUbicacion}" var="ubi"
+                                itemLabel="#{ubi.pasillo} - #{ubi.estante}" itemValue="#{ubi.idUbicacion}" />
                         </p:selectOneMenu>
 
                         <h:outputLabel value="Unidad:" />
@@ -96,19 +102,18 @@
                         <h:outputLabel value="Stock Mínimo:" />
                         <p:inputText value="#{productosManagerBean.producto.stockMinimo}" />
 
-                        <h:outputLabel value="Ubicación:" />
-                        <p:inputText value="#{productosManagerBean.producto.ubicacion}" />
-
                         <h:outputLabel value="Activo:" />
                         <p:selectBooleanCheckbox value="#{productosManagerBean.producto.activo}" />
+
+                        <h:outputLabel value="Imagen del Producto:" />
+                        <p:fileUpload value="#{productosManagerBean.uploadedImagen}" mode="simple" skinSimple="true"
+                            label="Seleccionar Archivo" chooseIcon="pi pi-upload" accept="image/*" />
 
                     </h:panelGrid>
 
                     <p:separator />
-
-                    <p:commandButton value="Guardar" icon="pi pi-save" action="#{productosManagerBean.guardarTabla}"
-                        process="@form" update="formProducto"
-                        oncomplete="if (!args.validationFailed) PF('dlgConfirmacion').show();" />
+                    <p:commandButton value="Guardar" action="#{productosManagerBean.guardarTabla}" process="@form"
+                        update="formProducto" ajax="false" />
 
                     <p:commandButton value="Regresar" icon="pi pi-chevron-left"
                         action="#{productosManagerBean.irATablaProductos}" immediate="true"
@@ -145,7 +150,7 @@
                         <h:outputText value="#{prod.idCategoria}" />
                     </p:column>
 
-                     <p:column headerText="Proveedor">
+                    <p:column headerText="Proveedor">
                         <h:outputText value="#{prod.idProveedor}" />
                     </p:column>
 
@@ -181,7 +186,6 @@
         </p:dialog>
     </h:form>
     <ui:include src="/pages/stock_manager/footer.xhtml" />
-
 </h:body>
 
 </html>

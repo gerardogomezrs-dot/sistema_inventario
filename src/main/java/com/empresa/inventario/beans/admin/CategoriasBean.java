@@ -1,6 +1,8 @@
 package com.empresa.inventario.beans.admin;
 
 import java.io.Serializable;
+import javax.faces.view.ViewScoped; 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +26,7 @@ import com.empresa.inventario.utils.Mensajes;
 import lombok.Data;
 
 @Named("categoriasBean")
-@javax.faces.view.ViewScoped
+@ViewScoped
 @Data
 public class CategoriasBean implements Serializable {
 

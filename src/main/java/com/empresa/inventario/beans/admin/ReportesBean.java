@@ -1,6 +1,8 @@
 package com.empresa.inventario.beans.admin;
 
 import java.io.Serializable;
+import javax.faces.view.ViewScoped; 
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -28,7 +30,7 @@ import com.empresa.inventario.utils.ReportesUtils;
 import lombok.Data;
 
 @Named("inventarioReporteBean")
-@javax.faces.view.ViewScoped
+@ViewScoped
 @Data
 public class ReportesBean implements Serializable {
 
